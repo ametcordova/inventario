@@ -43,6 +43,30 @@ static public function ctrConsultaExistenciaProd($tabla, $item, $valor){
 	
 }  
 
+/*=============================================
+	GUARDA ENTRADA AL ALMACEN
+=============================================*/
+static public function ctrAltaEntradasAlmacen($tabla_almacen, $tabla, $datos){
+
+	$respuesta = ModeloEntradasAlmacen::mdlAltaEntradasAlmacen($tabla_almacen, $tabla, $datos);
+	return $respuesta;
+	
+}      
+
+/*=============================================
+REPORTE DE ENTRADAS
+============================================*/
+static public function ctrReporteEntradaAlmacen($item, $numeroid){
+
+	$tabla="tbl_entradas";
+	$tabla_hist="hist_entrada";
+
+	$respuesta = ModeloEntradasAlmacen::mdlReporteEntradaAlmacen($tabla, $tabla_hist, $item, $numeroid);
+
+	return $respuesta;
+	
+}  
+
 
 }   //fin de la clase
 ?>

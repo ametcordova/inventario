@@ -58,9 +58,9 @@ class ModeloEntradas{
         //SCRIP QUE REGISTRA LA ENTRADA EN HIST_ENTRADA
 		if($stmt){
 
-            $stmt = Conexion::conectar()->prepare("INSERT INTO hist_entrada(id_proveedor, fechadocto, numerodocto, fechaentrada, recibio, tipomov, id_producto, cantidad, id_almacen, ultusuario) VALUES (:id_proveedor,:fechadocto, :numerodocto, :fechaentrada, :recibio, :tipomov, :id_producto, :cantidad, :id_almacen, :ultusuario)");
+        $stmt = Conexion::conectar()->prepare("INSERT INTO hist_entrada(id_proveedor, fechadocto, numerodocto, fechaentrada, recibio, tipomov, id_producto, cantidad, id_almacen, ultusuario) VALUES (:id_proveedor,:fechadocto, :numerodocto, :fechaentrada, :recibio, :tipomov, :id_producto, :cantidad, :id_almacen, :ultusuario)");
             
-         for($i=0;$i<$contador;$i++) { 
+        for($i=0;$i<$contador;$i++) { 
             $stmt->bindParam(":id_proveedor", $nuevoProveedor, PDO::PARAM_INT);
             $stmt->bindParam(":fechadocto", $newfecha, PDO::PARAM_STR);
             $stmt->bindParam(":numerodocto", $numeroDocto, PDO::PARAM_STR);
@@ -72,13 +72,11 @@ class ModeloEntradas{
             $stmt->bindParam(":id_almacen", $id_almacen, PDO::PARAM_INT);
             $stmt->bindParam(":ultusuario", $ultusuario, PDO::PARAM_INT);
             $stmt->execute();
-         }
+        }
             if($stmt){
                 return "ok";
             }else{
-
-			return "error";
-		
+    			return "error";
 		   }
 
 		}else{

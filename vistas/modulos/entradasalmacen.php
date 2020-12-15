@@ -75,15 +75,15 @@ $fechaHoy = date("Y-m-d");
         <div class="card">
           <div class="card-body">
             <table class="table table-bordered table-hover table-compact table-sm table-striped dt-responsive" id="dt-entradasalmacen" cellspacing="0" width="100%">
-              <thead class="thead-dark" style="font-size:.8rem; height:1.4px">
-                <tr>
-                  <th style="width:2rem;">#</th>
-                  <th style="width:6rem;">Fecha</th>
-                  <th>Almacen</th>
-                  <th>Proveedor</th>
-                  <th>Tipo Mov.</th>
-                  <th style="width:10rem;">Usuario</th>
-                  <th style="width:9rem;">Acción</th>
+              <thead class="thead-dark" style="font-size:.8rem; height:1.2px">
+                <tr style="font-size:.8rem;">
+                  <th style="width:1em;">#</th>
+                  <th style="width:2em;">Fecha</th>
+                  <th style="width:4em;">Almacen</th>
+                  <th style="width:14em;">Proveedor</th>
+                  <th style="width:6em;">Tipo Mov.</th>
+                  <th style="width:2em;">Usuario</th>
+                  <th style="width:4em;">Acción</th>
                 </tr>
               </thead>
               <tbody>
@@ -180,8 +180,8 @@ $fechaHoy = date("Y-m-d");
 
               <div class="form-group col-md-2">
               <label for="inputTipoMov"><i class="fa fa-bookmark-o"></i> Tipo de Entrada</label>
-                  <select class="form-control form-control-sm" name="NvoTipoEntradaAlmacen" id="NvoTipoEntradaAlmacen" title="Tipo de Entrada" required>
-                    <option value=0 selected>Seleccione Tipo</option>
+                  <select class="form-control form-control-sm" name="nvoTipoEntradaAlmacen" id="nvoTipoEntradaAlmacen" title="Tipo de Entrada" required>
+                    <option value="0" selected>Seleccione Tipo</option>
                     <?php
                     $item="clase";
                     $valor="E";

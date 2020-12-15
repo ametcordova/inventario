@@ -1,24 +1,30 @@
 <?php
 
-require_once "../../../controladores/salidasalmacen.controlador.php";
-require_once "../../../modelos/salidasalmacen.modelo.php";
-require_once "../../../funciones/funciones.php";
+require_once "../../../controladores/entradasalmacen.controlador.php";
+require_once "../../../modelos/entradasalmacen.modelo.php";
+/*
+require_once "../../../controladores/proveedores.controlador.php";
+require_once "../../../modelos/proveedores.modelo.php";
 
-class imprimirSalida{
+require_once "../../../controladores/usuarios.controlador.php";
+require_once "../../../modelos/usuarios.modelo.php";
+
+require_once "../../../controladores/productos.controlador.php";
+require_once "../../../modelos/productos.modelo.php";
+
+*/
+class imprimirEntrada{
 
 public $codigo;
 
-public function traerImpresionSalida(){
+public function traerImpresionEntrada(){
 
-$fechahoy=fechaHoraMexico(date("d-m-Y G:i:s"));
+//TRAEMOS LA INFORMACIÓN DE LA VENTA
 
-//TRAEMOS LA INFORMACIÓN DE LA SALIDA
-$campo = "id_entrada";
-$valor = $_GET["codigo"];
+$item = "id_entrada";
+$numeroid = $_GET["codigo"];
 
-$respuestaAlmacen = ControladorSalidasAlmacen::ctrPrintSalidaAlmacen($campo, $valor);
-
-
+$respuestaAlmacen = ControladorEntradasAlmacen::ctrReporteEntradaAlmacen($item, $numeroid);
 
 /*
 $fecha = substr($respuestaVenta["fecha"],0,-8);
@@ -40,8 +46,7 @@ $pdf->startPageGroup();
 
 $pdf->AddPage();
 
-if($respuestaAlmacen){
-
+if($respuestaAlmacen){    
 // ---------------------------------------------------------
 
 $bloque1 = <<<EOF
@@ -78,7 +83,7 @@ $bloque1 = <<<EOF
 				
 			</td>
 
-			<td style="background-color:white; width:110px; text-align:center; color:red"><br><br>SALIDA No.<br>$valor</td>
+			<td style="background-color:white; width:110px; text-align:center; color:red"><br><br>ENTRADA No.<br>$numeroid</td>
 
 		</tr>
 
@@ -89,11 +94,11 @@ EOF;
 $pdf->writeHTML($bloque1, false, false, false, false, '');
 
 $pdf->Ln(2);
-
+    
 // ---------------------------------------------------------
 $bloque2 = <<<EOF
 
-<h2 style="text-align:center;">REPORTE DE SALIDA DE ALMACEN</h2>
+<h2 style="text-align:center;">REPORTE DE ENTRADAS AL ALMACEN</h2>
 
 
 EOF;
@@ -103,39 +108,34 @@ $pdf->Ln(2);
 // ---------------------------------------------------------
 
 //var_dump($respuestaAlmacen);
-$idTecnico=$respuestaAlmacen[0]["id_tecnico"];
-$nomTecnico=$respuestaAlmacen[0]["nombretecnico"];
-//$FechDocto=date("d/m/Y", strtotime($respuestaAlmacen[0]["fechadocto"]));
+$idProv=$respuestaAlmacen[0]["id_proveedor"];
+$nomProv=$respuestaAlmacen[0]["nombreproveedor"];
+$FechDocto=date("d/m/Y", strtotime($respuestaAlmacen[0]["fechaentrada"]));
 $idAlmacen=$respuestaAlmacen[0]["id_almacen"];
-$nombreAlmacen=$respuestaAlmacen[0]["nombrealma"];
-$fechaSalida=date("d/m/Y", strtotime($respuestaAlmacen[0]["fechasalida"]));
-$usuario=$respuestaAlmacen[0]["nombreusuario"];
-$id_tipomov=$respuestaAlmacen[0]["id_tipomov"];
-$nombre_tipo=$respuestaAlmacen[0]["nombre_tipo"];
-$motivo=$respuestaAlmacen[0]['motivo'];
+$nombreAlmacen=$respuestaAlmacen[0]["nombrealmacen"];
+$fechEntrada=date("d/m/Y", strtotime($respuestaAlmacen[0]["fechaentrada"]));
+$recibio=$respuestaAlmacen[0]["nombreusuario"];
 
 $bloque3 = <<<EOF
 
 	<table style="font-size:9px; padding:5px 5px;">
-
-	<tr>		
-	<td style="text-align: right;">Fecha impresión: $fechahoy</td>
-	</tr>
-	
+    
     <tr>		
-		<td style="border: 1px solid #666; width:270px">Técnico: $idTecnico - $nomTecnico</td>
-		<td style="border: 1px solid #666; width:270px">Fecha Salida de Almacen: $fechaSalida</td>
+		<td style="border: 1px solid #666; width:540px">Proveedor: $idProv - $nomProv</td>
 	</tr>
 	
 	<tr>
-	   <td style="border: 1px solid #666; width:270px">Tipo Mov.: $id_tipomov - $nombre_tipo</td>
+	   <td style="border: 1px solid #666; width:165px">Numero de Docto: $numeroid</td>
 
-        <td style="border: 1px solid #666; width:270px">Almacen de Salida: $idAlmacen - $nombreAlmacen</td>
+	   <td style="border: 1px solid #666; width:135px; text-align:left">Fecha Docto: $FechDocto
+	   </td>
+
+        <td style="border: 1px solid #666; width:240px">Almacen de Entrada: $idAlmacen - $nombreAlmacen</td>
 	</tr>
 
  	<tr>
-		<td style="border: 1px solid #666; width:340px">Motivo: $motivo</td>
-        <td style="border: 1px solid #666; width:200px">Capturo: $usuario</td>
+		<td style="border: 1px solid #666; width:300px">Recibio: $recibio</td>
+        <td style="border: 1px solid #666; width:240px">Fecha recepción en Almacen: $fechEntrada</td>
 	</tr>
 
 	</table>
@@ -145,7 +145,7 @@ EOF;
 $pdf->writeHTML($bloque3, false, false, false, false, '');
 $pdf->Ln(4);
 // ---------------------------------------------------------    
-//Usuario: $usuario    
+    
 // ---------------------------------------------------------
 
 $bloque4 = <<<EOF
@@ -167,7 +167,7 @@ EOF;
 $pdf->writeHTML($bloque4, false, false, false, false, '');
 
 // ---------------------------------------------------------
-$cantSalida=0;
+$cantEntra=0;
 foreach ($respuestaAlmacen as $row) {
 
 $bloque5 = <<<EOF
@@ -185,7 +185,7 @@ $bloque5 = <<<EOF
  	</table>
 
 EOF;
-$cantSalida+=$row['cantidad'];
+$cantEntra+=$row['cantidad'];
 $pdf->writeHTML($bloque5, false, false, false, false, '');
 }
 // ---------------------------------------------------------
@@ -197,8 +197,8 @@ $bloque6 = <<<EOF
 	<table style="font-size:9px; padding:5px 5px;">
 
 	<tr bgcolor="#cccccc">
-		<td style="border: 1px solid #666; width:495px; text-align:right">Total Salida:</td>
-		<td style="border: 1px solid #666; width:45px; text-align:center">$cantSalida</td>
+		<td style="border: 1px solid #666; width:495px; text-align:right">Total Entrada:</td>
+		<td style="border: 1px solid #666; width:45px; text-align:center">$cantEntra</td>
     </tr>
     
  	</table>
@@ -215,7 +215,7 @@ $bloque7 = <<<EOF
     <tr>
         <td style="border: 1px solid #666;width:260px; height:50px; text-align:center">Nombre y firma quien Recibe</td>
         <td style="width:20px;height:50px; text-align:center"></td>
-        <td style="border: 1px solid #666;width:260px; height:50px; text-align:center">Nombre y firma quien Entrega</td>
+        <td style="border: 1px solid #666;width:260px; height:50px; text-align:center">Nombre y firma quien Revisa</td>
     </tr>
 
  	</table>
@@ -225,27 +225,18 @@ EOF;
 $pdf->writeHTML($bloque7, false, false, false, false, '');     
 // ---------------------------------------------------------    
 //SALIDA DEL ARCHIVO 
- $nombre_archivo="reporte_salida".trim($valor).".pdf";   //genera el nombre del archivo para descargarlo
- $pdf->Output($nombre_archivo);
+    $nombre_archivo="entrada".trim($numeroid).".pdf";   //genera el nombre del archivo para descargarlo
+    $pdf->Output($nombre_archivo);
 }else{
-  
-$js = <<<EOD
-	app.alert('No se encontraron datos', 3, 0, 'Welcome');
-EOD;
-
-// set javascript
-$pdf->IncludeJS($js);
- //$nombre_archivo="entrada";
-$pdf->Output("salida.pdf","I");
-//var_dump($respuestaAlmacen);
-  
+    $nombre_archivo="entradax".trim($numeroid).".pdf";   //genera el nombre del archivo para descargarlo
+    $pdf->Output($nombre_archivo);  
 }
 }
 
 }
 
-$salida = new imprimirSalida();
-$salida -> codigo = $_GET["codigo"];
-$salida -> traerImpresionSalida();
+$entrada = new imprimirEntrada();
+$entrada -> codigo = $_GET["codigo"];
+$entrada -> traerImpresionEntrada();
 
 ?>

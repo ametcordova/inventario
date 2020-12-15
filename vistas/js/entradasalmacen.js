@@ -8,11 +8,10 @@ $("#modalAgregarEntradasAlmacen").draggable({
 
 //Función que se ejecuta al inicio
 function init(){
-
 /*=============================================
   VARIABLE LOCAL STORAGE
   =============================================*/
- 
+
   fechaactual();
 
   $("#btnGuardarEntradasAlmacen").hide();
@@ -186,17 +185,23 @@ $('#daterange-btn-EntAlmacen').on('cancel.daterangepicker', function(ev, picker)
   $("#daterange-btn-EntAlmacen span").html('<i class="fa fa-calendar"></i> Rango de fecha')
 });
 
+/*================ AL SALIR DEL MODAL RESETEAR FORMULARIO ==================*/
+$("#modalAgregarEntradasAlmacen").on('hidden.bs.modal', ()=> {
+  $("#agregarProdEntrada").addClass("d-none");
+  $('#form_entradasalmacen')[0].reset();                //resetea el formulario
+  $("#cantExistenciaAlmacen").val(0);                   //inicializa campo existencia
+  $("#cantEntradaAlmacen").val("");                     //inicializa campo salida
+  $("#tbodyentradasalmacen").empty();                   //vacia tbody
+  $('#selProdEntAlm').val(null).trigger('change');      //inicializa el select de productos
+  arrayProductos["length"]=0;                           //inicializa array
+});
 
 //AL ABRIR EL MODAL TRAER EL ULTIMO NUMERO
 $('#modalAgregarEntradasAlmacen').on('show.bs.modal', function (event) {
-	// $("#idNumSalAlm").val(0);
-  // $("#form_salidasalmacen")[0].reset();
-  // $("#tbodysalidasalmacen").empty();
-  // $("#btnGuardarSalidasAlmacen").hide();
-  // $("#rowSalAlma").hide();
-
   UltimoNumEntradaAlmacen();		//TRAE EL SIGUIENTE NUMERO 
-    
+  renglonesEntradas=cantEntrante=0;
+	$("#renglonentradas").html("");
+	$("#totalentradasalmacen").html("");
 })
 
 //TRAER EL ULTIMO ID GUARDADO
@@ -253,14 +258,15 @@ $('#selProdEntAlm').select2({
 //$(document).on('change', '#selProdEntAlm', function(event) {
 $("#selProdEntAlm").change(function(event){
   event.preventDefault();
-  // si viene vacio el select2 que regrese en false   |=124
-  if($(this).val()=="" || $(this).val()==null){       
-      return false;	
-  }
 
   let idalmacen=$("#idAlmacenEntrada").val();
   let tbl_almacen=$( "#idAlmacenEntrada option:selected" ).text();
   let idprod=$("#selProdEntAlm").val();
+  // si viene vacio el select2 que regrese en false   |=124
+  if($(this).val()=="" || $(this).val()==null || idalmacen==null){       
+      return false;	
+  }
+
   console.log(idprod, idalmacen, tbl_almacen)
   //$('#servicioSelecionado').html($("#selProdEntAlm option:selected").text());
 
@@ -286,19 +292,19 @@ $("#selProdEntAlm").change(function(event){
 });
 
 //VERIFICA CANT SALIENTE NO SEA MAYOR QUE LA EXISTENCIA
-$("#cantEntradaAlmacen").change(function(event){
-  event.preventDefault();
-      $("#mensajerrorentrada").addClass("d-none");
-      let cantexist=$("#cantExistenciaAlmacen").val();
-      let cantSolicitada=$("#cantEntradaAlmacen").val();
-      if(parseFloat(cantSolicitada)>parseFloat(cantexist)){
-          $("#cantEntradaAlmacen").val(0);
-          $('#mensajerrorentrada').text('Cantidad Solicitada es Mayor a la Existencia!!');
-          $("#mensajerrorentrada").removeClass("d-none");
-      }else{
-          $("#mensajerrorentrada").addClass("d-none");
-      }
-  });
+// $("#cantEntradaAlmacen").change(function(event){
+//   event.preventDefault();
+//       $("#mensajerrorentrada").addClass("d-none");
+//       let cantexist=$("#cantExistenciaAlmacen").val();
+//       let cantSolicitada=$("#cantEntradaAlmacen").val();
+//       if(parseFloat(cantSolicitada)>parseFloat(cantexist)){
+//           $("#cantEntradaAlmacen").val(0);
+//           $('#mensajerrorentrada').text('Cantidad Solicitada es Mayor a la Existencia!!');
+//           $("#mensajerrorentrada").removeClass("d-none");
+//       }else{
+//           $("#mensajerrorentrada").addClass("d-none");
+//       }
+//   });
 
 /*============================================================
                 AGREGA PRODUCTO SELECCIONADO
@@ -426,7 +432,7 @@ $("body").on("submit", "#form_entradasalmacen", function( event ) {
   if (aceptado) {
         axios({ 
           method  : 'post', 
-          url : 'ajax/salidasalmacen.ajax.php?op=guardarEntradasAlmacen', 
+          url : 'ajax/entradasalmacen.ajax.php?op=guardarEntradasAlmacen', 
           data : formData, 
         }) 
         .then((res)=>{ 
@@ -447,6 +453,19 @@ $("body").on("submit", "#form_entradasalmacen", function( event ) {
 }); 
 
 });  
+
+/*===================================================
+ENVIA REPORTE DE SALIDA DE ALMACEN DESDE EL DATATABLE
+===================================================*/
+$("#dt-entradasalmacen tbody").on("click", "button.btnPrintEntradaAlmacen", function(){
+	let idPrintEntrada = $(this).attr("idPrintEntrada");
+   console.log(idPrintEntrada);
+    if(idPrintEntrada.length > 0){
+     window.open("extensiones/tcpdf/pdf/reporte_entrada.php?codigo="+idPrintEntrada, "_blank");
+    }
+})
+
+
 
 
 init();

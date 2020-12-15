@@ -44,7 +44,7 @@ switch ($_GET["op"]){
             $tri = '<tr><td>'.($value["id"]).'</td>';
             $trf='</tr';
 
-            $boton1 =getAccess($acceso, ACCESS_PRINTER)?"<td><button class='btn btn-sm btn-success btnPrintSalidaAlmacen' idPrintSalida='".$value['id']."' title='Generar PDF '><i class='fa fa-file-pdf-o'></i></button></td> ":""; 
+            $boton1 =getAccess($acceso, ACCESS_PRINTER)?"<td><button class='btn btn-sm btn-success btnPrintEntradaAlmacen' idPrintEntrada='".$value['id']."' title='Generar PDF '><i class='fa fa-file-pdf-o'></i></button></td> ":""; 
             $boton2 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-primary btnEditSalidaAlmacen' idEditSalida='".$value['id']."' title='Editar Salida' data-toggle='modal' data-target='#modalEditarSalidasAlmacen'><i class='fa fa-edit'></i></button></td> ":""; 
             $boton3 =getAccess($acceso, ACCESS_DELETE)?"<td><button class='btn btn-sm btn-danger btnDelSalidaAlmacen' idDeleteSalAlm='".$value['id']."' title='Eliminar Salida '><i class='fa fa-trash'></i></button></td> ":"";
 
@@ -121,11 +121,38 @@ switch ($_GET["op"]){
     
         echo json_encode($respuesta);
             
-     break;
+    break;
 
     case 'guardarEntradasAlmacen':
+        if(isset($_POST["idproducto"])){
 
-        
+            //EXTRAE EL NOMBRE DEL ALMACEN
+        	$tablatmp =trim(substr($_POST['idAlmacenEntrada'],strpos($_POST['idAlmacenEntrada'].'-','-')+1)); 
+            $tabla_almacen=strtolower($tablatmp);
+            //EXTRAE EL NUMERO DE ALMACEN
+            $id_almacen=strstr($_POST['idAlmacenEntrada'],'-',true);
+            $tabla="tbl_entradas";
+
+            $datos = array(
+                "fechaentrada"  =>$_POST["nvaFechaEntradaAlmacen"],
+                "id_proveedor"  =>$_POST["nvoProveedorEntrada"],
+                "id_almacen"    =>$id_almacen,
+                "id_tipomov"    =>$_POST["nvoTipoEntradaAlmacen"],
+                "observacion"   =>strtoupper($_POST["nvaObservacion"]),
+                "ultusuario"    =>$_POST["idDeUsuario"],
+                "productos"     =>$_POST["idproducto"],
+                "cantidades"    =>$_POST["cantidad"]
+            );
+                unset ($tablatmp);
+
+                $respuesta = ControladorEntradasAlmacen::ctrAltaEntradasAlmacen($tabla_almacen, $tabla, $datos);
+
+                echo json_encode($respuesta);
+       }else{
+
+            $respuesta = array('idproducto' => $idalmacen, 'error' => 'sindatos');	           
+            echo json_encode($respuesta);
+       }
 
     break;
 } // fin del switch
