@@ -92,7 +92,6 @@ static public function mdlGuardarEditarFactura($tabla, $datos){
 		   
 		   }
    
-		   $stmt->close();
 		   $stmt = null;
    
 	} catch (Exception $e) {
@@ -126,7 +125,6 @@ static public function mdlGuardarPagoFactura($tabla, $datos){
 
 	}
 
-	$stmt -> close();
 
 	$stmt = null;
 
@@ -154,7 +152,6 @@ static public function mdlBorrarFactura($tabla, $item, $valor, $estado){
 
 	}
 
-	$stmt -> close();
 
 	$stmt = null;
 
@@ -180,10 +177,16 @@ static public function mdlMostrarFacturas($tabla, $item, $valor, $orden, $tipo, 
 
 			if($tipo=='todos'){
 				$where='1=1';
+				$borrado=0;
 			}elseif($tipo=='porpagar'){
 				$where='status=0';
-			}else{
+				$borrado=0;
+			}elseif($tipo=='pagado'){
 				$where='status=1';
+				$borrado=0;
+			}else{
+				$where='1=1';
+				$borrado=1;
 			}
 			
 			if(isset($year) && !empty($year)){
@@ -191,7 +194,7 @@ static public function mdlMostrarFacturas($tabla, $item, $valor, $orden, $tipo, 
 				$where.=' AND YEAR(`fechafactura`) = "'.$year.'" ';
 			}
 			
-			$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE borrado=0 AND ".$where); 
+			$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE borrado=$borrado AND ".$where); 
 
 			$stmt -> execute();
 
@@ -199,7 +202,6 @@ static public function mdlMostrarFacturas($tabla, $item, $valor, $orden, $tipo, 
 
 		}
 
-		$stmt -> close();
 
 		$stmt = null;
 }

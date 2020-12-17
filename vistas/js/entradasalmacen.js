@@ -8,6 +8,8 @@ $("#modalAgregarEntradasAlmacen").draggable({
 
 //Función que se ejecuta al inicio
 function init(){
+
+  
 /*=============================================
   VARIABLE LOCAL STORAGE
   =============================================*/
@@ -332,7 +334,7 @@ $("#selProdEntAlm").change(function(event){
          
     //let udemedida=udeMedida;
       
-    console.log("prod:",idProducto, "cant:",cantEntrada, "medida:",udeMedida, "codInt:",codigointerno, "descrip:",descripcion);
+    //console.log("prod:",idProducto, "cant:",cantEntrada, "medida:",udeMedida, "codInt:",codigointerno, "descrip:",descripcion);
     
     let encontrado=arrayProductos.includes(idProducto)
       console.log("encontrado:", encontrado)
@@ -420,7 +422,7 @@ $("body").on("submit", "#form_entradasalmacen", function( event ) {
   event.preventDefault();
   event.stopPropagation();
   let formData = new FormData($("#form_entradasalmacen")[0]);   
-  for (var pair of formData.entries()){console.log(pair[0]+ ', ' + pair[1]);} 
+  //for (var pair of formData.entries()){console.log(pair[0]+ ', ' + pair[1]);} 
   swal({
     title: "¿Está seguro de guardar Entrada?",
     text: "¡Si no lo está pulse Cancelar",
@@ -429,37 +431,44 @@ $("body").on("submit", "#form_entradasalmacen", function( event ) {
     dangerMode: false,
   })
   .then((aceptado) => {
-  if (aceptado) {
-        axios({ 
-          method  : 'post', 
-          url : 'ajax/entradasalmacen.ajax.php?op=guardarEntradasAlmacen', 
-          data : formData, 
-        }) 
-        .then((res)=>{ 
-          if(res.status==200) {
-            console.log(res.data)
+    if (aceptado) {
+          axios({ 
+            method  : 'post', 
+            url : 'ajax/entradasalmacen.ajax.php?op=guardarEntradasAlmacen', 
+            data : formData, 
+          }) 
+          .then((res)=>{ 
+            if(res.status==200) {
+              console.log(res.data)
 
-            $('#modalAgregarEntradasAlmacen').modal('hide')
-            $('#dt-entradasalmacen').DataTable().ajax.reload(null, false);
-  
-          }            
-          console.log(res); 
-        }) 
-        .catch((err) => {throw err}); 
+              $('#dt-entradasalmacen').DataTable().ajax.reload(null, false);
+              $('#modalAgregarEntradasAlmacen').modal('hide')
 
-  }else{
-    return false;
-}
-}); 
+              $("#alert1").removeClass("d-none");
+              $("#alert1" ).fadeOut( 4500, "linear", complete );
+    
+            }            
+            console.log(res); 
+          }) 
+          .catch((err) => {throw err}); 
+
+    }else{
+      return false;
+    }
+  }); 
 
 });  
 
+function complete() {
+  $("#alert1").addClass("d-none")
+}
+
 /*===================================================
-ENVIA REPORTE DE SALIDA DE ALMACEN DESDE EL DATATABLE
+ENVIA REPORTE DE ENTRADA AL ALMACEN DESDE EL DATATABLE
 ===================================================*/
 $("#dt-entradasalmacen tbody").on("click", "button.btnPrintEntradaAlmacen", function(){
-	let idPrintEntrada = $(this).attr("idPrintEntrada");
-   console.log(idPrintEntrada);
+  let idPrintEntrada = $(this).attr("idPrintEntrada");
+  console.log(idPrintEntrada); 
     if(idPrintEntrada.length > 0){
      window.open("extensiones/tcpdf/pdf/reporte_entrada.php?codigo="+idPrintEntrada, "_blank");
     }

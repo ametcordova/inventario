@@ -522,9 +522,11 @@ function listarFacturas(){
       $(api.column(9).footer()).html(total);
     },
     "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {		//cambiar el tamaño de la fuente
-      if ( true ) // your logic here
-      {
-      $(nRow).addClass( 'customFont' );
+      if ( true ){ // your logic here
+        $(nRow).addClass( 'customFont' );
+      }
+      if(valorradio=="cancelado"){
+        $('td', nRow).css('color', 'Red');
       }
   },
       "ajax":

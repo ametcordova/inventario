@@ -67,11 +67,22 @@ $fechaHoy = date("Y-m-d");
             <i class="fa fa-times"></i></button>
         </div>
       </div>
-      <div class="row">
+
+     <div class="row text-center">
+
 
       </div>
 
+
       <div class="card-body">
+
+          <div class="alert alert-warning alert-dismissible fade show d-none p-2" id="alert1" role="alert">
+            <strong>Hecho!!</strong> Registro guardado correctamente.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
         <div class="card">
           <div class="card-body">
             <table class="table table-bordered table-hover table-compact table-sm table-striped dt-responsive" id="dt-entradasalmacen" cellspacing="0" width="100%">
@@ -181,7 +192,7 @@ $fechaHoy = date("Y-m-d");
               <div class="form-group col-md-2">
               <label for="inputTipoMov"><i class="fa fa-bookmark-o"></i> Tipo de Entrada</label>
                   <select class="form-control form-control-sm" name="nvoTipoEntradaAlmacen" id="nvoTipoEntradaAlmacen" title="Tipo de Entrada" required>
-                    <option value="0" selected>Seleccione Tipo</option>
+                    <option value="" selected>Seleccione Tipo</option>
                     <?php
                     $item="clase";
                     $valor="E";
@@ -196,7 +207,7 @@ $fechaHoy = date("Y-m-d");
               <div class="form-group col-md-2">
                 <label for="inputAlmacen"><i class="fa fa-hospital-o"></i> Almacen</label>
                 <select class="form-control form-control-sm" name="idAlmacenEntrada" id="idAlmacenEntrada" tabindex="4" required>
-                  <option value=0 selected>Seleccione Almacen</option>
+                  <option value="">Seleccione Almacen</option>
                   <?php
                   $item = null;
                   $valor = null;
@@ -494,5 +505,5 @@ $fechaHoy = date("Y-m-d");
                 FIN MODAL PARA CAPTURAR LAS SALIDAS DEL ALMACEN
 ==================================================================================== -->
 
-<script defer src="vistas/js/entradasalmacen.js?v=01102020"></script>
+<script defer src="vistas/js/entradasalmacen.js?v=01122020"></script>
 <!--<script defer src="vistas/js/salidasalmacenedit.js?v=01102020"></script>  -->

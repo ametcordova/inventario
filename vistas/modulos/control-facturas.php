@@ -35,35 +35,39 @@
       <div class="card">
 
         <div class="card-header border-success mb-3 py-1" >
-		 
-			<div class="input-group mb-3 col-md-7" >
-          <?php if(getAccess($acceso, ACCESS_ADD)){?> 
-					 <button class="btn btn-primary btn-sm mr-2" data-toggle="modal" data-target="#modalAgregarFactura"><i class="fa fa-plus-circle"></i> Agregar Factura
-					 </button> 
-          <?php } ?>           
+		    <div class="col-md-12">
+          <div class="input-group mb-3 col-md-9">
+              <?php if(getAccess($acceso, ACCESS_ADD)){?> 
+              <button class="btn btn-primary btn-sm mr-2" data-toggle="modal" data-target="#modalAgregarFactura"><i class="fa fa-plus-circle"></i> Agregar Factura
+              </button> 
+              <?php } ?>           
 
-					 <button class="btn btn-danger btn-sm mr-2" id="btnregresar" onclick="regresar()" type="button"><i class="fa fa-arrow-circle-left"></i> Regresar</button>
-          <?php if(getAccess($acceso, ACCESS_VIEW)){?>           
-            <div>	
-              <input type="radio" name="radiofactura" value="todos" >
-                <label class="ml-1">Todos</label>
-              <input type="radio" class="ml-1" name="radiofactura" value="porpagar" checked>
-                <label>Por Pagar</label>
-              <input type="radio" class="ml-1" name="radiofactura" value="pagado">
-                <label>Pagados</label>
-            </div>		
+              <button class="btn btn-danger btn-sm mr-2" id="btnregresar" onclick="regresar()" type="button"><i class="fa fa-arrow-circle-left"></i> Regresar</button>
+              <?php if(getAccess($acceso, ACCESS_VIEW)){?>           
+                <div>	
+                  <input type="radio" name="radiofactura" value="todos" >
+                    <label class="ml-1">Todos</label>
+                  <input type="radio" class="ml-1" name="radiofactura" value="porpagar" checked>
+                    <label>Por Pagar</label>
+                  <input type="radio" class="ml-1" name="radiofactura" value="pagado">
+                    <label>Pagados</label>
+                  <input type="radio" class="ml-1" name="radiofactura" value="cancelado">
+                    <label>Cancelados</label>
+                </div>		
 
-					 <div class="input-group-prepend ml-3">
-								  <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-					 </div>
-						 <input type="text" class="form-control form-control-sm" placeholder="" name="filterYear" id="filterYear" value="<?= $yearHoy?>" data-toggle="tooltip" title="Año" >
-						 
-					 <button class="btn btn-success btn-sm ml-2" onclick="listarFacturas()" ><i class="fa fa-eye"></i>
-							Mostrar
-					 </button>
-          <?php } ?>
-            
-			</div>
+              <div class="input-group-prepend ml-3">
+                      <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+              </div>
+                <input type="text" class="form-control form-control-sm" placeholder="" name="filterYear" id="filterYear" value="<?= $yearHoy?>" data-toggle="tooltip" title="Año" >
+                
+              <button class="btn btn-success btn-sm ml-2" onclick="listarFacturas()" ><i class="fa fa-eye"></i>
+                  Mostrar
+              </button>
+              <?php } ?>
+                
+          </div>  <!-- fin * -->        
+        </div>
+
 
       
 		

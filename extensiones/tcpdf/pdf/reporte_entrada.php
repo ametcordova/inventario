@@ -2,22 +2,12 @@
 
 require_once "../../../controladores/entradasalmacen.controlador.php";
 require_once "../../../modelos/entradasalmacen.modelo.php";
-/*
-require_once "../../../controladores/proveedores.controlador.php";
-require_once "../../../modelos/proveedores.modelo.php";
 
-require_once "../../../controladores/usuarios.controlador.php";
-require_once "../../../modelos/usuarios.modelo.php";
-
-require_once "../../../controladores/productos.controlador.php";
-require_once "../../../modelos/productos.modelo.php";
-
-*/
-class imprimirEntrada{
+class reporteEntrada{
 
 public $codigo;
 
-public function traerImpresionEntrada(){
+public function traerReporteEntrada(){
 
 //TRAEMOS LA INFORMACIÓN DE LA VENTA
 
@@ -26,13 +16,6 @@ $numeroid = $_GET["codigo"];
 
 $respuestaAlmacen = ControladorEntradasAlmacen::ctrReporteEntradaAlmacen($item, $numeroid);
 
-/*
-$fecha = substr($respuestaVenta["fecha"],0,-8);
-$productos = json_decode($respuestaVenta["productos"], true);
-$neto = number_format($respuestaVenta["neto"],2);
-$impuesto = number_format($respuestaVenta["impuesto"],2);
-$total = number_format($respuestaVenta["total"],2);
-*/
 
 //REQUERIMOS LA CLASE TCPDF
 require_once('tcpdf_include.php');
@@ -92,7 +75,6 @@ $bloque1 = <<<EOF
 EOF;
 
 $pdf->writeHTML($bloque1, false, false, false, false, '');
-
 $pdf->Ln(2);
     
 // ---------------------------------------------------------
@@ -100,14 +82,12 @@ $bloque2 = <<<EOF
 
 <h2 style="text-align:center;">REPORTE DE ENTRADAS AL ALMACEN</h2>
 
-
 EOF;
 
 $pdf->writeHTML($bloque2, false, false, false, false, '');
 $pdf->Ln(2);
 // ---------------------------------------------------------
 
-//var_dump($respuestaAlmacen);
 $idProv=$respuestaAlmacen[0]["id_proveedor"];
 $nomProv=$respuestaAlmacen[0]["nombreproveedor"];
 $FechDocto=date("d/m/Y", strtotime($respuestaAlmacen[0]["fechaentrada"]));
@@ -225,18 +205,18 @@ EOF;
 $pdf->writeHTML($bloque7, false, false, false, false, '');     
 // ---------------------------------------------------------    
 //SALIDA DEL ARCHIVO 
-    $nombre_archivo="entrada".trim($numeroid).".pdf";   //genera el nombre del archivo para descargarlo
-    $pdf->Output($nombre_archivo);
+$nombre_archivo="entrada".trim($numeroid).".pdf";   //genera el nombre del archivo para descargarlo
+$pdf->Output($nombre_archivo);
 }else{
-    $nombre_archivo="entradax".trim($numeroid).".pdf";   //genera el nombre del archivo para descargarlo
-    $pdf->Output($nombre_archivo);  
+$nombre_archivo="entradax".trim($numeroid).".pdf";   //genera el nombre del archivo para descargarlo
+$pdf->Output($nombre_archivo);  
 }
 }
 
 }
 
-$entrada = new imprimirEntrada();
+$entrada = new reporteEntrada();
 $entrada -> codigo = $_GET["codigo"];
-$entrada -> traerImpresionEntrada();
+$entrada -> traerReporteEntrada();
 
 ?>
