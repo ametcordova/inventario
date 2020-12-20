@@ -107,7 +107,7 @@
                     <th translate="no" style="width:6%;">iva Ret</th>
                     <th translate="no" style="width:7%;">Importe</th>
                     <th translate="no" style="width:7%;">F. Entregado</th>
-                    <th translate="no" style="width:7%;">F. Pagado</th>
+                    <th translate="no" style="width:7%;">F.Pag/Can</th>
                     <th translate="no" style="width:3%;">#RP</th>
                     <th translate="no" style="width:5%;">Stat</th>
                     <th translate="no" style="width:7%;">Acción</th>
@@ -184,7 +184,7 @@
               <div class="input-group-prepend">
                       <span class="input-group-text"><i class="fa fa-building-o"></i></span>
               </div>
-              <input type="text" class="form-control form-control-sm" placeholder="Nombre Cliente" name="nuevoCliente" id="nuevoCliente" value="" data-toggle="tooltip" data-placement="top" title="Nombre Cliente" tabindex="2">
+              <input type="text" class="form-control form-control-sm" placeholder="Nombre Cliente" name="nuevoCliente" id="nuevoCliente" value="" data-toggle="tooltip" data-placement="top" title="Nombre Cliente" tabindex="1">
             </div>
 
             <div class="form-row">
@@ -192,7 +192,7 @@
                 <div class="input-group-prepend">
                         <span class="input-group-text"><i class="fa fa-hashtag"></i></span>
                 </div>
-                <input type="number" class="form-control form-control-sm" placeholder="Número de Factura" name="nuevaFactura" id="nuevaFactura" value="" required tabindex="1" data-toggle="tooltip" title="Número de Factura" >
+                <input type="number" class="form-control form-control-sm" placeholder="Número de Factura" name="nuevaFactura" id="nuevaFactura" value="" data-toggle="tooltip" title="Número de Factura" required tabindex="2" >
                 <input type="hidden"  name="idDeUsuario" value="<?php echo $_SESSION['id'];?>">
               </div>
 
@@ -271,14 +271,14 @@
               <div class="input-group-prepend">
                       <span class="input-group-text"><i class="fa fa-file-text"></i></span>
               </div>
-              <input type="text" class="form-control form-control-sm" placeholder="Observaciones" name="nvaObservacion" id="nvaObservacion" value="" onkeyUp="mayuscula(this);" placeholder="Observación" data-toggle="tooltip" title="Observación"  tabindex="11" >
+              <input type="text" class="form-control form-control-sm" placeholder="Observaciones" name="nvaObservacion" id="nvaObservacion" value="" onkeyUp="mayuscula(this);" placeholder="Observación" data-toggle="tooltip" title="Observación" tabindex="11">
             </div>
 
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                       <span class="input-group-text"><i class="fa fa-unlock-alt"></i></span>
               </div>
-                <select class="form-control form-control-sm" name="nvoStatusFactura" id="nvoStatusFactura" required tabindex="12" placeholder="" data-toggle="tooltip" title="Estatus" >
+                <select class="form-control form-control-sm" name="nvoStatusFactura" id="nvoStatusFactura" required tabindex="12" placeholder="" data-toggle="tooltip" title="Estatus" tabindex="12" >
                 <option value="" selected>Seleccione</option>
                 <option value="1">Pagado</option>
                 <option value="0">Sin pagar</option>

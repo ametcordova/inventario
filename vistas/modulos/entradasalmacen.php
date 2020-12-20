@@ -315,82 +315,82 @@ $fechaHoy = date("Y-m-d");
   </div>
 </div>
 <!-- ==============================================================================
-                FIN MODAL PARA CAPTURAR LAS SALIDAS DEL ALMACEN
+                FIN MODAL PARA CAPTURAR ENTRADAS AL ALMACEN
 ==================================================================================== -->
 
 <!-- ==============================================================================
-              MODAL PARA CAPTURAR LAS SALIDAS DEL ALMACEN
+              MODAL PARA EDITAR ENTRADAS AL ALMACEN
 ==================================================================================== -->
-<div class="modal fade" id="modalEditarSalidasAlmacen" data-backdrop="static" data-keyboard="false">
+<div class="modal fade" id="modalEditarEntradasAlmacen" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog modal-xlg">
     <div class="modal-content">
-      <form role="form" id="form_SalAlmaEdit">
+      <form role="form" id="form_Editentradasalmacen">
         <!-- Modal Header -->
-        <div class="modal-header m-2 p-1 bg-warning" >
-          <h5 class="modal-title"><i class="fa fa-plus-circle"></i> Editar Salidas del Almacen</h5>
+        <div class="modal-header m-2 p-1" style="background-color:darkslategrey; color:floralwhite;">
+          <h5 class="modal-title"><i class="fa fa-plus-circle"></i> Editar Entradas al Almacén</h5>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
 
         <!-- Modal body -->
-        <div class="modal-body m-1">
+        <div class="modal-body m-0">
 
           <div class="card-body m-0 p-0">
 
-            <div class="form-row m-0 p-0">
+            <div class="form-row m-0">
 
               <!-- data-date-end-date=no puede seleccionar una fecha posterior a la actual -->
               <div class="form-group col-md-1 pt-0 text-center">
                 <label class="control-label p-0"><i class="fa fa-file-o"></i> No.</label>
-                <input type="text" class="form-control form-control-sm text-center"  name="EditidNumSalAlm" id="EditidNumSalAlm" readonly title="Número de salida">
+                <input type="text" class="form-control form-control-sm text-center" name="numEditarEntradaAlmacen" id="numEditarEntradaAlmacen" value="" readonly title="Número de salida">
                 <input type="hidden" name="idDeUsuario" value="<?php echo $_SESSION['id']; ?>">
               </div>
 
               <div class="form-group col-md-3">
-                <label class="control-label p-0"> <i class="fa fa-tty"></i> Técnico</label>
-                <select class="form-control form-control-sm" name="EditidTecnicoRecibe" id="EditidTecnicoRecibe" style="width: 100%;">
+              <label><i class="fa fa-male"></i> Proveedor</label>
+                  <select class="form-control form-control-sm" name="EditarProveedorEntrada" id="EditarProveedorEntrada" style="width: 100%;" tabindex="0" readonly>
                   <?php
-                  $item = null;
-                  $valor = null;
-                  $tecnicos = ControladorTecnicos::ctrMostrarTecnicos($item, $valor);
-                  foreach ($tecnicos as $key => $value) {
-                    echo '<option value="' . $value["id"] . '">' . $value["nombre"] . '</option>';
-                  }
-                  ?>
-                </select>
+                    $item=null;
+                    $valor=null;
+                    $proveedores=ControladorProveedores::ctrMostrarProveedores($item, $valor);
+                    foreach($proveedores as $key=>$value){
+                          echo '<option value="'.$value["id"].'">'.$value["nombre"].'</option>';
+                    }
+                  ?>				  
+                  </select>
               </div>
 
-              <?php
-              if (getAccess($acceso, ACCESS_EDIT)) { ?>
                 <div class="form-group col-md-2">
-                  <label class="control-label" for=""><i class="fa fa-calendar"></i> Fecha</label>
-                  <input type="date" class="form-control form-control-sm" name="EditFechaSalidaAlmacen" value="" tabindex="1" readonly title="Fecha Ajuste">
+                  <label class="control-label" for="nvaFechaAjuste"><i class="fa fa-calendar"></i> Fecha</label>
+                  <input type="date" class="form-control form-control-sm" name="EditarFechaEntradaAlmacen" id="EditarFechaEntradaAlmacen" value="" tabindex="1" title="Fecha Ajuste" readonly>
                 </div>
-              <?php } ?>
 
               <div class="form-group col-md-2">
-                <label class="control-label" for=""><i class="fa fa-check"></i> Resp.</label>
-                <input type="text" class="form-control form-control-sm" name="EditidRespSalidaAlmacen" id="EditidRespSalidaAlmacen" value="" placeholder="" tabindex="3" readonly title="Nombre Usuario ">
+                <label class="control-label" for="nvoNombreAjuste"><i class="fa fa-check"></i> Captura</label>
+                <input type="text" class="form-control form-control-sm" name="EditarRespEntradaAlmacen" id="EditarRespEntradaAlmacen" value="" placeholder="" tabindex="3" readonly title="Nombre Usuario ">
               </div>
 
               <div class="form-group col-md-2">
-                <label for="inputTipoMov"><i class="fa fa-bookmark-o"></i> Tipo de Mov.</label>
-                  <select class="form-control form-control-sm" name="EditidTipoSalidaAlmacen" id="EditidTipoSalidaAlmacen" title="Tipo de Salida">
-                    <option value=1>Recarga a los Técnicos</option>
-                    <option value=2>Traspasos entre Almacenes</option>
-                    <option value=3>Devolución a Carso</option>
-                    <option value=4>Ajustes Inv.</option>
-                </select>			  
+              <label for="inputTipoMov"><i class="fa fa-bookmark-o"></i> Tipo de Entrada</label>
+                  <select class="form-control form-control-sm" name="EditarTipoEntradaAlmacen" id="EditarTipoEntradaAlmacen" title="Tipo de Entrada" readonly>
+                    <?php
+                    $item="clase";
+                    $valor="E";
+                    $tipomov=ControladorEntradasAlmacen::ctrMostrarTipoMov($item, $valor);
+                    foreach($tipomov as $key=>$value){
+                          echo '<option value="'.$value["id"].'">'.$value["nombre_tipo"].'</option>';    
+                    }
+                  ?>				  
+                  </select>			  
               </div>
 
               <div class="form-group col-md-2">
-                <label for=""><i class="fa fa-hospital-o"></i> Almacen</label>
-                <select class="form-control form-control-sm" name="EditidAlmacenSalida" id="EditidAlmacenSalida" tabindex="4">
+                <label for="inputAlmacen"><i class="fa fa-hospital-o"></i> Almacen</label>
+                <select class="form-control form-control-sm" name="idEditarAlmacenEntrada" id="idEditarAlmacenEntrada" tabindex="4" readonly>
                   <?php
                   $item = null;
                   $valor = null;
                   $almacenes = ControladorAlmacenes::ctrMostrarAlmacenes($item, $valor);
                   foreach ($almacenes as $key => $value) {
-                    //echo '<option value="' . $value["id"] . '">' . $value["nombre"] . '</option>';
                     echo '<option value="' . $value["id"] . '-' . $value["nombre"] . '">' . $value["nombre"] . '</option>';
                   }
                   ?>
@@ -399,63 +399,54 @@ $fechaHoy = date("Y-m-d");
 
             </div>
 
-            <div class="form-row col-md-12 p-1"> <span id="Editmsjdeerror"></span></div>
+            <div class="form-row col-md-12 p-1"> <span id="msjEditerrorentrada"></span></div>
 
             <div class="form-row">
               <div class="form-group col-md-12">
-                <input type="text" class="form-control form-control-sm" name="EditObservacion" id="EditObservacion" value="" placeholder="Observación" title="Observación:" tabindex="5">
+                <input type="text" class="form-control form-control-sm" name="EditarObservacion" id="EditarObservacion" value="" placeholder="Observación" title="Observación:" tabindex="5" readonly>
               </div>
             </div>
 
             <div class="dropdown-divider p-1 mb-1 mt-0"></div>
 
 
-            <div class="form-row" id="EditagregarProd">        
+            <div class="form-row " id="EditarProdEntrada">
 
+              <!--CONSULTA DE PRODUCTOS POR AJAX REMOTE DATA-->
               <div class="col-md-5">
                  <div class="form-group">
-                    <select class="form-control select3" name="EditselProdSalAlm" id="EditselProdSalAlm" style="width: 100%;" tabindex="5">
-                    <option selected value=""></option>
-                    <?php
-                          $item=null;
-                          $valor=null;
-                          $orden="id";
-                          $productos=ControladorProductos::ctrMostrarProductos($item, $valor,$orden);
-                          foreach($productos as $key=>$value){
-                              echo '<option value="'.$value["id"].'">'.$value["codigointerno"]." - ".$value["descripcion"].'</option>';
-                              //echo '<option value="'.$value["id"].'">'.$value["codigointerno"]." - ".$value["descripcion"]." - ".$value["precio_compra"].'</option>';
-                          }
-                    ?>		
+                    <select class="form-control " name="selEditarProdEntAlm" id="selEditarProdEntAlm" style="width:100%;" tabindex="">
                     </select>
                   </div>
               </div>
-
+                            
               <div class="col-md-1">
-                <input type="number" class="form-control form-control-sm text-center mb-1" name="EditcantExisteAlmacen" id="EditcantExisteAlmacen" value="" step="any" tabindex="6" readonly title="cantidad Existente">
+                <input type="number" class="form-control form-control-sm text-center mb-1" name="cantEditarExistenciaAlmacen" id="cantEditarExistenciaAlmacen" value="" tabindex="6" readonly title="cantidad Existente">
               </div>
 
               <div class="col-md-1 text-center">
-                <input type="number" class="form-control form-control-sm mb-1 text-center bg-dark" name="EditcantSalidaAlmacen" id="EditcantSalidaAlmacen" value="0" step="any" min="0" tabindex="7" title="cantidad de Salida">
+                <input type="number" class="form-control form-control-sm mb-1 text-center" name="cantEditarEntradaAlmacen" id="cantEditarEntradaAlmacen" value="0" step="any" min="0" tabindex="7" title="cantidad de Salida">
               </div>
 
               <div class="col-md-1">
-                 <button class="btn btn-primary btn-sm mb-1" data-toggle="modal" id="EditagregaSalidaProd"><i class="fa fa-plus-circle"></i> Agregar</button>
+                 <button class="btn btn-primary btn-sm mb-1" data-toggle="modal" id="EditarEntradaProd"><i class="fa fa-plus-circle"></i> Agregar</button>
               </div>
-
-              <div class="col-md-4 alert-danger rounded d-none" style="height:30px;" id="Editmensajerrorsalida"></div>
+              
+              <div class="col-md-4 alert-danger rounded d-none" style="height:30px;" id="mensajeEditarerrorentrada"></div>
 
             </div><!-- fin del form-row -->
 
+            <div class="col-md-4 rounded" style="height:30px;" id="servicioEditarSelecionado"></div>
 
             <div class="wrapper">
               <section class="invoice">
                 <div class="row">
-                  <div class="col-12 col-sm-12">
-                    <table class="table table-sm table-compact table-hover table-bordered table-striped table-responsive-sm" id="EditdetalleSalidasAlmacen" cellspacing="0" width="100%">
+                  <div class="col-12 col-sm-12 table-hover table-compact table-responsive-sm">
+                    <table class="table table-sm table-compact table-bordered table-striped" id="detEditarEntradasAlmacen" >
 
-                      <thead class="thead-dark" style="font-size:.8rem; height:1.5px">
+                      <thead class="thead-dark">
                         <tr translate="no" class="text-center">
-                        <th translate="no" style="width:2.5rem"><i class="fa fa-cut"></i></th>
+                        <th translate="no" style="width:2.5rem">Acción</th>
                         <th translate="no" style="width:2.5rem">#</th>
                         <th translate="no" style="width:15rem">Código</th>
                         <th translate="no">Producto</th>
@@ -463,7 +454,7 @@ $fechaHoy = date("Y-m-d");
                         <th translate="no" style="width:5rem">Cant</th>
                         </tr>
                       </thead>
-                        <tbody id="Edittbodysalidasalmacen">
+                        <tbody id="tbodyEditarentradasalmacen">
                           <!--AQUI SE AÑADEN LAS ENTRADAS DE LOS PRODUCTOS  -->
                         </tbody>
 
@@ -473,13 +464,13 @@ $fechaHoy = date("Y-m-d");
 
                   <div class="row">
                     <div class="col-lg-8 col-md-6 col-sm-2"></div>
-                      <div class="col-lg-4 col-md-6 col-sm-10 text-right" id="EditrowSalAlma">
+                      <div class="col-lg-4 col-md-6 col-sm-10 text-right" id="rowEditarEntradaAlma">
                         <button type="button" class="btn badge-warning btn-sm mb-1 mr-1 p-0">Fila(s): &nbsp 
-                          <span class="badge badge-warning" id="Editrenglonsalidas" style="font-size:1rem;"></span>
+                          <span class="badge badge-warning" id="renglonEditarentradas" style="font-size:1rem;"></span>
                         </button>
 
                         <button type="button" class="btn badge-warning btn-sm mb-1 mr-1 p-0">Cant: &nbsp 
-                          <span class="badge badge-warning" id="Edittotalsalidasalmacen" style="font-size:1rem;"></span>
+                          <span class="badge badge-warning" id="totalEditarentradasalmacen" style="font-size:1rem;"></span>
                         </button>
                       </div>   <!-- /.col -->
                   </div>
@@ -492,9 +483,9 @@ $fechaHoy = date("Y-m-d");
         </div> <!-- fin Modal body -->
 
         <!-- Modal footer -->
-        <div class="modal-footer m-1 p-1 bg-warning">
+        <div class="modal-footer m-1 p-1" style="background-color:darkslategrey; color:floralwhite;">
           <button type="button" class="btn btn-dark btn-sm float-left" data-dismiss="modal"><i class="fa fa-reply"></i> Salir</button>
-          <button type="submit" class="btn btn-success btn-sm" id="btnEditSalidasAlmacen"><i class="fa fa-save"></i> Guardar</button>
+          <button type="submit" class="btn btn-success btn-sm" id="btnEditarEntradasAlmacen"><i class="fa fa-save"></i> Guardar</button>
         </div>
 
       </form>
@@ -506,4 +497,4 @@ $fechaHoy = date("Y-m-d");
 ==================================================================================== -->
 
 <script defer src="vistas/js/entradasalmacen.js?v=01122020"></script>
-<!--<script defer src="vistas/js/salidasalmacenedit.js?v=01102020"></script>  -->
+<script defer src="vistas/js/entradasalmacenedit.js?v=01102020"></script>

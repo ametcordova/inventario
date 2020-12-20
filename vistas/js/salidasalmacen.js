@@ -468,36 +468,11 @@ ASIGNA FECHA ACTUAL EN DATERANGEPICKER
 =============================================*/    
 function fechadehoy(){
    
-  var d = new Date();
-  //console.log("Fecha de Hoy:",d);
-  var dia = d.getDate();
-  var mes = d.getMonth()+1;
-  var año = d.getFullYear();
-
-  if(mes < 10){
-
-    var fechaInicial = dia+"-0"+mes+"-"+año;
-    var fechaFinal = dia+"-0"+mes+"-"+año;
-
-  }else if(dia < 10){
-
-    var fechaInicial = "0"+dia+"-"+mes+"-"+año;
-    var fechaFinal =   "0"+dia+"-"+mes+"-"+año;
-
-  }else if(mes < 10 && dia < 10){
-
-    var fechaInicial = "0"+dia+"-0"+mes+"-"+año;
-    var fechaFinal =   "0"+dia+"-0"+mes+"-"+año;
-
-  }else{
-
-    var fechaInicial = dia+"-"+mes+"-"+año;
-    var fechaFinal =   dia+"-"+mes+"-"+año;
-
-  } 
-      $("#daterange-btn-SalAlmacen span").html(fechaInicial+' - '+fechaFinal);
-      //console.log(fechaInicial+' - '+fechaFinal);
-      localStorage.setItem("RangoFechaSalidasAlmacen", fechaInicial+' - '+fechaFinal);
+  let fechaInicial=moment().add(-30, 'day').format('DD-MM-YYYY');
+  let fechaFinal=moment().format('DD-MM-YYYY');
+  $("#daterange-btn-SalAlmacen span").html(fechaInicial+' - '+fechaFinal);
+  //console.log(fechaInicial+' - '+fechaFinal);
+  localStorage.setItem("RangoFechaSalidasAlmacen", fechaInicial+' - '+fechaFinal);
     
 }    
 

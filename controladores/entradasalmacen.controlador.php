@@ -67,6 +67,19 @@ static public function ctrReporteEntradaAlmacen($item, $numeroid){
 	
 }  
 
+/*=============================================
+  MOSTRAR ENTRADAS AL ALMACEN PARA EDITAR 
+============================================*/
+static public function ctrMostrarEntradasAlmacen($campo, $valor){
+
+	$tabla="tbl_entradas";
+
+	$respuesta = ModeloEntradasAlmacen::mdlMostrarEntradasAlmacen($tabla, $campo, $valor);
+
+return $respuesta;
+
+}  
+
 
 }   //fin de la clase
 ?>

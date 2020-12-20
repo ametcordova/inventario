@@ -137,9 +137,11 @@ static public function mdlGuardarPagoFactura($tabla, $datos){
 static public function mdlBorrarFactura($tabla, $item, $valor, $estado){
         
 	//$stmt = Conexion::conectar()->prepare("DELETE FROM $tabla WHERE id = :id");
-	$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET borrado=:borrado WHERE $item = :$item");
+	$numorden="CANCELADO";
+	$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET numorden=:numorden, borrado=:borrado WHERE $item = :$item");
 	
 	$stmt -> bindParam(":".$item, $valor, PDO::PARAM_INT);
+	$stmt -> bindParam(":numorden", $numorden, PDO::PARAM_STR);
 	$stmt -> bindParam(":borrado", $estado, PDO::PARAM_INT);
 
 	if($stmt -> execute()){
@@ -164,8 +166,8 @@ static public function mdlBorrarFactura($tabla, $item, $valor, $estado){
 static public function mdlMostrarFacturas($tabla, $item, $valor, $orden, $tipo, $year){
 
 		if($item != null){
-
-			$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item =:$item AND borrado=0"); 
+			$orden=intval($orden);
+			$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item =:$item AND borrado=$orden"); 
 			
 			$stmt -> bindParam(":".$item, $valor, PDO::PARAM_STR);
 
@@ -177,16 +179,12 @@ static public function mdlMostrarFacturas($tabla, $item, $valor, $orden, $tipo, 
 
 			if($tipo=='todos'){
 				$where='1=1';
-				$borrado=0;
 			}elseif($tipo=='porpagar'){
-				$where='status=0';
-				$borrado=0;
+				$where='status=0 AND borrado="'.$orden.'"';
 			}elseif($tipo=='pagado'){
-				$where='status=1';
-				$borrado=0;
-			}else{
-				$where='1=1';
-				$borrado=1;
+				$where='status=1 AND borrado="'.$orden.'"';
+			}else{		//CANCELADOS
+				$where='borrado=1';
 			}
 			
 			if(isset($year) && !empty($year)){
@@ -194,7 +192,7 @@ static public function mdlMostrarFacturas($tabla, $item, $valor, $orden, $tipo, 
 				$where.=' AND YEAR(`fechafactura`) = "'.$year.'" ';
 			}
 			
-			$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE borrado=$borrado AND ".$where); 
+			$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE ".$where); 
 
 			$stmt -> execute();
 

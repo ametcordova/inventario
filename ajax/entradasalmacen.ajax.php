@@ -45,7 +45,7 @@ switch ($_GET["op"]){
             $trf='</tr';
 
             $boton1 =getAccess($acceso, ACCESS_PRINTER)?"<td><button class='btn btn-sm btn-success btnPrintEntradaAlmacen' idPrintEntrada='".$value['id']."' title='Generar PDF '><i class='fa fa-file-pdf-o'></i></button></td> ":""; 
-            $boton2 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-primary btnEditSalidaAlmacen' idEditSalida='".$value['id']."' title='Editar Salida' data-toggle='modal' data-target='#modalEditarEntradasAlmacen'><i class='fa fa-edit'></i></button></td> ":""; 
+            $boton2 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-primary btnEditEntradaAlmacen' idEditarEntrada='".$value['id']."' title='Editar Entrada' data-toggle='modal' data-target='#modalEditarEntradasAlmacen'><i class='fa fa-edit'></i></button></td> ":""; 
             $boton3 =getAccess($acceso, ACCESS_DELETE)?"<td><button class='btn btn-sm btn-danger btnDelEntradasAlmacen' idDeleteSalAlm='".$value['id']."' title='Eliminar Salida '><i class='fa fa-trash'></i></button></td> ":"";
 
             $botones=$boton1.$boton2.$boton3;
@@ -155,4 +155,27 @@ switch ($_GET["op"]){
        }
 
     break;
+
+    case 'getDataInStore':
+
+        if(isset($_GET["idEditarEntrada"])){
+            $campo="id_entrada";
+
+            //$respuesta = array("identrada" =>$_GET["idEditarEntrada"]);
+
+            $respuesta = ControladorEntradasAlmacen::ctrMostrarEntradasAlmacen($campo, $_GET["idEditarEntrada"]);
+            
+            echo json_encode($respuesta);    
+
+        }else{
+            
+            $array = array("error" =>$POST['idsalida']);
+            echo json_encode($array);
+        }
+        
+     break;
+
+
+
+
 } // fin del switch

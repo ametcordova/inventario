@@ -147,7 +147,7 @@ EOF;
 $pdf->writeHTML($bloque4, false, false, false, false, '');
 
 // ---------------------------------------------------------
-$cantEntra=0;
+$cantEntra=$filas=0;
 foreach ($respuestaAlmacen as $row) {
 
 $bloque5 = <<<EOF
@@ -166,6 +166,7 @@ $bloque5 = <<<EOF
 
 EOF;
 $cantEntra+=$row['cantidad'];
+$filas++;
 $pdf->writeHTML($bloque5, false, false, false, false, '');
 }
 // ---------------------------------------------------------
@@ -177,7 +178,9 @@ $bloque6 = <<<EOF
 	<table style="font-size:9px; padding:5px 5px;">
 
 	<tr bgcolor="#cccccc">
-		<td style="border: 1px solid #666; width:495px; text-align:right">Total Entrada:</td>
+		<td style="border: 1px solid #666; width:380px; text-align:right">Total filas:</td>
+		<td style="border: 1px solid #666; width:40px; text-align:center">$filas</td>
+		<td style="border: 1px solid #666; width:75px; text-align:right">Total Entrada:</td>
 		<td style="border: 1px solid #666; width:45px; text-align:center">$cantEntra</td>
     </tr>
     

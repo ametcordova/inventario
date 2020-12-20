@@ -109,15 +109,15 @@ $("#EditselProdSalAlm").change(function(event){
       setTimeout(function(){$("#Editmensajerrorsalida").addClass("d-none")}, 2500);
     }else{
       let approved = arrayitems.filter(items => items[0]===idProducts);
-      if(typeof approved !== "undefined" && approved != null && approved.length > 0){
-       //console.log(approved[0][1])
-       let aumenta=approved[0][1];    //obtiene valor de cant
-       $("#EditcantExisteAlmacen").css("background", "#E8EF00");
-       $("#EditcantExisteAlmacen").val(parseInt(data.cant)+aumenta);
-      }else{
-        $("#EditcantExisteAlmacen").val(data.cant);
-        $("#EditcantExisteAlmacen").css(nuevoCSS);
-      }
+        if(typeof approved !== "undefined" && approved != null && approved.length > 0){
+        //console.log(approved[0][1])
+        let aumenta=approved[0][1];    //obtiene valor de cant
+        $("#EditcantExisteAlmacen").css("background", "#E8EF00");
+        $("#EditcantExisteAlmacen").val(parseInt(data.cant)+aumenta);
+        }else{
+          $("#EditcantExisteAlmacen").val(data.cant);
+          $("#EditcantExisteAlmacen").css(nuevoCSS);
+        }
 
         udeMedida=data.medida;
 
@@ -226,9 +226,9 @@ $("#dt-salidasalmacen tbody").on("click", "button.btnEditSalidaAlmacen", functio
     obtenerdatos(idEditSalida)
 })
 
-
+//TRAER DATOS DE SALIDA PARA EDITAR
 function obtenerdatos(idsalida){
-    oldproducts=new Array();
+    //oldproducts=new Array();
     axios.post('ajax/salidasalmacen.ajax.php?op=getDataOutStore', { idsalida: idsalida })
       .then(res => {
         //console.log(res);

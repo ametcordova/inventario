@@ -72,9 +72,10 @@ switch ($_GET["op"]){
 	case 'mostrar':
         if(isset($_POST["idFactura"])){
             $item = "id";
-            $valor = $_POST["idFactura"];
+			$valor = $_POST["idFactura"];
+			$orden = $_POST["idBorrado"];
 
-            $respuesta = ControladorFacturas::ctrMostrarFacturas($item, $valor, $orden=null, $tipo=null, $year=null);
+            $respuesta = ControladorFacturas::ctrMostrarFacturas($item, $valor, $orden, $tipo=null, $year=null);
 
             echo json_encode($respuesta);
 
@@ -195,7 +196,7 @@ switch ($_GET["op"]){
   			echo '{"data": []}';           //arreglar, checar como va
 		  	return;
   		}    
-        
+
            foreach($facturas as $key => $value){
 		    $conter++;
             $fechaFactura = date('d-m-Y', strtotime($value["fechafactura"]));
@@ -216,10 +217,13 @@ switch ($_GET["op"]){
 			<button class='btn btn-info btn-sm px-1 btnVerFactura' id=fila".$conter." idFactura='".$value['id']."' numFactura='".$value['numfact']."' idEstado='".$value['status']."' title='Ver Expediente'><i class='fa fa-eye'></i></button>"." 
 			<button class='btn btn-danger btn-sm px-1 btnBorrarFactura' title='Borrar Factura' idFactura='".$value['id']."' numFactura='".$value['numfact']."' idEstado='".$value['status']."'><i class='fa fa-times'></i></button>"
 			; */
-			$boton1=getAccess($acceso, ACCESS_EDIT)?"<button class='btn btn-primary btn-sm px-1 btnEditarFactura' idFactura='".$value['id']."' numFactura='".$value['numfact']."' idEstado='".$value['status']."' data-toggle='modal' data-target='#modalEditarFactura' title='Editar Factura'><i class='fa fa-pencil'></i></button> ":"";
-			$boton2=getAccess($acceso, ACCESS_PRINTER)?"<button class='btn btn-info btn-sm px-1 btnVerFactura' id=fila".$conter." idFactura='".$value['id']."' numFactura='".$value['numfact']."' idEstado='".$value['status']."' title='Ver Expediente'><i class='fa fa-eye'></i></button> ":"";
-			$boton3=getAccess($acceso, ACCESS_DELETE)?"<button class='btn btn-danger btn-sm px-1 btnBorrarFactura' title='Borrar Factura' idFactura='".$value['id']."' numFactura='".$value['numfact']."' idEstado='".$value['status']."'><i class='fa fa-times'></i></button>":"";
-
+			$boton1=getAccess($acceso, ACCESS_EDIT)?"<button class='btn btn-primary btn-sm px-1 btnEditarFactura' idFactura='".$value['id']."' numFactura='".$value['numfact']."' idEstado='".$value['status']."' idBorrado='".$value['borrado']."' data-toggle='modal' data-target='#modalEditarFactura' title='Editar Factura'><i class='fa fa-pencil'></i></button> ":"";
+			$boton2=getAccess($acceso, ACCESS_PRINTER)?"<button class='btn btn-info btn-sm px-1 btnVerFactura' id=fila".$conter." idFactura='".$value['id']."' numFactura='".$value['numfact']."' idEstado='".$value['status']."' idBorrado='".$value['borrado']."' title='Ver Expediente'><i class='fa fa-eye'></i></button> ":"";
+			if($value["borrado"]==0){
+			  	$boton3=getAccess($acceso, ACCESS_DELETE)?"<button class='btn btn-danger btn-sm px-1 btnBorrarFactura' title='Borrar Factura' idFactura='".$value['id']."' numFactura='".$value['numfact']."' idEstado='".$value['status']."' idBorrado='".$value['borrado']."'><i class='fa fa-times'></i></button>":"";
+			}else{
+				$boton3=getAccess($acceso, ACCESS_DELETE)?"<button class='btn btn-danger btn-sm px-1 disabled' title='Borrar Factura' ><i class='fa fa-times'></i></button>":"";
+			}
 			$botones = $boton1.$boton2.$boton3;
 
 		  	$data[]=array(

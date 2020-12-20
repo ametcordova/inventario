@@ -13,7 +13,7 @@ public function traerImpresionSalida(){
 $fechahoy=fechaHoraMexico(date("d-m-Y G:i:s"));
 
 //TRAEMOS LA INFORMACIÓN DE LA SALIDA
-$campo = "id_entrada";
+$campo = "id_salida";
 $valor = $_GET["codigo"];
 
 $respuestaAlmacen = ControladorSalidasAlmacen::ctrPrintSalidaAlmacen($campo, $valor);
@@ -124,18 +124,18 @@ $bloque3 = <<<EOF
 	
     <tr>		
 		<td style="border: 1px solid #666; width:270px">Técnico: $idTecnico - $nomTecnico</td>
-		<td style="border: 1px solid #666; width:270px">Fecha Salida de Almacen: $fechaSalida</td>
+		<td style="border: 1px solid #666; width:270px">Fecha Salida de Almacén: $fechaSalida</td>
 	</tr>
 	
 	<tr>
 	   <td style="border: 1px solid #666; width:270px">Tipo Mov.: $id_tipomov - $nombre_tipo</td>
 
-        <td style="border: 1px solid #666; width:270px">Almacen de Salida: $idAlmacen - $nombreAlmacen</td>
+        <td style="border: 1px solid #666; width:270px">Almacén de Salida: $idAlmacen - $nombreAlmacen</td>
 	</tr>
 
  	<tr>
 		<td style="border: 1px solid #666; width:340px">Motivo: $motivo</td>
-        <td style="border: 1px solid #666; width:200px">Capturo: $usuario</td>
+        <td style="border: 1px solid #666; width:200px">Capturó: $usuario</td>
 	</tr>
 
 	</table>
@@ -150,7 +150,7 @@ $pdf->Ln(4);
 
 $bloque4 = <<<EOF
 
- 	<table style="font-size:10px; padding:5px 5px;">
+ 	<table style="font-size:10px; padding:5px 3px;">
 
 	  <tr bgcolor="#cccccc" class="text-center">
 		<td style="border: 1px solid #666; width:35px; text-align:center">id</td>
@@ -172,7 +172,7 @@ foreach ($respuestaAlmacen as $row) {
 
 $bloque5 = <<<EOF
 
- 	<table style="font-size:9px; padding:5px 5px;">
+ 	<table style="font-size:9px; padding:5px 3px;">
 
 	  <tr>
 		<td style="border: 1px solid #666; width:35px; text-align:center">$row[id_producto]</td>
@@ -194,7 +194,7 @@ $pdf->writeHTML($bloque5, false, false, false, false, '');
 
 $bloque6 = <<<EOF
 
-	<table style="font-size:9px; padding:5px 5px;">
+	<table style="font-size:9px; padding:5px 3px;">
 
 	<tr bgcolor="#cccccc">
 		<td style="border: 1px solid #666; width:495px; text-align:right">Total Salida:</td>
@@ -210,16 +210,25 @@ $pdf->Ln(6);
 // ---------------------------------------------------------
 $bloque7 = <<<EOF
 
-	<table style="font-size:9px; padding:5px 5px;">
+
+	<table style="font-size:9px; padding:5px 3px;">
 
     <tr>
-        <td style="border: 1px solid #666;width:260px; height:50px; text-align:center">Nombre y firma quien Recibe</td>
-        <td style="width:20px;height:50px; text-align:center"></td>
-        <td style="border: 1px solid #666;width:260px; height:50px; text-align:center">Nombre y firma quien Entrega</td>
+		<td style="border: 1px solid #666;width:260px; height:20px; text-align:center">Nombre y firma quien recibe</td>
+        <td style="width:20px;height:20px; text-align:center"></td>
+        <td style="border: 1px solid #666;width:260px; height:20px; text-align:center">Nombre y firma quien entrega</td>
+    </tr>
+
+    <tr>
+		<td style="border: 1px solid #666;width:260px; height:40px; text-align:center">$nomTecnico</td>
+        <td style="width:20px;height:40px; text-align:center"></td>
+        <td style="border: 1px solid #666;width:260px; height:40px; text-align:center"></td>
     </tr>
 
  	</table>
 
+	
+	 
 EOF;
 
 $pdf->writeHTML($bloque7, false, false, false, false, '');     

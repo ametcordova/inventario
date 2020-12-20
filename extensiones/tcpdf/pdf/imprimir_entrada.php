@@ -27,7 +27,7 @@ $numdeDocto = $_GET["codigo"];
 
 $respuestaAlmacen = ControladorEntradas::ctrEntradaAlm($itemVenta, $numdeDocto);
 
-if($respuestaAlmacen){
+
 
 /*
 $fecha = substr($respuestaVenta["fecha"],0,-8);
@@ -48,7 +48,8 @@ $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
 $pdf->startPageGroup();
 
 $pdf->AddPage();
-    
+
+if($respuestaAlmacen){    
 // ---------------------------------------------------------
 
 $bloque1 = <<<EOF
@@ -230,8 +231,8 @@ $pdf->writeHTML($bloque7, false, false, false, false, '');
  $nombre_archivo="entrada".trim($numdeDocto).".pdf";   //genera el nombre del archivo para descargarlo
  $pdf->Output($nombre_archivo);
 }else{
-  //$nombre_archivo="entrada";
-  $pdf->Output("entrada.pdf");
+//$nombre_archivo="entrada";
+$pdf->Output("entrada.pdf");
 }
 }
 

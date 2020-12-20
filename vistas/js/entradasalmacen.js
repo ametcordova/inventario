@@ -172,7 +172,7 @@ function (start, end) {
 ASIGNA FECHA ACTUAL EN DATERANGEPICKER 
 =============================================*/    
 function fechaactual(){
-    let fechaInicial=moment().format('DD-MM-YYYY');
+    let fechaInicial=moment().add(-30, 'day').format('DD-MM-YYYY');
     let fechaFinal=moment().format('DD-MM-YYYY');
     $("#daterange-btn-EntAlmacen span").html(fechaInicial+' - '+fechaFinal);
     localStorage.setItem("RangoFechaEntradasAlmacen", fechaInicial+' - '+fechaFinal);
@@ -407,13 +407,13 @@ function evaluarElementos(){
 }
 
 //FUNCION PARA MENSAJE DE ERROR
-function mensajedeerror(){
-  $("#cantEntradaAlmacen, #EditcantentradaAlmacen").val(0);
-  $('#Editmensajerrorsalida, #mensajerrorentrada').text('Producto ya capturado. Revise!!');
-  $("#mensajerrorentrada, #Editmensajerrorentrada").removeClass("d-none");
-  setTimeout(function(){$("#mensajerrorentrada, #Editmensajerrorentrada").addClass("d-none")}, 2500);
-  return true;
-}
+// function mensajedeerror(){
+//   $("#cantEntradaAlmacen, #cantEditarEntradaAlmacen").val(0);
+//   $('#mensajeEditarerrorentrada, #mensajerrorentrada').text('Producto ya capturado. Revise!!');
+//   $("#mensajerrorentrada, #mensajeEditarerrorentrada").removeClass("d-none");
+//   setTimeout(function(){$("#mensajerrorentrada, #mensajeEditarerrorentrada").addClass("d-none")}, 2500);
+//   return true;
+// }
 
 /*======================================================================*/
 //ENVIAR FORMULARIO PARA GUARDAR DATOS DE ENTRADA

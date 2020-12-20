@@ -111,3 +111,12 @@ function removeItemFromArr ( arr, item ) {
   }
   //console.log(arrayProductos);
 }
+
+//FUNCION PARA MENSAJE DE ERROR
+function mensajedeerror(){
+  $("#cantEntradaAlmacen, #cantEditarEntradaAlmacen").val(0);
+  $('#mensajeEditarerrorentrada, #mensajerrorentrada').text('Producto ya capturado. Revise!!');
+  $("#mensajerrorentrada, #mensajeEditarerrorentrada").removeClass("d-none");
+  setTimeout(function(){$("#mensajerrorentrada, #mensajeEditarerrorentrada").addClass("d-none")}, 2500);
+  return true;
+}

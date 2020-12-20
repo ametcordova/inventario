@@ -79,7 +79,7 @@ static public function MdlMostrarTipoMov($tabla, $item, $valor){
 =============================================*/
 static public function MdlajaxProductos($tabla, $campo, $valor){
 	$estado=1;
-    $stmt = Conexion::conectar()->prepare("SELECT id, codigointerno, descripcion FROM $tabla WHERE $campo LIKE '%".$valor."%' ");
+    $stmt = Conexion::conectar()->prepare("SELECT id, codigointerno, descripcion, codigo FROM $tabla WHERE $campo LIKE '%".$valor."%' ");
 	//$stmt = Conexion::conectar()->prepare("SELECT id, codigointerno, descripcion FROM $tabla");
     
     //$stmt->bindParam(":".$campo, $valor, PDO::PARAM_STR);
@@ -246,6 +246,42 @@ static Public function mdlReporteEntradaAlmacen($tabla, $tabla_hist, $item, $num
        $stmt=null;
 }
 
+/*=============================================
+  MOSTRAR ENTRADAS AL ALMACEN PARA EDITAR 
+============================================*/
+static public function mdlMostrarEntradasAlmacen($tabla, $campo, $valor){
+
+    try {          
+
+        $sql="SELECT tbl.id, tbl.id_proveedor,prov.nombre AS nombreproveedor, tbl.fechaentrada, h.cantidad,tbl.observacion, h.id_producto,
+        a.descripcion,a.codigointerno, a.id_medida, m.medida, tbl.id_almacen,b.nombre AS nombrealmacen,tbl.id_tipomov,
+        tm.nombre_tipo,tbl.ultusuario,u.nombre AS nombreusuario 
+        FROM $tabla tbl
+        INNER JOIN hist_entrada h ON tbl.id=h.id_entrada
+        INNER JOIN proveedores prov ON tbl.id_proveedor=prov.id
+        INNER JOIN productos a ON h.id_producto=a.id
+        INNER JOIN almacenes b ON tbl.id_almacen=b.id
+        INNER JOIN medidas m ON a.id_medida=m.id
+        INNER JOIN tipomovimiento tm ON tbl.id_tipomov=tm.id
+        INNER JOIN usuarios u ON tbl.ultusuario=u.id
+        WHERE h.$campo=:$campo";
+                    
+        $stmt=Conexion::conectar()->prepare($sql);
+    
+        $stmt->bindParam(":".$campo, $valor, PDO::PARAM_STR);
+                    
+        $stmt->execute();
+                   
+        return $stmt->fetchAll();
+    
+        $stmt = null;
+    
+    
+    } catch (Exception $e) {
+        echo "Failed: " . $e->getMessage();
+    }
+
+}  
 
 
 
