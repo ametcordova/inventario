@@ -46,7 +46,7 @@ switch ($_GET["op"]){
 
             $boton1 =getAccess($acceso, ACCESS_PRINTER)?"<td><button class='btn btn-sm btn-success btnPrintEntradaAlmacen' idPrintEntrada='".$value['id']."' title='Generar PDF '><i class='fa fa-file-pdf-o'></i></button></td> ":""; 
             $boton2 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-primary btnEditEntradaAlmacen' idEditarEntrada='".$value['id']."' title='Editar Entrada' data-toggle='modal' data-target='#modalEditarEntradasAlmacen'><i class='fa fa-edit'></i></button></td> ":""; 
-            $boton3 =getAccess($acceso, ACCESS_DELETE)?"<td><button class='btn btn-sm btn-danger btnDelEntradasAlmacen' idDeleteSalAlm='".$value['id']."' title='Eliminar Salida '><i class='fa fa-trash'></i></button></td> ":"";
+            $boton3 =getAccess($acceso, ACCESS_DELETE)?"<td><button class='btn btn-sm btn-danger btnDelEntradasAlmacen' idDeleteEntradaAlm='".$value['id']."' title='Eliminar Entrada '><i class='fa fa-trash'></i></button></td> ":"";
 
             $botones=$boton1.$boton2.$boton3;
 
@@ -57,7 +57,7 @@ switch ($_GET["op"]){
                 $value["nombreproveedor"],
                 $value["nombretipomov"],
                 $value["usuario"],
-                $botones,
+                $botones.$trf,
             );
         }
   
@@ -69,15 +69,6 @@ switch ($_GET["op"]){
           echo json_encode($results);        
 
      break;
-
-     case 'obtenerUltimoId':
-        $tabla = "tbl_salidas";
-        $campo=null;
-        $respuesta = ControladorSalidasAlmacen::ctrObtenerUltimoId($tabla, $campo);
-
-        echo json_encode($respuesta);
-    
-    break;
 
     case 'obtenerUltimoNumero':
         $tabla = "tbl_entradas";
@@ -95,14 +86,6 @@ switch ($_GET["op"]){
         $data = array();
 
         $respuesta = ControladorEntradasAlmacen::ctrajaxProductos($tabla, $campo, $valor);
-
-        //print_r($respuesta);
-
-        // foreach($respuesta as $key => $value){
-        //     $data[] = array("id"=>$row['id'], "text"=>$row['codigointerno'], "text"=>$row['descripcion']);
-        // }
-
-        // echo json_encode($data);                
 
         echo json_encode($respuesta);
     
@@ -144,7 +127,7 @@ switch ($_GET["op"]){
                 "cantidades"    =>$_POST["cantidad"]
             );
                 unset ($tablatmp);
-
+                
                 $respuesta = ControladorEntradasAlmacen::ctrAltaEntradasAlmacen($tabla_almacen, $tabla, $datos);
 
                 echo json_encode($respuesta);
@@ -175,7 +158,145 @@ switch ($_GET["op"]){
         
      break;
 
+    case 'guardarEditaEntradasAlmacen':
 
+        if(isset($_POST["idproducto"])){
 
+            //EXTRAE EL NOMBRE DEL ALMACEN
+        	$tablatmp =trim(substr($_POST['idEditarAlmacenEntrada'],strpos($_POST['idEditarAlmacenEntrada'].'-','-')+1)); 
+            $tabla_almacen=strtolower($tablatmp);
+            //EXTRAE EL NUMERO DE ALMACEN
+            $id_almacen=strstr($_POST['idEditarAlmacenEntrada'],'-',true);
+            //NUMERO DE ENTRADA
+            $id_entrada=$_POST["numEditarEntradaAlmacen"];
+
+            $oldarray=array_combine($_POST["oldproducto"], $_POST["oldcantidad"]);      //combina 2 array en 1. (indice)prod y (valor)cant
+            $newarray=array_combine($_POST["idproducto"], $_POST["cantidad"]);
+
+            //ARRAY PARA SACAR PROD(S) A ELIMINAR DE LA ENTRADA
+            $aeliminar=array_diff_key($oldarray, $newarray);        
+            if(!empty($aeliminar)) {
+                foreach ($aeliminar as $key => $value) {
+                    $respuesta = ControladorEntradasAlmacen::ctrEditEliminarRegEA($tabla_almacen, $id_almacen, $key, $value, $id_entrada);
+                    if($respuesta=="ok"){
+                        unset($oldarray[$key]);
+                    }
+                }
+            }
+
+            //ARRAY PARA SACAR PROD(S) A AGREGAR A LA ENTRADA
+            $aadicionar=(array_diff_key($newarray, $oldarray));            
+            if(!empty($aadicionar)) {
+                foreach ($aadicionar as $key => $value) {
+                    $datos = array(
+                    "id_entrada"    =>$_POST["numEditarEntradaAlmacen"],
+                    "fechaentrada"  =>$_POST["EditarFechaEntradaAlmacen"],
+                    "id_proveedor"  =>$_POST["EditarProveedorEntrada"],
+                    "id_tipomov"    =>$_POST["EditarTipoEntradaAlmacen"],
+                    "id_almacen"    =>$id_almacen,
+                    "id_usuario"    =>$_POST["idDeUsuario"],
+                    "productos"     =>$key,
+                    "cantidades"    =>$value,
+                    "ultusuario"    =>$_POST["idDeUsuario"]
+                    );
+    
+                     $respuesta = ControladorEntradasAlmacen::ctrEditAdicionarRegEA($tabla_almacen, $datos);
+                     if($respuesta=="ok"){
+                        unset($newarray[$key]);
+                    }
+                }
+            }            
+
+            //ITERAR CON LOS PRODUCTOS QUE QUEDAN CON INDICES IGUALES, PERO DIF. O IGUALES EN CANTIDAD
+            foreach($oldarray as $key => $value){
+                $nuevovalor=$newarray[$key]-$value;
+
+                    //SI ES MAYOR A 0, QUE AUMENTE EXISTENCIA
+                    if($nuevovalor>0){
+                        $respuesta = ControladorEntradasAlmacen::ctrEditAumentarRegEA($tabla_almacen, $id_almacen, $key, $nuevovalor);
+                    }    
+
+                    //SI ES MENOR A 0, QUE DISMINUYA EXISTENCIA
+                    if($nuevovalor<0){
+                        $respuesta = ControladorEntradasAlmacen::ctrEditDisminuirRegEA($tabla_almacen, $id_almacen, $key, abs($nuevovalor));
+                    }
+            }
+
+            unset($tablatmp);
+            echo json_encode($respuesta);
+            
+        }else{
+
+            $respuesta = array('idproducto' => $_POST["idproducto"], 'error' => 'sindatos');		           
+            echo json_encode($respuesta);
+
+        }
+   
+    break;
+
+    case 'deleteIdEntradaAlmacen':
+
+        if(isset($_GET["idaborrar"])){
+            $respuesta="error";
+            $nombremes_actual = strtolower(date('F'));  // NOMBRE DEL MES ACTUAL PARA ACTUALIZAR KARDEX 
+            $tabla_hist="hist_entrada";
+            $tabla_cancela="cancelacion_entrada";
+            $campo="id_entrada";
+            $id_cancela="id_cancelacion";   //campo para obtener el consecutivo
+            $idusuario=$_SESSION['id'];     //id del usuario que cancela
+
+            //TRAER LOS DATOS DE LA ENTRADA QUE SE VA A ELIMINAR
+            $datos = ControladorEntradasAlmacen::ctrBorrarEntradaAlmacen($tabla_hist, $_GET["idaborrar"], $campo);
+
+            if($datos=="error"){
+                return $respuesta = array("error" =>'vacio');
+            }else{
+                $tabla_almacen=strtolower($datos[0]['nombrealmacen']);
+                $tabla_kardex="kardex_".$tabla_almacen;
+
+                //TRAER NUMERO DE LA ULTIMA CANCELACION
+                $query = ControladorEntradasAlmacen::ctrObtenerUltimoNumero($tabla_cancela, $id_cancela);
+                $idnumcancela=$query[0];
+                if(is_null($idnumcancela)){
+                    $idnumcancela=1;
+                }else{
+                    $idnumcancela+=1;
+                }
+            }
+
+                //GUARDA DATOS DE CANCELACION EN TABLA CANCELACION_ENTRADA
+                $respuesta = ControladorEntradasAlmacen::ctrGuardaCancelacion($tabla_cancela, $idnumcancela, $datos, $idusuario);
+
+                 if($respuesta="ok"){
+
+                    //ACTUALIZA EXISTENCIA EN LAS TABLAS DEL ALMACEN Y DE KARDEX 
+                    $respuesta = ControladorEntradasAlmacen::ctrActualizaExistencia($tabla_almacen, $tabla_kardex, $nombremes_actual, $datos);
+
+                    if($respuesta="ok"){
+
+                        //ELIMINAR DATOS EN EL HIST_ENTRADAS
+                        $respuesta = ControladorEntradasAlmacen::ctrEliminarDatos($tabla_hist, $_GET["idaborrar"], $campo);
+
+                        if($respuesta="ok"){
+                            //ELIMINAR DATOS EN TBL_ENTRADA
+                            $tabla="tbl_entradas";
+                            $campo="id";
+                            $respuesta = ControladorEntradasAlmacen::ctrEliminarDatos($tabla, $_GET["idaborrar"], $campo);
+                
+                        }
+
+                    }
+
+                }
+
+            $respuesta = array("respuesta:" =>$respuesta);
+            echo json_encode($respuesta);    
+
+        }else{
+            $respuesta = array("error" =>$_GET['idaborrar']);
+            echo json_encode($respuesta);
+        }
+
+    break;    
 
 } // fin del switch

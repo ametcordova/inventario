@@ -1,9 +1,8 @@
-var udeMedida;
+var udeMedida="S/I";
 var renglonEditarEntradas=cantEditarEntrante=0;
 var arrayEditarProductos=new Array();
 var arrayitems=new Array();
 var nuevoCSS = { "background": '#8EF70F', "font-weight" : 'bold' };
-var xcodigo;
 
 $("#modalEditarEntradasAlmacen").draggable({
     handle: ".modal-header"
@@ -19,7 +18,7 @@ TRAER DATOS DE ENTRADA DEL ALMACEN DESDE EL DATATABLE PARA EDITAR
 $("#dt-entradasalmacen tbody").on("click", "button.btnEditEntradaAlmacen", function(event){
   event.preventDefault();
 	var idEditarEntrada = $(this).attr("idEditarEntrada");
-  console.log(idEditarEntrada);
+  //console.log(idEditarEntrada);
   $("#EditidNumSalAlm").val(idEditarEntrada);
   obtenerdatosEntrada(idEditarEntrada)
 })
@@ -35,8 +34,8 @@ function obtenerdatosEntrada(idEditarEntrada){
 
     .then(res => {
       if(res.status==200) {
-        console.log(res);
-        console.log(res.data);
+        //console.log(res);
+        //console.log(res.data);
         $("#numEditarEntradaAlmacen").val(res.data[0].id);
         $("#EditarProveedorEntrada").val(res.data[0].id_proveedor);
         $("input[name=EditarFechaEntradaAlmacen").val(res.data[0].fechaentrada);
@@ -115,30 +114,7 @@ function deleteProducts(indice, restarcantidad){
   evaluarElementos();
 }
 
-//AL ABRIR EL MODAL 
-$('#modalEditarEntradasAlmacen').on('show.bs.modal', function (event) {
-    $('#EditarProveedorEntrada').prop('disabled',true);
-    $('#EditarTipoEntradaAlmacen').prop('disabled',true);
-    $('#idEditarAlmacenEntrada').prop('disabled',true);
-    renglonEditarEntradas=cantEditarEntrante=0;
-    $("#renglonEditarentradas").html("");
-    $("#totalEditarentradasalmacen").html("");
-    $("#btnEditarEntradasAlmacen").hide();
-})
-    
-/*================ AL SALIR DEL MODAL RESETEAR FORMULARIO ==================*/
-$("#modalEditarEntradasAlmacen").on('hidden.bs.modal', ()=> {
-  $("#agregarProdEntrada").addClass("d-none");
-  $('#form_entradasalmacen')[0].reset();                //resetea el formulario
-  $("#cantExistenciaAlmacen").val(0);                   //inicializa campo existencia
-  $("#cantEntradaAlmacen").val("");                     //inicializa campo salida
-  $("#tbodyentradasalmacen").empty();                   //vacia tbody
-  $('#selProdEntAlm').val(null).trigger('change');      //inicializa el select de productos
-  arrayEditarProductos["length"]=0;                           //inicializa array
-});
-
-
-
+//SELECT2 DE CAT. DE PRODUCTOS POR AJAX
 $('#selEditarProdEntAlm').select2({
   placeholder: 'Selecciona un producto',
   ajax: {
@@ -159,11 +135,14 @@ $('#selEditarProdEntAlm').select2({
                   text: item.codigointerno+' - '+item.descripcion,
                   id: item.id,
                   descripcion:item.descripcion,
-                  codigo:item.codigo
               }
           })
       };
+
   },    
+    // success:function(data){
+    //   console.log(data[0].medida);
+    // },
     cache: true
   },
   minimumInputLength: 1
@@ -172,9 +151,9 @@ $('#selEditarProdEntAlm').select2({
 
 $(document).on('change', '#selEditarProdEntAlm', function(event) {
 //$("#selProdEntAlm").change(function(event){
-  event.preventDefault();
+event.preventDefault();
 
-console.log(this);
+//console.log(this);
 
   let idalmacen=$("#idEditarAlmacenEntrada").val();
   let tbl_almacen=$( "#idEditarAlmacenEntrada option:selected" ).text();
@@ -184,7 +163,7 @@ console.log(this);
       return false;	
   }
 
-  console.log(idprod, idalmacen, tbl_almacen)
+  //console.log(idprod, idalmacen, tbl_almacen)
   
   axios.get('ajax/entradasalmacen.ajax.php?op=consultaExistenciaProd', {
     params: {
@@ -196,6 +175,7 @@ console.log(this);
     if(res.status==200) {
       console.log(res.data)
       if(res.data==false){
+        $("#cantEditarExistenciaAlmacen").css("background", "#E8EF00");
         $("#cantEditarExistenciaAlmacen").val(0);
         $("#cantEditarEntradaAlmacen").val("");
         $('#mensajeEditarerrorentrada').text('Prod. no existe en este almacén. Se agregará.');
@@ -206,17 +186,22 @@ console.log(this);
 
         let approved = arrayitems.filter(items => items[0]===idprod);
         if(typeof approved !== "undefined" && approved != null && approved.length > 0){
-        //console.log(approved[0][1])
-        let disminuye=approved[0][1];    //obtiene valor de cant
-        $("#cantEditarExistenciaAlmacen").css("background", "#E8EF00");
-        $("#cantEditarExistenciaAlmacen").val(parseInt(res.data.cant)-disminuye);
+          //console.log(approved[0][1])
+          let disminuye=approved[0][1];    //obtiene valor de cant
+          $("#cantEditarExistenciaAlmacen").css("background", "#E8EF00");
+          $("#cantEditarExistenciaAlmacen").val(parseInt(res.data.cant)-disminuye);
         }else{
           $("#cantEditarExistenciaAlmacen").val(res.data.cant);
           $("#cantEditarExistenciaAlmacen").css(nuevoCSS);
         }
       }
-      udeMedida=res.data.medida;
-      $('#servicioEditarSelecionado').html(udeMedida);
+
+      if(res.data.medida!=undefined){
+        udeMedida=res.data.medida;
+      }
+      
+      
+      //$('#servicioEditarSelecionado').html(udeMedida);
     }          
 
   }) 
@@ -260,7 +245,6 @@ $("#EditarEntradaProd").click(function(event){
   
 });  
 
-
 /*==================================================================
 ADICIONA PRODUCTOS AL TBODY
 ==================================================================*/
@@ -290,7 +274,61 @@ function addEditarProductoEntrada(...argsProductos){
     $("#btnEditarEntradasAlmacen").show(); 
 }
 
+/*======================================================================*/
+//= ENVIAR FORMULARIO PARA GUARDAR DATOS DE ENTRADA = 
+/* ======================================================================*/
+$("body").on("submit", "#form_Editentradasalmacen", function( event ) {	
+  event.preventDefault();
+  event.stopPropagation();
+  $('#EditarProveedorEntrada').prop('disabled',false);
+  $('#EditarTipoEntradaAlmacen').prop('disabled',false);
+  $('#idEditarAlmacenEntrada').prop('disabled',false);
+  let formData = new FormData($("#form_Editentradasalmacen")[0]);   
+  //for (var pair of formData.entries()){console.log(pair[0]+ ', ' + pair[1]);} 
 
+  axios({ 
+    method: 'post', 
+    url   : 'ajax/entradasalmacen.ajax.php?op=guardarEditaEntradasAlmacen', 
+    data  : formData, 
+  }) 
+  .then((res)=>{ 
+    if(res.status==200) {
+      //console.log(res.data)
+
+      $('#modalEditarEntradasAlmacen').modal('hide')
+      $('#dt-entradasalmacen').DataTable().ajax.reload(null, false);
+      $("#alert1").removeClass("d-none");
+      $("#alert1" ).fadeOut( 4500, "linear", complete );
+
+    }            
+    //console.log(res); 
+  }) 
+  .catch((err) => {throw err}); 
+
+});  
+/* ======================================================================*/
+
+//AL ABRIR EL MODAL 
+$('#modalEditarEntradasAlmacen').on('show.bs.modal', function (event) {
+  $('#EditarProveedorEntrada').prop('disabled',true);
+  $('#EditarTipoEntradaAlmacen').prop('disabled',true);
+  $('#idEditarAlmacenEntrada').prop('disabled',true);
+  renglonEditarEntradas=cantEditarEntrante=0;
+  $("#renglonEditarentradas").html("");
+  $("#totalEditarentradasalmacen").html("");
+  $("#btnEditarEntradasAlmacen").hide();
+})
+  
+/*================ AL SALIR DEL MODAL RESETEAR FORMULARIO ==================*/
+$("#modalEditarEntradasAlmacen").on('hidden.bs.modal', ()=> {
+$("#agregarProdEntrada").addClass("d-none");
+$('#form_entradasalmacen')[0].reset();                //resetea el formulario
+$("#cantExistenciaAlmacen").val(0);                   //inicializa campo existencia
+$("#cantEntradaAlmacen").val("");                     //inicializa campo salida
+$("#tbodyentradasalmacen").empty();                   //vacia tbody
+$('#selProdEntAlm').val(null).trigger('change');      //inicializa el select de productos
+arrayEditarProductos["length"]=0;                           //inicializa array
+});
 
 
 init();

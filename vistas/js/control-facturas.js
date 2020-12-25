@@ -37,11 +37,13 @@ $("#TablaFacturas").on("click", ".btnVerFactura", function(){
   var idFactura = $(this).attr("idFactura");
   var numFactura = $(this).attr("numFactura");
   var idEstatus = $(this).attr("idEstado");
+  var idBorrado = $(this).attr("idBorrado");
   var xfile;
   
-
+  console.log(idFactura, numFactura,idEstatus, idBorrado);
+  
 	(async () => { 
-		xfile=await verpdf(idFactura,numFactura,idEstatus);
+		xfile=await verpdf(idFactura,numFactura,idEstatus, idBorrado);
     console.log(xfile);
     window.open(xfile, '_blank');
 		//await mostrarPDF(xfile,numFactura);
@@ -55,15 +57,16 @@ $("#TablaFacturas").on("click", ".btnVerFactura", function(){
 });
 
 /* ==== FUNCION PARA TRAER EL RUTA DEL PDF DE LA FACTURA  =====*/
-async function verpdf(idFactura,numFactura,idEstatus){
+async function verpdf(idFactura,numFactura,idEstatus, idBorrado){
  $("#pdfdoc").attr("data","");  
   var filePdf;
       
-  //console.log(idFactura, numFactura,idEstatus);
+  console.log(idFactura, numFactura,idEstatus, idBorrado);
 	var datos = new FormData();
 	datos.append("idFactura", idFactura);
 	datos.append("numFactura", numFactura);
 	datos.append("idEstatus", idEstatus);
+	datos.append("idBorrado", idBorrado);
  
 	await fetch('ajax/control-facturas.ajax.php?op=mostrar', {
 		method: 'POST',
@@ -350,11 +353,13 @@ $("#TablaFacturas").on("click", ".btnEditarFactura", function(){
   var idFactura = $(this).attr("idFactura");
   var numFactura = $(this).attr("numFactura");
   var idEstatus = $(this).attr("idEstado");
+  var idBorrado = $(this).attr("idBorrado");
   console.log(idFactura, numFactura,idEstatus);
 	var datos = new FormData();
 	datos.append("idFactura", idFactura);
 	datos.append("numFactura", numFactura);
 	datos.append("idEstatus", idEstatus);
+	datos.append("idBorrado", idBorrado);
  
   (async () => { 
    await fetch('ajax/control-facturas.ajax.php?op=mostrar', {
@@ -525,7 +530,7 @@ function listarFacturas(){
       if ( true ){ // your logic here
         $(nRow).addClass( 'customFont' );
       }
-      if(valorradio=="cancelado"){
+      if(valorradio=="cancelado" || aData[3] == "CANCELADO" || aData[3] == "cancelado"){
         $('td', nRow).css('color', 'Red');
       }
   },

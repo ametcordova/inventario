@@ -71,6 +71,14 @@ $fechaHoy = date("Y-m-d");
       </div>
 
       <div class="card-body">
+
+          <div class="alert alert-success alert-dismissible fade show d-none p-2" id="alerta" role="alert">
+            <strong>Hecho!!</strong> Registro guardado correctamente!!.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
         <div class="card">
           <div class="card-body">
             <table class="table table-bordered table-hover table-compact table-sm table-striped dt-responsive" id="dt-salidasalmacen" cellspacing="0" width="100%">
@@ -480,5 +488,5 @@ $fechaHoy = date("Y-m-d");
                 FIN MODAL PARA CAPTURAR LAS SALIDAS DEL ALMACEN
 ==================================================================================== -->
 
-<script defer src="vistas/js/salidasalmacen.js?v=01122020"></script>
-<script defer src="vistas/js/salidasalmacenedit.js?v=01122020"></script>
+<script defer src="vistas/js/salidasalmacen.js?v=02122020"></script>
+<script defer src="vistas/js/salidasalmacenedit.js?v=02122020"></script>

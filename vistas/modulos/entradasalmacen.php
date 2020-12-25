@@ -59,7 +59,7 @@ $fechaHoy = date("Y-m-d");
             <i class="fa fa-eye"></i> Mostrar
           </button>
         <?php } ?>
-        <!--<h2 class="card-title">Control de Usuarios</h2> -->
+
         <div class="card-tools">
           <button type="button" class="btn btn-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse">
             <i class="fa fa-minus"></i></button>
@@ -76,7 +76,7 @@ $fechaHoy = date("Y-m-d");
 
       <div class="card-body">
 
-          <div class="alert alert-warning alert-dismissible fade show d-none p-2" id="alert1" role="alert">
+          <div class="alert alert-warning alert-dismissible fade show p-2 d-none" id="alert1" role="alert">
             <strong>Hecho!!</strong> Registro guardado correctamente.
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
               <span aria-hidden="true">&times;</span>
@@ -258,7 +258,7 @@ $fechaHoy = date("Y-m-d");
 
             </div><!-- fin del form-row -->
 
-            <div class="col-md-4 rounded" style="height:30px;" id="servicioSelecionado"></div>
+            <!-- <div class="col-md-4 rounded" style="height:30px;" id="servicioSelecionado"></div> -->
 
             <div class="wrapper">
               <section class="invoice">
@@ -436,7 +436,7 @@ $fechaHoy = date("Y-m-d");
 
             </div><!-- fin del form-row -->
 
-            <div class="col-md-4 rounded" style="height:30px;" id="servicioEditarSelecionado"></div>
+            <!--<div class="col-md-4 rounded" style="height:30px;" id="servicioEditarSelecionado"></div> -->
 
             <div class="wrapper">
               <section class="invoice">
@@ -496,5 +496,5 @@ $fechaHoy = date("Y-m-d");
                 FIN MODAL PARA CAPTURAR LAS SALIDAS DEL ALMACEN
 ==================================================================================== -->
 
-<script defer src="vistas/js/entradasalmacen.js?v=01122020"></script>
-<script defer src="vistas/js/entradasalmacenedit.js?v=01102020"></script>
+<script defer src="vistas/js/entradasalmacen.js?v=05122020"></script>
+<script defer src="vistas/js/entradasalmacenedit.js?v=05102020"></script>

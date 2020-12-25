@@ -38,7 +38,8 @@ $("body").on("submit", "#form_SalAlmaEdit", function( event ) {
 
       $('#modalEditarSalidasAlmacen').modal('hide')
       $('#dt-salidasalmacen').DataTable().ajax.reload(null, false);
-
+      $("#alerta").removeClass("d-none");
+      $("#alerta" ).fadeOut( 4500, "linear", complete );
     }            
     console.log(res); 
   }) 
@@ -312,7 +313,8 @@ $("#modalEditarSalidasAlmacen").on('hidden.bs.modal', ()=> {
   $('#EditselProdSalAlm').val(null).trigger('change');	//inicializa select2
   $("#EditcantExisteAlmacen").val(0);                   //inicializa campo existencia
   $("#EditcantSalidaAlmacen").val("");                  //inicializa campo salida
-  arrayDeProductos["length"]=0;                         //inicializa array
+  arrayDeProductos["length"]=0;                  //inicializa array
+  arrayitems["length"]=0;                  //inicializa array
 });
 
 /*=============================================

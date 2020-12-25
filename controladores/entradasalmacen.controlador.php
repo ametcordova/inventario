@@ -80,6 +80,108 @@ return $respuesta;
 
 }  
 
+/*=============================================
+  ELIMINA REGISTRO(S) EN LA EDICION DE ENTRADA
+============================================*/
+static public function ctrEditEliminarRegEA($tabla_almacen, $id_almacen, $key, $value, $id_entrada){
+
+	$tablahist="hist_entrada";
+	$tablakardex="kardex_".$tabla_almacen;
+	$nombremes_actual = strtolower(date('F'));
+
+	$respuesta = ModeloEntradasAlmacen::mdlEditEliminarRegEA($tabla_almacen, $id_almacen, $tablahist, $tablakardex, $key, $value, $id_entrada, $nombremes_actual);
+
+	return $respuesta;
+
+}  
+
+/*========================================================
+GUARDA REGISTRO NUEVO EN LA EDICION DE ENTRADA AL ALMACEN
+=========================================================*/
+static public function ctrEditAdicionarRegEA($tabla_almacen, $datos){
+	$tablahist="hist_entrada";
+	$tablakardex="kardex_".$tabla_almacen;
+	$nombremes_actual = strtolower(date('F'));
+
+	$respuesta = ModeloEntradasAlmacen::mdlEditAdicionarRegEA($tabla_almacen, $tablahist, $tablakardex, $nombremes_actual, $datos);
+
+	return $respuesta;
+	
+}      
+
+/*=============================================
+  AUMENTA CANT EN LA EDICION DE SALIDA DE ALM
+============================================*/
+static public function ctrEditAumentarRegEA($tabla_almacen, $id_almacen, $key, $nuevovalor){
+
+	$tablahist="hist_entrada";
+	$tablakardex="kardex_".$tabla_almacen;
+	$nombremes_actual = strtolower(date('F'));
+
+	$respuesta = ModeloEntradasAlmacen::mdlEditAumentarRegEA($tabla_almacen, $id_almacen, $tablahist, $tablakardex, $key, $nuevovalor, $nombremes_actual);
+
+	return $respuesta;
+
+}  
+
+/*=============================================
+  DISMINUYE CANT EN LA EDICION DE SALIDA DE ALM
+============================================*/
+static public function ctrEditDisminuirRegEA($tabla_almacen, $id_almacen, $key, $nuevovalor){
+
+	$tablahist="hist_entrada";
+	$tablakardex="kardex_".$tabla_almacen;
+	$nombremes_actual = strtolower(date('F'));
+
+	$respuesta = ModeloEntradasAlmacen::mdlEditDisminuirRegEA($tabla_almacen, $id_almacen, $tablahist, $tablakardex, $key, $nuevovalor, $nombremes_actual);
+
+	return $respuesta;
+
+} 
+
+/*=============================================
+  TRAE LOS DATOS PARA ELIMINAR ENTRADA DEL ALMACEN
+============================================*/
+static public function ctrBorrarEntradaAlmacen($tabla_hist, $idaborrar, $campo){
+
+	$respuesta = ModeloEntradasAlmacen::mdlBorrarEntradaAlmacen($tabla_hist, $idaborrar, $campo);
+
+	return $respuesta;
+
+}  
+
+/*=============================================
+  GUARDA CANCELACION DE ENTRADA DE ALMACEN
+============================================*/
+static public function ctrGuardaCancelacion($tabla_cancela, $idnumcancela, $datos, $idusuario){
+
+	$respuesta = ModeloEntradasAlmacen::mdlGuardaCancelacion($tabla_cancela, $idnumcancela, $datos, $idusuario);
+
+	return $respuesta;
+
+}  
+
+/*=============================================
+  ACTUALIZA EXIST POR CANCELACION DE ENTRADA
+============================================*/
+static public function ctrActualizaExistencia($tabla_almacen, $tabla_kardex, $nombremes_actual, $datos){
+
+	$respuesta = ModeloEntradasAlmacen::mdlActualizaExistencia($tabla_almacen, $tabla_kardex, $nombremes_actual, $datos);
+
+	return $respuesta;
+
+}  
+
+/*=============================================
+  ELIMINAR DATOS EN EL HIST_ENTRADA
+============================================*/
+static public function ctrEliminarDatos($tabla, $idaborrar, $campo){
+
+	$respuesta = ModeloEntradasAlmacen::mdlEliminarDatos($tabla, $idaborrar, $campo);
+
+	return $respuesta;
+
+}  
 
 }   //fin de la clase
 ?>

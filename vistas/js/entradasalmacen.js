@@ -25,7 +25,7 @@ function init(){
 // ========= LISTAR EN EL DATATABLE REGISTROS DE LA TABLA cajas================
 function dt_ListarEntradasAlmacen(){
   let rangodeFecha = $("#daterange-btn-EntAlmacen span").html();
-  console.log("Rango de Fecha Ent:",rangodeFecha);
+  //console.log("Rango de Fecha Ent:",rangodeFecha);
   if(rangodeFecha==undefined || rangodeFecha==null){
       var FechDev1=moment().format('YYYY-MM-DD');
       var FechDev2=moment().format('YYYY-MM-DD');
@@ -38,7 +38,7 @@ function dt_ListarEntradasAlmacen(){
 	  var FechDev2=f2[2].concat("-").concat(f2[1]).concat("-").concat(f2[0]);
   }	   
  
-  console.log(FechDev1, FechDev2);
+  //console.log(FechDev1, FechDev2);
 
   tablaSalidasAlmacen=$('#dt-entradasalmacen').dataTable(
 	{
@@ -190,12 +190,13 @@ $('#daterange-btn-EntAlmacen').on('cancel.daterangepicker', function(ev, picker)
 /*================ AL SALIR DEL MODAL RESETEAR FORMULARIO ==================*/
 $("#modalAgregarEntradasAlmacen").on('hidden.bs.modal', ()=> {
   $("#agregarProdEntrada").addClass("d-none");
+  $('#idAlmacenEntrada option:not(:selected)').attr('disabled',false);
   $('#form_entradasalmacen')[0].reset();                //resetea el formulario
   $("#cantExistenciaAlmacen").val(0);                   //inicializa campo existencia
   $("#cantEntradaAlmacen").val("");                     //inicializa campo salida
   $("#tbodyentradasalmacen").empty();                   //vacia tbody
   $('#selProdEntAlm').val(null).trigger('change');      //inicializa el select de productos
-  arrayProductos["length"]=0;                           //inicializa array
+  arrayProductos["length"]=0;                      //inicializa array
 });
 
 //AL ABRIR EL MODAL TRAER EL ULTIMO NUMERO
@@ -257,7 +258,7 @@ $('#selProdEntAlm').select2({
   minimumInputLength: 1
 });
 
-//$(document).on('change', '#selProdEntAlm', function(event) {
+//CONSULTA EXISTENCIA DE PRODUCTO SELECCIONADO
 $("#selProdEntAlm").change(function(event){
   event.preventDefault();
 
@@ -269,49 +270,37 @@ $("#selProdEntAlm").change(function(event){
       return false;	
   }
 
-  console.log(idprod, idalmacen, tbl_almacen)
+  //console.log(idprod, idalmacen, tbl_almacen)
   //$('#servicioSelecionado').html($("#selProdEntAlm option:selected").text());
-
-  axios.get('ajax/entradasalmacen.ajax.php?op=consultaExistenciaProd', {
-    params: {
-      idprod: idprod,
-      almacen: tbl_almacen
-    }
-  })
-  .then((res)=>{ 
-    if(res.status==200) {
-      console.log(res.data)
-      if(res.data==false){
-        $("#cantExistenciaAlmacen").val(0);
-      }else{
-        $("#cantExistenciaAlmacen").val(res.data.cant);
-        udeMedida=res.data.medida;
+  (async () => {   
+    await axios.get('ajax/entradasalmacen.ajax.php?op=consultaExistenciaProd', {
+      params: {
+        idprod: idprod,
+        almacen: tbl_almacen
       }
-    }          
+    })
+    .then((res)=>{ 
+      if(res.status==200) {
+        //console.log(res.data)
+        if(res.data==false){
+          $("#cantExistenciaAlmacen").val(0);
+        }else{
+          $("#cantExistenciaAlmacen").val(res.data.cant);
+          udeMedida=res.data.medida;
+        }
+      }          
+    }) 
 
-  }) 
-  .catch((err) => {throw err}); 
+    .catch((err) => {throw err}); 
+  
+  })();  //fin del async
+
 });
-
-//VERIFICA CANT SALIENTE NO SEA MAYOR QUE LA EXISTENCIA
-// $("#cantEntradaAlmacen").change(function(event){
-//   event.preventDefault();
-//       $("#mensajerrorentrada").addClass("d-none");
-//       let cantexist=$("#cantExistenciaAlmacen").val();
-//       let cantSolicitada=$("#cantEntradaAlmacen").val();
-//       if(parseFloat(cantSolicitada)>parseFloat(cantexist)){
-//           $("#cantEntradaAlmacen").val(0);
-//           $('#mensajerrorentrada').text('Cantidad Solicitada es Mayor a la Existencia!!');
-//           $("#mensajerrorentrada").removeClass("d-none");
-//       }else{
-//           $("#mensajerrorentrada").addClass("d-none");
-//       }
-//   });
 
 /*============================================================
                 AGREGA PRODUCTO SELECCIONADO
 ============================================================*/
-  $("#agregaEntradaProd").click(function(event){
+$("#agregaEntradaProd").click(function(event){
     event.preventDefault();
     let cantEntrada=$("#cantEntradaAlmacen").val();
     let idProducto=$("#selProdEntAlm").val();
@@ -345,7 +334,7 @@ $("#selProdEntAlm").change(function(event){
         mensajedeerror();
       }
     
-  });  
+});  
 
 /*==================================================================
 ADICIONA PRODUCTOS AL TBODY
@@ -406,15 +395,6 @@ function evaluarElementos(){
   }
 }
 
-//FUNCION PARA MENSAJE DE ERROR
-// function mensajedeerror(){
-//   $("#cantEntradaAlmacen, #cantEditarEntradaAlmacen").val(0);
-//   $('#mensajeEditarerrorentrada, #mensajerrorentrada').text('Producto ya capturado. Revise!!');
-//   $("#mensajerrorentrada, #mensajeEditarerrorentrada").removeClass("d-none");
-//   setTimeout(function(){$("#mensajerrorentrada, #mensajeEditarerrorentrada").addClass("d-none")}, 2500);
-//   return true;
-// }
-
 /*======================================================================*/
 //ENVIAR FORMULARIO PARA GUARDAR DATOS DE ENTRADA
 /*======================================================================*/
@@ -439,16 +419,16 @@ $("body").on("submit", "#form_entradasalmacen", function( event ) {
           }) 
           .then((res)=>{ 
             if(res.status==200) {
-              console.log(res.data)
+              //console.log(res.data)
 
               $('#dt-entradasalmacen').DataTable().ajax.reload(null, false);
               $('#modalAgregarEntradasAlmacen').modal('hide')
 
               $("#alert1").removeClass("d-none");
-              $("#alert1" ).fadeOut( 4500, "linear", complete );
+              $("#alert1" ).fadeOut( 4500, "linear", completa );
     
             }            
-            console.log(res); 
+
           }) 
           .catch((err) => {throw err}); 
 
@@ -459,7 +439,7 @@ $("body").on("submit", "#form_entradasalmacen", function( event ) {
 
 });  
 
-function complete() {
+function completa() {
   $("#alert1").addClass("d-none")
 }
 
@@ -474,7 +454,59 @@ $("#dt-entradasalmacen tbody").on("click", "button.btnPrintEntradaAlmacen", func
     }
 })
 
+/*===================================================
+ELIMINAR SALIDA DE ALMACEN DESDE EL DATATABLE
+===================================================*/
+$("#dt-entradasalmacen tbody").on("click", "button.btnDelEntradasAlmacen", function(event){
+  event.preventDefault();
+	let idaborrar = $(this).attr("idDeleteEntradaAlm");
+  //console.log(idaborrar);
 
+  swal({
+    title: "¿Está seguro de Eliminar Entrada No. "+idaborrar+"? ",
+    text: "Si no lo esta puede cancelar la acción!",
+    icon: "vistas/img/logoaviso.jpg",
+    buttons: ["Cancelar", "Sí, Eliminar"],
+    dangerMode: true
+  })
+   .then((willDelete) => {
+    if (willDelete) {
+
+        axios.get('ajax/entradasalmacen.ajax.php?op=deleteIdEntradaAlmacen', {
+          params: {
+            idaborrar: idaborrar
+          }
+        })
+      
+       .then(res => {
+        //console.log(res.data);
+        if(res.data=="error"){
+
+          swal({
+            title: "¡Error!",
+            text: 'No fue posible eliminar Entrada, revise existencias!!',
+            icon: "error",
+            button: "Cerrar"
+          })  //fin swal
+
+        }else{
+          $('#dt-entradasalmacen').DataTable().ajax.reload(null, false);
+          swal({
+            title: 'Hecho',
+            text: 'Registro fue Eliminado!',
+            buttons: false,
+            timer: 2000
+          })          
+        } 
+      })
+
+      .catch((err) => {throw err}); 
+      
+    } else {
+      return
+    }
+  }) 
+})
 
 
 init();

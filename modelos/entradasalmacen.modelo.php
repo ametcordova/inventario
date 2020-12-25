@@ -8,7 +8,7 @@ class ModeloEntradasAlmacen{
 =============================================*/
 
 static public function mdlListarEntradas($tabla, $fechadev1, $fechadev2){
-
+try {
  	//$where='1=1';
 		  
 	$where='tb1.fechaentrada>="'.$fechadev1.'" AND tb1.fechaentrada<="'.$fechadev2.'" ';
@@ -30,7 +30,11 @@ static public function mdlListarEntradas($tabla, $fechadev1, $fechadev2){
 	return $stmt -> fetchAll();
   
     $stmt = null;
-  
+
+} catch (Exception $e) {
+    echo "Failed: " . $e->getMessage();
+}
+
 }	
 
 /*=============================================
@@ -61,7 +65,7 @@ static public function mdlObtenerUltimoNumero($tabla, $campo){
 	MOSTRAR TIPO DE MOV DE SALIDA
 =============================================*/
 static public function MdlMostrarTipoMov($tabla, $item, $valor){
-
+try {
     $stmt = Conexion::conectar()->prepare("SELECT id, nombre_tipo, clase FROM $tabla WHERE $item = :$item");
     
     $stmt->bindParam(":".$item, $valor, PDO::PARAM_STR);
@@ -71,6 +75,9 @@ static public function MdlMostrarTipoMov($tabla, $item, $valor){
 	 return $stmt -> fetchAll();
 
 	$stmt = null;
+} catch (Exception $e) {
+    echo "Failed: " . $e->getMessage();
+}
 
 }
 
@@ -78,8 +85,12 @@ static public function MdlMostrarTipoMov($tabla, $item, $valor){
 	MOSTRAR TIPO DE MOV DE SALIDA
 =============================================*/
 static public function MdlajaxProductos($tabla, $campo, $valor){
-	$estado=1;
-    $stmt = Conexion::conectar()->prepare("SELECT id, codigointerno, descripcion, codigo FROM $tabla WHERE $campo LIKE '%".$valor."%' ");
+try {    
+
+    $stmt = Conexion::conectar()->prepare("SELECT tb1.id, tb1.codigointerno, tb1.descripcion, med.medida 
+    FROM $tabla tb1
+    INNER JOIN medidas med ON tb1.id_medida=med.id
+    WHERE tb1.$campo LIKE '%".$valor."%' ");
 	//$stmt = Conexion::conectar()->prepare("SELECT id, codigointerno, descripcion FROM $tabla");
     
     //$stmt->bindParam(":".$campo, $valor, PDO::PARAM_STR);
@@ -90,11 +101,15 @@ static public function MdlajaxProductos($tabla, $campo, $valor){
 	 return $stmt -> fetchAll();
 
 	$stmt = null;
+} catch (Exception $e) {
+    echo "Failed: " . $e->getMessage();
+}
 
 }
 
 /*==========================================================*/
 static Public function mdlConsultaExistenciaProd($tabla, $campo, $valor){
+try {        
     $stmt = Conexion::conectar()->prepare("SELECT a.cant , m.medida 
 	FROM $tabla a 
     INNER JOIN productos p ON a.id_producto=p.id
@@ -105,6 +120,9 @@ static Public function mdlConsultaExistenciaProd($tabla, $campo, $valor){
     $stmt -> execute();
     return $stmt -> fetch();      
 	$stmt=null;
+} catch (Exception $e) {
+    echo "Failed: " . $e->getMessage();
+}
 	
 }
 
@@ -153,7 +171,7 @@ static public function mdlAltaEntradasAlmacen($tabla_almacen, $tabla, $datos){
                 $stmt->bindParam(":ultusuario",     $datos["ultusuario"], PDO::PARAM_INT);
                 $stmt->execute();
                 if($stmt){
-                    $id_articulo=$datos["productos"][$i]; 
+                    $id_articulo=$datos["productos"][$i];
                     //CONSULTA SI PRODUCTO EXISTE, PARA ACTUALIZAR O INSERTAR
                     $existeid=Conexion::conectar()->prepare("SELECT IF(EXISTS(SELECT * FROM $tabla_almacen WHERE id_producto=:id_producto), 1, 0) AS idx");
                     $existeid->bindParam(":id_producto", $id_articulo, PDO::PARAM_INT);
@@ -223,7 +241,7 @@ static public function mdlAltaEntradasAlmacen($tabla_almacen, $tabla, $datos){
 	REPORTE DE ENTRADAS
 =============================================*/	
 static Public function mdlReporteEntradaAlmacen($tabla, $tabla_hist, $item, $numeroid){
-     
+try {         
     $sql="SELECT tb1.id, tb1.fechaentrada, tb1.id_proveedor,prov.nombre AS nombreproveedor, tb1.observacion, h.id_producto, h.cantidad, a.descripcion, a.codigointerno, a.id_medida, m.medida, tb1.id_almacen, b.nombre AS nombrealmacen, tb1.id_tipomov, tm.nombre_tipo AS nombretipo, tb1.ultusuario, u.nombre AS nombreusuario 
     FROM $tabla tb1
     INNER JOIN $tabla_hist h ON tb1.id=h.id_entrada
@@ -244,6 +262,11 @@ static Public function mdlReporteEntradaAlmacen($tabla, $tabla_hist, $item, $num
        return $stmt->fetchAll();
        
        $stmt=null;
+       
+} catch (Exception $e) {
+		echo "Failed: " . $e->getMessage();
+}
+
 }
 
 /*=============================================
@@ -283,6 +306,333 @@ static public function mdlMostrarEntradasAlmacen($tabla, $campo, $valor){
 
 }  
 
+/*=============================================
+	ELIMINAR PRODUCTO DE ENTRADA DE ALMACEN
+=============================================*/
+static public function mdlEditEliminarRegEA($tabla_almacen, $id_almacen, $tablahist, $tablakardex, $key, $value, $id_entrada, $nombremes_actual){
+    try {      
+        //MODIFICAR PARA PRODUCCION. DEBE SER DELETE
+        //$stmt = Conexion::conectar()->prepare("UPDATE $tablahist SET precio_venta=:precio_venta WHERE id_producto = :id_producto AND id_almacen=:id_almacen");
+        $stmt = Conexion::conectar()->prepare("DELETE FROM $tablahist WHERE id_entrada=:id_entrada AND id_producto=:id_producto AND id_almacen=:id_almacen");
+        $stmt->bindParam(":id_entrada", $id_entrada, PDO::PARAM_INT);
+        $stmt->bindParam(":id_producto", $key, PDO::PARAM_INT);
+        $stmt->bindParam(":id_almacen", $id_almacen, PDO::PARAM_INT);
+
+        $stmt->execute();
+        
+        if($stmt){
+
+            //GUARDA EN EL ALMACEN ELEGIDO
+            $stmt = Conexion::conectar()->prepare("UPDATE $tabla_almacen SET cant=cant-(:cant) WHERE id_producto = :id_producto");
+            $stmt->bindParam(":id_producto", $key, PDO::PARAM_INT);
+            $stmt->bindParam(":cant", $value, PDO::PARAM_INT);
+            $stmt->execute();
+    
+   			//GUARDA EN KARDEX DEL ALMACEN ELEGIDO
+            $stmt = Conexion::conectar()->prepare("UPDATE $tablakardex SET $nombremes_actual=$nombremes_actual-(:$nombremes_actual) WHERE id_producto = :id_producto");
+            $stmt->bindParam(":id_producto", $key, PDO::PARAM_INT);
+            $stmt->bindParam(":".$nombremes_actual, $value, PDO::PARAM_INT);
+            $stmt->execute();
+   
+            return "ok";
+         }else{
+              return "error";
+         }
+
+    } catch (Exception $e) {
+            echo "Failed: " . $e->getMessage();
+    }
+   
+}
+
+/*==================================================
+ALTA Y ACTUALIZA PRODUCTO EN LA EDICION DE ENTRADA AL ALMACEN
+===================================================*/
+static public function mdlEditAdicionarRegEA($tabla_almacen, $tablahist, $tablakardex, $nombremes_actual, $datos){
+	try {      
+            
+            //SCRIP QUE REGISTRA LA ENTRADA EN HIST_ENTRADA
+            $stmt = Conexion::conectar()->prepare("INSERT INTO $tablahist(id_entrada, fechadocto, numerodocto, id_proveedor, fechaentrada, id_producto, cantidad, id_almacen, tipomov, ultusuario) VALUES (:id_entrada, :fechadocto, :numerodocto, :id_proveedor, :fechaentrada, :id_producto, :cantidad, :id_almacen, :tipomov, :ultusuario)");
+                
+            $stmt->bindParam(":id_entrada", $datos["id_entrada"], PDO::PARAM_INT);
+            $stmt->bindParam(":fechadocto", $datos["fechaentrada"], PDO::PARAM_STR);
+            $stmt->bindParam(":id_proveedor", $datos["id_proveedor"], PDO::PARAM_INT);
+            $stmt->bindParam(":numerodocto", $datos["id_entrada"], PDO::PARAM_STR);
+            $stmt->bindParam(":fechaentrada", $datos["fechaentrada"], PDO::PARAM_STR);
+            $stmt->bindParam(":id_producto", $datos["productos"], PDO::PARAM_INT);
+            $stmt->bindParam(":cantidad", $datos["cantidades"], PDO::PARAM_INT);
+            $stmt->bindParam(":id_almacen", $datos["id_almacen"], PDO::PARAM_INT);
+            $stmt->bindParam(":tipomov", $datos["id_tipomov"], PDO::PARAM_INT);
+            $stmt->bindParam(":ultusuario", $datos["id_usuario"], PDO::PARAM_INT);
+            $stmt->execute();
+
+            
+            if($stmt){
+                
+                $id_articulo=$datos["productos"];
+                //CONSULTA SI PRODUCTO EXISTE, PARA ACTUALIZAR O INSERTAR
+                $existeid=Conexion::conectar()->prepare("SELECT IF(EXISTS(SELECT * FROM $tabla_almacen WHERE id_producto=:id_producto), 1, 0) AS idx");
+                $existeid->bindParam(":id_producto", $id_articulo, PDO::PARAM_INT);
+                $existeid->execute();
+                $rsp = $existeid->fetch();
+                
+                if($rsp["idx"]){        //SI EXISTE=1 ACTUALIZA
+
+                    //SCRIP QUE REGISTRA LA ENTRADA EN EL ALMACEN ELEGIDO   
+                    $stmt = Conexion::conectar()->prepare("UPDATE $tabla_almacen SET cant=:cant+cant, ultusuario=:ultusuario WHERE id_producto = :id_producto");
+                     $stmt->bindParam(":id_producto", $datos["productos"], PDO::PARAM_INT);
+                     $stmt->bindParam(":cant", $datos["cantidades"], PDO::PARAM_INT);
+                     $stmt->bindParam(":ultusuario", $datos["id_usuario"], PDO::PARAM_INT);
+                     $stmt->execute();
+
+   					//GUARDA EN KARDEX DEL ALMACEN ELEGIDO
+					$query = Conexion::conectar()->prepare("UPDATE $tablakardex SET $nombremes_actual=:$nombremes_actual+$nombremes_actual WHERE id_producto = :id_producto");
+					$query->bindParam(":id_producto", $datos["productos"], PDO::PARAM_INT);
+					$query->bindParam(":".$nombremes_actual, $datos["cantidades"], PDO::PARAM_STR);
+					$query->execute();
+
+                    if($stmt){
+                        return "ok";
+                    }else{
+                        return "error";
+                    }
+                }else{    //DE LO CONTRARIO=0 INSERTA
+
+                    //INSERTA PRODUCTO EN ALMACEN SELECCIONADO
+                    $stmt1 = Conexion::conectar()->prepare("INSERT INTO $tabla_almacen(id_producto, cant, fecha_entrada, ultusuario) VALUES (:id_producto, :cant, :fecha_entrada, :ultusuario)");
+
+                    $stmt1->bindParam(":id_producto", $datos["productos"], PDO::PARAM_INT);
+                    $stmt1->bindParam(":cant", $datos["cantidades"], PDO::PARAM_INT);
+                    $stmt1->bindParam(":fecha_entrada", $datos["fechaentrada"], PDO::PARAM_STR);
+                    $stmt1->bindParam(":ultusuario", $datos["ultusuario"], PDO::PARAM_INT);
+                    $stmt1->execute();
+
+                    //INSERTA PRODUCTO EN KARDEX DEL ALMACEN ELEGIDO
+                    $stmt2 = Conexion::conectar()->prepare("INSERT INTO $tablakardex (id_producto, $nombremes_actual) VALUES (:id_producto, :$nombremes_actual)");
+                    $stmt2->bindParam(":id_producto",        $datos["productos"], PDO::PARAM_INT);
+                    $stmt2->bindParam(":".$nombremes_actual, $datos["cantidades"], PDO::PARAM_INT);
+                    $stmt2->execute();
+
+                    if($stmt2){
+                        return "ok";
+                    }else{
+                        return "error";
+                    }
+
+                }         
+
+            }else{
+                return "error";
+            }
+
+            $stmt = null;
+            $stmt1 = null;
+            $stmt2 = null;
+            $existeid=null;
+
+	} catch (Exception $e) {
+		echo "Failed: " . $e->getMessage();
+   }
+
+}
+
+/*=============================================
+	AUMENTA CANT EN LA EDICION DE ENTRADA AL ALM
+=============================================*/
+static public function mdlEditAumentarRegEA($tabla_almacen, $id_almacen, $tablahist, $tablakardex, $key, $nuevovalor, $nombremes_actual){
+    try {      
+        $stmt = Conexion::conectar()->prepare("UPDATE $tablahist SET cantidad=:cantidad+cantidad WHERE id_producto = :id_producto AND id_almacen=:id_almacen");
+        $stmt->bindParam(":id_producto", $key, PDO::PARAM_INT);
+        $stmt->bindParam(":id_almacen", $id_almacen, PDO::PARAM_INT);
+        $stmt->bindParam(":cantidad", $nuevovalor, PDO::PARAM_INT);
+        $stmt->execute();
+        
+        if($stmt){
+
+            $stmt = Conexion::conectar()->prepare("UPDATE $tabla_almacen SET cant=:cant+cant WHERE id_producto = :id_producto");
+            $stmt->bindParam(":id_producto", $key, PDO::PARAM_INT);
+            $stmt->bindParam(":cant", $nuevovalor, PDO::PARAM_INT);
+            $stmt->execute();
+    
+   			//GUARDA EN KARDEX DEL ALMACEN ELEGIDO
+            $stmt = Conexion::conectar()->prepare("UPDATE $tablakardex SET $nombremes_actual=:$nombremes_actual+$nombremes_actual WHERE id_producto = :id_producto");
+            $stmt->bindParam(":id_producto", $key, PDO::PARAM_INT);
+            $stmt->bindParam(":".$nombremes_actual, $nuevovalor, PDO::PARAM_INT);
+            $stmt->execute();
+            
+            return "ok";
+         }else{
+              return "error";
+         }
+
+    } catch (Exception $e) {
+            echo "Failed: " . $e->getMessage();
+    }
+   
+}
+
+/*=============================================
+DISMINUYE CANT EN LA EDICION DE ENTRADA DE ALM
+=============================================*/
+static public function mdlEditDisminuirRegEA($tabla_almacen, $id_almacen, $tablahist, $tablakardex, $key, $nuevovalor, $nombremes_actual){
+    try {      
+        $stmt = Conexion::conectar()->prepare("UPDATE $tablahist SET cantidad=cantidad-(:cantidad) WHERE id_producto = :id_producto AND id_almacen=:id_almacen");
+        $stmt->bindParam(":id_producto", $key, PDO::PARAM_INT);
+        $stmt->bindParam(":id_almacen", $id_almacen, PDO::PARAM_INT);
+        $stmt->bindParam(":cantidad", $nuevovalor, PDO::PARAM_INT);
+        $stmt->execute();
+        
+        if($stmt){
+
+
+            $stmt = Conexion::conectar()->prepare("UPDATE $tabla_almacen SET cant=cant-(:cant) WHERE id_producto = :id_producto");
+            $stmt->bindParam(":id_producto", $key, PDO::PARAM_INT);
+            $stmt->bindParam(":cant", $nuevovalor, PDO::PARAM_INT);
+            $stmt->execute();
+    
+   			//GUARDA EN KARDEX DEL ALMACEN ELEGIDO
+            $stmt = Conexion::conectar()->prepare("UPDATE $tablakardex SET $nombremes_actual=$nombremes_actual-(:$nombremes_actual) WHERE id_producto = :id_producto");
+            $stmt->bindParam(":id_producto", $key, PDO::PARAM_INT);
+            $stmt->bindParam(":".$nombremes_actual, $nuevovalor, PDO::PARAM_INT);
+            $stmt->execute();
+   
+            return "ok";
+         }else{
+              return "error";
+         }
+
+    } catch (Exception $e) {
+            echo "Failed: " . $e->getMessage();
+    }
+   
+}
+
+/*=============================================
+OBTIENE LOS DATOS PARA ELIMINAR ENTRADA DEL ALMACEN
+=============================================*/
+static public function mdlBorrarEntradaAlmacen($tabla_hist, $idaborrar, $campo){
+    try {      
+        //$idaborrar=200;
+        $sql="SELECT tb1.id, tb1.id_entrada, tb1.id_proveedor, tb1.fechaentrada, tb1.cantidad, tb1.id_producto,
+        tb1.id_almacen, b.nombre AS nombrealmacen,tb1.tipomov, tb1.ultusuario
+        FROM $tabla_hist tb1
+        INNER JOIN almacenes b ON tb1.id_almacen=b.id
+        WHERE tb1.$campo=:$campo";
+
+        $stmt=Conexion::conectar()->prepare($sql);
+
+        $stmt->bindParam(":".$campo, $idaborrar, PDO::PARAM_INT);
+                    
+        $stmt->execute();
+
+        if ($stmt->rowCount() > 0) {
+            return $stmt->fetchAll();
+        }else{
+            //$respuesta = array("error" =>'vacio');
+            $respuesta = "error";
+            return $respuesta;
+        }
+                
+        $stmt = null;
+
+     } catch (Exception $e) {
+            echo "Failed: " . $e->getMessage();
+    }
+   
+}
+
+/*=============================================
+GUARDA CANCELACION EN TABLA CANCELACION_ENTRADAS
+=============================================*/
+static public function mdlGuardaCancelacion($tabla_cancela, $idnumcancela, $datos, $idusuario){
+    try {      
+    
+        foreach ($datos as $value) {
+            $stmt = Conexion::conectar()->prepare("INSERT INTO $tabla_cancela(id_cancelacion, id_entrada, id_proveedor, fecha_entrada, id_producto, cantidad, id_almacen, id_capturo, ultusuario) VALUES (:id_cancelacion, :id_entrada, :id_proveedor, :fecha_entrada, :id_producto, :cantidad, :id_almacen, :id_capturo, :ultusuario)");
+    
+            $stmt->bindParam(":id_cancelacion", $idnumcancela, PDO::PARAM_INT);
+            $stmt->bindParam(":id_entrada", 	$value["id_entrada"], PDO::PARAM_INT);
+            $stmt->bindParam(":id_proveedor", 	$value["id_proveedor"], PDO::PARAM_INT);
+            $stmt->bindParam(":fecha_entrada", 	$value["fechaentrada"], PDO::PARAM_STR);
+            $stmt->bindParam(":id_producto", 	$value["id_producto"], PDO::PARAM_INT);
+            $stmt->bindParam(":cantidad", 	    $value["cantidad"], PDO::PARAM_INT);
+            $stmt->bindParam(":id_almacen",     $value["id_almacen"], PDO::PARAM_INT);
+            $stmt->bindParam(":id_capturo",     $value["ultusuario"], PDO::PARAM_INT);
+            $stmt->bindParam(":ultusuario",     $idusuario, PDO::PARAM_INT);
+            $stmt->execute();
+            
+        }
+    
+        if($stmt){
+            return "ok";
+        }else{
+            return "error";
+        }
+    
+    } catch (Exception $e) {
+            echo "Failed: " . $e->getMessage();
+    }
+    
+}
+
+/*=============================================
+ACTUALIZA EXISTENCIA POR CANCELACION DE ENTRADA
+=============================================*/
+static public function mdlActualizaExistencia($tabla_almacen, $tabla_kardex, $nombremes_actual, $datos){
+    try {      
+    
+        foreach ($datos as $value) {
+
+            $stmt = Conexion::conectar()->prepare("UPDATE $tabla_almacen SET cant=cant-(:cant) WHERE id_producto = :id_producto");
+            $stmt->bindParam(":id_producto",    $value["id_producto"], PDO::PARAM_INT);
+            $stmt->bindParam(":cant",           $value["cantidad"], PDO::PARAM_INT);
+            $stmt->execute();
+    
+   			//GUARDA EN KARDEX DEL ALMACEN ELEGIDO
+            $stmt = Conexion::conectar()->prepare("UPDATE $tabla_kardex SET $nombremes_actual=$nombremes_actual-(:$nombremes_actual) WHERE id_producto = :id_producto");
+            $stmt->bindParam(":id_producto",        $value["id_producto"], PDO::PARAM_INT);
+            $stmt->bindParam(":".$nombremes_actual, $value["cantidad"], PDO::PARAM_INT);
+            $stmt->execute();
+            
+        }
+    
+        if($stmt){
+            return "ok";
+        }else{
+            return "error";
+        }
+    
+    } catch (Exception $e) {
+            echo "Failed: " . $e->getMessage();
+    }
+    
+}
+
+/*=============================================
+ELIMINAR DATOS EN EL HIST_ENTRADAS
+=============================================*/
+static public function mdlEliminarDatos($tabla, $idaborrar, $campo){
+    try {      
+        //$idaborrar=200;
+        $sql="DELETE FROM $tabla WHERE $campo=:$campo";
+        $stmt=Conexion::conectar()->prepare($sql);
+        $stmt->bindParam(":".$campo, $idaborrar, PDO::PARAM_INT);
+        $stmt->execute();
+
+        if ($stmt) {
+            return "ok";
+        }else{
+            $respuesta = array("error" =>'Eliminacion');
+            return $respuesta;
+        }
+                
+        $stmt = null;
+
+     } catch (Exception $e) {
+            echo "Failed: " . $e->getMessage();
+    }
+   
+}
 
 
 } //fin de la clase

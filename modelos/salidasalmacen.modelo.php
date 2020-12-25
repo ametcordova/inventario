@@ -88,8 +88,8 @@ static public function mdlAltaSalidasAlmacen($tabla_almacen, $tabla, $datos){
 
 }
 /*==========================================================*/
-
 static Public function mdlConsultaExistenciaProd($tabla, $campo, $valor){
+try {          
     //$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $campo = :$campo");
     $stmt = Conexion::conectar()->prepare("SELECT a.cant ,p.id_medida,m.medida FROM $tabla a 
     INNER JOIN productos p ON a.id_producto=p.id
@@ -100,14 +100,18 @@ static Public function mdlConsultaExistenciaProd($tabla, $campo, $valor){
     $stmt -> execute();
     return $stmt -> fetch();      
     $stmt=null;
+
+} catch (Exception $e) {
+    echo "Failed: " . $e->getMessage();
+}
+
 }
 
  /*=============================================
 	LISTAR SALIDAS
 =============================================*/
-
 static public function mdlListarSalidas($tabla, $fechadev1, $fechadev2){
-
+try {      
  	//$where='1=1';
 		  
 	$where='tb1.fechasalida>="'.$fechadev1.'" AND tb1.fechasalida<="'.$fechadev2.'" ';
@@ -127,6 +131,10 @@ static public function mdlListarSalidas($tabla, $fechadev1, $fechadev2){
 	return $stmt -> fetchAll();
   
     $stmt = null;
+
+} catch (Exception $e) {
+    echo "Failed: " . $e->getMessage();
+}
   
 }	
 
@@ -202,9 +210,9 @@ try {
 
 }
 
-/*=============================================
-	ELIMINAR PRODUCTO DE SALIDA DE ALMACEN
-=============================================*/
+/*==================================================
+ELIMINAR PRODUCTO EN LA EDICION DE SALIDA DE ALMACEN
+===================================================*/
 static public function mdEditEliminarRegSA($tabla_almacen, $id_almacen, $tablahist, $tablakardex, $key, $value, $id_salida, $nombremes_actual){
     try {      
         //MODIFICAR PARA PRODUCCION. DEBE SER DELETE
@@ -263,6 +271,7 @@ static public function mdlEditAdicionarRegSA($tabla_almacen, $tablahist, $tablak
 
             
             if($stmt){
+
                 //SCRIP QUE REGISTRA LA SALIDA EN EL ALMACEN ELEGIDO
                    
                     $stmt = Conexion::conectar()->prepare("UPDATE $tabla_almacen SET cant=cant-(:cant), ultusuario=:ultusuario WHERE id_producto = :id_producto");
@@ -288,7 +297,7 @@ static public function mdlEditAdicionarRegSA($tabla_almacen, $tablahist, $tablak
 
 	} catch (Exception $e) {
 		echo "Failed: " . $e->getMessage();
-   }
+    }
 
 }
 /*==========================================================*/    
@@ -496,23 +505,23 @@ static public function mdlEliminarDatos($tabla, $idaborrar, $campo){
 	OBTENER EL ULTIMO REGISTRO-ID CAPTURADO 
 =============================================*/
 static public function mdlObtenerUltimoId($tabla, $campo){
-	try {
+try {
 			
-        if($campo==null){
-            $stmt=Conexion::conectar()->prepare("SELECT MAX(id) AS id FROM $tabla");
-        }else{
-            $stmt=Conexion::conectar()->prepare("SELECT MAX($campo) AS idcancela FROM $tabla");
-        }
+    if($campo==null){
+        $stmt=Conexion::conectar()->prepare("SELECT MAX(id) AS id FROM $tabla");
+    }else{
+        $stmt=Conexion::conectar()->prepare("SELECT MAX($campo) AS idcancela FROM $tabla");
+    }
 
-        $stmt->execute();
+    $stmt->execute();
         
-        return $stmt->fetch();
+    return $stmt->fetch();
 
-		$stmt = null;
+    $stmt = null;
 
-	} catch (Exception $e) {
+} catch (Exception $e) {
 		echo "Failed: " . $e->getMessage();
-	}
+}
 
 }  
 

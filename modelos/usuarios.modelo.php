@@ -3,8 +3,9 @@
 require_once "conexion.php";
 
 class ModeloUsuarios{
-    static Public function MdlMostrarUsuarios($tabla, $campo, $valor){
-     
+
+static Public function MdlMostrarUsuarios($tabla, $campo, $valor){
+try {     
      if($campo !=null){    
         $stmt=Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $campo=:$campo");
         
@@ -24,18 +25,21 @@ class ModeloUsuarios{
 
 	 }        
         
-        $stmt->close();
         
-        $stmt=null;
-    }
+		$stmt=null;
+		
+} catch (Exception $e) {
+	echo "Failed: " . $e->getMessage();
+}
+	
+}
     
     
-    /*=============================================
+/*=============================================
 	REGISTRO DE USUARIO
-	=============================================*/
-
-	static public function mdlIngresarUsuario($tabla, $datos){
-
+=============================================*/
+static public function mdlIngresarUsuario($tabla, $datos){
+try {
 		$stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(nombre, usuario, password, perfil, foto) VALUES (:nombre, :usuario, :password, :perfil, :foto)");
 
 		$stmt->bindParam(":nombre", $datos["nombre"], PDO::PARAM_STR);
@@ -55,18 +59,20 @@ class ModeloUsuarios{
 		
 		}
 
-		$stmt->close();
 		
 		$stmt = null;
 
-	}    
+} catch (Exception $e) {
+	echo "Failed: " . $e->getMessage();
+}
+	
+}    
     
 /*=============================================
 	EDITAR USUARIO
-	=============================================*/
-
-	static public function mdlEditarUsuario($tabla, $datos){
-	
+=============================================*/
+static public function mdlEditarUsuario($tabla, $datos){
+try {	
 		$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET nombre = :nombre, password = :password, perfil = :perfil, foto = :foto WHERE usuario = :usuario");
 
 		$stmt -> bindParam(":nombre", $datos["nombre"], PDO::PARAM_STR);
@@ -85,11 +91,14 @@ class ModeloUsuarios{
 
 		}
 
-		$stmt -> close();
 
 		$stmt = null;
 
-	}    
+} catch (Exception $e) {
+	echo "Failed: " . $e->getMessage();
+}
+	
+}    
     
     
     /*=============================================

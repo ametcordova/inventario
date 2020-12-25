@@ -298,15 +298,6 @@ function eliminarProducto(indice, restarcantidad){
   evaluarElementos();
 }
 
-// //REMOVER ITEM DEL ARRAY arrayProductos
-// function removeItemFromArr ( arr, item ) {
-//   var i = arr.indexOf( item );
-//    if ( i !== -1 ) {
-//       arr.splice( i, 1 );
-//   }
-//   //console.log(arrayProductos);
-// }
-
 //SI NO HAY ELEMENTOS count SE INICIALIZA
 function evaluarElementos(){
   if (!renglonesSalidas>0){
@@ -346,6 +337,9 @@ $("body").on("submit", "#form_salidasalmacen", function( event ) {
 
               $('#modalAgregarSalidasAlmacen').modal('hide')
               $('#dt-salidasalmacen').DataTable().ajax.reload(null, false);
+              $("#alerta").removeClass("d-none");
+              $("#alerta" ).fadeOut( 4500, "linear", complete );
+        
     
             }            
             console.log(res); 
@@ -359,6 +353,10 @@ $("body").on("submit", "#form_salidasalmacen", function( event ) {
 
 });  
 
+function complete() {
+  $("#alerta").addClass("d-none")
+}
+
 //AL ABRIR EL MODAL TRAER EL ULTIMO NUMERO
 $('#modalAgregarSalidasAlmacen').on('show.bs.modal', function (event) {
 	$("#idNumSalAlm").val(0);
@@ -370,6 +368,11 @@ $('#modalAgregarSalidasAlmacen').on('show.bs.modal', function (event) {
   UltimoIdSalidasAlmacen();		//TRAE EL SIGUIENTE NUMERO 
     
 })
+
+/*================ AL SALIR DEL MODAL DE EDICION  RESETEAR FORMULARIO==================*/
+$("#modalAgregarSalidasAlmacen").on('hidden.bs.modal', ()=> {
+  arrayProductos["length"]=0;                  //inicializa array
+});
 
 //TRAER EL ULTIMO ID GUARDADO
 async function UltimoIdSalidasAlmacen(){

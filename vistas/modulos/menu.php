@@ -124,21 +124,11 @@ $jsonpermisos4=($jsonpermisos4==NULL)?$jsonpermisos4=["SINDATO"=>0]:$jsonpermiso
               <li class="nav-item">
                 <a href="salidasalmacen" class="nav-link">
 				          <i class="fa fa-truck nav-icon"></i>
-                  <p>Salidas</p>
+                  <p>Salidas de Almacén</p>
                 </a>
               </li>
             <?php } ?>  
             
-            <?php
-            if(getAccess(array_key_exists("pentradas",$jsonpermisos1)?$jsonpermisos1["pentradas"]:0,ACCESS_ACC)){ ?>
-              <li class="nav-item">
-                <a href="entradas" class="nav-link">
-                  <i class="fa fa-shopping-cart nav-icon"></i>
-                  <p>Entradas </p>
-                </a>
-              </li>
-            <?php } ?>
-
             <?php
             if(getAccess(array_key_exists("pentradas",$jsonpermisos1)?$jsonpermisos1["pentradas"]:0,ACCESS_ACC)){ ?>
               <li class="nav-item">
