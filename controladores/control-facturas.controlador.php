@@ -37,12 +37,22 @@ static public function ctrGuardarEditarFactura($tabla, $datos){
 }
 
 /*=============================================
-FECHA DE PAGO DE FACTURA
+FECHA Y COMPLEMENTO DE PAGO DE FACTURA
 =============================================*/
 
 static public function ctrGuardarPagoFactura($tabla, $datos){
 
         return $respuesta = ModeloFacturas::mdlGuardarPagoFactura($tabla, $datos);
+
+}
+
+/*=============================================
+FECHA DE PAGO DE FACTURA
+=============================================*/
+
+static public function ctrGuardarFechaPagoFactura($tabla, $datos){
+
+	return $respuesta = ModeloFacturas::mdlGuardarFechaPagoFactura($tabla, $datos);
 
 }
 

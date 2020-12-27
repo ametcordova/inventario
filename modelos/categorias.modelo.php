@@ -4,12 +4,11 @@ require_once "conexion.php";
 
 class ModeloCategorias{
 
-	/*=============================================
+/*=============================================
 	CREAR CATEGORIA
-	=============================================*/
-
-	static public function mdlIngresarCategoria($tabla, $datos){
-
+=============================================*/
+static public function mdlIngresarCategoria($tabla, $datos){
+try{
 		$stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(categoria) VALUES (:categoria)");
 
 		$stmt->bindParam(":categoria", $datos, PDO::PARAM_STR);
@@ -24,17 +23,19 @@ class ModeloCategorias{
 		
 		}
 
-		$stmt->close();
 		$stmt = null;
 
-	}
+} catch (Exception $e) {
+	echo "Failed: " . $e->getMessage();
+}
 
-	/*=============================================
+}
+
+/*=============================================
 	MOSTRAR CATEGORIAS
-	=============================================*/
-
-	static public function mdlMostrarCategorias($tabla, $item, $valor){
-
+=============================================*/
+static public function mdlMostrarCategorias($tabla, $item, $valor){
+try{
 		if($item != null){
 
 			$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item = :$item");
@@ -55,17 +56,18 @@ class ModeloCategorias{
 
 		}
 
-		$stmt -> close();
-
 		$stmt = null;
 
-	}
+} catch (Exception $e) {
+	echo "Failed: " . $e->getMessage();
+}
+	
+}
 
-	/*=============================================
+/*=============================================
 	EDITAR CATEGORIA
-	=============================================*/
-
-	public function mdlEditarCategoria($tabla, $datos){
+=============================================*/
+public function mdlEditarCategoria($tabla, $datos){
     try{
 		$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET categoria = :categoria WHERE id = :id");
 
@@ -82,37 +84,37 @@ class ModeloCategorias{
 		
 		}
 
-		$stmt->close();
 		$stmt = null;
 
     }catch(Exception $e) {
                 die($e->getMessage());
     }
 }
-	/*=============================================
+/*=============================================
 	BORRAR CATEGORIA
-	=============================================*/
+=============================================*/
+public function mdlBorrarCategoria($tabla, $datos){
+try{
+	$stmt = Conexion::conectar()->prepare("DELETE FROM $tabla WHERE id = :id");
 
-	public function mdlBorrarCategoria($tabla, $datos){
+	$stmt -> bindParam(":id", $datos, PDO::PARAM_INT);
 
-		$stmt = Conexion::conectar()->prepare("DELETE FROM $tabla WHERE id = :id");
+	if($stmt -> execute()){
 
-		$stmt -> bindParam(":id", $datos, PDO::PARAM_INT);
-
-		if($stmt -> execute()){
-
-			return "ok";
+		return "ok";
 		
-		}else{
+	}else{
 
-			return "error";	
+		return "error";	
 
-		}
+	}
 
-		$stmt -> close();
+	$stmt = null;
 
-		$stmt = null;
-
+} catch (Exception $e) {
+	echo "Failed: " . $e->getMessage();
+}
+	
 	}
 
 }

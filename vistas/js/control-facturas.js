@@ -1,9 +1,10 @@
 var tabla;
 
 
-$("#modalAgregarFactura, #modalEditarFactura, #modalPagarFactura, #modalVerFactura").draggable({
+$("#modalAgregarFactura, #modalEditarFactura, #modalPagarFactura, #modalVerFactura, #modal_fecha_pago").draggable({
 	  handle: ".modal-header"
 });
+
 
 //Función que se ejecuta al inicio
 function init(){
@@ -21,7 +22,11 @@ function init(){
     $("#formularioPagoFactura").on("submit",function(e){
         guadarPagoFactura(e);	
     })
-	
+  
+    $("#formFechaPagoFactura").on("submit",function(e){
+      guadarFechaPagoFactura(e);	
+  })
+  
 }
 
 
@@ -175,7 +180,7 @@ function previewFile() {
 }
 
 /*=============================================
-Guardar Fecha de Pago de Factura
+Guardar Fecha y numero complemento de Pago de Factura
 =============================================*/
 function guadarPagoFactura(e){
 	e.preventDefault(); //No se activará la acción predeterminada del evento
@@ -191,6 +196,22 @@ function guadarPagoFactura(e){
 
 }
 
+/*=============================================
+Guardar Fecha de Pago de Factura
+=============================================*/
+function guadarFechaPagoFactura(e){
+	e.preventDefault(); //No se activará la acción predeterminada del evento
+	var formData = new FormData($("#formFechaPagoFactura")[0]);
+    for (var pair of formData.entries()){console.log(pair[0]+ ', ' + pair[1]);}
+
+     fetch('ajax/control-facturas.ajax.php?op=fechapagofactura', {
+      method: 'POST',
+      body: formData
+     })
+     .then(ajaxPositiva)
+     .catch(showError1);     
+
+}
 
 /*=============================================
 AGREGAR Factura
@@ -238,7 +259,7 @@ function ajaxPositiva(response) {
   //console.log('response.ok: ', response.ok);
   $(".spin").hide();
   $('.enviarfrm, .salirfrm').show(); //oculto mediante id
-  $('#modalAgregarFactura, #modalEditarFactura, #modalPagarFactura').modal('hide')
+  $('#modalAgregarFactura, #modalEditarFactura, #modalPagarFactura, #modal_fecha_pago').modal('hide')
   $('#TablaFacturas').DataTable().ajax.reload(null, false);
     swal({
       title: "Realizado!!",
@@ -557,6 +578,20 @@ $(document).ready(function (){
   $(".spin").hide();
 } );
 
+/ /
+$('#TablaFacturas tbody').on( 'dblclick', 'td', function () {
+  if(tabla.cell( this ).index().columnVisible==10){
+    //console.log(tabla.row( this ).data()[0]);
+    //console.log(tabla.row(this).data());
+    let numerodefactura=tabla.row( this ).data()[0];
+    $('#numerodefactura').html("");
+    $('#numerodefactura').html('<i class="fa fa-calendar"></i>'+' Capturar fecha pago de factura: #'+numerodefactura);
+    $('#modal_fecha_pago').modal('show')
+    $( "input[name='registroid']").val(numerodefactura);
+  };
+});
+
+//click para seleccionar y sumar importes
 $('#TablaFacturas tbody').on( 'click', 'tr', function () {
   $(this).toggleClass('selected');
   //$("#sumaseleccionados").addClass("d-none");
@@ -581,10 +616,8 @@ $('#TablaFacturas tbody').on( 'click', 'tr', function () {
       //$("#sumaseleccionados").removeClass("d-none");
       $(".sumaseleccion").html(sumaseleccion1 + " -/- "+sumaseleccion2);
   };
-  
-});
-
-
+ 
+ });
 
  // Handle click on "Select all" control
    $('#example-select-all').on('click', function(){
@@ -658,7 +691,12 @@ $("#modalAgregarFactura").on('hidden.bs.modal', ()=> {
 $("#modalPagarFactura").on('hidden.bs.modal', ()=> {
 	$('#formularioPagoFactura')[0].reset();
 });
-  
+
+/*================ AL SALIR DEL MODAL DE EDICION RESETEAR FORMULARIO==================*/
+$("#modal_fecha_pago").on('hidden.bs.modal', ()=> {
+	$('#formFechaPagoFactura')[0].reset();
+});
+
 init();
 
 

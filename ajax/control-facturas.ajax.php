@@ -163,6 +163,24 @@ switch ($_GET["op"]){
         }
 	break;
 	
+	case 'fechapagofactura':
+		if(isset($_POST["fechaPagoFactura"])){
+			$tabla = "facturas";
+
+                $datos = array("registroid"     => trim($_POST["registroid"]),
+							   "fechapagado"    => $_POST["fechaPagoFactura"],
+						       "idusuario"      => $_POST["idDeUsuario"]
+                               );
+                                               
+                $rspta = ControladorFacturas::ctrGuardarFechaPagoFactura($tabla, $datos);
+
+                echo $rspta ? $rspta : "Factura no se pudo actualizar";
+
+        }else{
+			echo $rspta = "Factura no se pudo actualizar";
+		}
+	break;
+
 	
 	case 'borrar':
         if(isset($_POST["idFactura"])){

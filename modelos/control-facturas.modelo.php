@@ -105,7 +105,8 @@ static public function mdlGuardarEditarFactura($tabla, $datos){
 	FECHA PAGO DE  FACTURA
 ===============================================================================*/
 static public function mdlGuardarPagoFactura($tabla, $datos){
-        
+try {
+
 	//$stmt = Conexion::conectar()->prepare("DELETE FROM $tabla WHERE id = :id");
 	$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET fechapagado=:fechapagado, numcomplemento=:numcomplemento, status=:status, idusuario=:idusuario WHERE id=:id");
 
@@ -128,14 +129,51 @@ static public function mdlGuardarPagoFactura($tabla, $datos){
 
 	$stmt = null;
 
+} catch (Exception $e) {
+	echo "Failed: " . $e->getMessage();
+}        
+
 }
 
+/* ===============================================================================   
+	FECHA PAGO DE  FACTURA
+===============================================================================*/
+static public function mdlGuardarFechaPagoFactura($tabla, $datos){
+	try {
+	
+		//$stmt = Conexion::conectar()->prepare("DELETE FROM $tabla WHERE id = :id");
+		$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET fechapagado=:fechapagado, numcomplemento=:numcomplemento, idusuario=:idusuario WHERE numfact=:numfact");
+	
+		$stmt->bindParam(":numfact", $datos["registroid"], PDO::PARAM_STR);
+		$stmt->bindParam(":fechapagado", $datos["fechapagado"], PDO::PARAM_STR);
+		$stmt->bindParam(":numcomplemento", $datos["numcomplemento"], PDO::PARAM_STR);
+		$stmt->bindParam(":idusuario", $datos["idusuario"], PDO::PARAM_INT);
+	
+		if($stmt -> execute()){
+	
+			return "ok";
+		
+		}else{
+	
+			return "error";	
+	
+		}
+	
+	
+		$stmt = null;
+	
+	} catch (Exception $e) {
+		echo "Failed: " . $e->getMessage();
+	}        
+	
+}
+	
 
 /* ===============================================================================   
 	BORRAR FACTURA
 ===============================================================================*/
 static public function mdlBorrarFactura($tabla, $item, $valor, $estado){
-        
+try{     
 	//$stmt = Conexion::conectar()->prepare("DELETE FROM $tabla WHERE id = :id");
 	$numorden="CANCELADO";
 	$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET numorden=:numorden, borrado=:borrado WHERE $item = :$item");
@@ -157,14 +195,17 @@ static public function mdlBorrarFactura($tabla, $item, $valor, $estado){
 
 	$stmt = null;
 
+} catch (Exception $e) {
+	echo "Failed: " . $e->getMessage();
+}        
+
 }
    
 /*=============================================
 	MOSTRAR FACTURAS
 =============================================*/
-
 static public function mdlMostrarFacturas($tabla, $item, $valor, $orden, $tipo, $year){
-
+try{
 		if($item != null){
 			$orden=intval($orden);
 			$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item =:$item AND borrado=$orden"); 
@@ -200,7 +241,10 @@ static public function mdlMostrarFacturas($tabla, $item, $valor, $orden, $tipo, 
 
 		}
 
-
+} catch (Exception $e) {
+	echo "Failed: " . $e->getMessage();
+}        
+	
 		$stmt = null;
 }
 

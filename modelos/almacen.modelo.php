@@ -5,7 +5,7 @@ require_once "conexion.php";
 class ModeloAlmacen{
 	
 static Public function MdlMostrarAlmacen($tabla, $campo, $valor){
-
+try{
   if($valor != null){
 			//$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $campo = :$campo");
 			$stmt = Conexion::conectar()->prepare("SELECT a.*,p.id_medida,m.medida FROM $tabla a 
@@ -33,32 +33,38 @@ static Public function MdlMostrarAlmacen($tabla, $campo, $valor){
   }
     
       if($stmt){
- 	  }else{
- 		return false;
+
+     	}else{
+ 		      return false;
       }         
         
         $stmt->close();
         
         $stmt=null;
+
+} catch (Exception $e) {
+  echo "Failed: " . $e->getMessage();
+}
+    
 }
 
 
 static Public function MdlMostrarEntradas($tabla, $campo, $valor){
+try{
+    if($tabla>0){			//QUE ALMACEN MOSTRAR ENTRADAS
+      $sql="SELECT h.`numerodocto`,h.`fechaentrada`, sum(h.`cantidad`) AS entro,h.`id_proveedor`,prov.nombre,h.`id_almacen`,alm.nombre as almacen FROM hist_entrada h
+      INNER JOIN proveedores prov ON id_proveedor=prov.id
+      INNER JOIN almacenes alm ON id_almacen=alm.id 
+      WHERE id_almacen=$tabla
+      GROUP by `fechaentrada`,`numerodocto`,`id_almacen`,`id_proveedor`";
+      
+    }else{                  // TODOS LOS ALMACENES
 
-if($tabla>0){			//QUE ALMACEN MOSTRAR ENTRADAS
-	$sql="SELECT h.`numerodocto`,h.`fechaentrada`, sum(h.`cantidad`) AS entro,h.`id_proveedor`,prov.nombre,h.`id_almacen`,alm.nombre as almacen FROM hist_entrada h
-	INNER JOIN proveedores prov ON id_proveedor=prov.id
-	INNER JOIN almacenes alm ON id_almacen=alm.id 
-	WHERE id_almacen=$tabla
-	GROUP by `fechaentrada`,`numerodocto`,`id_almacen`,`id_proveedor`";
-	
-}else{                  // TODOS LOS ALMACENES
-
-	$sql="SELECT h.`numerodocto`,h.`fechaentrada`, sum(h.`cantidad`) AS entro,h.`id_proveedor`,prov.nombre,h.`id_almacen`,alm.nombre as almacen FROM hist_entrada h
-	INNER JOIN proveedores prov ON id_proveedor=prov.id
-	INNER JOIN almacenes alm ON id_almacen=alm.id
-	GROUP by `numerodocto`,`fechaentrada`,`id_almacen`,`id_proveedor`";
-}
+      $sql="SELECT h.`numerodocto`,h.`fechaentrada`, sum(h.`cantidad`) AS entro,h.`id_proveedor`,prov.nombre,h.`id_almacen`,alm.nombre as almacen FROM hist_entrada h
+      INNER JOIN proveedores prov ON id_proveedor=prov.id
+      INNER JOIN almacenes alm ON id_almacen=alm.id
+      GROUP by `numerodocto`,`fechaentrada`,`id_almacen`,`id_proveedor`";
+    }
         $stmt=Conexion::conectar()->prepare($sql);
 		
         //$stmt->bindParam(":".$campo, $valor, PDO::PARAM_STR);
@@ -78,6 +84,10 @@ if($tabla>0){			//QUE ALMACEN MOSTRAR ENTRADAS
         $stmt->close();
         
         $stmt=null;
+} catch (Exception $e) {
+  echo "Failed: " . $e->getMessage();
+}
+    
     }	
         
 /*

@@ -152,9 +152,8 @@ static public function mdlObtenerLastId($tabla, $item, $valor){
 /*=============================================
 	LISTAR AJUSTE DE INVENTARIO
 =============================================*/
-
 static public function mdlListarAjusteInv($tabla, $item, $valor, $orden, $fechadev1, $fechadev2){
-
+try{
 	if($item != null){
   
 	 // $stmt = Conexion::conectar()->prepare("SELECT cja.id AS idcaja, cja.caja, cja.descripcion, cja.estado, cja.id_usuario, user.id, user.nombre FROM $tabla cja LEFT JOIN usuarios user ON user.id=cja.id_usuario WHERE cja.$item = :$item"); 
@@ -187,17 +186,19 @@ static public function mdlListarAjusteInv($tabla, $item, $valor, $orden, $fechad
   
 	}
   
-	//$stmt -> close();
-  
 	$stmt = null;
-  
+
+} catch (Exception $e) {
+	echo "Failed: " . $e->getMessage();
+}
+
 }	
 
 /*=============================================
 	REPORTE NOTA DE SALIDAS
 =============================================*/	
 static Public function MdlReporteAjusteInv($tabla, $campo, $valor){
-     
+try{     
 	if($campo !=null){    
 
 		$sql="SELECT ai.id, ai.tipomov, tm.nombre_tipo, ai.fecha_ajuste, ai.motivo_ajuste, ai.datos_ajuste, ai.id_almacen, alm.nombre AS almacen, ai.id_usuario, usu.nombre AS nombreusuario, ai.ultmodificacion FROM $tabla ai 
@@ -222,16 +223,18 @@ static Public function MdlReporteAjusteInv($tabla, $campo, $valor){
 
 	}        
 	   
-	   //$stmt->close();
-	   
 	   $stmt=null;
-   }    
+
+} catch (Exception $e) {
+	echo "Failed: " . $e->getMessage();
+}
+}    
 
 /*=============================================
 	MOSTRAR PRODUCTOS  
 =============================================*/
 static public function mdlDatosProducto($tabla, $item, $valor){
-	
+try{
 	$stmt = Conexion::conectar()->prepare("SELECT prod.id, prod.id_medida, prod.codigointerno, prod.descripcion, med.medida 
 	FROM $tabla prod
 	INNER JOIN medidas med ON med.id=prod.id_medida
@@ -244,9 +247,11 @@ static public function mdlDatosProducto($tabla, $item, $valor){
 
 		return $stmt -> fetch();
 
-	//$stmt -> close();
-
 	$stmt = null;
+
+} catch (Exception $e) {
+	echo "Failed: " . $e->getMessage();
+}
 
 }
 
@@ -254,6 +259,7 @@ static public function mdlDatosProducto($tabla, $item, $valor){
 	MOSTRAR TIPO DE MOV DE SALIDA
 =============================================*/
 static public function MdlMostrarTipoMovs($tabla, $item, $valor){
+try{	
 	if($item !=null){    
 	  $stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item=:$item");
   
@@ -272,9 +278,12 @@ static public function MdlMostrarTipoMovs($tabla, $item, $valor){
 	   return $stmt -> fetchAll();	  
 	}	 
   
+	$stmt = null;
   
-	  $stmt = null;
-  
+} catch (Exception $e) {
+	echo "Failed: " . $e->getMessage();
+}
+
   }
 
 } //fin de la clase

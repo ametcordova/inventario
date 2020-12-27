@@ -1,4 +1,4 @@
-<?php
+  <?php
     $fechaHoy=date("d/m/Y");
     $yearHoy=date("Y");
     $tabla="usuarios";
@@ -81,9 +81,9 @@
 		  
          </div>  <!-- fin del card-header -->
  
-        <div class="card-body">
+        <div class="card-body p-1">
         
-        <div class="card">
+        <div class="card" >
           
             <!-- <div class="card-header p-0">
               <div class="text-center col-md-12 d-none" style="font-family: 'Play', sans-serif; font-size:1.1em; font-weight:bold;" id="sumaseleccionados">Suma selección s/IVA:
@@ -92,7 +92,7 @@
             </div>  -->
 
             <div class="card-body table-responsive-sm p-1">
-             <!-- <table id="example" class="display" width="100%"></table> -->
+
               <table class="table table-bordered compact table-hover table-striped dt-responsive" cellspacing="0" id="TablaFacturas" width="100%">
                 <thead class="thead-dark">
                 <tr style="font-size:0.80em"> 
@@ -609,7 +609,39 @@
   </div>   <!-- fin del modal-lg -->
 </div>    <!-- fin del modal -->
 <!--================================= FIN MODAL =======================================-->
+<!-- Modal -->
+<div class="modal fade" id="modal_fecha_pago" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+    <form name="formFechaPagoFactura" id="formFechaPagoFactura" method="POST">    
 
+      <div class="modal-header p-1">
+        <h6 class="modal-title" id="numerodefactura"></h6>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+        <div class="modal-body pt-3 pb-1 bg-warning">
+
+          <div class="form-group">
+              <input type="date" class="form-control form-control-sm" name="fechaPagoFactura" value="" title="Fecha Pago Factura" required >
+              <input type="hidden"  name="idDeUsuario" value="<?php echo $_SESSION['id'];?>">
+              <input type="hidden"  name="registroid" value="">
+          </div>
+
+        </div>
+
+        <div class="modal-footer p-1">
+          <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Cerrar</button>
+          <button type="submit" class="btn btn-sm btn-primary">Guardar</button>
+        </div>
+        
+      </form>  <!-- fin del form -->
+    </div>
+  </div>
+</div>
+<script defer src="vistas/js/control-facturas.js?v=15122020"></script>
+<!--===========================================================================================-->
 
 <!--================================= MODAL VER EXPEDIENTE DE FACTURA =======================================-->
 <!-- Modal para visualizar imagen del producto -->
@@ -644,3 +676,4 @@
   <!-- </div>  fin modal-dialog --->
   
 <!-- </div>	fin modal - -->
+

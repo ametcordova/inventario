@@ -434,7 +434,6 @@
         <hr class="m-2">
 
         <div id="app" style="overflow-x:hidden; overflow-y: auto;">
-
         </div>
 		
       </div>	<!-- fin modal-body-->

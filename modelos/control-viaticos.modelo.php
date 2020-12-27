@@ -57,7 +57,7 @@ static public function mdlGuardarViatico($tabla, $datos){
 	GUARDAR FECHA COMPROBACION 
 ===============================================================================*/
 static public function mdlGuardarAgregaViatico($tabla, $datos){
-        
+try{        
 	$stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(id_viatico, fecha, id_mediodeposito, comentario, importe_liberado) VALUES (:id_viatico, :fecha, :id_mediodeposito, :comentario, :importe_liberado)");
 
 	$stmt->bindParam(":id_viatico", 		$datos["id_viatico"], PDO::PARAM_INT);
@@ -82,8 +82,13 @@ static public function mdlGuardarAgregaViatico($tabla, $datos){
 	}else{
 		return "error";	
 	}
-	$stmt -> close();
+
 	$stmt = null;
+
+} catch (Exception $e) {
+	echo "Failed: " . $e->getMessage();
+}        
+
 }
 /*=============================================*/
 
@@ -92,7 +97,7 @@ static public function mdlGuardarAgregaViatico($tabla, $datos){
 	GUARDAR FECHA COMPROBACION 
 ===============================================================================*/
 static public function mdlGuardarCheckup($tabla, $datos){
-        
+try{        
 	$stmt = Conexion::conectar()->prepare("INSERT INTO tbl_viaticos_checkup(id_viatico, fecha_gasto, numerodocto, concepto_gasto, importe_gasto, ultusuario) VALUES (:id_viatico, :fecha_gasto, :numerodocto, :concepto_gasto, :importe_gasto, :ultusuario)");
 
 	$stmt->bindParam(":id_viatico", 	$datos["id_viatico"], PDO::PARAM_INT);
@@ -128,15 +133,19 @@ static public function mdlGuardarCheckup($tabla, $datos){
 
 	$stmt = null;
 
+} catch (Exception $e) {
+	echo "Failed: " . $e->getMessage();
+}        
+
+
 }
 /*=============================================*/
 
 /*=============================================
 	LISTAR VIATICOS DATATABLE
 =============================================*/
-
 static public function mdlMostrarViaticos($tabla, $item, $valor, $orden, $tipo, $year){
-
+try{
 		if($item != null){
 
 			$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item =:$item AND estado=1"); 
@@ -176,15 +185,19 @@ static public function mdlMostrarViaticos($tabla, $item, $valor, $orden, $tipo, 
 
 		}
 
-
 		$stmt = null;
+
+} catch (Exception $e) {
+	echo "Failed: " . $e->getMessage();
+}        
+	
 }
 
 /*=============================================
 	ASIGNAR NUMERO DE VIATICOS
 =============================================*/	    
 static Public function MdlAsignarNumViatico($tabla){
-     
+try{
 	if($tabla !=null){    
 	   // SELECT MAX(id) AS id FROM productos // SELECT MAX(num_salida) AS num_salida FROM hist_salidas
 	   //$stmt=Conexion::conectar()->prepare("SELECT * FROM $tabla ORDER BY id DESC limit 1");
@@ -195,8 +208,13 @@ static Public function MdlAsignarNumViatico($tabla){
 	}else{
 		   return false;
 	}        
-	   $query->close();
+
 	   $query=null;
+
+} catch (Exception $e) {
+	echo "Failed: " . $e->getMessage();
+}        
+	
 }
 
 /*=============================================
@@ -220,7 +238,7 @@ static Public function mdlPutCambiaEstatus($tabla, $item, $idviatico, $swestado)
 	}
 
  }  catch (Exception $e) {
-		echo "Failed: " . $e->getMessage();
+	echo "Failed: " . $e->getMessage();
  };
 }
    
@@ -228,7 +246,7 @@ static Public function mdlPutCambiaEstatus($tabla, $item, $idviatico, $swestado)
 	OBTENER DATOS DE VIATICOS
 =============================================*/	    
 static Public function mdlGetViatico($tabla, $item1, $idviatico){
-	try {     
+try {     
 	   $stmt=Conexion::conectar()->prepare("SELECT v1.id, v1.id_tecnico, u2.nombre, v1.fecha_dispersion, v1.descripcion_dispersion, v1.concepto_dispersion, v1.descripcion_dispersion, v1.importe_dispersion, v1.saldo_actual, v1.estado, v1.ultusuario, u1.nombre as nomusuario FROM $tabla v1 
 	   INNER JOIN usuarios u1 ON v1.ultusuario=u1.id
 	   INNER JOIN usuarios u2 ON v1.id_tecnico=u2.id
@@ -243,9 +261,9 @@ static Public function mdlGetViatico($tabla, $item1, $idviatico){
 	   
 	   $stmt=null;
 
-	} catch (Exception $e) {
-		echo "Failed: " . $e->getMessage();
-	};
+} catch (Exception $e) {
+	echo "Failed: " . $e->getMessage();
+};
    
 }
 
@@ -253,7 +271,7 @@ static Public function mdlGetViatico($tabla, $item1, $idviatico){
 	OBTENER DATOS DE VIATICOS
 =============================================*/	    
 static Public function mdlGetDatosViatico($tabla, $idviatico){
-	try {    
+try {    
 
 		$stmt=Conexion::conectar()->prepare("SELECT u2.nombre AS comisionista, v1.fecha_dispersion, d1.fecha, d1.comentario,v1.descripcion_dispersion, u1.nombre AS disperso, v1.saldo_actual, v1.concepto_dispersion, v1.descripcion_dispersion, d1.importe_liberado, m1.establecimiento,d1.comentario
 		FROM $tabla v1
@@ -281,9 +299,9 @@ static Public function mdlGetDatosViatico($tabla, $idviatico){
    
 	   $stmt=null;
 
-	} catch (Exception $e) {
-		echo "Failed: " . $e->getMessage();
-	};
+} catch (Exception $e) {
+	echo "Failed: " . $e->getMessage();
+};
    
 }
 
