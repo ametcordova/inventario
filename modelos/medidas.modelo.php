@@ -4,12 +4,12 @@ require_once "conexion.php";
 
 class ModeloMedidas{
 
-	/*=============================================
+/*=============================================
 	CREAR CATEGORIA
-	=============================================*/
+=============================================*/
 
-	static public function mdlIngresarMedida($tabla, $datos){
-
+static public function mdlIngresarMedida($tabla, $datos){
+	try{
 		$stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(medida) VALUES (:medida)");
 
 		$stmt->bindParam(":medida", $datos, PDO::PARAM_STR);
@@ -24,17 +24,21 @@ class ModeloMedidas{
 		
 		}
 
-		$stmt->close();
 		$stmt = null;
+		
+	} catch (Exception $e) {
+		echo "Failed: " . $e->getMessage();
+    }
+	
 
-	}
+}
 
 	/*=============================================
 	MOSTRAR UNIDAD DE MEDIDAS
 	=============================================*/
 
-	static public function mdlMostrarMedidas($tabla, $item, $valor){
-
+static public function mdlMostrarMedidas($tabla, $item, $valor){
+	try{
 		if($item != null){
 
 			$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item = :$item");
@@ -55,17 +59,20 @@ class ModeloMedidas{
 
 		}
 
-		$stmt -> close();
 
 		$stmt = null;
 
-	}
+	} catch (Exception $e) {
+		echo "Failed: " . $e->getMessage();
+    }
 
-	/*=============================================
+}
+
+/*=============================================
 	EDITAR UNIDAD DE MEDIDAS
-	=============================================*/
+=============================================*/
 
-	static public function mdlEditarMedida($tabla, $datos){
+static public function mdlEditarMedida($tabla, $datos){
     try{
 		$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET medida = :medida WHERE id = :id");
 
@@ -89,12 +96,12 @@ class ModeloMedidas{
                 die($e->getMessage());
     }
 }
-	/*=============================================
+
+/*=============================================
 	BORRAR UNIDAD DE MEDIDAS
-	=============================================*/
-
-	static public function mdlBorrarMedida($tabla, $datos){
-
+=============================================*/
+static public function mdlBorrarMedida($tabla, $datos){
+	try{
 		$stmt = Conexion::conectar()->prepare("DELETE FROM $tabla WHERE id = :id");
 
 		$stmt -> bindParam(":id", $datos, PDO::PARAM_INT);
@@ -112,8 +119,13 @@ class ModeloMedidas{
 		$stmt -> close();
 
 		$stmt = null;
+		
+	} catch (Exception $e) {
+		echo "Failed: " . $e->getMessage();
+    }
+		
 
-	}
+}
 
 }
 
