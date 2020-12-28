@@ -26,7 +26,7 @@ static public function mdlGuardarPermisos($tabla, $datajson, $usuario, $campo){
 
 	} catch (Exception $e) {
 		echo "Failed: " . $e->getMessage();
-   }
+    }
 }
 
 /*=============================================
@@ -47,7 +47,7 @@ static public function mdlGetAccesos($tabla, $usuario, $module, $campo){
 
 	} catch (Exception $e) {
 		echo "Failed: " . $e->getMessage();
-   }
+    }
 } 	//fin de la funcion
 
 /*=======================================================
@@ -68,7 +68,7 @@ static public function mdlGetPermisos($tabla, $usuario, $modulo){
 
 	} catch (Exception $e) {
 		echo "Failed: " . $e->getMessage();
-   }
+    }
 } 	//fin de la funcion
 
 
