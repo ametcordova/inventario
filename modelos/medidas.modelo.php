@@ -89,7 +89,6 @@ static public function mdlEditarMedida($tabla, $datos){
 		
 		}
 
-		$stmt->close();
 		$stmt = null;
 
     }catch(Exception $e) {
@@ -116,7 +115,6 @@ static public function mdlBorrarMedida($tabla, $datos){
 
 		}
 
-		$stmt -> close();
 
 		$stmt = null;
 		
