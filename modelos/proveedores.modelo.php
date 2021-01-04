@@ -4,11 +4,11 @@ require_once "conexion.php";
 
 class ModeloProveedores{
 
-	/*=============================================
+/*=============================================
 	CREAR CLIENTE
-	=============================================*/
-
-	 static public function mdlIngresarProveedor($tabla, $datos){
+=============================================*/
+static public function mdlIngresarProveedor($tabla, $datos){
+	try{
 
 		$stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(nombre, rfc, direccion, codpostal, ciudad, email, telefono, contacto, tel_contacto, email_contacto, estatus) VALUES (:nombre, :rfc, :direccion, :codpostal, :ciudad, :email, :telefono, :contacto, :tel_contacto, :email_contacto, :estatus)");
 
@@ -34,16 +34,17 @@ class ModeloProveedores{
 		
 		}
 
-		$stmt->close();
 		$stmt = null;
-
+	} catch (Exception $e) {
+		echo "Failed: " . $e->getMessage();
 	}
+}
 
-    /*=============================================
+/*=============================================
 	MOSTRAR PROVEEDORES
-	=============================================*/
-
-	static public function mdlMostrarProveedores($tabla, $item, $valor){
+=============================================*/
+static public function mdlMostrarProveedores($tabla, $item, $valor){
+	try{
 
 		if($item != null){
 
@@ -65,18 +66,21 @@ class ModeloProveedores{
 
 		}
 
-		$stmt -> close();
 
 		$stmt = null;
 
-	}	
+	} catch (Exception $e) {
+		echo "Failed: " . $e->getMessage();
+	}
+
+}	
 
     
-    /*=============================================
+/*=============================================
 	ACTUALIZAR PROVEEDOR
-	=============================================*/
-
-	 static public function mdlEditarProveedor($tabla, $datos){
+=============================================*/
+ static public function mdlEditarProveedor($tabla, $datos){
+	 try{
 
 		$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET nombre= :nombre, rfc= :rfc, direccion= :direccion, codpostal= :codpostal, ciudad= :ciudad, email= :email, telefono= :telefono, contacto= :contacto, tel_contacto= :tel_contacto, email_contacto= :email_contacto, estatus= :estatus WHERE id= :id");
 
@@ -106,13 +110,16 @@ class ModeloProveedores{
 		$stmt->close();
 		$stmt = null;
 
-	}       
+	} catch (Exception $e) {
+		echo "Failed: " . $e->getMessage();
+	}
+}       
 
-	/*=============================================
+/*=============================================
 	ELIMINAR CLIENTE PROVEEDOR
-	=============================================*/
-
-	static public function mdlEliminarProveedor($tabla, $datos){
+=============================================*/
+static public function mdlEliminarProveedor($tabla, $datos){
+	try{
 
 		$stmt = Conexion::conectar()->prepare("DELETE FROM $tabla WHERE id = :id");
 
@@ -128,9 +135,13 @@ class ModeloProveedores{
 
 		}
 
-		$stmt -> close();
-
 		$stmt = null;
 
-	}	
+	} catch (Exception $e) {
+		echo "Failed: " . $e->getMessage();
+	}
+
+
+}	
+
 }  //fin de la clase

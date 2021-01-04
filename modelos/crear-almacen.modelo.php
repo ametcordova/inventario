@@ -86,10 +86,10 @@ class ModeloAlmacenes{
 
 /*=============================================
 	MOSTRAR ALMACENES
-	=============================================*/
+=============================================*/
+static public function mdlMostrarAlmacenes($tabla, $item, $valor){
 
-	static public function mdlMostrarAlmacenes($tabla, $item, $valor){
-
+	try{
 		if($item != null){
 
 			$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item = :$item");
@@ -112,13 +112,17 @@ class ModeloAlmacenes{
 
 		$stmt = null;
 
-	}	
+	} catch (Exception $e) {
+		echo "Failed: " . $e->getMessage();
+	}
+	
+}	
     
-    /*=============================================
+/*=============================================
 	EDITAR CLIENTE
-	=============================================*/
-
-	 static public function mdlEditarAlmacen($tabla, $datos){
+=============================================*/
+static public function mdlEditarAlmacen($tabla, $datos){
+	try{
 
 		$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET ubicacion= :ubicacion, responsable= :responsable, email= :email, telefono= :telefono, ultusuario= :ultusuario WHERE id= :id");
 
@@ -141,14 +145,19 @@ class ModeloAlmacenes{
 
 		$stmt = null;
 
-	}   
+	} catch (Exception $e) {
+		echo "Failed: " . $e->getMessage();
+	}
+	
+
+}   
     
     
 /*=============================================
 	ELIMINAR CLIENTE
-	=============================================*/
-
-	static public function mdlEliminarAlmacen($tabla, $datos){
+=============================================*/
+static public function mdlEliminarAlmacen($tabla, $datos){
+	try{
 
 		$stmt = Conexion::conectar()->prepare("DELETE FROM $tabla WHERE id = :id");
 
@@ -167,7 +176,10 @@ class ModeloAlmacenes{
 
 		$stmt = null;
 
-	}
-    
+
+	} catch (Exception $e) {
+    echo "Failed: " . $e->getMessage();
+  	}
+}
 
 }  //fin de la clase

@@ -105,8 +105,8 @@ try {
 	ACTUALIZAR USUARIO  <no pasa por el controlador>
 	=============================================*/
 
-	static public function mdlActualizarUsuario($tabla, $item1, $valor1, $item2, $valor2){
-
+static public function mdlActualizarUsuario($tabla, $item1, $valor1, $item2, $valor2){
+	try{
 		$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET $item1 = :$item1 WHERE $item2 = :$item2");
 
 		$stmt -> bindParam(":".$item1, $valor1, PDO::PARAM_STR);
@@ -122,18 +122,21 @@ try {
 
 		}
 
-		$stmt -> close();
-
 		$stmt = null;
 
+	} catch (Exception $e) {
+		echo "Failed: " . $e->getMessage();
 	}
+	
+
+}
     
     
 /*=============================================
 	BORRAR USUARIO
-	=============================================*/
-
-	static public function mdlBorrarUsuario($tabla, $datos){
+=============================================*/
+static public function mdlBorrarUsuario($tabla, $datos){
+	try{
 
 		$stmt = Conexion::conectar()->prepare("DELETE FROM $tabla WHERE id = :id");
 
@@ -153,10 +156,13 @@ try {
 
 		$stmt = null;
 
+	} catch (Exception $e) {
+		echo "Failed: " . $e->getMessage();
+    }
 
-	}    
+}    
     
     
     
     
-}
+}   // fin de la clase

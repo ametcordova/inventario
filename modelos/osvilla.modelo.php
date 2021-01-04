@@ -113,7 +113,6 @@ static public function mdlEditarOsvilla($tabla, $datos){
 /*=============================================
 	??? OS VILLA
 =============================================*/
-
 static public function mdlMostrarOsvilla($tabla, $item, $valor){
 
 	$stmt = Conexion::conectar()->prepare("SELECT os.*, edo.nombreestado,tec.nombre, alm.nombre AS nomalmacen FROM $tabla os INNER JOIN catestado edo ON os.id_estado=edo.idestado 

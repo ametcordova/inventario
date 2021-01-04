@@ -3,8 +3,10 @@ date_default_timezone_set('America/Mexico_City');
 require_once "conexion.php";
 
 class ModeloInventario{
-	
+
+/*===================================================================== */
 static Public function MdlMostrarInventario($tabla, $campo, $valor){
+try{	
 	if($valor=="todos"){
 		$where="1=1 ORDER BY `surtir`";
 	}else{
@@ -26,7 +28,11 @@ static Public function MdlMostrarInventario($tabla, $campo, $valor){
 
 	return $stmt -> fetchAll();      
     
-    $stmt=null;
+	$stmt=null;
+} catch (Exception $e) {
+    echo "Failed: " . $e->getMessage();
+}
+	
 
 }		
 		

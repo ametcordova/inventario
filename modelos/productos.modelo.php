@@ -10,8 +10,8 @@ class ModeloProductos{
 	INNER JOIN CATEGORIAS C ON P.ID_CATEGORIA=C.ID 
 	INNER JOIN MEDIDAS M ON P.ID_MEDIDA=M.ID
 	=============================================*/
-
-	static public function mdlMostrarProductos($tabla, $item, $valor, $orden){
+static public function mdlMostrarProductos($tabla, $item, $valor, $orden){
+	try{
         $estado=1;
 		if($item != null){
 
@@ -36,16 +36,20 @@ class ModeloProductos{
 
 		}
 
-		$stmt -> close();
-
 		$stmt = null;
 
+	} catch (Exception $e) {
+		echo "Failed: " . $e->getMessage();
 	}
+	
 
-	/*=============================================
+}
+
+/*=============================================
 	REGISTRO DE PRODUCTO
-	=============================================*/
-	static public function mdlIngresarProducto($tabla, $datos){
+=============================================*/
+static public function mdlIngresarProducto($tabla, $datos){
+	try{
 
 		$stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(id_categoria, id_medida, codigo, codigointerno, descripcion, imagen, stock, minimo, sku, precio_compra, precio_venta, conseries, ultusuario) VALUES (:id_categoria, :id_medida, :codigo, :codigointerno, :descripcion, :imagen, :stock, :minimo, :sku, :precio_compra, :precio_venta, :conseries, :ultusuario)");
 
@@ -76,14 +80,20 @@ class ModeloProductos{
 
 		$stmt = null;
 
+	} catch (Exception $e) {
+		echo "Failed: " . $e->getMessage();
 	}
+	
 
-	/*=============================================
+}
+
+/*=============================================
 	EDITAR PRODUCTO
-	=============================================*/
-	static public function mdlEditarProducto($tabla, $datos){
+=============================================*/
+static public function mdlEditarProducto($tabla, $datos){
+	try{
 
-	$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET id_categoria = :id_categoria, id_medida = :id_medida, codigo=:codigo, codigointerno = :codigointerno, descripcion = :descripcion, imagen = :imagen, stock = :stock, minimo = :minimo, sku =:sku, precio_compra = :precio_compra, precio_venta = :precio_venta, conseries = :conseries, ultusuario = :ultusuario WHERE id = :id");
+		$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET id_categoria = :id_categoria, id_medida = :id_medida, codigo=:codigo, codigointerno = :codigointerno, descripcion = :descripcion, imagen = :imagen, stock = :stock, minimo = :minimo, sku =:sku, precio_compra = :precio_compra, precio_venta = :precio_venta, conseries = :conseries, ultusuario = :ultusuario WHERE id = :id");
 
 		$stmt->bindParam(":id", $datos["id"], PDO::PARAM_INT);
 		$stmt->bindParam(":id_categoria", $datos["id_categoria"], PDO::PARAM_INT);
@@ -112,13 +122,17 @@ class ModeloProductos{
 
 		$stmt = null;
 
+	} catch (Exception $e) {
+		echo "Failed: " . $e->getMessage();
+	}
+	
 	}
 
-	/*=============================================
+/*=============================================
 	BORRAR PRODUCTO
-	=============================================*/
-
-	static public function mdlEliminarProducto($tabla, $datos){
+=============================================*/
+static public function mdlEliminarProducto($tabla, $datos){
+	try{
         $estado=0;
 		//$stmt = Conexion::conectar()->prepare("DELETE FROM $tabla WHERE id = :id");
 		$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET estado=:estado WHERE id = :id");
@@ -136,17 +150,19 @@ class ModeloProductos{
 
 		}
 
-		$stmt -> close();
-
 		$stmt = null;
 
+	} catch (Exception $e) {
+		echo "Failed: " . $e->getMessage();
 	}
+	
+}
 
-	/*=============================================
+/*=============================================
 	ACTUALIZAR PRODUCTO
-	=============================================*/
-
-	static public function mdlActualizarProducto($tabla, $item1, $valor1, $valor){
+=============================================*/
+static public function mdlActualizarProducto($tabla, $item1, $valor1, $valor){
+	try{
 
 		$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET $item1 = :$item1 WHERE id = :id");
 
@@ -163,17 +179,19 @@ class ModeloProductos{
 
 		}
 
-		$stmt -> close();
-
 		$stmt = null;
 
+	} catch (Exception $e) {
+		echo "Failed: " . $e->getMessage();
 	}
+	
+}
 
-	/*=============================================
+/*=============================================
 	MOSTRAR SUMA VENTAS
-	=============================================*/	
-
-	static public function mdlMostrarSumaVentas($tabla){
+=============================================*/	
+static public function mdlMostrarSumaVentas($tabla){
+	try{
 
 		$stmt = Conexion::conectar()->prepare("SELECT SUM(ventas) as total FROM $tabla");
 
@@ -181,10 +199,14 @@ class ModeloProductos{
 
 		return $stmt -> fetch();
 
-		$stmt -> close();
-
 		$stmt = null;
-	}
 
+	} catch (Exception $e) {
+		echo "Failed: " . $e->getMessage();
+	}
+	
+}
+
+	
 
 }

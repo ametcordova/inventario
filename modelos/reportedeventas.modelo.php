@@ -7,7 +7,7 @@ class ModeloVentas{
 
 //FUNCION PARA REPORTE EN TCPDF
 static Public function MdlReporteVentas($tabla, $campo, $valor, $fechavta1, $fechavta2, $idNumCaja, $idNumCliente, $idNumProds, $idTipoMovs){
-
+try{
 //CAMBIAR EL FORMATO DE FECHA A yyyy-mm-dd Y SI ESTA VACIA TOMA FECHA ACTUAL
 /*$fechavta = explode('/', $fechavta);
 
@@ -69,77 +69,82 @@ $where.=' GROUP BY sal.id_tipomov, pro.id_familia, pro.id_categoria, sal.id_prod
 	$stmt -> execute();
 
 	return $stmt -> fetchAll();      
-    
-    $stmt->close();
        
-    $stmt=null;
+	$stmt=null;
+	
+} catch (Exception $e) {
+    echo "Failed: " . $e->getMessage();
+}
+
 
 }		
 
 //FUNCION PARA REPORTE EN TCPDF
 static Public function MdlListarVentas($tabla, $campo, $valor, $fechavta1, $fechavta2, $idNumCaja, $idNumCliente, $idNumProds, $idTipoMovs){
-
-	$where='sal.id_almacen="'.$tabla.'"';      //
+	try{
+		$where='sal.id_almacen="'.$tabla.'"';      //
+			
+		$idFam = (int) $valor;
+		$valor = isset($valor)?implode(",", $valor):null;
+		$where.=$idFam>0?' AND pro.'.$campo.' IN ('.$valor.')':'';
 		
-	$idFam = (int) $valor;
-	$valor = isset($valor)?implode(",", $valor):null;
-	$where.=$idFam>0?' AND pro.'.$campo.' IN ('.$valor.')':'';
-	
-	if($fechavta1==$fechavta2){
-	 $where.=' AND sal.fecha_salida="'.$fechavta1.'"';    
-	}else{
-	 $where.=' AND sal.fecha_salida>="'.$fechavta1.'" AND sal.fecha_salida<="'.$fechavta2.'" ';
+		if($fechavta1==$fechavta2){
+		$where.=' AND sal.fecha_salida="'.$fechavta1.'"';    
+		}else{
+		$where.=' AND sal.fecha_salida>="'.$fechavta1.'" AND sal.fecha_salida<="'.$fechavta2.'" ';
+		}
+		
+		$idNumCaja = (int) $idNumCaja;
+		if($idNumCaja>'0'){
+			$where.=' AND sal.id_caja="'.$idNumCaja.'"';
+		}
+			
+		$idNumCliente = (int) $idNumCliente;
+		if($idNumCliente>0){
+			$where.=' AND sal.id_cliente="'.$idNumCliente.'"';
+		}
+		
+		$idProd = (int) $idNumProds;
+		$idNumProds = isset($idNumProds)?implode(",", $idNumProds):null;
+		$where.=$idProd>0?' AND sal.id_producto IN ('.$idNumProds.')':'';
+
+		$idMovs = (int) $idTipoMovs;
+		$idTipoMovs = isset($idTipoMovs)?implode(",", $idTipoMovs):null;
+		$where.=$idMovs>0?' AND sal.id_tipomov IN ('.$idTipoMovs.')':'';
+
+		
+		$where.=' GROUP BY sal.id_tipomov, pro.id_familia, pro.id_categoria, sal.id_producto';
+			
+		
+			$sql="SELECT sal.fecha_salida, sal.id_producto,pro.id_familia, fam.familia, pro.id_categoria, cat.categoria, pro.id_medida, med.medida, pro.precio_compra, sal.id_cliente, cli.nombre AS cliente, pro.codigointerno,pro.descripcion,
+			sum(sal.cantidad) AS cant, sum(sal.cantidad*sal.precio_venta) AS venta,
+			SUM(IF(sal.`es_promo` = 0, sal.`cantidad`*sal.`precio_venta`,0)) AS sinpromo, SUM(IF(sal.`es_promo` = 1, sal.`precio_venta`,0)) AS promo, sal.id_caja
+			FROM hist_salidas sal 
+			INNER JOIN productos pro ON sal.id_producto=pro.id
+			INNER JOIN familias fam ON pro.id_familia=fam.id
+			INNER JOIN categorias cat ON pro.id_categoria=cat.id
+			INNER JOIN medidas med ON pro.id_medida=med.id
+			INNER JOIN clientes cli ON sal.id_cliente=cli.id
+			WHERE ".$where;
+			
+			$stmt = Conexion::conectar()->prepare($sql);
+		
+			//$stmt -> bindParam(":$campo", $valor, PDO::PARAM_STR);
+		
+			$stmt -> execute();
+		
+			return $stmt -> fetchAll();      
+			
+			$stmt=null;
+		
+	} catch (Exception $e) {
+		echo "Failed: " . $e->getMessage();
 	}
 	
-	$idNumCaja = (int) $idNumCaja;
-	if($idNumCaja>'0'){
-		$where.=' AND sal.id_caja="'.$idNumCaja.'"';
-	}
-		
-	$idNumCliente = (int) $idNumCliente;
-	if($idNumCliente>0){
-		$where.=' AND sal.id_cliente="'.$idNumCliente.'"';
-	}
-	
-	$idProd = (int) $idNumProds;
-	$idNumProds = isset($idNumProds)?implode(",", $idNumProds):null;
-	$where.=$idProd>0?' AND sal.id_producto IN ('.$idNumProds.')':'';
-
-	$idMovs = (int) $idTipoMovs;
-	$idTipoMovs = isset($idTipoMovs)?implode(",", $idTipoMovs):null;
-	$where.=$idMovs>0?' AND sal.id_tipomov IN ('.$idTipoMovs.')':'';
-
-	
-	$where.=' GROUP BY sal.id_tipomov, pro.id_familia, pro.id_categoria, sal.id_producto';
-		
-	
-		$sql="SELECT sal.fecha_salida, sal.id_producto,pro.id_familia, fam.familia, pro.id_categoria, cat.categoria, pro.id_medida, med.medida, pro.precio_compra, sal.id_cliente, cli.nombre AS cliente, pro.codigointerno,pro.descripcion,
-		sum(sal.cantidad) AS cant, sum(sal.cantidad*sal.precio_venta) AS venta,
-		SUM(IF(sal.`es_promo` = 0, sal.`cantidad`*sal.`precio_venta`,0)) AS sinpromo, SUM(IF(sal.`es_promo` = 1, sal.`precio_venta`,0)) AS promo, sal.id_caja
-		FROM hist_salidas sal 
-		INNER JOIN productos pro ON sal.id_producto=pro.id
-		INNER JOIN familias fam ON pro.id_familia=fam.id
-		INNER JOIN categorias cat ON pro.id_categoria=cat.id
-		INNER JOIN medidas med ON pro.id_medida=med.id
-		INNER JOIN clientes cli ON sal.id_cliente=cli.id
-		WHERE ".$where;
-		
-		$stmt = Conexion::conectar()->prepare($sql);
-	
-		//$stmt -> bindParam(":$campo", $valor, PDO::PARAM_STR);
-	
-		$stmt -> execute();
-	
-		return $stmt -> fetchAll();      
-		
-		$stmt->close();
-		   
-		$stmt=null;
-	
-	}	
+}	
     
-	static Public function MdlMostrarTotVentasFam($tablaVtaFam, $fechaInimes, $fechaFinmes, $limite){
-
+static Public function MdlMostrarTotVentasFam($tablaVtaFam, $fechaInimes, $fechaFinmes, $limite){
+	try{
 		if($fechaInimes==$fechaFinmes){
 		 $where='sal.fecha_salida="'.$fechaInimes.'"';    
 		}else{
@@ -167,7 +172,11 @@ static Public function MdlListarVentas($tabla, $campo, $valor, $fechavta1, $fech
 			   
 			$stmt=null;
 		
-		}	
+		} catch (Exception $e) {
+			echo "Failed: " . $e->getMessage();
+		}
+		
+}	
 	
 
 }       //fin de la clase

@@ -7,8 +7,8 @@ class ModeloSeries{
 	/*=============================================
 	REGISTRO DE SERIES
 	=============================================*/
-	static public function mdlGuardarNumeroSeries($tabla, $id_almacen, $numerodocto, $datos, $id_usuario, $contador){
-        
+static public function mdlGuardarNumeroSeries($tabla, $id_almacen, $numerodocto, $datos, $id_usuario, $contador){
+  try{        
         //$contador = count($productos);    //CUANTO PRODUCTOS VIENEN PARA EL FOR 
         $estado=1;
 				//ACTUALIZA EXISTENCIA EN EL ALMACEN SELECCIONADO
@@ -32,17 +32,19 @@ class ModeloSeries{
 					return "error";
 				 }
 
-		$stmt->close();
 		$stmt = null;
 
+  } catch (Exception $e) {
+    echo "Failed: " . $e->getMessage();
+  }
+  
   }
     
 /*=============================================
 	LISTAR DEV TECNICOS
 =============================================*/
-
 static public function mdlListarSeries($tabla, $item, $valor, $orden, $fechadev1, $fechadev2){
-
+try{
   //if($item = null){
 
     $stmt = Conexion::conectar()->prepare("SELECT series.id, series.id_producto, prod.descripcion, series.numerodocto, series.numeroserie, 
@@ -73,10 +75,12 @@ static public function mdlListarSeries($tabla, $item, $valor, $orden, $fechadev1
 
   //}
 
-  $stmt -> close();
-
-  $stmt = null;
-
+    $stmt = null;
+    
+  } catch (Exception $e) {
+    echo "Failed: " . $e->getMessage();
+  }
+  
 }
         
     

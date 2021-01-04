@@ -139,7 +139,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="vistas/js/salidas.js?v=02092020"></script>
 <script src="vistas/js/crear-almacen.js?v=02092020"></script>
 <script src="vistas/js/adminalmacenes.js?v=01122020"></script>  
-<script src="vistas/js/tecnicos.js?v=03092020"></script>  
+<script src="vistas/js/tecnicos.js?v=03122020"></script>  
 <script src="vistas/js/adminsalidas.js?v=02092020"></script> 
 <script src="vistas/js/reporteinventario.js?v=02092020"></script> 
 <script src="vistas/js/osvilla.js?v=02092020"></script> 

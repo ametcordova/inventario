@@ -8,36 +8,38 @@ class ModeloKardex{
 //FUNCION PARA REPORTE EN TCPDF
 //======================== CONSULTA ENTRADA POR COMPRA ===============================
 static Public function MdlEntradaKardex($campo, $idproducto, $idalmacen, $fechainicial){
+try{
+    $idProd = (int) $idproducto;
+    $where=$idProd>0?' ent.id_producto="'.$idproducto.'" ':'';
 
-$idProd = (int) $idproducto;
-$where=$idProd>0?' ent.id_producto="'.$idproducto.'" ':'';
+    $where.=' AND ent.fechaentrada>="'.$fechainicial.'" ';
 
-$where.=' AND ent.fechaentrada>="'.$fechainicial.'" ';
+    $where.='AND ent.id_almacen="'.$idalmacen.'"';
 
-$where.='AND ent.id_almacen="'.$idalmacen.'"';
+    $where.=' ORDER BY ent.fechaentrada';
+        
+        $sql="SELECT pro.id, ent.id_producto,pro.codigointerno, pro.descripcion, ent.fechaentrada, ent.numerodocto, ent.recibio,ent.cantidad, ent.precio_compra, ent.id_almacen, ent.id_tipomov, tm.nombre_tipo 
+        FROM hist_entrada ent
+        INNER JOIN productos pro ON pro.id=ent.id_producto
+        INNER JOIN tipomovimiento tm ON tm.id=ent.id_tipomov
+        WHERE".$where;
+        
+        $stmt = Conexion::conectar()->prepare($sql);
 
-$where.=' ORDER BY ent.fechaentrada';
+        $stmt -> execute();
+
+        return $stmt -> fetchAll();      
+        
+        $stmt=null;
+    } catch (Exception $e) {
+        echo "Failed: " . $e->getMessage();
+    }
     
-	$sql="SELECT pro.id, ent.id_producto,pro.codigointerno, pro.descripcion, ent.fechaentrada, ent.numerodocto, ent.recibio,ent.cantidad, ent.precio_compra, ent.id_almacen, ent.id_tipomov, tm.nombre_tipo 
-    FROM hist_entrada ent
-    INNER JOIN productos pro ON pro.id=ent.id_producto
-    INNER JOIN tipomovimiento tm ON tm.id=ent.id_tipomov
-    WHERE".$where;
-    
-	$stmt = Conexion::conectar()->prepare($sql);
-
-	$stmt -> execute();
-
-	return $stmt -> fetchAll();      
-    
-    $stmt->close();
-       
-    $stmt=null;
 
 }		
 //================================== ENTRADA POR AJUSTE DE INVENTARIO ====================================
 static Public function MdlMovtoAjuste($tabla, $tipomov, $idalmacen, $fechainicial){
-
+try{
     $where='tm.clase="'.$tipomov.'"';
     $where.=' AND aj.fecha_ajuste>="'.$fechainicial.'" ';
     
@@ -61,11 +63,15 @@ static Public function MdlMovtoAjuste($tabla, $tipomov, $idalmacen, $fechainicia
            
         $stmt=null;
     
-    }		
+    } catch (Exception $e) {
+        echo "Failed: " . $e->getMessage();
+    }
+    
+}		
 
 //==========================================================================================================
-
 static Public function MdlSalidaKardex($campo, $idproducto, $idalmacen, $fechainicial){
+try{
 
     //SELECT `fecha_salida`,`id_producto`, SUM(`cantidad`)as cant,`id_almacen`,`id_tipomov`,`id_caja` FROM `hist_salidas` WHERE `id_producto`="20" and fecha_salida>="2019-10-01" GROUP BY fecha_salida ORDER BY fecha_salida
 
@@ -88,35 +94,37 @@ static Public function MdlSalidaKardex($campo, $idproducto, $idalmacen, $fechain
     
         return $stmt -> fetchAll();      
         
-        $stmt->close();
-           
         $stmt=null;
     
-    }		
+
+    } catch (Exception $e) {
+        echo "Failed: " . $e->getMessage();
+    }
+    
+}		
     
 
 /*=============================================
 	MOSTRAR PRODUCTOS  
 =============================================*/
-
 static public function MdlTraerProduct($tabla, $campo, $idproducto, $estado){
-try{
-		
-	$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $campo = :$campo AND estado=$estado");
+    try{
+            
+        $stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $campo = :$campo AND estado=$estado");
 
-	$stmt -> bindParam(":$campo", $idproducto, PDO::PARAM_STR);
-	//$stmt -> bindParam(":$estado", $estado, PDO::PARAM_INT);
+        $stmt -> bindParam(":$campo", $idproducto, PDO::PARAM_STR);
+        //$stmt -> bindParam(":$estado", $estado, PDO::PARAM_INT);
 
-	$stmt -> execute();
+        $stmt -> execute();
 
-	return $stmt -> fetch();
+        return $stmt -> fetch();
 
-	$stmt -> close();
+        $stmt -> close();
 
-	$stmt = null;
-} catch (Exception $e) {
-	echo "Failed: " . $e->getMessage();
-}
+        $stmt = null;
+    } catch (Exception $e) {
+        echo "Failed: " . $e->getMessage();
+    }
 
 }
 

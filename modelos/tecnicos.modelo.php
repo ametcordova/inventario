@@ -5,11 +5,11 @@ require_once "conexion.php";
 class ModeloTecnicos{
 
 
-	/*=============================================
+/*=============================================
 	CREAR TECNICOS
-	=============================================*/
-
-	 public function mdlIngresarTecnico($tabla, $datos){
+=============================================*/
+public function mdlIngresarTecnico($tabla, $datos){
+	try{
 
 		$stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(nombre,rfc,curp,direccion,cp,ciudad,estado,telefonos,email,numero_licencia,numero_imss,expediente,usuario,contrasena,banco,num_cuenta,clabe,edo_nacimiento,alm_asignado,status,ultusuario) 
 											   VALUES (:nombre, :rfc, :curp, :direccion, :cp, :ciudad, :estado, :telefonos, :email, :numero_licencia, :numero_imss, :expediente, :usuario, :contrasena, :banco, :num_cuenta, :clabe, :edo_nacimiento, :alm_asignado, :status, :ultusuario)");
@@ -47,16 +47,20 @@ class ModeloTecnicos{
 		
 		}
 
-		$stmt->close();
 		$stmt = null;
 
+	} catch (Exception $e) {
+		echo "Failed: " . $e->getMessage();
 	}
+	
+}
 
-	/*=============================================
+/*=============================================
 	EDITAR TECNICOS
-	=============================================*/
+=============================================*/
 
-	 public function mdlEditarTecnico($tabla, $datos){
+public function mdlEditarTecnico($tabla, $datos){
+try{
 
 	$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET nombre=:nombre, rfc=:rfc, curp=:curp, direccion=:direccion, cp=:cp, ciudad=:ciudad, estado=:estado, telefonos=:telefonos, email=:email, numero_licencia=:numero_licencia, numero_imss=:numero_imss, expediente=:expediente, usuario=:usuario, contrasena=:contrasena, banco=:banco, num_cuenta=:num_cuenta, clabe=:clabe, edo_nacimiento=:edo_nacimiento, alm_asignado=:alm_asignado, status=:status, ultusuario=:ultusuario WHERE id=:id");
          
@@ -94,16 +98,20 @@ class ModeloTecnicos{
 		
 		}
 
-		$stmt->close();
 		$stmt = null;
 
-	}    
+	} catch (Exception $e) {
+		echo "Failed: " . $e->getMessage();
+	}
 	
-   /*=============================================
-	MOSTRAR TECNICOS
-	=============================================*/
 
-	static public function mdlMostrarTecnicos($tabla, $item, $valor){
+}    
+	
+/*=============================================
+	MOSTRAR TECNICOS
+=============================================*/
+static public function mdlMostrarTecnicos($tabla, $item, $valor){
+	try{
 
 		if($item != null){
 
@@ -123,7 +131,7 @@ class ModeloTecnicos{
 
 		}else{
 
-			$stmt = Conexion::conectar()->prepare("SELECT tec.id,tec.nombre, tec.expediente,tec.rfc,tec.telefonos, tec.direccion, tec.num_cuenta, alm.nombre AS almacen,tec.status FROM $tabla tec INNER JOIN almacenes alm ON alm_asignado=alm.id");
+			$stmt = Conexion::conectar()->prepare("SELECT tec.id,tec.nombre, tec.expediente, tec.curp, tec.rfc,tec.telefonos, tec.direccion, tec.num_cuenta, alm.nombre AS almacen,tec.status FROM $tabla tec INNER JOIN almacenes alm ON alm_asignado=alm.id");
 
 			$stmt -> execute();
 
@@ -131,19 +139,21 @@ class ModeloTecnicos{
 
 		}
 
-		$stmt -> close();
-
 		$stmt = null;
 
+	} catch (Exception $e) {
+		echo "Failed: " . $e->getMessage();
 	}
+	
+}
     
     
 	
-	/*=============================================
+/*=============================================
 	MOSTRAR ESTADOS
-	=============================================*/
-
-	static public function mdlMostrarEstados($tabla, $item, $valor){
+=============================================*/
+static public function mdlMostrarEstados($tabla, $item, $valor){
+	try{
 
 		if($item != null){
 
@@ -165,11 +175,14 @@ class ModeloTecnicos{
 
 		}
 
-		$stmt -> close();
-
 		$stmt = null;
 
+	} catch (Exception $e) {
+		echo "Failed: " . $e->getMessage();
 	}
+	
+
+}
 	
 	
 

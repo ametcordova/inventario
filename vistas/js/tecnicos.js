@@ -60,7 +60,7 @@ $("#TablaTecnicos").on("click", ".btnVerTecnico", function(){
 	        /*$("#idTecnico").val(respuesta["id"]);*/
 		   $("#VerNombre").val(respuesta["nombre"]);
 		   $("#VerRfc").val(respuesta["rfc"]);
-           $("#verCurp").val(respuesta["curp"]);
+           $("#VerCurp").val(respuesta["curp"]);
 		   $("#VerDireccion").val(respuesta["direccion"]);
 		   $("#VerCp").val(respuesta["cp"]);
            $("#VerCiudad").val(respuesta["ciudad"]);

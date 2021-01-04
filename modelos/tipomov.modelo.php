@@ -145,11 +145,11 @@ static public function MdlMostrarTipoMov($tabla, $item, $valor){
 
 }
 
-	/*=============================================
+/*=============================================
 	BORRAR CAJA
-	=============================================*/
-
-	static public function mdlBorrarMovto($tabla, $item, $valor, $estado){
+=============================================*/
+static public function mdlBorrarMovto($tabla, $item, $valor, $estado){
+	try{
         
 		//$stmt = Conexion::conectar()->prepare("DELETE FROM $tabla WHERE id = :id");
 		$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET estado=:estado WHERE $item = :$item");
@@ -167,13 +167,13 @@ static public function MdlMostrarTipoMov($tabla, $item, $valor){
 
 		}
 
-		$stmt -> close();
-
 		$stmt = null;
 
+	} catch (Exception $e) {
+		echo "Failed: " . $e->getMessage();
 	}
-
-
+	
+}
 
 
 	

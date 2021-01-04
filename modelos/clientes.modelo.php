@@ -4,11 +4,12 @@ require_once "conexion.php";
 
 class ModeloClientes{
 
-	/*=============================================
+/*=============================================
 	CREAR CLIENTE
-	=============================================*/
+=============================================*/
 
-	 public function mdlIngresarCliente($tabla, $datos){
+public function mdlIngresarCliente($tabla, $datos){
+	try{
 
 		$stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(nombre, rfc, email, telefono, direccion, fecha_nacimiento) 
 														VALUES (:nombre, :rfc, :email, :telefono, :direccion, :fecha_nacimiento)");
@@ -33,14 +34,18 @@ class ModeloClientes{
 		$stmt->close();
 		$stmt = null;
 
+	} catch (Exception $e) {
+		echo "Failed: " . $e->getMessage();
+	}
+			
+
 	}
 
 /*=============================================
 	MOSTRAR CLIENTES
 	=============================================*/
-
-	static public function mdlMostrarClientes($tabla, $item, $valor){
-
+static public function mdlMostrarClientes($tabla, $item, $valor){
+	try{
 		if($item != null){
 
 			$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item = :$item");
@@ -61,18 +66,20 @@ class ModeloClientes{
 
 		}
 
-		$stmt -> close();
 
 		$stmt = null;
 
+	} catch (Exception $e) {
+		echo "Failed: " . $e->getMessage();
+	}
+	
 	}	
     
-    /*=============================================
+/*=============================================
 	EDITAR CLIENTE
-	=============================================*/
-
-	 static public function mdlEditarCliente($tabla, $datos){
-
+=============================================*/
+static public function mdlEditarCliente($tabla, $datos){
+	try{
 		$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET nombre= :nombre, rfc= :rfc, email= :email, telefono= :telefono, direccion= :direccion, fecha_nacimiento= :fecha_nacimiento WHERE id= :id");
 
 		$stmt->bindParam(":id", $datos["id"], PDO::PARAM_INT);
@@ -93,18 +100,21 @@ class ModeloClientes{
 		
 		}
 
-		$stmt->close();
 		$stmt = null;
 
+	} catch (Exception $e) {
+		echo "Failed: " . $e->getMessage();
+	}
+	
 	}   
     
     
 /*=============================================
 	ELIMINAR CLIENTE
-	=============================================*/
+=============================================*/
+static public function mdlEliminarCliente($tabla, $datos){
 
-	static public function mdlEliminarCliente($tabla, $datos){
-
+	try{
 		$stmt = Conexion::conectar()->prepare("DELETE FROM $tabla WHERE id = :id");
 
 		$stmt -> bindParam(":id", $datos, PDO::PARAM_INT);
@@ -119,12 +129,12 @@ class ModeloClientes{
 
 		}
 
-		$stmt -> close();
+	$stmt = null;
 
-		$stmt = null;
-
-	}
-    
+	} catch (Exception $e) {
+    	echo "Failed: " . $e->getMessage();
+  	}	
+}	  
 
 }  //fin de la clase
 
