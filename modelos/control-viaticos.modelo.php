@@ -247,7 +247,7 @@ static Public function mdlPutCambiaEstatus($tabla, $item, $idviatico, $swestado)
 =============================================*/	    
 static Public function mdlGetViatico($tabla, $item1, $idviatico){
 try {     
-	   $stmt=Conexion::conectar()->prepare("SELECT v1.id, v1.id_tecnico, u2.nombre, v1.fecha_dispersion, v1.descripcion_dispersion, v1.concepto_dispersion, v1.descripcion_dispersion, v1.importe_dispersion, v1.saldo_actual, v1.estado, v1.ultusuario, u1.nombre as nomusuario FROM $tabla v1 
+	   $stmt=Conexion::conectar()->prepare("SELECT v1.id, v1.id_tecnico, u2.nombre, v1.fecha_dispersion, v1.concepto_dispersion, v1.descripcion_dispersion, v1.importe_dispersion, v1.saldo_actual, v1.estado, v1.ultusuario, u1.nombre as nomusuario FROM $tabla v1 
 	   INNER JOIN usuarios u1 ON v1.ultusuario=u1.id
 	   INNER JOIN usuarios u2 ON v1.id_tecnico=u2.id
 	   WHERE v1.$item1=:id");

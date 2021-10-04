@@ -39,7 +39,9 @@
 <script src="extensiones/plugins/iCheck/icheck.min.js"></script>
 
 <!-- DataTables -->
-<script type="text/javascript" src="extensiones/datatables/datatables.min.js?v=250820"></script>
+<script type="text/javascript" src="extensiones/datatables/datatables.min.js?v=01012021"></script>
+<!-- funcion para Datatables para ordener por fecha-->
+<script type="text/javascript" src="extensiones/datatables/date-eu.js?v=01012021"></script> 
 
 
 <!-- DataTables -->
@@ -71,6 +73,7 @@
 <script src="extensiones/plugins/jqueryNumber/jquery.number.js"></script>
 
 <script src="extensiones/plugins/moment.js"></script>
+
 
 <script src="extensiones/plugins/datepicker/bootstrap-datepicker.js"></script>
 

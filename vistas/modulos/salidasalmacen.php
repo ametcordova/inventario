@@ -3,6 +3,17 @@
     font-size: 14px !important;
   }
 </style>
+<script>
+    document.addEventListener("DOMContentLoaded", ()=>{
+      // Invocamos cada 5 minutos ;
+      const milisegundos = 500*1000;
+      setInterval(()=>{
+      // No esperamos la respuesta de la petición porque no nos importa
+      //console.log("500 segundos.. refrescado")
+      fetch("vistas/modulos/refrescar.php");
+      },milisegundos);
+    });
+  </script>
 <?php
 $tabla = "usuarios";
 $usuario = $_SESSION['id'];
@@ -138,11 +149,11 @@ $fechaHoy = date("Y-m-d");
                 <select class="form-control form-control-sm" name="idTecnicoRecibe" id="idTecnicoRecibe" style="width: 100%;" required>
                   <option value="">Selecione Técnico</option>
                   <?php
-                  $item = null;
-                  $valor = null;
-                  $tecnicos = ControladorTecnicos::ctrMostrarTecnicos($item, $valor);
-                  foreach ($tecnicos as $key => $value) {
-                    echo '<option value="' . $value["id"] . '">' . $value["nombre"] . '</option>';
+                    $item = "status";
+                    $valor = "1";
+                    $tecnicos = ControladorTecnicos::ctrMostrarTecnicos($item, $valor);
+                    foreach ($tecnicos as $key => $value) {
+                      echo '<option value="' . $value["id"] . '">' . $value["nombre"] . '</option>';
                   }
                   ?>
                 </select>
@@ -168,13 +179,17 @@ $fechaHoy = date("Y-m-d");
               </div>
 
               <div class="form-group col-md-2">
-                <label for="inputTipoMov"><i class="fa fa-bookmark-o"></i> Tipo de Mov.</label>
+                <label for=""><i class="fa fa-bookmark-o"></i> Tipo de Mov.</label>
                   <select class="form-control form-control-sm" name="idTipoSalidaAlmacen" id="idTipoSalidaAlmacen" title="Tipo de Salida" required>
-                    <option value="0" >Seleccione Tipo</option>
-                    <option value="1">Recarga a los Técnicos</option>
-                    <option value="2">Traspasos entre Almacenes</option>
-                    <option value="3">Devolución a Carso</option>
-                    <option value="4">Ajustes Inv.</option>
+                    <option value=0 selected>Seleccione Movto</option>
+                    <?php
+                      $item = "estatus";
+                      $valor = 1;
+                      $tipomovsalida = ControladorSalidasAlmacen::ctrMostrarTipoMov($item, $valor);
+                      foreach ($tipomovsalida as $key => $value) {
+                        echo '<option value="' . $value["id"] . '">' . $value["nombre_tipo"] . '</option>';
+                      }
+                    ?>
                 </select>			  
               </div>
 
@@ -358,10 +373,14 @@ $fechaHoy = date("Y-m-d");
               <div class="form-group col-md-2">
                 <label for="inputTipoMov"><i class="fa fa-bookmark-o"></i> Tipo de Mov.</label>
                   <select class="form-control form-control-sm" name="EditidTipoSalidaAlmacen" id="EditidTipoSalidaAlmacen" title="Tipo de Salida">
-                    <option value=1>Recarga a los Técnicos</option>
-                    <option value=2>Traspasos entre Almacenes</option>
-                    <option value=3>Devolución a Carso</option>
-                    <option value=4>Ajustes Inv.</option>
+                  <?php
+                      $item = "estatus";
+                      $valor = 1;
+                      $tipomovsalida = ControladorSalidasAlmacen::ctrMostrarTipoMov($item, $valor);
+                      foreach ($tipomovsalida as $key => $value) {
+                        echo '<option value="' . $value["id"] . '">' . $value["nombre_tipo"] . '</option>';
+                      }
+                    ?>
                 </select>			  
               </div>
 

@@ -25,7 +25,11 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
       </div><!-- /.container-fluid -->
     </section>
 
-    <!-- Main content -->
+    <!-- Main content
+    https://otorgantes.circulodecredito.com.mx/
+    FIN!bien/des15
+    YCW3uk3CEc
+     -->
     <section class="content">
 
       <!-- Default box -->

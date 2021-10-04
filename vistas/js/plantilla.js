@@ -36,14 +36,18 @@ $(".modal-header").css("cursor", "move");
                     pdfMake.createPdf(doc).open();
                 },
             },
-            
        {
             extend: 'print',
             text: 'Imprimir',
+            className: 'btn btn-success btn-sm',
             autoPrint: false            //TRUE para abrir la impresora
         }
         ],
-		
+        initComplete: function () {
+            var btns = $('.dt-button');
+            btns.removeClass('dt-button');
+            btns.addClass('btn btn-success btn-sm');
+          },
     } );
 
 $(document).ready(function() {
@@ -226,7 +230,58 @@ $('.activarDatatable').DataTable({
             text: 'Imprimir',
             autoPrint: false            //TRUE para abrir la impresora
         }
-        ]
+        ],
+        initComplete: function () {
+            var btns = $('.dt-button');
+            btns.removeClass('dt-button');
+            btns.addClass('btn btn-success btn-sm');
+          },
+
+    columnDefs: [{
+        width: "10px",
+        targets: 0
+      },
+      {
+        width: "150px",
+        targets: 1
+      },
+      {
+        width: "80px",
+        targets: 2
+      },
+      {
+        width: "20px",
+        targets: 3
+      },
+      {
+        width: "70px",
+        targets: 4
+      },
+      {
+        width: "180px",
+        targets: 5
+      },
+      {
+        width: "60px",
+        targets: 7
+      },
+      {
+        width: "70px",
+        targets: 8
+      },
+      {
+        width: "60px",
+        targets: 9
+      },
+      {
+        width: "50px",
+        targets: 10
+      },
+      {"className": "dt-center", "targets": [10]}
+    ],
+    "drawCallback": function( settings ) {
+        $('ul.pagination').addClass("pagination-sm");
+   }        
  });
  
 

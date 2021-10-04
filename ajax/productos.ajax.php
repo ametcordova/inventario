@@ -76,9 +76,6 @@ class AjaxProductos{
   }
 
     
-    
-    
-    
 }       //fin de la clase
 
 

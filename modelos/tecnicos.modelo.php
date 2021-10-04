@@ -113,7 +113,24 @@ try{
 static public function mdlMostrarTecnicos($tabla, $item, $valor){
 	try{
 
-		if($item != null){
+
+		if($item != null and $valor!=null){
+
+			$sql="SELECT tec.*,alm.nombre AS almacen,est.nombreestado 
+			FROM $tabla tec 
+			INNER JOIN almacenes alm ON tec.alm_asignado=alm.id 
+			INNER JOIN catestado est ON tec.estado=est.idestado	
+			WHERE tec.$item = :$item";
+			
+			$stmt = Conexion::conectar()->prepare($sql);
+
+			$stmt -> bindParam(":".$item, $valor, PDO::PARAM_STR);
+
+			$stmt -> execute();
+
+			return $stmt -> fetchAll();
+
+		 }elseif($item != null){
 
 			$sql="SELECT tec.*,alm.nombre AS almacen,est.nombreestado 
 			FROM $tabla tec 
@@ -128,7 +145,6 @@ static public function mdlMostrarTecnicos($tabla, $item, $valor){
 			$stmt -> execute();
 
 			return $stmt -> fetch();
-
 		}else{
 
 			$stmt = Conexion::conectar()->prepare("SELECT tec.id,tec.nombre, tec.expediente, tec.curp, tec.rfc,tec.telefonos, tec.direccion, tec.num_cuenta, alm.nombre AS almacen,tec.status FROM $tabla tec INNER JOIN almacenes alm ON alm_asignado=alm.id");

@@ -23,8 +23,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <link rel="stylesheet" href="extensiones/plugins/ionicons/css/ionicons.min.css">
   
   <!-- Theme style -->
-  <link rel="stylesheet" href="extensiones/dist/css/adminlte.css?v=01092200">
-  <link rel="stylesheet" href="extensiones/dist/css/estilos.css?v=010920">  
+  <link rel="stylesheet" href="extensiones/dist/css/adminlte.css?v=01072021">
+  <link rel="stylesheet" href="extensiones/dist/css/estilos.css?v=010121">  
   
   
   <!-- iCheck -->
@@ -56,7 +56,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <link rel="stylesheet" href="extensiones/plugins/jquery-ui-1.12.1/jquery-ui.css">  
   
 <!-- DataTables -->
-<link rel="stylesheet" href="extensiones/datatables/datatables.min.css?v=250820">   
+<link rel="stylesheet" href="extensiones/datatables/datatables.css?v=25082021">   
 
 <!-- DROPZONE -->
 <script src="extensiones/dropzone/dropzone.js"></script>
@@ -85,7 +85,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 		   $_GET["ruta"]=="usuarios" ||
 		   $_GET["ruta"]=="salidas" ||
 		   $_GET["ruta"]=="salidasalmacen" ||
-		   $_GET["ruta"]=="entradas" ||
+		   $_GET["ruta"]=="gestion-empresas" ||
 		   $_GET["ruta"]=="entradasalmacen" ||
 		   $_GET["ruta"]=="devolucion-tecnicos" ||
 		   $_GET["ruta"]=="osvilla" ||
@@ -96,7 +96,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 		   $_GET["ruta"]=="medidas" ||
 		   $_GET["ruta"]=="productos" ||
 		   $_GET["ruta"]=="empresa" ||
-		   $_GET["ruta"]=="modalAviso" ||
+		   $_GET["ruta"]=="reporteportecnico" ||
 		   $_GET["ruta"]=="crear-almacen" ||
 		   $_GET["ruta"]=="almacen" ||
 		   $_GET["ruta"]=="adminalmacenes" ||

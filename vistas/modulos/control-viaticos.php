@@ -1,3 +1,14 @@
+<script>
+    document.addEventListener("DOMContentLoaded", ()=>{
+      // Invocamos cada 5 minutos ;
+      const milisegundos = 500*1000;
+      setInterval(()=>{
+      // No esperamos la respuesta de la petición porque no nos importa
+      //console.log("500 segundos.. refrescado")
+      fetch("vistas/modulos/refrescar.php");
+      },milisegundos);
+    });
+  </script>
 <?php
     date_default_timezone_set('America/Mexico_City');
     $fechaHoy=date("d/m/Y");
@@ -482,4 +493,4 @@ var printContents = document.getElementById('paraimprimir').innerHTML;
   }
 </script>
 
-<script defer src="vistas/js/control-viaticos.js?v=01112020"></script> 
+<script defer src="vistas/js/control-viaticos.js?v=31012021"></script> 

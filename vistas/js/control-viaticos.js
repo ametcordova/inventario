@@ -1,3 +1,4 @@
+
 var tabla;
 
 
@@ -35,7 +36,7 @@ $("#TablaViaticos tbody").on("click", "button.btnPrintViatico", function(){
 
 
 /*=============================================
-AGREGAR Factura
+AGREGAR VIATICO
 =============================================*/
 function agregarViatico(e){
 	e.preventDefault(); //No se activará la acción predeterminada del evento
@@ -52,7 +53,7 @@ function agregarViatico(e){
 }
 
 /*=============================================
-AGREGAR VIATICOS A UNO YA CAPTURADO
+GUARDAR Y AGREGAR VIATICOS A UNO YA CAPTURADO
 =============================================*/
 function guadarAgregaViatico(e){
 	e.preventDefault(); //No se activará la acción predeterminada del evento
@@ -77,9 +78,9 @@ function ajaxViaticos(response) {
     swal({
       title: "Realizado!!",
       text: "Registro Guardado correctamente",
-	  icon: "success",
+	    icon: "success",
       button: "Cerrar",
-	  timer: 3000
+	    timer: 2000
       })  //fin swal
       .then(function(result){
         if (result) {
@@ -103,8 +104,8 @@ function showViaticos(err) {
   swal({
       title: "Error!!",
       text: err,
-          icon: "error",
-          button: "Cerrar"
+      icon: "error",
+      button: "Cerrar"
       })  //fin swal
     window.location = "inicio";
 }
@@ -123,7 +124,6 @@ function guadarCheckup(e){
      })
      .then(ajaxViaticos)
      .catch(showViaticos);     
-
 }
 
 /*===========================================================
@@ -196,7 +196,7 @@ $("#TablaViaticos").on("click", ".btnVerReporte", function(){
   })
   .then(function (response) {
     // handle success
-    console.log(response.data);
+    //console.log(response.data);
     template1(response.data);
   })
   .catch(function (error) {
@@ -216,7 +216,6 @@ $("#TablaViaticos").on("click", ".btnVerReporte", function(){
     }
   })
   .then(function (response) {
-    // handle success
     //console.log(response.data);
     template2(response.data);
   })
@@ -334,7 +333,7 @@ function template2(data){
   `;    
 }
 /*===========================================================*/
-// LISTAR EN EL DATATABLE REGISTROS DE LA TABLA Facturas
+// LISTAR EN EL DATATABLE REGISTROS DE LA TABLA VIATICOS
 function listarViaticos(){
  let valorradio=($('input:radio[name=radiofactura]:checked').val());
  let valoryear=$("input[name='filterYearViaticos']").val();
@@ -343,21 +342,21 @@ function listarViaticos(){
   tabla=$('#TablaViaticos').dataTable(
 	{
 		"aProcessing": true,//Activamos el procesamiento del datatables
-	    "aServerSide": true,//Paginación y filtrado realizados por el servidor
+	  "aServerSide": true,//Paginación y filtrado realizados por el servidor
 		"lengthMenu": [ [10, 25, 50,100, -1], [10, 25, 50, 100, "Todos"] ],
-       "language": {
+    "language": {
 		"sProcessing":     "Procesando...",
 		"stateSave": true,
-        "sLengthMenu":     "Mostrar _MENU_ registros &nbsp",
-        "sZeroRecords":    "No se encontraron resultados",
-        "sEmptyTable":     "Ningún dato disponible en esta tabla",
-        "sInfo":           "Mostrar registros del _START_ al _END_ de un total de _TOTAL_",
+    "sLengthMenu":     "Mostrar _MENU_ registros &nbsp",
+    "sZeroRecords":    "No se encontraron resultados",
+    "sEmptyTable":     "Ningún dato disponible en esta tabla",
+    "sInfo":           "Mostrar registros del _START_ al _END_ de un total de _TOTAL_",
 		"sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
 		"sInfoPostFix":    "",           
-        "sSearch":         "Buscar:",
-        "sInfoThousands":  ",",
-        "sLoadingRecords": "Cargando...",
-        "oPaginate": {
+    "sSearch":         "<i class='fa fa-search btn btn-info px-1 py-0 '></i>",
+    "sInfoThousands":  ",",
+    "sLoadingRecords": "Cargando...",
+    "oPaginate": {
 		"sFirst":    "Primero",
 		"sLast":     "Último",
 		"sNext":     "Siguiente",
@@ -367,39 +366,40 @@ function listarViaticos(){
 			"sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
 			"sSortDescending": ": Activar para ordenar la columna de manera descendente"
 		},
-      //   dom: '<clear>Bfrtip',
-      //   buttons: [
-      //       {
-      //        text: 'Copiar',
-      //        extend: 'copy'
-      //        },
-      //       'excelHtml5',
-      //       'csvHtml5',
-      //       {
-      //           extend: 'pdfHtml5',
-      //           orientation: 'landscape',
-      //           title: "NUNOSCO",
-      //           customize: function ( doc ) {
-      //               pdfMake.createPdf(doc).open();
-      //           },
-      //       },
+        dom: '<clear>Bfrtip',
+        buttons: [
+            {
+             text: 'Copiar',
+             extend: 'copy'
+             },
+            'excelHtml5',
+            'csvHtml5',
+            {
+                extend: 'pdfHtml5',
+                orientation: 'landscape',
+                title: "NUNOSCO",
+                customize: function ( doc ) {
+                    pdfMake.createPdf(doc).open();
+                },
+            },
             
-      //  {
-      //       extend: 'print',
-      //       text: 'Imprimir',
-      //       autoPrint: false            //TRUE para abrir la impresora
-      //   }
-      //  ],
-        // initComplete: function () {			//botones pequeños y color verde
-        //   var btns = $('.dt-button');
-        //   btns.removeClass('dt-button');
-        //   btns.addClass('btn btn-success btn-sm');
-        // },  
+       {
+            extend: 'print',
+            text: 'Imprimir',
+            autoPrint: false            //TRUE para abrir la impresora
+        }
+       ],
+        initComplete: function () {			//botones pequeños y color verde
+          var btns = $('.dt-button');
+          btns.removeClass('dt-button');
+          btns.addClass('btn btn-success btn-sm');
+        },  
 		"columnDefs": [
 			{"className": "dt-left", "targets": [2]},
 			{"className": "dt-center", "targets": [1,6,7]},
-			{"className": "dt-right", "targets": [4,5]}				//"_all" para todas las columnas
-      ],    
+      {"className": "dt-right", "targets": [4,5]},				//"_all" para todas las columnas
+      {"targets": 1, "type":"date-eu"}    //ordenado por fecha
+      ],
 		"ajax":
 				{
 					url: 'ajax/control-viaticos.ajax.php?op=listar',
@@ -413,7 +413,7 @@ function listarViaticos(){
        
 		"bDestroy": true,
 		"iDisplayLength": 10,//Paginación
-    "order": [[ 1, 0, "desc" ]]//Ordenar (columna,orden)
+    "order": [[ 1, "desc" ]]//Ordenar (columna,orden)
 	}).DataTable();    
 
 // $('#TablaViaticos').on('click', 'tr', function () {
@@ -451,7 +451,7 @@ $('#filterYearViaticos').datepicker({
   todayHighlight:true,
 }); 
 
-/*================ AL ENTRAR AL MODAL DE AGREAGR VIATICO RESETEAR FORMULARIO==================*/
+/*===== AL ENTRAR AL MODAL DE AGREAGR VIATICO RESETEAR FORMULARIO Y OBTENER NUM CONSECUTIVO=====*/
 $("#modalAgregarViaticos").on('show.bs.modal', ()=> {
   $('#formularioAgregarViatico')[0].reset();
     (async () => { 
@@ -475,6 +475,16 @@ $("#modalAgregarViaticos").on('show.bs.modal', ()=> {
     });
   })();  //fin del async  
 });
+
+/*===========================================================
+REPORTE DE VIATICOS EN EXCEL
+============================================================*/
+$("#TablaViaticos").on("click", ".btnExcel", function(){
+  var idViatico = $(this).attr("idviatico");
+  if(idViatico.length > 0){
+    window.open("extensiones/tcpdf/pdf/viatico-excel.php?codigo="+idViatico,"_self");
+   }  
+})
 
 /*================ AL SALIR DEL MODAL DE EDICION RESETEAR FORMULARIO==================*/
 $("#modalEditarViaticos").on('hidden.bs.modal', ()=> {

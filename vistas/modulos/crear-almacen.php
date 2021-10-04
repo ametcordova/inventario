@@ -46,10 +46,10 @@ error_reporting(E_ALL ^ E_NOTICE);
       <div class="card-body">
         <div class="card">
           <div class="card-body">
-            <table class="table table-bordered table-striped dt-responsive activarDatatable" width="100%">
-              <thead>
-                <tr>
-                  <th style="width:9px;">#</th>
+          <table class="table table-bordered compact table-hover table-striped dt-responsive activarDatatable" cellspacing="0" width="100%">
+                <thead class="thead-dark">
+                <tr style="font-size:0.90em">             
+                  <th>#</th>
                   <th>Nombre</th>
                   <th>Ubicación</th>
                   <th>Responsable</th>
@@ -108,8 +108,8 @@ error_reporting(E_ALL ^ E_NOTICE);
                 ?>
 
               </tbody>
-              <tfoot>
-                <tr>
+              <tfoot class="thead-dark">
+                <tr style="font-size:0.90em">
                   <th style="width:9px;">#</th>
                   <th>Nombre</th>
                   <th>Ubicación</th>

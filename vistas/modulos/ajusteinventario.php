@@ -179,7 +179,7 @@ $fechaHoy=date("Y-m-d");
                     $tabla="tipomovimiento";
                     $tipomov=ControladorAjusteInventario::ctrMostrarTipoMovs($tabla, $item, $valor);
                       foreach($tipomov as $key=>$value){
-                           echo '<option value="'.$value["id"].'-'.$value["clase"].'">'.$value["nombre_tipo"].'</option>';
+                           echo '<option value="'.$value["id"].'-'.$value["clase"].'">'.$value["nombre_tipo"].' - '.$value["clase"] . '</option>';
                       }
                   ?>				  
                   </select>			  

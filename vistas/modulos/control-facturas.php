@@ -8,15 +8,15 @@
 ?>
 
 <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
+  <div class="content-wrapper" style="background-color:darkslategrey;">
     <!-- Content Header (Page header) -->
     <section class="content-header m-0 p-1">
       <div class="container-fluid">
         <div class="row">
           <div class="col-sm-6">
-            <h4>Control Facturas:&nbsp; 
+            <h5 style="color:floralwhite;">Control Facturas:&nbsp; 
                 <small><i class="fa fa-th"></i></small>
-            </h4>
+            </h5>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -118,9 +118,7 @@
                 </tbody>
                 <tfoot class="thead-dark">
                 <tr style="font-size:0.80em">
-                    <th></th>
-                    <th class="text-right">Suma selección s/c/IMPS.</th>
-                    <th class="sumaseleccion"></th>
+                    <th>No.</th>
                     <th></th>
                     <th></th>
                     <th></th>
@@ -130,8 +128,8 @@
                     <th></th>
                     <th></th>
                     <th></th>
-                    <th></th>
-                    <th style="width:7%;"></th>
+                    <th colspan="2" class="text-right">Suma selección</th>
+                    <th colspan="2" class="sumaseleccion"></th>
                 </tr>
                 </tfoot>
               </table>

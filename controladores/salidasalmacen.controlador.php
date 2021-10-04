@@ -1,7 +1,7 @@
 <?php
 
 class ControladorSalidasAlmacen{
-
+	
 
 /*=============================================
 	GUARDA SALIDA DEL ALMACEN
@@ -174,6 +174,13 @@ static public function ctrObtenerUltimoId($tabla, $campo){
 
 	return $respuesta = ModeloSalidasAlmacen::mdlObtenerUltimoId($tabla, $campo);
 
+}
+
+/*=================MOSTRAR TIPO MOVs ================================ */
+static public function ctrMostrarTipoMov($item, $valor){
+    $tabla="tipomovsalida";
+	$respuesta = ModeloSalidasAlmacen::mdlMostrarTipoMov($tabla, $item, $valor);
+    return $respuesta;
 }
 
 

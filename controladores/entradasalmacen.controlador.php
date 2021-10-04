@@ -30,8 +30,8 @@ static public function ctrMostrarTipoMov($item, $valor){
 }
 
 /*=================MOSTRAR PRODUCTOS ================================ */
-static public function ctrajaxProductos($tabla, $campo, $valor){
-	$respuesta = ModeloEntradasAlmacen::MdlajaxProductos($tabla, $campo, $valor);
+static public function ctrAjaxProductos($tabla, $campo, $valor){
+	$respuesta = ModeloEntradasAlmacen::MdlAjaxProductos($tabla, $campo, $valor);
     return $respuesta;
 }
 /*============================================*/

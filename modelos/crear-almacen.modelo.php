@@ -9,11 +9,11 @@ class ModeloAlmacenes{
 	=============================================*/
 
 	static public function mdlIngresarAlmacen($tabla, $datos){
-
-	 $tbl_kardex="kardex_".strtolower($datos["nombre"]);
+	 $nombre_nvo_almacen=strtolower($datos["nombre"]);
+	 $tbl_kardex='kardex_'.$nombre_nvo_almacen.' ';
 
 	 $crear_tb_almacen = Conexion::conectar()->prepare('
-	 CREATE TABLE IF NOT EXISTS '.$datos["nombre"].' (
+	 CREATE TABLE IF NOT EXISTS '.$nombre_nvo_almacen.'(
 	 id int(5) NOT NULL AUTO_INCREMENT,
 	 id_producto int(5) NOT NULL,
 	 codigointerno varchar(15) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
@@ -50,7 +50,7 @@ class ModeloAlmacenes{
 	  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;');
 	  
 
-		 if($crear_tb_almacen->execute()){
+		if($crear_tb_almacen->execute()){
 	 
 			if($crear_kardex_almacen->execute()){
 				$stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(nombre, kardex, ubicacion, responsable, telefono, email, ultusuario) VALUES (:nombre, :kardex, :ubicacion, :responsable, :telefono, :email, :ultusuario)");

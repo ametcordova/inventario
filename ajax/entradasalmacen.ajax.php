@@ -44,11 +44,11 @@ switch ($_GET["op"]){
             $tri = '<tr><td>'.($value["id"]).'</td>';
             $trf='</tr';
 
-            $boton1 =getAccess($acceso, ACCESS_PRINTER)?"<td><button class='btn btn-sm btn-success btnPrintEntradaAlmacen' idPrintEntrada='".$value['id']."' title='Generar PDF '><i class='fa fa-file-pdf-o'></i></button></td> ":""; 
-            $boton2 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-primary btnEditEntradaAlmacen' idEditarEntrada='".$value['id']."' title='Editar Entrada' data-toggle='modal' data-target='#modalEditarEntradasAlmacen'><i class='fa fa-edit'></i></button></td> ":""; 
-            $boton3 =getAccess($acceso, ACCESS_DELETE)?"<td><button class='btn btn-sm btn-danger btnDelEntradasAlmacen' idDeleteEntradaAlm='".$value['id']."' title='Eliminar Entrada '><i class='fa fa-trash'></i></button></td> ":"";
-
-            $botones=$boton1.$boton2.$boton3;
+            $boton1 =getAccess($acceso, ACCESS_PRINTER)?"<td><button class='btn btn-success btn-sm px-1 py-1 btnPrintEntradaAlmacen' idPrintEntrada='".$value['id']."' title='Generar PDF '><i class='fa fa-file-pdf-o'></i></button></td> ":"";
+            $boton2 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-primary btn-sm px-1 py-1 btnEditEntradaAlmacen' idEditarEntrada='".$value['id']."' title='Editar Entrada' data-toggle='modal' data-target='#modalEditarEntradasAlmacen'><i class='fa fa-edit'></i></button></td> ":"";
+            $boton3 =getAccess($acceso, ACCESS_DELETE)?"<td><button class='btn btn-danger btn-sm px-1 py-1 btnDelEntradasAlmacen' idDeleteEntradaAlm='".$value['id']."' title='Eliminar Entrada '><i class='fa fa-trash'></i></button></td> ":"";
+            $boton4 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-info btn-sm px-1 py-1 btnUpEntradasAlmacen' idUploadEntradaAlm='".$value['id']."' title='Subir Entrada ' data-idupentrada='".$value['id']."' ><i class='fa fa-cloud-upload'></i></button></td> ":"";
+            $botones=$boton1.$boton2.$boton3.$boton4;
 
             $data[]=array(
                 $tri,
@@ -85,7 +85,7 @@ switch ($_GET["op"]){
         $campo = "descripcion";
         $data = array();
 
-        $respuesta = ControladorEntradasAlmacen::ctrajaxProductos($tabla, $campo, $valor);
+        $respuesta = ControladorEntradasAlmacen::ctrAjaxProductos($tabla, $campo, $valor);
 
         echo json_encode($respuesta);
     
@@ -173,7 +173,7 @@ switch ($_GET["op"]){
             $oldarray=array_combine($_POST["oldproducto"], $_POST["oldcantidad"]);      //combina 2 array en 1. (indice)prod y (valor)cant
             $newarray=array_combine($_POST["idproducto"], $_POST["cantidad"]);
 
-            //ARRAY PARA SACAR PROD(S) A ELIMINAR DE LA ENTRADA
+            //ARRAY DE PROD(S) A ELIMINAR DE LA ENTRADA.
             $aeliminar=array_diff_key($oldarray, $newarray);        
             if(!empty($aeliminar)) {
                 foreach ($aeliminar as $key => $value) {
@@ -184,7 +184,7 @@ switch ($_GET["op"]){
                 }
             }
 
-            //ARRAY PARA SACAR PROD(S) A AGREGAR A LA ENTRADA
+            //ARRAY DE PROD(S) A AGREGAR A LA ENTRADA
             $aadicionar=(array_diff_key($newarray, $oldarray));            
             if(!empty($aadicionar)) {
                 foreach ($aadicionar as $key => $value) {
@@ -207,7 +207,7 @@ switch ($_GET["op"]){
                 }
             }            
 
-            //ITERAR CON LOS PRODUCTOS QUE QUEDAN CON INDICES IGUALES, PERO DIF. O IGUALES EN CANTIDAD
+            //ITERAR CON LOS PRODUCTOS QUE QUEDAN CON INDICES IGUALES, PERO DIF. EN CANTIDAD YA SEA MAYOR O MENOR CANT.
             foreach($oldarray as $key => $value){
                 $nuevovalor=$newarray[$key]-$value;
 
@@ -298,5 +298,27 @@ switch ($_GET["op"]){
         }
 
     break;    
+
+    case 'subirArchivosEntrada':
+
+        if(isset($_POST["nombre_archivo"])){
+            $campo1=$_POST["nombre_archivo"];
+            $campo2=$_POST["numero_entrada"];
+
+            //$respuesta = array("identrada" =>$_POST["nombre_archivo"]);
+            $respuesta = array("identrada" =>$campo2,"nombre"=>$campo1);
+
+            //$respuesta = ControladorEntradasAlmacen::ctrMostrarEntradasAlmacen($campo, $_GET["idEditarEntrada"]);
+            
+            echo json_encode($respuesta);    
+
+        }else{
+            
+            $respuesta = array("error" =>$campo2);;
+            echo json_encode($respuesta);
+        }
+        
+     break;
+
 
 } // fin del switch

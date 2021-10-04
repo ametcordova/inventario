@@ -218,7 +218,35 @@
 
                         <td class="text-center">
                         </td>
-                        </tr>                   
+                        </tr>  
+
+                        <tr>
+                        <th scope="row">Tipos de Mov.</th>
+                        <td class="text-center">
+                            <input class="form-check-input checkbox-inline habilitaPermisoTipMov" type="checkbox" value="0" id="ptiposmov">
+                        </td>
+                        <td class="text-center">
+                            <input class="form-check-input checkbox-inline roltipomov" type="checkbox" value="1" id="aditipo">
+                        </td>
+                        <td class="text-center">
+                            <input class="form-check-input checkbox-inline roltipomov" type="checkbox" value="1" id="editipo">
+                        </td>
+                        <td class="text-center">
+                            <input class="form-check-input checkbox-inline roltipomov" type="checkbox" value="1" id="vietipo">
+                        </td>
+                        <td class="text-center">
+                            <input class="form-check-input checkbox-inline roltipomov" type="checkbox" value="1" id="deltipo">
+                        </td>
+                        <td class="text-center">
+
+                        </td>
+                        <td class="text-center">
+
+                        </td>
+                        <td class="text-center">
+                            <input class="form-check-input checkbox-inline roltipomov" type="checkbox" value="1" id="acttipo">
+                        </td>
+                        </tr>                                            
 
                     </tbody>
 

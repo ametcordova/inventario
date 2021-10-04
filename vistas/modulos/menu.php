@@ -288,6 +288,15 @@ $jsonpermisos4=($jsonpermisos4==NULL)?$jsonpermisos4=["SINDATO"=>0]:$jsonpermiso
               </li>
             <?php } ?>
 
+            <?php if(getAccess(array_key_exists("ptiposmov",$jsonpermisos2)?$jsonpermisos2["ptiposmov"]:0,ACCESS_ACC)){ ?>
+              <li class="nav-item">
+                <a href="tipomov" class="nav-link">
+                  <i class="fa fa-cc nav-icon"></i>
+                  <p>Tipos de Mov.</p>
+                </a>
+              </li>
+            <?php } ?>
+
     			</ul>
 		  	</li>
       
@@ -302,29 +311,20 @@ $jsonpermisos4=($jsonpermisos4==NULL)?$jsonpermisos4=["SINDATO"=>0]:$jsonpermiso
 
             <ul class="nav nav-treeview">
 
-            <?php if(getAccess(array_key_exists("rsalidas",$jsonpermisos3)?$jsonpermisos3["rsalidas"]:0,ACCESS_ACC)){ ?>              
+             <?php if(getAccess(array_key_exists("rinventarios",$jsonpermisos3)?$jsonpermisos3["rinventarios"]:0,ACCESS_ACC)){ ?>                          
               <li class="nav-item">
-                <a href="adminsalidas" class="nav-link">
-                  <i class="fa fa-circle-o nav-icon"></i>
-                  <p>Rep. de Salidas</p>
-                </a>
-              </li>
-            <?php } ?>
-
-            <?php if(getAccess(array_key_exists("rentradas",$jsonpermisos3)?$jsonpermisos3["rentradas"]:0,ACCESS_ACC)){ ?>              
-              <li class="nav-item">
-                <a href="adminalmacenes" class="nav-link">
-                  <i class="fa fa-circle-o nav-icon"></i>
-                  <p>Rep. de Entradas</p>
+                <a href="reporteinventario" class="nav-link">
+                  <i class="fa fa-book nav-icon"></i>
+                  <p>Rep. de Inventario</p>
                 </a>
               </li>
             <?php } ?>
 
             <?php if(getAccess(array_key_exists("rinventarios",$jsonpermisos3)?$jsonpermisos3["rinventarios"]:0,ACCESS_ACC)){ ?>                          
               <li class="nav-item">
-                <a href="reporteinventario" class="nav-link">
-                  <i class="fa fa-book nav-icon"></i>
-                  <p>Rep. de Inventario</p>
+                <a href="reporteportecnico" class="nav-link">
+                  <i class="fa fa-volume-control-phone nav-icon"></i>
+                  <p>Rep. Inv. por Técnico</p>
                 </a>
               </li>
             <?php } ?>
@@ -365,10 +365,10 @@ $jsonpermisos4=($jsonpermisos4==NULL)?$jsonpermisos4=["SINDATO"=>0]:$jsonpermiso
 
             <?php if(getAccess(array_key_exists("empresa",$jsonpermisos4)?$jsonpermisos4["empresa"]:0,ACCESS_ACC)){ ?>              
               <li class="nav-item">
-                <a href="empresa" class="nav-link">
+                <a href="gestion-empresas" class="nav-link">
                   <i class="nav-icon fa fa-building"></i>
                   <p>
-                    Empresa
+                    Empresas
                   </p>
                 </a>
               </li>

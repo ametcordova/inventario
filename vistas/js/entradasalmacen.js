@@ -8,14 +8,15 @@ $("#modalAgregarEntradasAlmacen").draggable({
 
 //Función que se ejecuta al inicio
 function init(){
-
   
 /*=============================================
   VARIABLE LOCAL STORAGE
   =============================================*/
-
-  fechaactual();
-
+  //console.log(localStorage.getItem("daterange-btn-EntAlmacen"))
+  if (localStorage.getItem("daterange-btn-EntAlmacen") === null) {
+    fechaactual();  
+  }
+  
   $("#btnGuardarEntradasAlmacen").hide();
 
   dt_ListarEntradasAlmacen();
@@ -24,44 +25,45 @@ function init(){
 
 // ========= LISTAR EN EL DATATABLE REGISTROS DE LA TABLA cajas================
 function dt_ListarEntradasAlmacen(){
-  let rangodeFecha = $("#daterange-btn-EntAlmacen span").html();
-  //console.log("Rango de Fecha Ent:",rangodeFecha);
-  if(rangodeFecha==undefined || rangodeFecha==null){
-      var FechDev1=moment().format('YYYY-MM-DD');
-      var FechDev2=moment().format('YYYY-MM-DD');
-  }else{
-	  let arrayFecha = rangodeFecha.split(" ", 3);
-	  let f1=arrayFecha[0].split("-");
-	  let f2=arrayFecha[2].split("-");
+  let rangodeFecha = (localStorage.getItem("daterange-btn-EntAlmacen"));
+  $('#daterange-btn-EntAlmacen span').html(rangodeFecha);
 
-	  var FechDev1=f1[2].concat("-").concat(f1[1]).concat("-").concat(f1[0]); //armar la fecha año-mes-dia
-	  var FechDev2=f2[2].concat("-").concat(f2[1]).concat("-").concat(f2[0]);
-  }	   
+   if(rangodeFecha==undefined || rangodeFecha==null){
+       var FechDev1=moment().format('YYYY-MM-DD');
+       var FechDev2=moment().format('YYYY-MM-DD');
+   }else{
+	   let arrayFecha = rangodeFecha.split(" ", 3);
+	   let f1=arrayFecha[0].split("-");
+	   let f2=arrayFecha[2].split("-");
+
+	   var FechDev1=f1[2].concat("-").concat(f1[1]).concat("-").concat(f1[0]); //armar la fecha año-mes-dia
+	   var FechDev2=f2[2].concat("-").concat(f2[1]).concat("-").concat(f2[0]);
+   }	   
  
   //console.log(FechDev1, FechDev2);
 
   tablaSalidasAlmacen=$('#dt-entradasalmacen').dataTable(
 	{
 		"aProcessing": true,//Activamos el procesamiento del datatables
-	    "aServerSide": true,//Paginación y filtrado realizados por el servidor
+	  "aServerSide": true,//Paginación y filtrado realizados por el servidor
     "lengthMenu": [ [10, 25, 50,100, -1], [10, 25, 50, 100, "Todos"] ],
-       "language": {
+    "language": {
 		"sProcessing":     "Procesando...",
-        "sLengthMenu":     "Mostrar _MENU_ registros &nbsp",
-        "sZeroRecords":    "No se encontraron resultados",
-        "sEmptyTable":     "Ningún dato disponible en esta tabla",
-        "sInfo":           "Mostrar registros del _START_ al _END_ de un total de _TOTAL_",
+    "sLengthMenu":     "Mostrar _MENU_ registros &nbsp",
+    "sZeroRecords":    "No se encontraron resultados",
+    "sEmptyTable":     "Ningún dato disponible en esta tabla",
+    "sInfo":           "Mostrar registros del _START_ al _END_ de un total de _TOTAL_",
 		"sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
 		"sInfoPostFix":    "",           
-        "sSearch":         "Buscar:",
-        "sInfoThousands":  ",",
-        "sLoadingRecords": "Cargando...",
-        "oPaginate": {
+    "sSearch":         "Buscar:",
+    "sInfoThousands":  ",",
+    "sLoadingRecords": "Cargando...",
+    "oPaginate": {
 		"sFirst":    "Primero",
 		"sLast":     "Último",
 		"sNext":     "Siguiente",
 		"sPrevious": "Anterior"}
-        },
+    },
 		"oAria": {
 			"sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
 			"sSortDescending": ": Activar para ordenar la columna de manera descendente"
@@ -395,6 +397,98 @@ function evaluarElementos(){
   }
 }
 
+/*===================================================
+ABRIR MODAL PARA SUBIR O VISUALIZAR ARCHIVOS. DESDE EL DATATABLE
+===================================================*/
+$("#dt-entradasalmacen tbody").on("click", "button.btnUpEntradasAlmacen", function(){
+  //let idUploadEntradaAlm = $(this).attr("idUploadEntradaAlm");
+  let datas=$(this).data("idupentrada")
+  //console.log(idUploadEntradaAlm, datas); 
+    if(datas.length > 0){
+      $('#modalUpEntradasAlmacen').modal('show');
+      $("#numIdEntradaAlmacen").val(datas);
+    }
+})
+/*===================================================*/
+
+
+/*======================================================================*/
+//ENVIAR FORMULARIO PARA GUARDAR ARCHIVOS DE ENTRADA
+/*======================================================================*/
+$("body").on("submit", "#form_upfile", (event)=>{	
+  event.preventDefault();
+  event.stopPropagation();
+  let sNombreFile = $("#nombre_archivo").val();   //Nombre o descripción del archivo a subir
+  let sUploadedFile = $("#uploadedFile").val();
+  let nIdEntrada=$("#numIdEntradaAlmacen").val();
+  console.log(sNombreFile, sUploadedFile, nIdEntrada )
+  //validar que no este vacio el input file
+  subirArchivos();
+  
+
+});  
+/*======================================================================*/
+function subirArchivos() {
+  var numero_entrada=$("#numIdEntradaAlmacen").val();
+  var nombre_archivo=$("#nombre_archivo").val();
+  $("#uploadedFile").upload('vistas/modulos/subir_archivo.php',{
+      nombre_archivo: $("#nombre_archivo").val(),
+      numero_entrada: $("#numIdEntradaAlmacen").val()
+  },
+  function(respuesta) {
+     console.log(respuesta, nombre_archivo)
+      //Subida finalizada.
+      $("#barra_de_progreso").val(0);
+
+      if (respuesta === 1) {
+        var datos = new FormData();
+        datos.append("nombre_archivo", nombre_archivo);
+        datos.append("numero_entrada", numero_entrada);
+        axios({ 
+          method  : 'post', 
+          url : 'ajax/entradasalmacen.ajax.php?op=subirArchivosEntrada', 
+          data : datos,
+        }) 
+        .then((res)=>{ 
+          if(res.status==200) {
+            console.log(res.data)
+
+            //$('#dt-entradasalmacen').DataTable().ajax.reload(null, false);
+            //$('#modalAgregarEntradasAlmacen').modal('hide')
+
+            //$("#alert1").removeClass("d-none");
+            //$("#alert1" ).fadeOut( 4500, "linear", completa );
+  
+          }            
+
+        }) 
+        .catch((err) => {throw err}); 
+
+          mostrarRespuesta(`<strong>Mensaje!</strong>El archivo se ha subido correctamente. <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
+          <span aria-hidden='true'>&times;</span></button>`, true);
+          $("#nombre_archivo, #uploadedFile").val('');
+      } else {
+          mostrarRespuesta(`<strong>Mensaje!</strong>El archivo NO se ha podido subir. <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
+          <span aria-hidden='true'>&times;</span></button>`, false);
+      }
+      //mostrarArchivos();
+  }, function(progreso, valor) {
+     console.log(valor)
+      //Barra de progreso.
+      $("#barra_de_progreso").val(valor);
+  });
+}
+/*======================================================================*/
+function mostrarRespuesta(mensaje, ok){
+  $("#respuesta").removeClass('alert-success').removeClass('alert-danger').removeClass('d-none').html(mensaje);
+  if(ok){
+      $("#respuesta").addClass('alert-success').addClass('d-block');
+  }else{
+      $("#respuesta").addClass('alert-danger').addClass('d-block');
+  }
+}
+/*======================================================================*/
+
 /*======================================================================*/
 //ENVIAR FORMULARIO PARA GUARDAR DATOS DE ENTRADA
 /*======================================================================*/
@@ -453,6 +547,26 @@ $("#dt-entradasalmacen tbody").on("click", "button.btnPrintEntradaAlmacen", func
      window.open("extensiones/tcpdf/pdf/reporte_entrada.php?codigo="+idPrintEntrada, "_blank");
     }
 })
+
+
+/*===================================================
+SUBIR O VISUALIZAR ENTRADA CARSO AL ALMACEN DESDE EL DATATABLE
+===================================================*/
+$("#dt-entradasalmacen tbody").on("click", "button.btnUpEntradasAlmacen", function(){
+  //let idUploadEntradaAlm = $(this).attr("idUploadEntradaAlm");
+  let datas=$(this).data("idupentrada")
+  //console.log(idUploadEntradaAlm, datas); 
+  $('#modalUpEntradasAlmacen').modal('show');
+  $("#numIdEntradaAlmacen").val(datas);
+  
+    if(datas.length > 0){}
+})
+
+//$("#modalUpEntradasAlmacen").on('show.bs.modal', ()=> {
+  //let idUploadEntradaAlm = $(this).attr("idUploadEntradaAlm");
+    //console.log($(this).data("idupentrada")); 
+  //$("#numIdEntradaAlmacen").val(idUploadEntradaAlm);
+//});
 
 /*===================================================
 ELIMINAR SALIDA DE ALMACEN DESDE EL DATATABLE

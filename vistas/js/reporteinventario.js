@@ -3,11 +3,11 @@ $('.btnImprimeInventario').on('click', function() {
    let idNumAlma=$("#almInventario").val();      //id de Almacen Seleccionado
    let idNomAlma=$("#almInventario option:selected" ).text();
    let valorradio=($('input:radio[name=radio1]:checked').val());
-  console.log(valorradio, idNomAlma);
+  console.log(valorradio, idNomAlma, idNumAlma);
   	idNomAlma = idNomAlma.toLowerCase();
 	idNumAlma=parseInt(idNumAlma);
     if(idNumAlma>0 && idNomAlma.length > 0){	
-	   window.open("extensiones/tcpdf/pdf/reporte_inventario.php?idNomAlma="+idNomAlma+"&tiporeporte="+valorradio, "_blank");
+	   window.open("extensiones/tcpdf/pdf/reporte_inventario.php?idNomAlma="+idNomAlma+"&tiporeporte="+valorradio+"&idNumAlma="+idNumAlma, "_blank");
 	}else{
 	 console.log("No se selecciono almacen");
 	 $('#mensajedeerror').text('Seleccione un almacen');
@@ -19,13 +19,21 @@ $('.btnImprimeInventario').on('click', function() {
 });
 
 
-
 function listarInventario(){
   //var almacenSel = $("#almInventario").val();
    let almacenInv=$("#almInventario option:selected" ).text();
    let valorradio=($('input:radio[name=radio1]:checked').val());
-  console.log(valorradio, almacenInv);
-	
+   console.log(valorradio, almacenInv);
+
+	if(almacenInv=="Seleccione Almacen"){
+		//console.log("No se selecciono almacen");
+		$('#mensajedeerror').text('Seleccione un almacen');
+		$("#mensajedeerror").removeClass("d-none");
+		setTimeout(function(){$("#mensajedeerror").addClass("d-none")}, 3500);
+		return true;	
+	}
+
+
 	$('#tablalistado').dataTable({
 		   "lengthMenu": [ [10, 25, 50,100, -1], [10, 25, 50, 100, "Todos"] ],
 		   "language": {

@@ -50,11 +50,11 @@ error_reporting(E_ALL^E_NOTICE);
             <div class="card-header">
               <h3 class="card-title">Tabla con todos los Proveedores</h3>
             </div>
-            <!-- /.card-header -->
+            card-header -->
             
             <div class="card-body">
-              <table class="table table-bordered table-striped dt-responsive TablaProveedores" width="100%">
-                <thead>
+              <table class="table table-bordered compact table-hover table-striped dt-responsive TablaProveedores" cellspacing="0" width="100%">
+                <thead class="thead-dark">
                 <tr>
                     <th style="width:9px;">#</th>
                     <th>Razon Social</th>
@@ -125,7 +125,7 @@ error_reporting(E_ALL^E_NOTICE);
         ?>              
                 
                 </tbody>
-                <tfoot>
+                <tfoot class="thead-dark">
                 <tr>
                     <th style="width:9px;">#</th>
                     <th>Razon Social</th>

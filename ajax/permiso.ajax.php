@@ -165,6 +165,10 @@ switch ($_GET["op"]){
 							$opcion="palmacenes";
 							$accesos=256;
 
+						}else if($value=="ptiposmov"){
+							$data+=[$opcion => $accesos];
+							$opcion="ptiposmov";
+							$accesos=256;
 						}
 
 						$accesos=valordeacceso($value, $accesos);

@@ -533,7 +533,7 @@
         <div class="form-row">
           <div class="form-group col-md-9">
             <input type="text" class="form-control form-control-sm" id="EditarNombre" name="EditarNombre" placeholder="Nombre" data-toggle="tooltip" title="Nombre Completo" autofocus required>
-			<input type="hidden"  name="idDeUsuario" value="<?php echo $_SESSION['id'];?>">
+			      <input type="hidden"  name="idDeUsuario" value="<?php echo $_SESSION['id'];?>">
             <input type="hidden" id="idTecnico" name="idTecnico">
           </div>
 

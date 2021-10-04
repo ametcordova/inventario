@@ -2,8 +2,18 @@
   .select2-results__options {
     font-size: 13px !important;
   }
-
 </style>
+<script>
+    document.addEventListener("DOMContentLoaded", ()=>{
+      // Invocamos cada 5 minutos ;
+      const milisegundos = 500*1000;
+      setInterval(()=>{
+      // No esperamos la respuesta de la petición porque no nos importa
+      //console.log("500 segundos.. refrescado")
+      fetch("vistas/modulos/refrescar.php");
+      },milisegundos);
+    });
+  </script>
 <?php
 $tabla = "usuarios";
 $usuario = $_SESSION['id'];
@@ -48,7 +58,7 @@ $fechaHoy = date("Y-m-d");
 
         <!-- Date range -->
         <?php if (getAccess($acceso, ACCESS_VIEW)) { ?>
-          <button type="button" class="btn btn-default btn-sm ml-3 mr-2 " id="daterange-btn-EntAlmacen" value="01/01/2018 - 01/15/2018">
+          <button type="button" class="btn btn-default btn-sm ml-3 mr-2 " id="daterange-btn-EntAlmacen" value="">
             <span>
               <i class="fa fa-calendar"></i> Rango de fecha
             </span>
@@ -86,34 +96,21 @@ $fechaHoy = date("Y-m-d");
         <div class="card">
           <div class="card-body">
             <table class="table table-bordered table-hover table-compact table-sm table-striped dt-responsive" id="dt-entradasalmacen" cellspacing="0" width="100%">
-              <thead class="thead-dark" style="font-size:.8rem; height:1.2px">
-                <tr style="font-size:.8rem;">
+              <thead class="thead-dark" style="font-size:.8rem; height:1px">
+                <tr style="font-size:0.90em">
                   <th style="width:1em;">#</th>
                   <th style="width:2em;">Fecha</th>
                   <th style="width:4em;">Almacen</th>
                   <th style="width:14em;">Proveedor</th>
                   <th style="width:6em;">Tipo Mov.</th>
-                  <th style="width:2em;">Usuario</th>
-                  <th style="width:4em;">Acción</th>
+                  <th style="width:1em;">Usuario</th>
+                  <th style="width:2em;">Acción</th>
                 </tr>
               </thead>
-              <tbody>
 
-              <tr>
-                  <td>99</td>
-                  <td>09-12-2020</td>
-                  <td>ALM_TUXTLA</td>
-                  <td>Grupo Carso</td>
-                  <td>Suministro Carso</td>
-                  <td>Amet</td>
-                  <td>
-                    <button class='btn btn-sm btn-success' title='Generar PDF '><i class='fa fa-file-pdf-o'></i></button>
-                    <button class='btn btn-sm btn-info' title='Generar PDF '><i class='fa fa-file-pdf-o'></i></button>
-                    <button class='btn btn-sm btn-danger' title='Generar PDF '><i class='fa fa-file-pdf-o'></i></button>
-                  </td> 
-                </tr>
-
+              <tbody style="font-size:0.90em">
               </tbody>
+
             </table>
           </div>  <!-- /.card-body  -->
         </div>   <!-- /.card -->
@@ -496,5 +493,77 @@ $fechaHoy = date("Y-m-d");
                 FIN MODAL PARA CAPTURAR LAS SALIDAS DEL ALMACEN
 ==================================================================================== -->
 
+<!-- ==============================================================================
+              MODAL PARA SUBIR ARCHIVOS DE ENTRADA CARSO AL ALMACEN 
+==================================================================================== -->
+<div class="modal fade" id="modalUpEntradasAlmacen" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-xlg">
+    <div class="modal-content">  <!-- modal-content -->
+      <form role="form" name="form_upfile" id="form_upfile" enctype="multipart/form-data" action="javascript:void(0);" >
+        <!-- Modal Header -->
+        <div class="modal-header m-2 p-1" style="background-color:darkslategrey; color:floralwhite;">
+          <h5 class="modal-title"><i class="fa fa-plus-circle"></i> Administración de archivos de Entrada al Almacén</h5>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body m-0">
+
+          <div class="card-body m-0 p-0">
+
+            <div class="form-row m-0">
+
+              <!-- data-date-end-date=no puede seleccionar una fecha posterior a la actual -->
+              <div class="form-group col-md-1 pt-0 text-center">
+                <label class="control-label p-0"><i class="fa fa-file-o"></i> No.</label>
+                <input type="text" class="form-control form-control-sm text-center" name="numIdEntradaAlmacen" id="numIdEntradaAlmacen" readonly title="Número de Entrada">
+                <input type="hidden" name="idDeUsuario" value="<?php echo $_SESSION['id']; ?>">
+              </div>
+
+              <div class="form-group col-md-3 pt-0">
+                  <label class="control-label p-0 text-left"><i class="fa fa-file-text"></i> Descrip. Archivo</label>
+                  <input type="text" class="form-control form-control-sm" id="nombre_archivo" name="nombre_archivo" />
+              </div>
+
+              <div class="form-group col-md-4 pt-0">
+                  <label class="control-label p-0 text-left"><i class="fa fa-file-o"></i> Subir archivo</label>
+                  <input type="file"  name="uploadedFile" id="uploadedFile" required/>
+                  <input type="submit" name="uploadBtn" value="Subir"  />
+              </div>
+
+            </div>
+
+              <!-- <div class="form-row col-md-12 alert"> <span id="respuesta"></span></div>-->
+
+            <div class="alert alert-success alert-dismissible fade show d-none" id="respuesta" role="alert">
+            </div>
+
+            <div class="row justify-content-lg-center">
+              <div class="col-lg-8 ">
+                <progress id="barra_de_progreso" value="0" max="100" style="height:40px; width:80%" ></progress>
+              </div>
+            </div>
+
+
+              <div class="dropdown-divider "></div>
+
+          </div> <!-- fin card-body -->
+
+        </div> <!-- fin Modal body -->
+
+        <!-- Modal footer -->
+        <div class="modal-footer m-1 p-1" style="background-color:darkslategrey; color:floralwhite;">
+          <button type="button" class="btn btn-dark btn-sm float-left" data-dismiss="modal"><i class="fa fa-reply"></i> Salir</button>
+          <!--<button type="submit" class="btn btn-success btn-sm" id="btnGuardarEntradasAlmacen"><i class="fa fa-save"></i> Guardar</button> -->
+        </div>
+
+      </form>
+    </div> <!-- fin del modal-content -->
+  </div>
+</div>
+<!-- ==============================================================================
+                FIN MODAL PARA SUBIR ARCHIVOS DE ENTRADA CARSO AL ALMACEN 
+==================================================================================== -->
 <script defer src="vistas/js/entradasalmacen.js?v=05122020"></script>
 <script defer src="vistas/js/entradasalmacenedit.js?v=05102020"></script>
+<script defer src="extensiones/upload.js?v=05102020"></script>

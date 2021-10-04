@@ -99,7 +99,15 @@ function dt_ListarSalidasAlmacen(){
             text: 'Imprimir',
             className: 'btn btn-success btn-sm',
             autoPrint: false            //TRUE para abrir la impresora
-        }
+        },
+        {
+          text: 'My button',
+          className: 'orange',
+          action: function ( e, dt, node, config ) {
+              dt_ListarSalidasAlmacen();
+              //alert( 'Button activated' );
+          }
+        }        
         ],
         initComplete: function () {
           var btns = $('.dt-button');

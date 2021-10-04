@@ -50,20 +50,20 @@ error_reporting(E_ALL^E_NOTICE);
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-              <table class="table table-bordered table-striped dt-responsive activarDatatable" width="100%">
-                <thead>
-                <tr>
-                    <th style="width:9px;">#</th>
-                    <th>Nombre</th>
-                    <th>Rfc</th>
-                    <th>Email</th>
-                    <th>Teléfono</th>
-                    <th>Dirección</th>
-                    <th>Fecha Nac.</th>
-                    <th>Tot. Compras</th>
-                    <th>Ult. Compra</th>
-                    <th>Alta</th>
-                    <th>Acciones</th>
+              <table class="table table-bordered compact table-hover table-striped dt-responsive activarDatatable" cellspacing="0" width="100%">
+                <thead class="thead-dark">
+                <tr style="width:100%;">
+                    <th style="width:1em;">#</th>
+                    <th style="width:4em;">Nombre</th>
+                    <th style="width:1em;">Rfc</th>
+                    <th style="width:1em;">Email</th>
+                    <th style="width:3em;">Teléfono</th>
+                    <th style="width:5em;">Dirección</th>
+                    <th style="width:3em;">Fec.Nac.</th>
+                    <th style="width:2em;">T.Compras</th>
+                    <th style="width:2em;">U. Compra</th>
+                    <th style="width:3em;">Alta</th>
+                    <th style="width:1em;">Accion</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -125,19 +125,19 @@ error_reporting(E_ALL^E_NOTICE);
         ?>              
                 
                 </tbody>
-                <tfoot>
-                <tr>
-                    <th style="width:9px;">#</th>
+                <tfoot class="thead-dark">
+                 <tr>
+                    <th>#</th>
                     <th>Nombre</th>
                     <th>Rfc</th>
                     <th>Email</th>
                     <th>Teléfono</th>
                     <th>Dirección</th>
-                    <th>Fecha Nac.</th>
-                    <th>Tot. Compras</th>
-                    <th>Últ. Compra</th>
+                    <th>Fec. Nac.</th>
+                    <th>T. Compras</th>
+                    <th>Ú. Compra</th>
                     <th>Alta</th>
-                    <th>Acciones</th>
+                    <th>Acción</th>
                 </tr>
                 </tfoot>
               </table>

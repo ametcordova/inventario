@@ -233,8 +233,8 @@ function obtenerdatos(idsalida){
     axios.post('ajax/salidasalmacen.ajax.php?op=getDataOutStore', { idsalida: idsalida })
       .then(res => {
         //console.log(res);
-        console.log(res.data);
-        console.log("id Almacen: ",res.data[0].id_almacen, "nombre Almacen: ",res.data[0].nombrealma);
+        //console.log(res.data);
+        //console.log("id Almacen: ",res.data[0].id_almacen, "nombre Almacen: ",res.data[0].nombrealma);
         $("#EditidTecnicoRecibe").val(res.data[0].id_tecnico);
         $("input[name=EditFechaSalidaAlmacen]").val(res.data[0].fechasalida);
         $("#EditidRespSalidaAlmacen").val(res.data[0].nombreusuario);
@@ -249,7 +249,7 @@ function obtenerdatos(idsalida){
         contenido.innerHTML="";
         res.data.forEach(i => {
             //console.log(i)
-            console.log(i.id_producto, i.cantidad, i.medida, i.codigointerno, i.descripcion,  )
+            //console.log(i.id_producto, i.cantidad, i.medida, i.codigointerno, i.descripcion,  )
             let amount=parseInt(i.cantidad);
 
               itemsbefore(i.id_producto, amount);   //array de productos de la salida a editar

@@ -132,6 +132,11 @@ $('.habilitaPermisoAlmacen').on('ifChecked', function (event) {
     $('input.rolalmacen').iCheck('check');
 });
 
+$('.habilitaPermisoTipMov').on('ifChecked', function (event) {
+    $('input.roltipomov').removeAttr("disabled");
+    $('input.roltipomov').iCheck('check');
+});
+
 /*****************************************************
             DESHABILITAR CHECKBOX
 *****************************************************/
@@ -170,6 +175,12 @@ $('.habilitaPermisoAlmacen').on('ifUnchecked', function (event) {
     $('input.rolalmacen').attr("disabled", "disabled");
     $('input.rolalmacen').iCheck('uncheck');
 });
+
+$('.habilitaPermisoTipMov').on('ifUnchecked', function (event) {
+    $('input.roltipomov').attr("disabled", "disabled");
+    $('input.roltipomov').iCheck('uncheck');
+});
+
 
 
 

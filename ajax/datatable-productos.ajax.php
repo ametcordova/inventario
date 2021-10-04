@@ -47,7 +47,7 @@ class TablaProductos{
  	 		TRAEMOS LA IMAGEN
   			=============================================*/ 
 			
-				$imagen = "<a href='#' data-toggle='modal' data-target='#modal' ><img src='".$productos[$i]["imagen"]."' class='idImagen' width='40px' descripcionProd='".$productos[$i]["descripcion"]."' codigointerno='".$productos[$i]["codigointerno"]."'> </a>";
+				//$imagen = "<a href='#' data-toggle='modal' data-target='#modal' ><img src='".$productos[$i]["imagen"]."' class='idImagen' width='40px' descripcionProd='".$productos[$i]["descripcion"]."' codigointerno='".$productos[$i]["codigointerno"]."'> </a>";
 
 		  	/*=============================================
  	 		TRAEMOS LA CATEGORÍA
@@ -106,8 +106,8 @@ class TablaProductos{
             //$compra = "$".number_format($productos[$i]["precio_compra"], 2, '.',',');
             //$venta = "$".number_format($productos[$i]["precio_venta"], 2, '.',',');
 		  	$datosJson .='[
-			      "'.($i+1).'",
-			      "'.$imagen.'",
+			      "'.$productos[$i]["id"].'",
+			      "'.$productos[$i]["sku"].'",
 			      "'.$productos[$i]["codigointerno"].'",
 			      "'.$productos[$i]["descripcion"].'",
 			      "'.$categorias["categoria"].'",

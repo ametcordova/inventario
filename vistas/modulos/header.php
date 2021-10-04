@@ -8,7 +8,7 @@
       <li class="nav-item d-none d-sm-inline-block">
         <a href="inicio" class="nav-link hover-underline-animation">Inicio</a>
       </li>
-      <?php if (isset($_SESSION['perfil']) && $_SESSION['perfil']=="Administrador" || trim($_SESSION["usuario"])=="iaovando" || trim($_SESSION["usuario"])=="Kevin" ){ ?>
+      <?php if (isset($_SESSION['perfil']) && $_SESSION['perfil']=="Administrador" || trim($_SESSION["usuario"])=="jonatan" || trim($_SESSION["usuario"])=="ari" ){ ?>
       <li class="nav-item d-none d-sm-inline-block">
         <a href="control-viaticos" class="nav-link font-weight-bold" id="">
           <button type="button" class="btn btn-sm btn-warning">Viáticos</button>

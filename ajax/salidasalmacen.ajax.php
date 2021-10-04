@@ -13,6 +13,41 @@ require_once '../funciones/funciones.php';
 
 switch ($_GET["op"]){
 
+    case 'guardarSalidasAlmacen':
+
+        if(isset($_POST["idproducto"])){
+
+            //EXTRAE EL NOMBRE DEL ALMACEN
+            $tablatmp =trim(substr($_POST['idAlmacenSalida'],strpos($_POST['idAlmacenSalida'].'-','-')+1)); 
+            $tabla_almacen=strtolower($tablatmp);
+            //EXTRAE EL NUMERO DE ALMACEN
+            $id_almacen=strstr($_POST['idAlmacenSalida'],'-',true);   
+
+            $tabla="tbl_salidas";
+
+            $datos = array(
+                "fechasalida"=>$_POST["nvaFechaSalidaAlmacen"],
+                "id_tecnico" =>$_POST["idTecnicoRecibe"],
+                "id_tipomov" =>$_POST["idTipoSalidaAlmacen"],
+                "id_almacen" =>$id_almacen,
+                "id_usuario" =>$_POST["idDeUsuario"],
+                "productos"  =>$_POST["idproducto"],
+                "cantidades" =>$_POST["cantidad"],
+                "motivo"     =>strtoupper($_POST["nvaObservacion"]),
+                "ultusuario" =>$_POST["idDeUsuario"]
+            );
+                unset ($tablatmp);
+
+                $respuesta = ControladorSalidasAlmacen::ctrAltaSalidasAlmacen($tabla_almacen, $tabla, $datos);
+
+                echo json_encode($respuesta);
+       }else{
+
+            $respuesta = array('idproducto' => $idproducto, 'error' => 'sindatos');		           
+            echo json_encode($respuesta);
+       }
+    break;    
+
     case 'deleteIdSalidaAlmacen':
         $POST = json_decode(file_get_contents('php://input'), true);
         if(isset($POST["idaborrar"])){
@@ -152,7 +187,7 @@ switch ($_GET["op"]){
                 $nuevovalor=$newarray[$key]-$value;
 
                     // if($value===$newarray[$key]){
-                    //      array_push($iguales,$key,$nuevovalor);
+                    //      array_push($iguales,$key,$nuevovalor);   //si son prod. y cant. iguales no se hace nada
                     // }     
 
                     if($nuevovalor>0){
@@ -190,40 +225,6 @@ switch ($_GET["op"]){
         
      break;
 
-    case 'guardarSalidasAlmacen':
-
-        if(isset($_POST["idproducto"])){
-
-            //EXTRAE EL NOMBRE DEL ALMACEN
-            $tablatmp =trim(substr($_POST['idAlmacenSalida'],strpos($_POST['idAlmacenSalida'].'-','-')+1)); 
-            $tabla_almacen=strtolower($tablatmp);
-            //EXTRAE EL NUMERO DE ALMACEN
-            $id_almacen=strstr($_POST['idAlmacenSalida'],'-',true);   
-
-            $tabla="tbl_salidas";
-
-            $datos = array(
-                "fechasalida"=>$_POST["nvaFechaSalidaAlmacen"],
-                "id_tecnico" =>$_POST["idTecnicoRecibe"],
-                "id_tipomov" =>$_POST["idTipoSalidaAlmacen"],
-                "id_almacen" =>$id_almacen,
-                "id_usuario" =>$_POST["idDeUsuario"],
-                "productos"  =>$_POST["idproducto"],
-                "cantidades" =>$_POST["cantidad"],
-                "motivo"     =>strtoupper($_POST["nvaObservacion"]),
-                "ultusuario" =>$_POST["idDeUsuario"]
-            );
-                unset ($tablatmp);
-
-                $respuesta = ControladorSalidasAlmacen::ctrAltaSalidasAlmacen($tabla_almacen, $tabla, $datos);
-
-                echo json_encode($respuesta);
-       }else{
-
-            $respuesta = array('idproducto' => $idproducto, 'error' => 'sindatos');		           
-            echo json_encode($respuesta);
-       }
-    break;
 
     case 'consultaExistenciaProd':
         // require_once "../controladores/salidasalmacen.controlador.php";

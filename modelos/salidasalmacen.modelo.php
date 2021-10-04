@@ -13,10 +13,10 @@ static public function mdlAltaSalidasAlmacen($tabla_almacen, $tabla, $datos){
         $stmt->bindParam(":fechasalida", 	$datos["fechasalida"], PDO::PARAM_STR);
         $stmt->bindParam(":id_tecnico", 	$datos["id_tecnico"], PDO::PARAM_INT);
         $stmt->bindParam(":id_tipomov", 	$datos["id_tipomov"], PDO::PARAM_INT);
-        $stmt->bindParam(":id_almacen",    $datos["id_almacen"], PDO::PARAM_INT);
-        $stmt->bindParam(":id_usuario",    $datos["id_usuario"], PDO::PARAM_INT);
+        $stmt->bindParam(":id_almacen",     $datos["id_almacen"], PDO::PARAM_INT);
+        $stmt->bindParam(":id_usuario",     $datos["id_usuario"], PDO::PARAM_INT);
         $stmt->bindParam(":motivo", 	    $datos["motivo"], PDO::PARAM_STR);
-        $stmt->bindParam(":ultusuario",    $datos["id_usuario"], PDO::PARAM_INT);
+        $stmt->bindParam(":ultusuario",     $datos["id_usuario"], PDO::PARAM_INT);
         $stmt->execute();
         
         if($stmt){
@@ -33,7 +33,7 @@ static public function mdlAltaSalidasAlmacen($tabla_almacen, $tabla, $datos){
             $tabla_kardex="kardex_".$tabla_almacen;     //TABLA KARDEX DEL SEGUN ALMACEN SELECCIONADO
             
             //SCRIP QUE REGISTRA LA SALIDA EN HIST_SALIDA
-            $stmt = Conexion::conectar()->prepare("INSERT INTO hist_salidas(id_salida, id_tecnico, fecha_salida, id_producto, cantidad, id_almacen, id_tipomov, id_usuario, ultusuario) VALUES (:id_salida, :id_tecnico, :fecha_salida, :id_producto, :cantidad, :id_almacen, :id_tipomov, :id_usuario, :ultusuario)");
+            $stmt = Conexion::conectar()->prepare("INSERT INTO hist_salidas(id_salida, id_tecnico, fecha_salida, id_producto, cantidad, id_almacen, id_tipomov, id_usuario, disponible, ultusuario) VALUES (:id_salida, :id_tecnico, :fecha_salida, :id_producto, :cantidad, :id_almacen, :id_tipomov, :id_usuario, :disponible, :ultusuario)");
                 
             for($i=0;$i<$contador;$i++) { 
                 $stmt->bindParam(":id_salida", $idnumsalida, PDO::PARAM_INT);
@@ -44,6 +44,7 @@ static public function mdlAltaSalidasAlmacen($tabla_almacen, $tabla, $datos){
                 $stmt->bindParam(":id_almacen", $datos["id_almacen"], PDO::PARAM_INT);
                 $stmt->bindParam(":id_tipomov", $datos["id_tipomov"], PDO::PARAM_INT);
                 $stmt->bindParam(":id_usuario", $datos["id_usuario"], PDO::PARAM_INT);
+                $stmt->bindParam(":disponible", $datos["cantidades"][$i], PDO::PARAM_INT);
                 $stmt->bindParam(":ultusuario", $datos["id_usuario"], PDO::PARAM_INT);
                 $stmt->execute();
             }      //termina ciclo 1er for 
@@ -52,7 +53,7 @@ static public function mdlAltaSalidasAlmacen($tabla_almacen, $tabla, $datos){
                 //SCRIP QUE REGISTRA LA SALIDA EN EL ALMACEN ELEGIDO
                 for($i=0;$i<$contador;$i++) { 
                    
-                    $stmt = Conexion::conectar()->prepare("UPDATE $tabla_almacen SET cant=cant-(:cant), ultusuario=:ultusuario WHERE id_producto = :id_producto");
+                     $stmt = Conexion::conectar()->prepare("UPDATE $tabla_almacen SET cant=cant-(:cant), ultusuario=:ultusuario WHERE id_producto = :id_producto");
                      $stmt->bindParam(":id_producto", $datos["productos"][$i], PDO::PARAM_INT);
                      $stmt->bindParam(":cant", $datos["cantidades"][$i], PDO::PARAM_INT);
                      $stmt->bindParam(":ultusuario", $datos["id_usuario"], PDO::PARAM_INT);
@@ -71,9 +72,6 @@ static public function mdlAltaSalidasAlmacen($tabla_almacen, $tabla, $datos){
                        }else{
                             return "error";
                        }
-
-
-
 
             }
 
@@ -181,8 +179,7 @@ try {
 static Public function mdlPrintSalidaAlmacen($tabla, $campo, $valor){
 try {      
     $sql="SELECT tb1.id, tb1.id_tecnico,t.nombre AS nombretecnico, tb1.fechasalida, h.cantidad,tb1.motivo, h.id_producto,
-				a.descripcion,a.codigointerno, a.id_medida, m.medida, tb1.id_almacen,b.nombre AS nombrealma,tb1.id_tipomov,
-				s.nombre_tipo,tb1.id_usuario,u.nombre AS nombreusuario 
+				a.descripcion,a.codigointerno, a.sku, a.id_medida, m.medida, tb1.id_almacen,b.nombre AS nombrealma,b.ubicacion, b.telefono AS tel_alm, b.email AS email_alm, tb1.id_tipomov, s.nombre_tipo, tb1.id_usuario,u.nombre AS nombreusuario 
 				FROM $tabla tb1
                 INNER JOIN hist_salidas h ON tb1.id=h.id_salida
                 INNER JOIN tecnicos t ON tb1.id_tecnico=t.id
@@ -193,6 +190,9 @@ try {
 				INNER JOIN usuarios u ON tb1.id_usuario=u.id
                 WHERE h.$campo=:$campo";
                 
+
+                           
+
     $stmt=Conexion::conectar()->prepare($sql);
 
     $stmt->bindParam(":".$campo, $valor, PDO::PARAM_STR);
@@ -525,12 +525,37 @@ try {
 
 }  
 
+/*=============================================
+	MOSTRAR TIPO DE MOV DE SALIDA
+=============================================*/
+static public function mdlMostrarTipoMov($tabla, $item, $valor){
+    try {
+        $stmt = Conexion::conectar()->prepare("SELECT id, nombre_tipo FROM $tabla WHERE $item = :$item");
+        
+        $stmt->bindParam(":".$item, $valor, PDO::PARAM_STR);
+    
+        $stmt -> execute();
+    
+        return $stmt -> fetchAll();
+    
+        $stmt = null;
+
+    } catch (Exception $e) {
+        echo "Failed: " . $e->getMessage();
+    }
+    
+}
+    
 
 } //fin de la clase
 
 /*
 copiar datos de una columna de una tabla a otra tabla
 INSERT INTO `kardex_alm_tuxtla`(`id_producto`, `november`) SELECT id_producto, cant FROM alm_tuxtla
+
+SELECT h.`id`,h.`id_salida`,h.`id_tecnico`,h.`fecha_salida`,h.`id_producto`, p.`descripcion` AS descripcion, h.`cantidad`,h.`id_almacen`, h.`id_tipomov`,h.`id_usuario`,h.estatus, h.`disponible` FROM `hist_salidas` h
+INNER JOIN productos p ON h.id_producto=p.id
+WHERE h.`id_tecnico`=3 AND h.id_producto=5 AND h.estatus=1 ORDER BY h.`fecha_salida`, h.`id_salida` ASC
  */
 
 ?>

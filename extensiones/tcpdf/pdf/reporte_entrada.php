@@ -1,4 +1,7 @@
 <?php
+session_start();
+if(isset($_SESSION["iniciarSesion"]) && $_SESSION["iniciarSesion"]=="ok"){
+setlocale(LC_ALL,"es_ES");
 
 require_once "../../../controladores/entradasalmacen.controlador.php";
 require_once "../../../modelos/entradasalmacen.modelo.php";
@@ -21,16 +24,26 @@ $respuestaAlmacen = ControladorEntradasAlmacen::ctrReporteEntradaAlmacen($item, 
 require_once('tcpdf_include.php');
 
 $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-
+$pdf->SetFooterMargin(8);
 // set auto page breaks
 $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
 
-$pdf->startPageGroup();
+//$pdf->startPageGroup();
 
 $pdf->AddPage();
 
 if($respuestaAlmacen){    
 // ---------------------------------------------------------
+$nombreAlmacen=$respuestaAlmacen[0]["nombrealmacen"];
+if($nombreAlmacen=="ALM_VILLAH" || $nombreAlmacen="ALM_COMAL"){
+	$img="images/logo_siesur.jpg";
+}else{
+	$img="images/logo_nuno.png";
+}
+
+$ubicacion=$respuestaAlmacen[0]["ubicacion"];
+$tel_alm=$respuestaAlmacen[0]["tel_alm"];
+$email_alm=$respuestaAlmacen[0]["email_alm"];
 
 $bloque1 = <<<EOF
 
@@ -38,16 +51,12 @@ $bloque1 = <<<EOF
 		
 		<tr>
 
-			<td style="width:150px"><img src="images/logo_nuno.png"></td>
+			<td style="width:140px"><img src="$img"></td>
 
-			<td style="background-color:white; width:140px">
+			<td style="background-color:white; width:160px">
 				
-				<div style="font-size:8.5px; text-align:right; line-height:15px;">
-					
-					<br>
-                    Av. Rio Coatan No.504, Col. 24 de Junio, Tuxtla Gutiérrez, Chiapas.
-
-
+				<div style="font-size:8.5px; text-align:center; line-height:15px;">
+                    $ubicacion
 				</div>
 
 			</td>
@@ -55,18 +64,14 @@ $bloque1 = <<<EOF
 			<td style="background-color:white; width:140px">
 
 				<div style="font-size:8.5px; text-align:right; line-height:15px;">
-					
+					Teléfono: $tel_alm
 					<br>
-					Teléfono: Tel: (961)-1407119
-					
-					<br>
-					brunonunosco1998@gmail.com
-
+					$email_alm
 				</div>
 				
 			</td>
 
-			<td style="background-color:white; width:110px; text-align:center; color:red"><br><br>ENTRADA No.<br>$numeroid</td>
+			<td style="background-color:white; width:110px; text-align:center; color:red"><br>ENTRADA No.<br>$numeroid</td>
 
 		</tr>
 
@@ -75,7 +80,7 @@ $bloque1 = <<<EOF
 EOF;
 
 $pdf->writeHTML($bloque1, false, false, false, false, '');
-$pdf->Ln(2);
+$pdf->Ln();
     
 // ---------------------------------------------------------
 $bloque2 = <<<EOF
@@ -92,30 +97,31 @@ $idProv=$respuestaAlmacen[0]["id_proveedor"];
 $nomProv=$respuestaAlmacen[0]["nombreproveedor"];
 $FechDocto=date("d/m/Y", strtotime($respuestaAlmacen[0]["fechaentrada"]));
 $idAlmacen=$respuestaAlmacen[0]["id_almacen"];
-$nombreAlmacen=$respuestaAlmacen[0]["nombrealmacen"];
+$nametype=$respuestaAlmacen[0]["nombretipo"];
+$observacion=$respuestaAlmacen[0]["observacion"];
 $fechEntrada=date("d/m/Y", strtotime($respuestaAlmacen[0]["fechaentrada"]));
 $recibio=$respuestaAlmacen[0]["nombreusuario"];
 
 $bloque3 = <<<EOF
 
-	<table style="font-size:9px; padding:5px 5px;">
+	<table style="font-size:9px; padding:3px 4px;">
     
     <tr>		
-		<td style="border: 1px solid #666; width:540px">Proveedor: $idProv - $nomProv</td>
+		<td style="border: 1px solid #666; width:385px">Proveedor: $idProv-$nomProv</td>
+		<td style="border: 1px solid #666; width:155px; text-align:left">T.Mov: $nametype</td>
 	</tr>
 	
 	<tr>
-	   <td style="border: 1px solid #666; width:165px">Numero de Docto: $numeroid</td>
 
-	   <td style="border: 1px solid #666; width:135px; text-align:left">Fecha Docto: $FechDocto
-	   </td>
-
-        <td style="border: 1px solid #666; width:240px">Almacen de Entrada: $idAlmacen - $nombreAlmacen</td>
+	   <td style="border: 1px solid #666; width:125px; text-align:left">Fecha Docto: $FechDocto</td>
+	   <td style="border: 1px solid #666; width:200px">Fecha recepción en Almacen: $fechEntrada</td>
+        <td style="border: 1px solid #666; width:215px">Almacen de Entrada: $idAlmacen - $nombreAlmacen</td>
 	</tr>
 
  	<tr>
-		<td style="border: 1px solid #666; width:300px">Recibio: $recibio</td>
-        <td style="border: 1px solid #666; width:240px">Fecha recepción en Almacen: $fechEntrada</td>
+		<td style="border: 1px solid #666; width:140px">Capturo: $recibio</td>
+		<td style="border: 1px solid #666; width:400px">Observación: $observacion</td>
+        
 	</tr>
 
 	</table>
@@ -178,7 +184,7 @@ $bloque6 = <<<EOF
 	<table style="font-size:9px; padding:5px 5px;">
 
 	<tr bgcolor="#cccccc">
-		<td style="border: 1px solid #666; width:380px; text-align:right">Total filas:</td>
+		<td style="border: 1px solid #666; width:380px; text-align:right">Total registros:</td>
 		<td style="border: 1px solid #666; width:40px; text-align:center">$filas</td>
 		<td style="border: 1px solid #666; width:75px; text-align:right">Total Entrada:</td>
 		<td style="border: 1px solid #666; width:45px; text-align:center">$cantEntra</td>
@@ -221,5 +227,10 @@ $pdf->Output($nombre_archivo);
 $entrada = new reporteEntrada();
 $entrada -> codigo = $_GET["codigo"];
 $entrada -> traerReporteEntrada();
+
+}else{
+	echo "no tienes acceso a este reporte.";
+}
+
 
 ?>

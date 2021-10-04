@@ -42,7 +42,7 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
           <div class="row ">
             <div class="form-group col-md-3">
                 <select class="form-control form-control-sm" id="almInventario" name="almInventario" tabindex="1" required>
-				        <option value="" selected>Seleccione Almacen</option>
+				        <option value=0 selected>Seleccione Almacen</option>
                  <?php
                    $item=null;
                     $valor=null;

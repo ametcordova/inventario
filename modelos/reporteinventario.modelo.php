@@ -33,10 +33,60 @@ try{
     echo "Failed: " . $e->getMessage();
 }
 	
-
 }		
 		
-    
+
+/*===================================================================== */
+static Public function MdlReporteInventarioAlmacen($idalmacen){
+	try{	
+	
+		$sql="SELECT * FROM almacenes WHERE id=".$idalmacen;
+	
+		$stmt = Conexion::conectar()->prepare($sql);
+	
+		//$stmt -> bindParam(":$campo", $valor, PDO::PARAM_STR);
+	
+		$stmt -> execute();
+	
+		return $stmt -> fetch();      
+		
+		$stmt=null;
+	} catch (Exception $e) {
+		echo "Failed: " . $e->getMessage();
+	}
+		
+	}		
+	
+
+
+/*===================================================================== */
+static Public function MdlReporteInventarioPorTecnico($tabla, $campo, $valor, $idalmacen){
+	try{	
+	
+		//$sql="SELECT * FROM almacenes WHERE id=".$idalmacen;
+
+		$sql="SELECT hist.`id_salida`,hist.`id_tecnico`,hist.`id_producto`, prod.codigointerno, prod.sku, prod.descripcion, prod.id_medida, med.medida, hist.`estatus`, SUM(hist.cantidad) as Total, SUM(hist.disponible) AS existe
+		FROM hist_salidas hist 
+		INNER JOIN productos prod ON hist.id_producto=prod.id
+		INNER JOIN medidas med ON prod.id_medida=med.id
+		WHERE hist.$campo=:campo AND hist.estatus=1 AND hist.id_almacen=:idalmacen GROUP BY hist.`id_tecnico`, hist.`id_producto`";
+	
+		$stmt = Conexion::conectar()->prepare($sql);
+	
+		$stmt -> bindParam(":campo", $valor, PDO::PARAM_STR);
+		$stmt -> bindParam(":idalmacen", $idalmacen, PDO::PARAM_STR);
+	
+		$stmt -> execute();
+	
+		return $stmt -> fetchAll();
+		
+		$stmt=null;
+	} catch (Exception $e) {
+		echo "Failed: " . $e->getMessage();
+	}
+		
+	}		
+/*===================================================================== */	
 
 }       //fin de la clase
 

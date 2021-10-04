@@ -177,11 +177,12 @@ switch ($_GET["op"]){
                 // }
 
                 $boton1=getAccess($acceso, ACCESS_VIEW)?"<button class='btn btn-primary btn-sm px-2 btnVerReporte' idviatico='".$value['id']."' idEstado='".$value['estado']."' title='Ver reporte'><i class='fa fa-desktop'></i></button> ":"";
-                $boton2=getAccess($acceso, ACCESS_PRINTER)?"<button class='btn btn-dark btn-sm px-2 btnPrintViatico' idviatico='".$value['id']."' idEstado='".$value['estado']."' title='Reporte en PDF'><i class='fa fa-file-pdf-o'></i></button> ":"";
-                $boton3=getAccess($acceso, ACCESS_DELETE)?"<button class='btn btn-danger btn-sm px-1 btnBorrarFactura' title='Borrar' idFactura='".$value['id']."' idEstado='".$value['estado']."'><i class='fa fa-times'></i></button> ":"";
-                $boton4=getAccess($acceso, ACCESS_SELECT)?"<button class='btn btn-info btn-sm px-2 btnCheckup' idviatico='".$value['id']."' idEstado='".$value['estado']."' data-toggle='modal' data-target='#modalCheckup' title='Comprobación'><i class='fa fa-edit'></button>":"";
+                $boton2=getAccess($acceso, ACCESS_PRINTER)?"<button class='btn btn-dark btn-sm px-1 btnPrintViatico' idviatico='".$value['id']."' idEstado='".$value['estado']."' title='Reporte en PDF'><i class='fa fa-file-pdf-o'></i></button> ":"";
+                $boton3=getAccess($acceso, ACCESS_PRINTER)?"<button class='btn btn-dark btn-sm px-1 btnExcel' title='Reporte en excel' idviatico='".$value['id']."'><i class='fa fa-file-excel-o'></i></button> ":"";
+                $boton4=getAccess($acceso, ACCESS_DELETE)?"<button class='btn btn-danger btn-sm px-1 btnBorrarFactura' title='Borrar' idviatico='".$value['id']."' idEstado='".$value['estado']."'><i class='fa fa-times'></i></button> ":"";
+                $boton5=getAccess($acceso, ACCESS_SELECT)?"<button class='btn btn-info btn-sm px-2 btnCheckup' idviatico='".$value['id']."' idEstado='".$value['estado']."' data-toggle='modal' data-target='#modalCheckup' title='Comprobación'><i class='fa fa-edit'></button>":"";
                 
-                $botones=$boton1.$boton2.$boton3.$boton4;
+                $botones=$boton1.$boton2.$boton3.$boton4.$boton5;
 
                 $data[]=array(
                     $value["id"],

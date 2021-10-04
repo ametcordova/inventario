@@ -1,7 +1,7 @@
 <?php
 session_start();
 if(isset($_SESSION["iniciarSesion"]) && $_SESSION["iniciarSesion"]=="ok"){
-
+setlocale(LC_ALL,"es_ES");
 require_once "../../../controladores/control-viaticos.controlador.php";
 require_once "../../../modelos/control-viaticos.modelo.php";
 /*
@@ -111,6 +111,7 @@ $pdf->Ln(1);
 // ---------------------------------------------------------
 
 //var_dump($respuestaV);
+$fecharep=date('d-m-Y');
 $idTec=$respuestaV["id_tecnico"];
 $nombreTec=$respuestaV["nombre"];
 $fechaDispersion=date("d/m/Y", strtotime($respuestaV["fecha_dispersion"]));
@@ -127,9 +128,9 @@ $usuario=$respuestaV["nomusuario"];
 $bloque3 = <<<EOF
 <table style="font-size:9px; padding:4px 4px;">
 <tr>		
-	<td style="border: 1px solid #666; width:425px">Comisionado: $idTec - $nombreTec</td>
-	<td style="border: 1px solid #666; width:130px; text-align:left">Fecha Docto: $fechaDispersion
-</td>
+	<td style="border: 1px solid #666; width:305px">Comisionado: $idTec - $nombreTec</td>
+	<td style="border: 1px solid #666; width:125px; text-align:left">Fecha Docto: $fechaDispersion</td>
+	<td style="border: 1px solid #666; width:125px; text-align:left">Fecha Rep: $fecharep</td>
 </tr>
 
 <tr>

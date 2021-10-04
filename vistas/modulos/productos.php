@@ -4,6 +4,26 @@ $module="pproductos";
 $campo="catalogo";
 $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);    
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<style>
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+  background:lightcoral ;
+  color: black!important;
+  border-radius: 4px;
+  border: 1px solid #828282;
+}
+ 
+.dataTables_wrapper .dataTables_paginate .paginate_button:active {
+  background: none;
+  color: black!important;
+}
+</style>
+
+<body>
+  
+</body>
+</html>
 <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -53,13 +73,13 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                 <thead>
                   <tr>
                    <th style="width:10px">#</th>
-                   <th>Imagen</th>
+                   <th>SKU</th>
                    <th>Cód.Int.</th>
                    <th>Descripción</th>
                    <th>Categoría</th>
                    <th>Stock</th>
                    <th>Medida</th>
-                   <th>Agregado</th>
+                   <th>Agregado</th>                   
                    <th>Accion</th>
                  </tr> 
                 </thead>
@@ -71,7 +91,7 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                 <tfoot>
                   <tr>
                    <th style="width:10px">#</th>
-                   <th>Imagen</th>
+                   <th>SKU</th>
                    <th>Cód.Int.</th>
                    <th>Descripción</th>
                    <th>Categoría</th>

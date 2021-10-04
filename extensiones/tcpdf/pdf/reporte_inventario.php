@@ -7,25 +7,42 @@ require_once "../../../funciones/funciones.php";
 //REQUERIMOS LA CLASE TCPDF
 require_once('tcpdf_include.php');
 
+
 // Extend the TCPDF class to create custom Header and Footer
 class MYPDF extends TCPDF {
 	
     //Page header
     public function Header() {
-	    
-		$tabla=$_GET["idNomAlma"];
+		$tabla=$_GET["idNomAlma"];    
+		$idalmacen=$_GET["idNumAlma"];
+		$encabezado = ControladorInventario::ctrReporteInventarioAlmacen($idalmacen);
+		//$nombreAlmacen=$encabezado[0]["nombrealmacen"];
+		if($tabla=="alm_villah"){
+			$img="images/logo_siesur.jpg";
+			$razonsocial='S E I S U R';
+		}else{
+			$img="images/logo_nuno.png";
+			$razonsocial='F I P A B I D E';
+		}
+		
+		$ubicacion=$encabezado["ubicacion"];
+		$tel_alm=$encabezado["telefono"];
+		$email_alm=$encabezado["email"];
+		
+		
 		$fechahoy=fechaHoraMexico(date("d-m-Y G:i:s"));
         // Logo
         //$image_file = K_PATH_IMAGES.'logo_example.jpg';
-        $this->Image('images/logo_nuno.jpg', 15, 6, 13);	//izq, size, ancho
+        $this->Image($img, 15, 8, 23);	//izq, top, ancho
 		//$this->Image('images/logo_nuno.jpg',10,8,25);
         // Set font
         $this->SetFont('helvetica', 'B', 16);
         // Title
-		$this->Cell(0, 10, 'N U N O S C O', 0, false, 'C', 0, '', 0, false, 'M', 'M');
+		$this->Cell(0, 10, $razonsocial, 0, false, 'C', 0, '', 0, false, 'M', 'M');
 		$this->Ln(6);
 		$this->SetFont('helvetica', 'B', 10);
-        $this->Cell(0, 10, 'Av. Rio Coatan No. 504, Col. 24 de Junio, Tuxtla Gutiérrez, Chiapas.    Teléfono: (961) 1-40-71-19   brunonunosco1998@gmail.com', 0, false, 'C', 0, '', 0, false, 'M', 'M');
+        //$this->Cell(0, 10, 'Av. Rio Coatan No. 504, Col. 24 de Junio, Tuxtla Gutiérrez, Chiapas.    Teléfono: (961) 1-40-71-19   brunonunosco1998@gmail.com', 0, false, 'C', 0, '', 0, false, 'M', 'M');
+		$this->Cell(0, 10, $ubicacion."  ".$tel_alm."  ".$email_alm, 0, false, 'C', 0, '', 0, false, 'M', 'M');
 		$this->Ln(6);
 		$this->SetFont('helvetica', 'B', 14);
 		$this->Cell(0, 10, 'Reporte de Inventario del Almacén '.$tabla." al $fechahoy", 0, false, 'C', 0, '', 0, false, 'M', 'M');
@@ -166,7 +183,7 @@ $bloque6 = <<<EOF
 EOF;
 
 $pdf->writeHTML($bloque6, false, false, false, false, '');    
-$pdf->Ln(16);
+$pdf->Ln(6);
 // ---------------------------------------------------------
 
 $bloque7 = <<<EOF
@@ -196,7 +213,8 @@ $fecha_elabora=$hoy1.$hoy2;
  $pdf->Output($nombre_archivo);
 }else{
   //$nombre_archivo="inventario";
-  $pdf->Output("inventario.pdf");
+$pdf = new MYPDF('L', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+$pdf->Output("inventario.pdf");
 }
 }
 
@@ -208,6 +226,18 @@ $hoy2 = date("His");
 $fecha_elabora=$hoy1.$hoy2;
 
 $inventario = new reporteInventario();
+$idalmacen=$_GET["idNumAlma"];
+$tabla=$_GET["idNomAlma"];
 $inventario -> traerReporteInventario();
 
+
+/*
+SELECT hist.`id_salida`,hist.`id_tecnico`,hist.`id_producto`, prod.sku, prod.descripcion, prod.id_medida, med.medida, hist.`estatus`, SUM(hist.cantidad) as Total, SUM(hist.disponible) AS existe
+FROM hist_salidas hist 
+INNER JOIN productos prod ON hist.id_producto=prod.id
+INNER JOIN medidas med ON prod.id_medida=med.id
+WHERE hist.id_tecnico=1 AND hist.estatus=1
+GROUP BY hist.`id_tecnico`, hist.`id_producto`
+*/
 ?>
+

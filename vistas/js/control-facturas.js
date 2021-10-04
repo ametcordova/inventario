@@ -1,6 +1,5 @@
 var tabla;
 
-
 $("#modalAgregarFactura, #modalEditarFactura, #modalPagarFactura, #modalVerFactura, #modal_fecha_pago").draggable({
 	  handle: ".modal-header"
 });
@@ -28,7 +27,6 @@ function init(){
   })
   
 }
-
 
 
 /*=============================================
@@ -452,28 +450,30 @@ function listarFacturas(){
  let valoryear=$("input[name='filterYear']").val();
  console.log(valoryear, valorradio);
   if(valorradio!==undefined){
-    tabla=$('#TablaFacturas').dataTable(
+    tabla=$('#TablaFacturas').DataTable(
     {
       "aProcessing": true,//Activamos el procesamiento del datatables
-        "aServerSide": true,//Paginación y filtrado realizados por el servidor
+      "aServerSide": true,//Paginación y filtrado realizados por el servidor
+      "paging": true,  //mostrar la paginación con los datos lengthMenu
       "lengthMenu": [ [10, 15, 25, 50,100, -1], [10, 15, 25, 50, 100, "Todos"] ],
-        "language": {
-      "sProcessing":     "Procesando...",
       "stateSave": true,
-          "sLengthMenu":     "Mostrar _MENU_ registros &nbsp",
-          "sZeroRecords":    "No se encontraron resultados",
-          "sEmptyTable":     "Ningún dato disponible en esta tabla",
-          "sInfo":           "Mostrar registros del _START_ al _END_ de un total de _TOTAL_",
+      "language": {
+      "sProcessing":     "Procesando...",
+      "sLengthMenu":     "Mostrar _MENU_ registros &nbsp",
+      "sZeroRecords":    "No se encontraron resultados",
+      "sEmptyTable":     "Ningún dato disponible en esta tabla",
+      "sInfo":           "Mostrar registros del _START_ al _END_ de un total de _TOTAL_",
       "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
       "sInfoPostFix":    "",           
-          "sSearch":         "Buscar:",
-          "sInfoThousands":  ",",
-          "sLoadingRecords": "Cargando...",
-          "oPaginate": {
+      "sSearch":         "Buscar:",
+      "sInfoThousands":  ",",
+      "sLoadingRecords": "Cargando...",
+      "sPaginationType": "full_numbers",
+      "oPaginate": {
       "sFirst":    "Primero",
       "sLast":     "Último",
-      "sNext":     "Siguiente",
-      "sPrevious": "Anterior"}
+      "sNext":     "Sig.",
+      "sPrevious": "Ant."}
           },
       "oAria": {
         "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
@@ -495,12 +495,25 @@ function listarFacturas(){
                       pdfMake.createPdf(doc).open();
                   },
               },
-              
         {
               extend: 'print',
               text: 'Imprimir',
               autoPrint: false            //TRUE para abrir la impresora
           }
+          ],
+          "columns" : [
+            {"data": 0},
+            {"data": 1},
+            {"data": 2},
+            {"data": 3}, 
+            {"data": 4}, 
+            {"data": 5},
+            {"data": 6},
+            {"data": 7},
+            {"data": 8},
+            {"data": 9},
+            {"data": 10},
+            {"data": 11}
           ],
           initComplete: function () {			//botones pequeños y color verde
             var btns = $('.dt-button');
@@ -511,7 +524,6 @@ function listarFacturas(){
         {"className": "dt-center", "targets": [4,9,10,11,12,13]},
         {"className": "dt-right", "targets": [5,6,7,8]}				//"_all" para todas las columnas
         ],
-
       "footerCallback": function ( row, data, start, end, display ) {
         var api = this.api();
       //console.log(api,data);
@@ -524,11 +536,10 @@ function listarFacturas(){
       var pageTotiva = api.column(6, {page:'current'}).data().sum();
       pageTotiva=new Intl.NumberFormat('en', {style: 'currency',currency: 'USD',currencySign: 'accounting',}).format(pageTotiva);
       
-      // Total over this page total
+      // Total ret over this page total
       var pageTotRet = api.column(7, {page:'current'}).data().sum();
       pageTotRet=new Intl.NumberFormat('en', {style: 'currency',currency: 'USD',currencySign: 'accounting',}).format(pageTotRet);
       
-    
       // Total over this page total
       var pageTotal = api.column(8, {page:'current'}).data().sum();
       pageTotal=new Intl.NumberFormat('en', {style: 'currency',currency: 'USD',currencySign: 'accounting',}).format(pageTotal);
@@ -538,7 +549,6 @@ function listarFacturas(){
       var total = api.column(8).data().sum();
       total=new Intl.NumberFormat('en', {style: 'currency',currency: 'USD',currencySign: 'accounting',}).format(total);
       //console.log(total);
-
 
       $(api.column(4).footer()).html('Totales:');
       $(api.column(5).footer()).html(pageSubTot);
@@ -555,8 +565,7 @@ function listarFacturas(){
         $('td', nRow).css('color', 'Red');
       }
   },
-      "ajax":
-          {
+      "ajax":{
             url: 'ajax/control-facturas.ajax.php?op=listar',
             data:{tiporeporte: valorradio, filteryear: valoryear},
             type : "get",
@@ -568,17 +577,32 @@ function listarFacturas(){
       "bDestroy": true,
       "iDisplayLength": 15,//Paginación
       "order": [[ 0, "asc" ]]//Ordenar (columna,orden)
-    }).DataTable();    
-    
+    });    
   }    
 } 
 
+//añadir un INPUT en la columna de No. de Fact
+$('#TablaFacturas tfoot th').each( function () {
+  var title=$(this).text();
+  //console.log(title);
+    if(title=="No."){
+      $(this).html('<input type="text" id="myInput" style="width:40px; height:20px;" placeholder="'+title+'"/>');
+  }
+});
+
+//Hacer busqueda por la columna de No. de Fact. segun el dato del INPUT
+$('#myInput').on( 'keyup change clear', function () {
+  if(tabla.column(0)){
+     //console.log(tableron.column())
+     tabla.column(0).search(this.value).draw();
+  };
+} );
 
 $(document).ready(function (){ 
   $(".spin").hide();
 } );
 
-/ /
+//
 $('#TablaFacturas tbody').on( 'dblclick', 'td', function () {
   if(tabla.cell( this ).index().columnVisible==10){
     //console.log(tabla.row( this ).data()[0]);
@@ -616,8 +640,7 @@ $('#TablaFacturas tbody').on( 'click', 'tr', function () {
       //$("#sumaseleccionados").removeClass("d-none");
       $(".sumaseleccion").html(sumaseleccion1 + " -/- "+sumaseleccion2);
   };
- 
- });
+});
 
  // Handle click on "Select all" control
    $('#example-select-all').on('click', function(){
@@ -654,7 +677,6 @@ jQuery.fn.dataTable.Api.register( 'sum()', function ( ) {
         return a + b;
     }, 0 );
 } );
-
 
 
 $('#filterYear').datepicker({

@@ -219,7 +219,7 @@ $("#cantAjuste").change(function(event){
   $("#msjerrorajuste").addClass("d-none");
   let tipoajuste=$("#nvoTipoAjuste").val();
   let tipodeajuste=tipoajuste.charAt(tipoajuste.length-1); //get the last character 
-  //console.log("tipo de ajuste:",tipodeajuste);
+  console.log("tipo de ajuste:",tipodeajuste);
   if(tipodeajuste=="S"){
     cantexist=$("#cantExist").val();
     cantSolicitada=$("#cantAjuste").val();
@@ -608,7 +608,6 @@ function dataAjusteInv(){
                     pdfMake.createPdf(doc).open();
                 },
             },
-            
        {
             extend: 'print',
             text: 'Imprimir',
