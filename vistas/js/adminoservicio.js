@@ -760,6 +760,13 @@ function datosinstalacion(datos_generales, json_datos_inst){
   $("#observacionesos").val(datos_generales['observaciones']);  
 }
 
+/* *****************AL ABRIR EL MODAL ************************************** */
+$('#modalAgregarOS').on('shown.bs.modal', function () {
+  let iduser=$('#iduser').val();
+  $("#nvotecnico").val(iduser);
+})
+/*==============================================================================*/
+
 /********************************************************** */
 // function interval para recargar el datatable cada 60 seg.
 // ver: https://datatables.net/reference/api/ajax.reload()

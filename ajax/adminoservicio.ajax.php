@@ -18,12 +18,12 @@ switch ($_GET["op"]){
 	case 'listaroservicios':
 
 		$tabla="usuarios";
-		$module="pcapseries";
+		$module="pcostuxtla";
 		$campo="administracion";
-		$acceso=accesomodulo($tabla, $_SESSION['id'], $module,$campo);
+		$acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
 			  
 		$item = "id";
-    	$valor = null;
+    	$valor = $_SESSION['user'];
 		$orden = "id";
 		if(isset($_POST["FechDev1"])){
 			$fechadev1=$_POST["FechDev1"];	

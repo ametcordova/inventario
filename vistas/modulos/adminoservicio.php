@@ -191,6 +191,7 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                     ?>
                   </select>
                   <input type="hidden" name="idDeUsuario" value="<?php echo $_SESSION['id']; ?>">
+                  <input type="hidden" name="iduser" id="iduser" value="<?php echo $_SESSION['user']; ?>">
                 </div>
 
                 <div class="form-group col-md-4">

@@ -57,7 +57,7 @@
 
 
     <!-- **************************************************************
-                          ONLINE
+                          CLIMA
     ******************************************************************-->
     <div class="col-md-1 text-left" style='font-size:.95em;'>
         <button type="button" class="btn btn-sm btn btn-warning rounded p-1">
@@ -72,7 +72,7 @@
               <li class="dropdown user user-menu">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                   <img src="<?php echo $_SESSION['foto']?>" class="user-image" alt="Image" width="25px">
-                  <span class="hidden-xs" id="usuar"><?php echo $_SESSION['usuario'];?></span>
+                  <span class="hidden-xs" id="usuar"><?php echo $_SESSION['usuario'],$_SESSION['id'] ;?></span>
                 </a>
                 
                 <ul class="dropdown-menu"  style="background-color:orange;">

@@ -103,15 +103,18 @@ static public function mdlActualizarTransito($tabla, $datos, $productos, $cantid
 static public function mdlListarOServicios($tabla, $item, $valor, $orden, $fechadev1, $fechadev2){
 try{
 
- 	//$where='1=1';
+ 	//$where='1=1' AND os.estatus>0;
 		  
 	$where="os.fecha_instalacion>='".$fechadev1."' AND os.fecha_instalacion<='".$fechadev2."' ";
-  
-    $stmt = Conexion::conectar()->prepare("SELECT os.`id`,os.`id_empresa`, os.`ordenservicio`,os.`telefono`,tec.nombre AS tecnico, alm.nombre AS almacen, os.`fecha_instalacion`,os.`estatus` , os.factura
+	$where.=" AND os.id_tecnico='".$valor."' ";
+
+    $stmt = Conexion::conectar()->prepare("SELECT os.`id`,os.`id_empresa`, os.id_tecnico, os.`ordenservicio`,os.`telefono`,user.nombre AS tecnico, alm.nombre AS almacen, os.`fecha_instalacion`, os.`estatus`, os.factura
     FROM $tabla os
     INNER JOIN almacenes alm ON alm.id=os.id_almacen
+    INNER JOIN usuarios user ON user.user=os.id_tecnico
     INNER JOIN tecnicos tec ON tec.id=os.id_tecnico
     WHERE ".$where); 
+
     $stmt -> execute();
 
     return $stmt -> fetchAll();
@@ -336,9 +339,6 @@ function actualizaDataOS($tabla, $id_producto, $cant, $id_tecnico, $id_almacen, 
 		//throw $th;
 		return $th;
 	}
-
-
-
 
 
 
