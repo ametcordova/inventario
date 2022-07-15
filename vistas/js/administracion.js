@@ -10,7 +10,7 @@ $("#guardarPermisoAdmin").on("click",function(event){
     let usuarioPermiso=$("#nvoUsuarioPermiso").val();
     var miArray = new Array()
 
-    console.log("entra:",usuarioPermiso)
+    //console.log("entra:",usuarioPermiso)
     $('#checkeadosadmin input[type=checkbox]').each(function(){
         if (this.checked) {
             //console.log([$(this).attr('id'),$(this).val()]);
@@ -19,7 +19,7 @@ $("#guardarPermisoAdmin").on("click",function(event){
             //miArray=[...nuevoarray];
     });     
 
-console.table(miArray)
+//console.table(miArray)
 
 let data = new FormData();
  data.append('miArray', JSON.stringify(miArray));
@@ -92,9 +92,10 @@ let data = new FormData();
 /*****************************************************
             HABILITAR CHECKBOX
 *****************************************************/
-$('.habilitaPermisoSalidas').on('ifChecked', function (event) {
-    $('input.rolSalidasAlm').removeAttr("disabled");
-    $('input.rolSalidasAlm').iCheck('check');
+$('.habilitaPermisoCapOSTuxtla').on('ifChecked', function (event) {
+    console.log("chekeado OK")
+    $('input.rolcapostuxtla').removeAttr("disabled");
+    $('input.rolcapostuxtla').iCheck('check');
 });
 
 $('.habilitaPermisoEntradas').on('ifChecked', function (event) {
@@ -106,6 +107,11 @@ $('.habilitaPermisoEntradas').on('ifChecked', function (event) {
 $('.habilitaPermisoCapSeries').on('ifChecked', function (event) {
     $('input.rolcapseries').removeAttr("disabled");
     $('input.rolcapseries').iCheck('check');
+});
+
+$('.habilitaPermisoCapquejas').on('ifChecked', function (event) {
+    $('input.rolcapquejas').removeAttr("disabled");
+    $('input.rolcapquejas').iCheck('check');
 });
 
 $('.habilitaPermisoAjusteInv').on('ifChecked', function (event) {
@@ -123,6 +129,11 @@ $('.habilitaPermisoCtrlFact').on('ifChecked', function (event) {
     $('input.rolctrlfact').iCheck('check');
 });
 
+$('.habilitaPermisoDeposito').on('ifChecked', function (event) {
+    $('input.rolDeposito').removeAttr("disabled");
+    $('input.rolDeposito').iCheck('check');
+});
+
 $('.habilitaPermisoCtrlViaticos').on('ifChecked', function (event) {
     $('input.rolctrlviatico').removeAttr("disabled");
     $('input.rolctrlviatico').iCheck('check');
@@ -137,8 +148,13 @@ $('.habilitaPermisoOsVila').on('ifChecked', function (event) {
 /*****************************************************
             DESHABILITAR CHECKBOX
 *****************************************************/
-$('.habilitaPermisoSalidas').on('ifUnchecked', function (event) {
+$('.habilitaPermisoCapOSTuxtla').on('ifUnchecked', ()=> {
     console.log("Deschekeado OK")
+    $('input.rolcapostuxtla').attr("disabled", "disabled");
+    $('input.rolcapostuxtla').iCheck('uncheck');
+});
+
+$('.habilitaPermisoSalidas').on('ifUnchecked', function (event) {
     $('input.rolSalidasAlm').attr("disabled", "disabled");
     $('input.rolSalidasAlm').iCheck('uncheck');
 });
@@ -154,6 +170,11 @@ $('.habilitaPermisoCapSeries').on('ifUnchecked', function (event) {
     $('input.rolcapseries').iCheck('uncheck');
 });
 
+$('.habilitaPermisoCapquejas').on('ifUnchecked', function (event) {
+    $('input.rolcapquejas').attr("disabled", "disabled");
+    $('input.rolcapquejas').iCheck('uncheck');
+});
+
 $('.habilitaPermisoAjusteInv').on('ifUnchecked', function (event) {
     $('input.rolajusteinv').attr("disabled", "disabled");
     $('input.rolajusteinv').iCheck('uncheck');
@@ -167,6 +188,11 @@ $('.habilitaPermisoDevAlmacen').on('ifUnchecked', function (event) {
 $('.habilitaPermisoCtrlFact').on('ifUnchecked', function (event) {
     $('input.rolctrlfact').attr("disabled", "disabled");
     $('input.rolctrlfact').iCheck('uncheck');
+});
+
+$('.habilitaPermisoDeposito').on('ifUnchecked', function (event) {
+    $('input.rolDeposito').attr("disabled", "disabled");
+    $('input.rolDeposito').iCheck('uncheck');
 });
 
 $('.habilitaPermisoCtrlViaticos').on('ifUnchecked', function (event) {

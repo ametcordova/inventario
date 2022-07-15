@@ -6,21 +6,23 @@ class ModeloEntradasAlmacen{
 /*=============================================
 	LISTAR SALIDAS
 =============================================*/
-
-static public function mdlListarEntradas($tabla, $fechadev1, $fechadev2){
+static public function mdlListarEntradas($tabla, $fechadev1, $fechadev2, $usuario, $todes){
 try {
  	//$where='1=1';
 		  
 	$where='tb1.fechaentrada>="'.$fechadev1.'" AND tb1.fechaentrada<="'.$fechadev2.'" ';
-  
+    if($todes>0){
+        $where.=' AND tb1.ultusuario="'.$usuario.'" ';
+    }
 	$where.=' ORDER BY tb1.id DESC';
   
-	$sql="SELECT tb1.*, alm.nombre AS nombrealmacen, prov.nombre AS nombreproveedor, mov.nombre_tipo AS nombretipomov, usu.usuario 
+	$sql="SELECT tb1.*, alm.nombre AS nombrealmacen, prov.nombre AS nombreproveedor, mov.nombre_tipo AS nombretipomov, usu.usuario, doc.id_entrada AS filex
     FROM $tabla tb1 
     INNER JOIN almacenes alm ON tb1.id_almacen=alm.id 
     INNER JOIN proveedores prov ON tb1.id_proveedor=prov.id 
     INNER JOIN tipomovimiento mov ON tb1.id_tipomov=mov.id 
     INNER JOIN usuarios usu ON tb1.ultusuario=usu.id 
+    LEFT JOIN tbl_doctos doc ON tb1.id=doc.id_entrada
     WHERE ".$where;
   
 	$stmt = Conexion::conectar()->prepare($sql);
@@ -345,9 +347,9 @@ static public function mdlEditEliminarRegEA($tabla_almacen, $id_almacen, $tablah
    
 }
 
-/*==================================================
+/*===============================================================================
 ALTA Y ACTUALIZA PRODUCTO EN LA EDICION DE ENTRADA AL ALMACEN
-===================================================*/
+===============================================================================*/
 static public function mdlEditAdicionarRegEA($tabla_almacen, $tablahist, $tablakardex, $nombremes_actual, $datos){
 	try {      
             
@@ -628,7 +630,133 @@ static public function mdlEliminarDatos($tabla, $idaborrar, $campo){
                 
         $stmt = null;
 
-     } catch (Exception $e) {
+    } catch (Exception $e) {
+            echo "Failed: " . $e->getMessage();
+    }
+   
+}
+
+
+/*===============================================================================
+//SCRIPT PARA SUBIR ARCHIVOS QUE CORRESPONDA A LA ENTRADA AL ALMACEN $tabla=tbl_doctos
+=================================================================================*/
+static public function mdlSubirArchivosEntradas($tabla, $descripcion_archivo, $nombre_archivo, $numero_entrada, $ruta_archivo, $ultusuario){
+	try {      
+            
+            $stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(id_entrada, descripcion_archivo, nombre_archivo, ruta_archivo, ultusuario) VALUES (:id_entrada, :descripcion_archivo, :nombre_archivo, :ruta_archivo, :ultusuario)");
+                
+            $stmt->bindParam(":id_entrada",         $numero_entrada, PDO::PARAM_INT);
+            $stmt->bindParam(":descripcion_archivo",$descripcion_archivo, PDO::PARAM_STR);
+            $stmt->bindParam(":nombre_archivo",     $nombre_archivo, PDO::PARAM_STR);
+            $stmt->bindParam(":ruta_archivo",       $ruta_archivo, PDO::PARAM_STR);
+            $stmt->bindParam(":ultusuario",         $ultusuario, PDO::PARAM_INT);
+            $stmt->execute();
+
+            if($stmt){
+
+                return "ok";
+
+            }else{
+
+                return "error";
+            }
+
+            $stmt = null;
+
+	} catch (Exception $e) {
+		echo "Failed: " . $e->getMessage();
+    }
+
+}
+
+/*=============================================
+	LISTAR SALIDAS
+=============================================*/
+static public function mdlListarArchivos($tabla, $id_entrada, $usuario, $todes){
+    try {
+         //$where='1=1';
+              
+        $where='tbl.id_entrada="'.$id_entrada.'" ';
+        if($todes>0){
+            $where.=' AND tbl.ultusuario="'.$usuario.'"';
+        }
+        $where.=' ORDER BY tbl.id DESC';
+      
+        $sql="SELECT * FROM $tabla tbl WHERE ".$where;
+      
+        $stmt = Conexion::conectar()->prepare($sql);
+      
+        $stmt -> execute();
+      
+        return $stmt -> fetchAll();
+      
+        $stmt = null;
+    
+    } catch (Exception $e) {
+        echo "Failed: " . $e->getMessage();
+    }
+    
+}	
+    
+/*=========================================================================================*/
+
+/*=============================================
+ELIMINAR ARCHIVO
+=============================================*/
+static public function mdlDeleteFile($tabla, $idaborrar, $campo, $file){
+    try {      
+        
+        if($file){
+
+            $sql="SELECT * FROM $tabla WHERE $campo=:$campo";
+            $stmt=Conexion::conectar()->prepare($sql);
+            $stmt->bindParam(":".$campo, $idaborrar, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt -> fetch();
+            
+        }else{
+
+            $sql="DELETE FROM $tabla WHERE $campo=:$campo";
+            $stmt=Conexion::conectar()->prepare($sql);
+            $stmt->bindParam(":".$campo, $idaborrar, PDO::PARAM_INT);
+            $stmt->execute();
+
+            if ($stmt) {
+                return "ok";
+            }else{
+                $respuesta = array("error" =>'Eliminacion');
+                return $respuesta;
+            }
+        }           
+        $stmt = null;
+
+    } catch (Exception $e) {
+            echo "Failed: " . $e->getMessage();
+    }
+   
+}
+
+/*=============================================
+OBTENER DATOS DEL ARCHIVO
+=============================================*/
+static public function mdlGetDataFile($tabla, $campo, $valor){
+    try {      
+        
+            $sql="SELECT id_entrada, descripcion_archivo, nombre_archivo, ruta_archivo FROM $tabla WHERE $campo=:$campo";
+            $stmt=Conexion::conectar()->prepare($sql);
+            $stmt->bindParam(":".$campo, $valor, PDO::PARAM_INT);
+            $stmt->execute();
+            
+            if ($stmt) {
+                return $stmt -> fetch();
+            }else{
+                $respuesta = array("error" => $stmt);
+                return $respuesta;
+           }
+
+        $stmt = null;
+
+    } catch (Exception $e) {
             echo "Failed: " . $e->getMessage();
     }
    

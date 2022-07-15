@@ -58,7 +58,6 @@ static Public function MdlReporteInventarioAlmacen($idalmacen){
 	}		
 	
 
-
 /*===================================================================== */
 static Public function MdlReporteInventarioPorTecnico($tabla, $campo, $valor, $idalmacen){
 	try{	
@@ -69,11 +68,11 @@ static Public function MdlReporteInventarioPorTecnico($tabla, $campo, $valor, $i
 		FROM hist_salidas hist 
 		INNER JOIN productos prod ON hist.id_producto=prod.id
 		INNER JOIN medidas med ON prod.id_medida=med.id
-		WHERE hist.$campo=:campo AND hist.estatus=1 AND hist.id_almacen=:idalmacen GROUP BY hist.`id_tecnico`, hist.`id_producto`";
+		WHERE hist.$campo=:campo AND hist.estatus=1 AND hist.id_tipomov>0 AND hist.id_almacen=:idalmacen GROUP BY hist.`id_tecnico`, hist.`id_producto`";
 	
 		$stmt = Conexion::conectar()->prepare($sql);
 	
-		$stmt -> bindParam(":campo", $valor, PDO::PARAM_STR);
+		$stmt -> bindParam(":campo", 	 $valor, PDO::PARAM_STR);
 		$stmt -> bindParam(":idalmacen", $idalmacen, PDO::PARAM_STR);
 	
 		$stmt -> execute();

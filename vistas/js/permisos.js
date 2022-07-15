@@ -58,6 +58,7 @@ $("#guardarPermisoCat").on("click",function(event){
 //SI SELECCIONA UN USUARIO SE ABRE ACORDION
 $("#nvoUsuarioPermiso").change(function(){
     let usuarioselec=$("#nvoUsuarioPermiso").val();
+    //console.log("Entra");
     if(usuarioselec=='0'){
         $("#accordion").hide();
     }else{
@@ -67,7 +68,7 @@ $("#nvoUsuarioPermiso").change(function(){
 });
 
 function obteneraccesos(user){
-console.log(user);
+//console.log(user);
 axios.get('ajax/permiso.ajax.php?op=getPermisosCat', {
     params: {
       user: user
@@ -78,7 +79,7 @@ axios.get('ajax/permiso.ajax.php?op=getPermisosCat', {
     if(response.status==200) {
         //console.table(response.data)
         datas=response.data.catalogo;
-        //console.log(datas);
+        console.log(datas);
         bigdata=JSON.parse(datas);
 
         activarcheckbox(bigdata)

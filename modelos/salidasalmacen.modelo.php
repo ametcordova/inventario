@@ -50,7 +50,7 @@ static public function mdlAltaSalidasAlmacen($tabla_almacen, $tabla, $datos){
             }      //termina ciclo 1er for 
             
             if($stmt){
-                //SCRIP QUE REGISTRA LA SALIDA EN EL ALMACEN ELEGIDO
+                //SCRIPT QUE REGISTRA LA SALIDA EN EL ALMACEN ELEGIDO
                 for($i=0;$i<$contador;$i++) { 
                    
                      $stmt = Conexion::conectar()->prepare("UPDATE $tabla_almacen SET cant=cant-(:cant), ultusuario=:ultusuario WHERE id_producto = :id_producto");
@@ -108,12 +108,15 @@ try {
  /*=============================================
 	LISTAR SALIDAS
 =============================================*/
-static public function mdlListarSalidas($tabla, $fechadev1, $fechadev2){
+static public function mdlListarSalidas($tabla, $fechadev1, $fechadev2, $usuario){
 try {      
  	//$where='1=1';
 		  
 	$where='tb1.fechasalida>="'.$fechadev1.'" AND tb1.fechasalida<="'.$fechadev2.'" ';
-  
+     if(!$usuario==''){
+         $where.=' AND tb1.id_usuario="'.$usuario.'" ';
+     }
+    
 	$where.=' ORDER BY tb1.id DESC';
   
 	$sql="SELECT tb1.*, alm.nombre AS nombrealmacen, tec.nombre AS nombretecnico, usu.usuario FROM $tabla tb1 
@@ -254,8 +257,8 @@ static public function mdEditEliminarRegSA($tabla_almacen, $id_almacen, $tablahi
 static public function mdlEditAdicionarRegSA($tabla_almacen, $tablahist, $tablakardex, $nombremes_actual, $datos){
 	try {      
             
-            //SCRIP QUE REGISTRA LA SALIDA EN HIST_SALIDA
-            $stmt = Conexion::conectar()->prepare("INSERT INTO $tablahist(id_salida, num_salida, id_tecnico, fecha_salida, id_producto, cantidad, id_almacen, id_tipomov, id_usuario, ultusuario) VALUES (:id_salida, :num_salida, :id_tecnico, :fecha_salida, :id_producto, :cantidad, :id_almacen, :id_tipomov, :id_usuario, :ultusuario)");
+            //SCRIP QUE REGISTRA SI HAY SALIDA EN HIST_SALIDA
+            $stmt = Conexion::conectar()->prepare("INSERT INTO $tablahist(id_salida, num_salida, id_tecnico, fecha_salida, id_producto, cantidad, id_almacen, id_tipomov, disponible, id_usuario, ultusuario) VALUES (:id_salida, :num_salida, :id_tecnico, :fecha_salida, :id_producto, :cantidad, :id_almacen, :id_tipomov, :disponible, :id_usuario, :ultusuario)");
                 
             $stmt->bindParam(":id_salida", $datos["id_salida"], PDO::PARAM_INT);
             $stmt->bindParam(":num_salida", $datos["id_salida"], PDO::PARAM_INT);
@@ -265,6 +268,7 @@ static public function mdlEditAdicionarRegSA($tabla_almacen, $tablahist, $tablak
             $stmt->bindParam(":cantidad", $datos["cantidades"], PDO::PARAM_INT);
             $stmt->bindParam(":id_almacen", $datos["id_almacen"], PDO::PARAM_INT);
             $stmt->bindParam(":id_tipomov", $datos["id_tipomov"], PDO::PARAM_INT);
+            $stmt->bindParam(":disponible", $datos["cantidades"], PDO::PARAM_STR);
             $stmt->bindParam(":id_usuario", $datos["id_usuario"], PDO::PARAM_INT);
             $stmt->bindParam(":ultusuario", $datos["id_usuario"], PDO::PARAM_INT);
             $stmt->execute();
@@ -306,10 +310,12 @@ static public function mdlEditAdicionarRegSA($tabla_almacen, $tablahist, $tablak
 =============================================*/
 static public function mdEditAumentarRegSA($tabla_almacen, $id_almacen, $tablahist, $tablakardex, $key, $nuevovalor, $nombremes_actual){
     try {      
-        $stmt = Conexion::conectar()->prepare("UPDATE $tablahist SET cantidad=:cantidad+cantidad WHERE id_producto = :id_producto AND id_almacen=:id_almacen");
+        $stmt = Conexion::conectar()->prepare("UPDATE $tablahist SET cantidad=:cantidad+cantidad, disponible=:disponible+:disponible WHERE id_producto = :id_producto AND id_almacen=:id_almacen");
         $stmt->bindParam(":id_producto", $key, PDO::PARAM_INT);
         $stmt->bindParam(":id_almacen", $id_almacen, PDO::PARAM_INT);
         $stmt->bindParam(":cantidad", $nuevovalor, PDO::PARAM_INT);
+        $stmt->bindParam(":cantidad", $nuevovalor, PDO::PARAM_INT);
+        $stmt->bindParam(":disponible", $nuevovalor, PDO::PARAM_INT);
         $stmt->execute();
         
         if($stmt){
@@ -341,10 +347,11 @@ DISMINUYE CANT EN LA EDICION DE SALIDA DE ALM
 =============================================*/
 static public function mdEditDisminuirRegSA($tabla_almacen, $id_almacen, $tablahist, $tablakardex, $key, $nuevovalor, $nombremes_actual){
     try {      
-        $stmt = Conexion::conectar()->prepare("UPDATE $tablahist SET cantidad=cantidad-(:cantidad) WHERE id_producto = :id_producto AND id_almacen=:id_almacen");
+        $stmt = Conexion::conectar()->prepare("UPDATE $tablahist SET cantidad=cantidad-(:cantidad), disponible=disponible-(:disponible) WHERE id_producto = :id_producto AND id_almacen=:id_almacen");
         $stmt->bindParam(":id_producto", $key, PDO::PARAM_INT);
         $stmt->bindParam(":id_almacen", $id_almacen, PDO::PARAM_INT);
         $stmt->bindParam(":cantidad", $nuevovalor, PDO::PARAM_INT);
+        $stmt->bindParam(":disponible", $nuevovalor, PDO::PARAM_INT);
         $stmt->execute();
         
         if($stmt){

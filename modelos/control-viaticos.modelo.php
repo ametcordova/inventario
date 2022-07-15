@@ -96,15 +96,16 @@ try{
 /* ===============================================================================   
 	GUARDAR FECHA COMPROBACION 
 ===============================================================================*/
-static public function mdlGuardarCheckup($tabla, $datos){
+static public function mdlGuardarCheckup($tabla, $datos, $ruta){
 try{        
-	$stmt = Conexion::conectar()->prepare("INSERT INTO tbl_viaticos_checkup(id_viatico, fecha_gasto, numerodocto, concepto_gasto, importe_gasto, ultusuario) VALUES (:id_viatico, :fecha_gasto, :numerodocto, :concepto_gasto, :importe_gasto, :ultusuario)");
+	$stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(id_viatico, fecha_gasto, numerodocto, concepto_gasto, importe_gasto, ruta_factura, ultusuario) VALUES (:id_viatico, :fecha_gasto, :numerodocto, :concepto_gasto, :importe_gasto, :ruta_factura, :ultusuario)");
 
 	$stmt->bindParam(":id_viatico", 	$datos["id_viatico"], PDO::PARAM_INT);
 	$stmt->bindParam(":fecha_gasto", 	$datos["fecha_gasto"], PDO::PARAM_STR);
 	$stmt->bindParam(":numerodocto", 	$datos["numerodocto"], PDO::PARAM_STR);
 	$stmt->bindParam(":concepto_gasto", $datos["concepto_gasto"], PDO::PARAM_STR);
 	$stmt->bindParam(":importe_gasto",  $datos["importe_gasto"], PDO::PARAM_STR);
+	$stmt->bindParam(":ruta_factura",  	$ruta, PDO::PARAM_STR);
 	$stmt->bindParam(":ultusuario", 	$datos["ultusuario"], PDO::PARAM_INT);
 
 	if($stmt -> execute()){
@@ -310,7 +311,7 @@ try {
 =============================================*/	    
 static Public function mdlGetViaticoCheck($tabla, $item2, $idviatico){
 	try {     
-	   $stmt=Conexion::conectar()->prepare("SELECT id, id_viatico, fecha_gasto, numerodocto, concepto_gasto, importe_gasto FROM $tabla WHERE $item2=:id_viatico ORDER BY fecha_gasto ASC");
+	   $stmt=Conexion::conectar()->prepare("SELECT id, id_viatico, fecha_gasto, numerodocto, concepto_gasto, importe_gasto, ruta_factura FROM $tabla WHERE $item2=:id_viatico ORDER BY fecha_gasto ASC");
 
 	   $stmt -> bindParam(":".$item2, $idviatico, PDO::PARAM_STR);
 

@@ -59,8 +59,6 @@ try{
     
         return $stmt -> fetchAll();      
         
-        $stmt->close();
-           
         $stmt=null;
     
     } catch (Exception $e) {
@@ -119,8 +117,6 @@ static public function MdlTraerProduct($tabla, $campo, $idproducto, $estado){
 
         return $stmt -> fetch();
 
-        $stmt -> close();
-
         $stmt = null;
     } catch (Exception $e) {
         echo "Failed: " . $e->getMessage();
@@ -140,8 +136,6 @@ static public function MdlTraerExist($campo, $idproducto, $tabla){
         $stmt -> execute();
     
         return $stmt -> fetch();
-    
-        $stmt -> close();
     
         $stmt = null;
     } catch (Exception $e) {

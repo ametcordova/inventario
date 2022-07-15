@@ -373,7 +373,6 @@ $(".tablaProductos tbody").on("click", ".idImagen", function(){
     $('#ModalCenterTitle').html("");
     $('#ModalCenterTitle').html('Imagen de: '+descripcionProd+' Cod: '+codeProd);
 	$('#imagen-modal').attr('src', muestra_imagen);
-	
 })
 
 $("#agregarProd").click(function(){

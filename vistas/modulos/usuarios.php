@@ -49,26 +49,25 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
          </div>
         
         <div class="card-body">
-<div class="card">
-            <div class="card-header">
-              <!-- <h3 class="card-title">Tabla con todos los Usuarios</h3>-->
-            </div>
-            <!-- /.card-header -->
+        <div class="card">
+            <div class="card-header p-0 m-0 text-center" style="background-color: lavenderblush; color:#08C49F; font-size:2rem;">
+               <label class="text-center p-0 m-0">Modulo Catalogo de Usuarios</label>
+            </div>  <!-- /.card-header -->
             <div class="card-body">
-              <table class="table table-bordered table-striped dt-responsive activarDatatable" width="100%">
-                <thead>
-                <tr>
+              <table class="table table-bordered table-hover table-striped dt-responsive compact usuariosDatatable" width="100%">
+                <thead class="thead-dark">
+                <tr style="height:10px !important; font-size:0.75em !important;">
                     <th style="width:10px;">#</th>
                     <th>Nombre</th>
                     <th>usuario</th>
                     <th>Foto</th>
                     <th>Perfil</th>
                     <th>Estado</th>
-                    <th>Fecha Login</th>
+                    <th>Ult. Login</th>
                     <th>Acción</th>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody style="font-size:0.90em !important;">
                 
                 <?php
                   
@@ -77,31 +76,40 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                   $usuarios=ControladorUsuarios::ctrMostrarUsuarios($campo, $valor);
                 
                   foreach($usuarios as $key => $value){
+                    if($value["ultimo_login"]==''){
+                      $fechalogin = 'No ha iniciado sesión';
+                    }else{
                       $fechalogin = date('d-m-Y H:i:s', strtotime($value["ultimo_login"]));
+                    }
                       echo '
                 <tr>
                   <td>'.$value["id"].'</td>
                   <td>'.$value["nombre"].'</td>
                   <td>'.$value["usuario"].'</td>';
                   if($value["foto"]!=""){
-                      echo '<td><img src="'.$value["foto"].'" class="img-thumbnail" width="30px" alt="Foto Usuario"></td>';
+                    if(is_file($value["foto"]) && is_readable($value["foto"])) {
+                      echo '<td><img src="'.$value["foto"].'" class="img-thumbnail" width="30px" alt="Foto"></td>';
+                    }else{
+                      echo '<td><img src="vistas/img/usuarios/default/anonymous.png" class="img-thumbnail" width="30px" alt="Foto"></td>';
+                    }
                   }else{
-                      echo '<td><img src="vistas/img/usuarios/default/anonymous.png" class="img-thumbnail" width="30px" alt="Foto Usuario"></td>';
+                    echo '<td><img src="vistas/img/usuarios/default/anonymous.png" class="img-thumbnail" width="30px" alt="Foto"></td>';
                   }
+                  clearstatcache();   //borra cache de las consultas is_file y is_readable
                   echo '<td>'.$value["perfil"].'</td>';
 
                   if(getAccess($acceso, ACCESS_ACTIVAR)){
                     if($value["estado"]!=0){
-                      echo '<td><button class="btn btn-success btn-sm btnActivar" idUsuario="'.$value["id"].'" estadoUsuario="0">Activado</button></td>';
+                      echo '<td><button class="btn btn-sm btn-success btnActivar" idUsuario="'.$value["id"].'" estadoUsuario="0" title="Click para desactivar" >Activado</button></td>';
                     }else{
-                      echo '<td><button class="btn btn-danger btn-sm btnActivar" idUsuario="'.$value["id"].'" estadoUsuario="1">Desactivado</button></td>';
+                      echo '<td><button class="btn btn-sm btn-danger btnActivar" idUsuario="'.$value["id"].'" estadoUsuario="1" title="Click para activar">Desactivado</button></td>';
                     }
                   }else{
-                    echo '<td></td>';
+                    echo '<td> </td>';
                   }
 
-                  $boton1=getAccess($acceso, ACCESS_EDIT)?'<button class="btn btn-warning btn-sm btnEditarUsuario" idUsuario="'.$value["id"].'" data-toggle="modal" data-target="#modalEditarUsuario"><i class="fa fa-pencil"></i></button> ':'';
-                  $boton2=getAccess($acceso, ACCESS_DELETE)?' <button class="btn btn-danger btn-sm btnEliminarUsuario" idUsuario="'.$value["id"].'" fotoUsuario="'.$value["foto"].'" usuario="'.$value["usuario"].'"><i class="fa fa-times"></i></button>':'';
+                  $boton1=getAccess($acceso, ACCESS_EDIT)?'<button class="btn btn-sm btn-warning btnEditarUsuario mr-1" idUsuario="'.$value["id"].'" data-toggle="modal" data-target="#modalEditarUsuario"><i class="fa fa-pencil"></i></button> ':'';
+                  $boton2=getAccess($acceso, ACCESS_DELETE)?' <button class="btn btn-sm btn-danger btnEliminarUsuario ml-1" idUsuario="'.$value["id"].'" fotoUsuario="'.$value["foto"].'" usuario="'.$value["usuario"].'"><i class="fa fa-times"></i></button> ':'';
               
                   echo '<td>'.$fechalogin.'</td>
                   
@@ -116,15 +124,15 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                 ?>
                 
                 </tbody>
-                <tfoot>
-                <tr>
+                <tfoot class="thead-dark">
+                <tr style="height:10px !important; font-size:0.75em !important;">
                     <th style="width:10px;">#</th>
                     <th>Nombre</th>
-                    <th>usuario</th>
+                    <th>Usuario</th>
                     <th>Foto</th>
                     <th>Perfil</th>
                     <th>Estado</th>
-                    <th>Fecha Login</th>
+                    <th>Ult. Login</th>
                     <th>Acción</th>
                 </tr>
                 </tfoot>
@@ -156,9 +164,9 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
     <div class="modal-content">
     <form role="form" method="POST" enctype="multipart/form-data">
       <!-- Modal Header -->
-      <div class="modal-header" style="background:#F7FE2E;">
+      <div class="modal-header py-0" style="background:#F7FE2E;">
    
-            <h4 class="modal-title">Agregar usuario</h4>
+            <h4 class="modal-title"><i class="fa fa-user"></i> Agregar usuario</h4>
         
             <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
@@ -202,6 +210,7 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                       <option value="Especial">Especial</option>
                       <option value="Auxiliar">Auxiliar</option>
                       <option value="Visitante">Visitante</option>
+                      <option value="Tecnico">Técnico</option>
                     </select>
               </div>
             </div>
@@ -231,10 +240,10 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
       </div>
 
       <!-- Modal footer -->
-      <div class="modal-footer" style="background:#F7FE2E;">
+      <div class="modal-footer py-1" style="background:#F7FE2E;">
        
-        <button type="button" class="btn btn-primary float-left" data-dismiss="modal"><i class="fa fa-reply"></i> Salir</button>
-        <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Guardar</button>
+        <button type="button" class="btn btn-sm btn-primary float-left" data-dismiss="modal"><i class="fa fa-reply"></i> Salir</button>
+        <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-save"></i> Guardar</button>
       
       </div>
       
@@ -249,15 +258,17 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
 </div>  
 
 
-<!-- === MODAL EDITAR USUARIO ==-->
- 
+
+<!--============================= MODAL EDITAR USUARIO =============================
+ === MODAL EDITAR USUARIO ======================================================*/ 
+==============================================================================-->
   <div class="modal fade" id="modalEditarUsuario">
   <div class="modal-dialog">
    
     <div class="modal-content">
     <form role="form" method="POST" enctype="multipart/form-data">
       <!-- Modal Header -->
-      <div class="modal-header" style="background:#F7FE2E;">
+      <div class="modal-header py-0" style="background:#F7FE2E;">
    
             <h4 class="modal-title">Editar usuario</h4>
         
@@ -304,6 +315,7 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                       <option value="Especial">Especial</option>
                       <option value="Auxiliar">Auxiliar</option>
                       <option value="Visitante">Visitante</option>
+                      <option value="Tecnico">Técnico</option>
                     </select>
               </div>
             </div>
@@ -312,7 +324,7 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
               <div class="panel">Subir Foto</div>
             </div>
               <input type="file" class="nuevaFoto" placeholder="foto" name="editarFoto">
-              <p class="help-block">peso Maximo de la foto 2mb.</p>
+              <p class="help-block">Peso Max. de la foto 2mb.</p>
               <img src="vistas/img/usuarios/default/anonymous.png" class="img-thumbnail previsualizarEditar" width="80px" alt="">
               <input type="hidden" id="fotoActual" name="fotoActual">
          </div>
@@ -321,10 +333,10 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
       </div>
 
       <!-- Modal footer -->
-      <div class="modal-footer" style="background:#F7FE2E;">
+      <div class="modal-footer py-1" style="background:#F7FE2E;">
        
-        <button type="button" class="btn btn-primary float-left" data-dismiss="modal"><i class="fa fa-reply"></i> Salir</button>
-        <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Guardar Cambios</button>
+        <button type="button" class="btn btn-sm btn-primary float-left" data-dismiss="modal"><i class="fa fa-reply"></i> Salir</button>
+        <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-save"></i> Guardar Cambios</button>
       
       </div>
       

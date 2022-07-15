@@ -38,7 +38,7 @@ $("#TecnicoDev").prop("selectedIndex", 1);
 $("#cantSalidaDev").val(1); 
 /* =============================================*/
 
-/*  =====  SE DESHABOLITA LA OPCION DESPUES DE SELECCIONAR EL ALMACEN  ======*/
+/*  =====  SE DESHABILITA LA OPCION DESPUES DE SELECCIONAR EL ALMACEN  ======*/
 $("#nuevoAlmacenSerie").change(function(){
     $("#agregarProdDev").removeClass("d-none" )
     $('#nuevoAlmacenSerie option:not(:selected)').attr('disabled',true);
@@ -401,7 +401,7 @@ $(".daterangepicker.opensright .ranges li").on("click", function(){
 // ========= LISTAR EN EL DATATABLE REGISTROS DE LA TABLA cajas================
 function listarSeries(){
   let rangodeFecha = $("#daterange-btnSeries span").html();
-  console.log("Rango de Fecha:",rangodeFecha);
+ // console.log("Rango de Fecha:",rangodeFecha);
   if(rangodeFecha==undefined || rangodeFecha==null){
       var FechDev1=moment().format('YYYY-MM-DD');
       var FechDev2=moment().format('YYYY-MM-DD');
@@ -415,7 +415,7 @@ function listarSeries(){
 	   var FechDev2=f2[2].concat("-").concat(f2[1]).concat("-").concat(f2[0]);
   }	   
  
-  console.log(FechDev1, FechDev2);
+  //console.log(FechDev1, FechDev2);
 
   tabladeSeries=$('#DatatableSeries').dataTable(
 	{

@@ -1,21 +1,29 @@
-<!-- Control Sidebar -->
-  <aside class="control-sidebar control-sidebar-dark">
-    <!-- Control sidebar content goes here -->
-    <div class="p-3">
-      <h5>Title</h5>
-      <p>Sidebar content</p>
-    </div>
-  </aside>
-  <!-- /.control-sidebar -->
 
 <!-- Main Footer -->
-  <footer class="main-footer">
-    <!-- To the right -->
-   <div class="float-right d-none d-sm-inline">
-      <strong style="color:red">@</strong>Kordova - (961)-248-0768
-    </div>	
-    <!-- Default to the left -->
-    <strong>Copyright &copy; 2019 <a href="index.php">AdminInV</a>.</strong> Todos Los Derechos Reservados.
+  <footer class="main-footer p-0 m-0">
+
+    <div class="col-md-12 d-flex">
+    
+        <p class="col-md-5 justify-content-end">
+          <!-- Default to the left -->
+          <strong>Copyright &copy; 2019 - <?= date("Y");?> <a href="index.php">AdminInV</a>.</strong> Todos Los Derechos Reservados.
+        </p>
+
+        <p class="col-md-5">
+          <?php
+            include_once "funciones/funciones.php";
+            echo verURL()
+          ?>
+        </p>
+
+      <p class="col-md-2 float-right">
+        <!-- To the right -->
+        <strong style="color:red">@</strong>Kordova - (961)-248-0768
+      </p>
+        
+
+    </div>
+    
   </footer>
 </div>
 <!-- ./wrapper -->
@@ -24,8 +32,8 @@
 
 <!-- jQuery -->
 <script src="extensiones/plugins/jquery/jquery.min.js"></script>
-<!-- Bootstrap 4 -->
-<script src="extensiones/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!-- Bootstrap 4 SE QUITO POR QUE NO SERVIA-->
 
 <script src="extensiones/plugins/jquery-ui-1.12.1/jquery-ui.js"></script>
 
@@ -35,6 +43,7 @@
 <!-- OPTIONAL SCRIPTS -->
  <script src="extensiones/dist/js/demo.js"></script>
 <!-- <script src="extensiones/dist/js/pages/dashboard3.js"></script>  -->
+
 <!-- iCheck -->
 <script src="extensiones/plugins/iCheck/icheck.min.js"></script>
 
@@ -43,6 +52,8 @@
 <!-- funcion para Datatables para ordener por fecha-->
 <script type="text/javascript" src="extensiones/datatables/date-eu.js?v=01012021"></script> 
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
 
 <!-- DataTables -->
 <!-- <script src="extensiones/plugins/datatables/jquery.dataTables.js"></script>
@@ -80,11 +91,20 @@
 <!-- daterangepicker -->
 <script src="extensiones/plugins/daterangepicker/daterangepicker.js"></script>
 
+<script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+<script src="extensiones/plugins/tempusdominus-bootstrap4/tempusdominus-bootstrap-4.min.js"></script>
+
 <!-- Select2 -->
 <script src="extensiones/plugins/select2/select2.full.min.js"></script>
 
 <!-- axios -->
 <script src="extensiones/axios-0.19.2/axios.min.js"></script>
+<!-- notie -->
+<script src="https://unpkg.com/notie"></script>
+<!-- Alertas ohSnap -->
+<script src="extensiones/plugins/ohSnap/ohsnap.js"></script>
 
+<!--<script src="../../codigos/rxjs/rxjs.umd.min.js"></script> -->
+<script src="https://unpkg.com/rxjs@^7/dist/bundles/rxjs.umd.min.js></script>
 </body>
 </html>

@@ -344,7 +344,7 @@ $('#abrircaja').click(function (e) {
   
     // swal("Importe en Caja Chica?", {
     //   buttons: ["Cancelar", "Abrir Caja!"],
-    //   closeOnEsc: false,
+    //   : false,
     //   content: "input",
     // })
     

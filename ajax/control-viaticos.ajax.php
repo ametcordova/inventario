@@ -17,11 +17,8 @@ switch ($_GET["op"]){
             $datos = array(
             "id_tecnico"            => $_POST["nvoComisionadoV"],
             "fecha_dispersion"      => $_POST["nvaFecha"],
-            //"id_mediodeposito"      => $_POST["nvoMedioDeposito"],
             "concepto_dispersion"   => $_POST["nvoConcepto"],
             "descripcion_dispersion"=> strtoupper($_POST["nvadescripcion"]),
-            //"importe_dispersion"    => $_POST["nvoImporte"],
-            //"saldo_actual"          => $_POST["nvoImporte"],
             "ultusuario"            => $_POST["idDeUsuario"]
             );
 
@@ -56,24 +53,51 @@ switch ($_GET["op"]){
 	break;
         
     case 'checkup':
+
+        if(isset($_FILES)){
+            //$tipos = array("image/gif","image/jpeg","image/jpg","image/png"); 
+            //if (in_array($_FILES["imagen"]["type"],$tipos) && $_FILES["imagen"]["size"] <= $maximo)  //Funciona a las mil maravillas
+            
+            if($_FILES['facturaPdf']['type']=='application/pdf'){
+                $tamayo_maximo = 2*(1024*1024);   //max 2mb.
+                if( $_FILES['facturaPdf']['size'] > $tamayo_maximo ) {      //NO ENTRA AQUI CUANDO SE TIENE name="MAX_FILE_SIZE"
+                    $peso=$_FILES['facturaPdf']['size'];
+                    echo json_encode(array('status' => 400, 'mensaje'=> 'Archivo supera los 2MB'));
+                    return;
+                }
+
+                if(isset($_POST["fechagasto"]) && !empty($_POST["conceptogasto"]) && !empty($_POST["importegasto"])){
+                    $tabla = "tbl_viaticos_checkup";
+                    $datos = array(
+                    "id_viatico"        => $_POST["registroid"],
+                    "fecha_gasto"       => $_POST["fechagasto"],
+                    "numerodocto"       => $_POST["numerodocto"],
+                    "concepto_gasto"    => strtoupper($_POST["conceptogasto"]),
+                    "importe_gasto"     => $_POST["importegasto"],
+                    "ruta_factura"      => $_FILES['facturaPdf'],
+                    "ultusuario"        => $_POST["idDeUsuario"]
+                    );
+    
+                    $rspta = ControladorViaticos::ctrGuardarCheckup($tabla, $datos);
+                    if($rspta==500){
+                        echo json_encode(array('status' => 400, 'mensaje'=> "Archivo ya existe.  VERIFIQUE!!"));
+                        return;
+                    }
+                    echo json_encode(array('status' => 200, 'mensaje'=> $rspta));
+                    //echo $rspta;
+    
+                }else{
+                    echo json_encode(array('status' => 400, 'mensaje'=> 'Datos incorrectos'));
+                    return false;  
+                }
+    
+            }else{
+                echo json_encode(array('status' => 400, 'mensaje'=> 'Archivo seleccionado no es .PDF o supera los 2MB'));
+                return false;
+            }
         
-        if(isset($_POST["fechagasto"]) && !empty($_POST["conceptogasto"]) && !empty($_POST["importegasto"])){
-            $tabla = "tbl_viaticos_checkup";
-            $datos = array(
-            "id_viatico"        => $_POST["registroid"],
-            "fecha_gasto"       => $_POST["fechagasto"],
-            "numerodocto"       => $_POST["numerodocto"],
-            "concepto_gasto"    => strtoupper($_POST["conceptogasto"]),
-            "importe_gasto"     => $_POST["importegasto"],
-            "ultusuario"        => $_POST["idDeUsuario"]
-            );
-
-            $rspta = ControladorViaticos::ctrGuardarCheckup($tabla, $datos);
-            echo $rspta;
-
-        }else{
-            return false;  
         }
+
 
  	break;
         

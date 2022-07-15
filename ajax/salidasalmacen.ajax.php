@@ -256,11 +256,16 @@ switch ($_GET["op"]){
         $usuario=$_SESSION['id'];
 		$module="psalidas";
 		$campo="administracion";
-		$acceso=accesomodulo($tabla, $usuario, $module, $campo);
+        $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
+
+        if($_SESSION['perfil']==="Administrador"){
+            $usuario='';
+        };
+		
 
         $tabla="tbl_salidas";
 		
-        $listarSalidas = ControladorSalidasAlmacen::ctrListarSalidas($tabla, $fechadev1, $fechadev2);	
+        $listarSalidas = ControladorSalidasAlmacen::ctrListarSalidas($tabla, $fechadev1, $fechadev2, $usuario);	
           
         if(count($listarSalidas) == 0){
   			echo '{"data": []}';           //arreglar, checar como va

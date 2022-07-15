@@ -114,3 +114,136 @@ Full screen Modal
   transform: scaleX(1);
   transform-origin: bottom left;
 }
+
+.btn-fipabide{
+  background-color:rgb(205, 238, 15); 
+}
+
+@media only screen and (max-width: 480px) {
+  .margen-custom {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    margin-top:1px;
+    margin-bottom: 10px;
+  }
+}
+@media only screen and (min-width: 480px) and (max-width: 768px) {
+  .margen-custom {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    margin-top:0;
+    margin-bottom: 10px;
+  }
+}
+
+@media only screen and (min-width: 768px) and (max-width: 959px) {
+  .margen-custom {margin-top:20px;}
+}
+@media only screen and (min-width: 959px) {
+  .margen-custom {margin-top:20px;;}
+}
+
+#uploadedFile{
+  border: 1px #A9A9A9 solid;
+  background-color: #00BFFF;
+  color: #fff;
+  font-family:Arial;
+  font-size: 14px;
+}
+
+.btn-circle {
+  width: 23px;
+  height: 23px;
+  padding: 3px 0px;
+  border-radius: 15px;
+  text-align: center;
+  font-size: 10px;
+  line-height: normal;
+  margin-right: 0px;
+  /*line-height: 1.42857;*/
+}
+
+#progress-wrp {
+  border: 1px solid #0099CC;
+  padding: 1px;
+  position: relative;
+  height: 30px;
+  border-radius: 3px;
+  margin: 10px;
+  text-align: left;
+  background: #fff;
+  box-shadow: inset 1px 3px 6px rgba(0, 0, 0, 0.12);
+}
+
+#progress-wrp .progress-bar {
+  height: 100%;
+  border-radius: 3px;
+  background-color: #f39ac7;
+  width: 0;
+  box-shadow: inset 1px 1px 10px rgba(0, 0, 0, 0.11);
+}
+
+#progress-wrp .status {
+  top: 3px;
+  left: 50%;
+  position: absolute;
+  display: inline-block;
+  color: #000000;
+}
+
+#estiloletra{
+  font-family: 'Unica One', cursive;
+  font-size: 38px;
+  margin: 0px;
+  padding: 0px;
+}
+
+.notie-container {
+  box-shadow: none;
+}
+
+#progress_bar {
+  margin: 8px 0;
+  padding: 3px;
+  border: 1px solid #000;
+  font-size: 14px;
+  clear: both;
+  opacity: 0;
+  transition: opacity 1s linear;
+  -moz-transition: opacity 1s linear;
+  -o-transition: opacity 1s linear;
+  -webkit-transition: opacity 1s linear;
+}
+#progress_bar.loading {
+  opacity: 1.0;
+}
+#progress_bar .percent {
+  background-color: #13e913;
+  height: auto;
+  width: 0;
+}
+
+.blink {
+  animation: blink 3s steps(2, end) infinite;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .75;
+  }
+  75% {
+    opacity: .5;
+    
+  }
+  100% {
+    opacity: 0;
+    
+  }
+}

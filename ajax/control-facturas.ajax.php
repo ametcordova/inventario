@@ -75,7 +75,7 @@ switch ($_GET["op"]){
 			$valor = $_POST["idFactura"];
 			$orden = $_POST["idBorrado"];
 
-            $respuesta = ControladorFacturas::ctrMostrarFacturas($item, $valor, $orden, $tipo=null, $year=null);
+            $respuesta = ControladorFacturas::ctrMostrarFacturas($item, $valor, $orden, $tipo=null, $year=null, $month=null);
 
             echo json_encode($respuesta);
 
@@ -204,11 +204,12 @@ switch ($_GET["op"]){
 	
 	    $tipo = $_GET["tiporeporte"];
 	    $year = $_GET["filteryear"];
+	    $month = isset($_GET["filtermonth"]) ? $_GET["filtermonth"] : null;
 		$item = null;
     	$valor = null;
     	$orden = "id";
 		$conter=0;
-  		$facturas = ControladorFacturas::ctrMostrarFacturas($item, $valor, $orden,$tipo, $year);	
+  		$facturas = ControladorFacturas::ctrMostrarFacturas($item, $valor, $orden,$tipo, $year, $month);	
 
   		if(count($facturas) == 0){
   			echo '{"data": []}';           //arreglar, checar como va
@@ -220,11 +221,10 @@ switch ($_GET["op"]){
             $fechaFactura = date('d-m-Y', strtotime($value["fechafactura"]));
             $fechaEntregado = $value["fechaentregado"]==null?"":date('d-m-Y', strtotime($value["fechaentregado"]));
             $fechaPagado =$value["fechapagado"]==null?" ":date('d-m-Y', strtotime($value["fechapagado"]));
-			
             $importeFact=number_format($value['importe'], 2, '.',',');
 			
 			if(getAccess($acceso, ACCESS_SELECT)){
-				$botonLock=$value["status"]==0?"<button class='btn btn-warning btn-sm px-1 py-1 btnPagarFactura' idFactura='".$value['id']."' numfactura='".$value['numfact']."' data-toggle='modal' data-target='#modalPagarFactura' title='Cap. Fecha Pago'><i class='fa fa-unlock'></i></button>"." <button class='btn btn-primary btn-sm px-1 py-1 btnAgregaGastos' idFactura='".$value['id']."' numFactura='".$value['numfact']."' idEstado='".$value['status']."' data-toggle='modal' data-target='#modalAgregarGastos' title=''><i class='fa fa-plus-circle'></i></button>":
+				$botonLock=$value["status"]==0?"<button class='btn btn-warning btn-sm px-1 py-1 btnPagarFactura' dFechaPago='".$value['fechapagado']."' idFactura='".$value['id']."' numfactura='".$value['numfact']."' data-toggle='modal' data-target='#modalPagarFactura' title='Cap. Fecha Pago'><i class='fa fa-unlock'></i></button>"." <button class='btn btn-primary btn-sm px-1 py-1 btnAgregaGastos' idFactura='".$value['id']."' numFactura='".$value['numfact']."' idEstado='".$value['status']."' data-toggle='modal' data-target='#modalAgregarGastos' title=''><i class='fa fa-plus-circle'></i></button>":
 				"<button class='btn btn-success py-1 btn-sm' idEstado='".$value['status']."' title='Cerrado'><i class='fa fa-lock'></i></button>";
 			}else{
 				$botonLock=$value["status"]==0?"<button class='btn btn-warning btn-sm px-1 py-1 disabled' title='Cap. Fecha Pago'><i class='fa fa-unlock'></i></button>":
@@ -247,7 +247,7 @@ switch ($_GET["op"]){
 		  	$data[]=array(
                   $value["numfact"],
                   substr($value["cliente"],0,30),
-				  substr($value["tipotrabajo"],0,25),
+				  substr($value["tipotrabajo"],0,28),
 				  $value["numorden"],
                   $fechaFactura,
 			      number_format($value["subtotal"], 2, '.',','),

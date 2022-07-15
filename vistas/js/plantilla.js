@@ -68,13 +68,14 @@ $(document).ready(function() {
     } );
 } );
 
-
-//Función Regresar
+/***********************************************/
+//Función Regresar al inicio
+/***********************************************/
 function regresar()
 {
 	location.href = 'inicio';
 }
-
+/********************************************* */
 
 $.fn.datepicker.dates['es'] = {
     days: ["Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"],
@@ -133,12 +134,16 @@ $(function () {
     
 })
 
-
+/**********************************************/
+/* Función para cambiar de minuscula a mayuscula
+/*********************************************/
 function mayuscula(letra) {
  letra.value=letra.value.toUpperCase(); 
  //console.log(letra);
 return true;
 }
+/********************************************/
+
 
 /*=============================================
 Data Table
@@ -187,105 +192,120 @@ $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
 $('[data-mask]').inputmask()	
 
 
-$('.activarDatatable').DataTable({
-		"lengthMenu": [ [10, 25, 50,100, -1], [10, 25, 50, 100, "Todos"] ],
-        "language": {
-		"sProcessing":     "Procesando...",
-		"sLengthMenu":     "Mostrar _MENU_ registros &nbsp",
-		"sZeroRecords":    "No se encontraron resultados",
-		"sEmptyTable":     "Ningún dato disponible en esta tabla",
-		"sInfo":           "Mostrar registros del _START_ al _END_ de un total de _TOTAL_",
-		"sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
-		"sInfoPostFix":    "",
-		"sSearch":         "Buscar:",
-		"sUrl":            "",
-		"sInfoThousands":  ",",
-		"sLoadingRecords": "Cargando...",
-		"oPaginate": {
-		"sFirst":    "Primero",
-		"sLast":     "Último",
-		"sNext":     "Siguiente",
-		"sPrevious": "Anterior"}
-		},
-		"oAria": {
-			"sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
-			"sSortDescending": ": Activar para ordenar la columna de manera descendente"
-		},
-        dom: '<clear>Bfrtip',
-        buttons: [
-            'copyHtml5',
-            'excelHtml5',
-            'csvHtml5',
-            {
-                extend: 'pdfHtml5',
-                orientation: 'landscape',
-                title: "NUNOSCO",
-                customize: function ( doc ) {
-                    pdfMake.createPdf(doc).open();
-                },
 
-            },
-       {
-            extend: 'print',
-            text: 'Imprimir',
-            autoPrint: false            //TRUE para abrir la impresora
-        }
-        ],
-        initComplete: function () {
-            var btns = $('.dt-button');
-            btns.removeClass('dt-button');
-            btns.addClass('btn btn-success btn-sm');
+ /*=============================================*/
+ $('.activarDatatable').DataTable({
+  "lengthMenu": [ [10, 25, 50,100, -1], [10, 25, 50, 100, "Todos"] ],
+  "language": {
+  "sProcessing":     "Procesando...",
+  "sLengthMenu":     "Mostrar _MENU_ registros &nbsp",
+  "sZeroRecords":    "No se encontraron resultados",
+  "sEmptyTable":     "Ningún dato disponible en esta tabla",
+  "sInfo":           "Mostrar registros del _START_ al _END_ de un total de _TOTAL_",
+  "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+  "sInfoPostFix":    "",
+  "sSearch":         "Buscar:",
+  "sUrl":            "",
+  "sInfoThousands":  ",",
+  "sLoadingRecords": "Cargando...",
+  "oPaginate": {
+  "sFirst":    "Primero",
+  "sLast":     "Último",
+  "sNext":     "Siguiente",
+  "sPrevious": "Anterior"}
+  },
+  "oAria": {
+    "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+    "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+  },
+      dom: '<clear>Bfrtip',
+      buttons: [
+          'copyHtml5',
+          'excelHtml5',
+          'csvHtml5',
+          {
+              extend: 'pdfHtml5',
+              orientation: 'landscape',
+              title: "NUNOSCO",
+              customize: function ( doc ) {
+                  pdfMake.createPdf(doc).open();
+              },
+
           },
+     {
+          extend: 'print',
+          text: 'Imprimir',
+          autoPrint: false            //TRUE para abrir la impresora
+      }
+      ],
+      initComplete: function () {
+          var btns = $('.dt-button');
+          btns.removeClass('dt-button');
+          btns.addClass('btn btn-success btn-sm');
+        },
 
-    columnDefs: [{
-        width: "10px",
-        targets: 0
-      },
-      {
-        width: "150px",
-        targets: 1
-      },
-      {
-        width: "80px",
-        targets: 2
-      },
-      {
-        width: "20px",
-        targets: 3
-      },
-      {
-        width: "70px",
-        targets: 4
-      },
-      {
-        width: "180px",
-        targets: 5
-      },
-      {
-        width: "60px",
-        targets: 7
-      },
-      {
-        width: "70px",
-        targets: 8
-      },
-      {
-        width: "60px",
-        targets: 9
-      },
-      {
-        width: "50px",
-        targets: 10
-      },
-      {"className": "dt-center", "targets": [10]}
-    ],
-    "drawCallback": function( settings ) {
-        $('ul.pagination').addClass("pagination-sm");
-   }        
- });
- 
+  columnDefs: [{
+      width: "10px",
+      targets: 0
+    },
+    {
+      width: "150px",
+      targets: 1
+    },
+    {
+      width: "80px",
+      targets: 2
+    },
+    {
+      width: "20px",
+      targets: 3
+    },
+    {
+      width: "70px",
+      targets: 4
+    },
+    {
+      width: "180px",
+      targets: 5
+    },
+    {
+      width: "60px",
+      targets: 7
+    },
+    {
+      width: "70px",
+      targets: 8
+    },
+    {
+      width: "60px",
+      targets: 9
+    },
+    {
+      width: "50px",
+      targets: 10
+    },
+    {"className": "dt-center", "targets": [10]}
+  ],
+  "drawCallback": function( settings ) {
+      $('ul.pagination').addClass("pagination-sm");
+ }        
+});
 
-//
+/***********************************************************************/
+function fechahora(){
+let optionsHora = {hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit'};
+let optionsFecha = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+const formatFullDate = new Date().toLocaleDateString("es-MX", optionsFecha);
+const semana=moment().isoWeek();
+
+  clockTempo=setInterval(()=>{
+    let clockHour=new Date().toLocaleTimeString('es-MX', optionsHora);
+    document.getElementById("liveclock").innerHTML=`Fecha y Hora: ${formatFullDate} ${clockHour} Sem. ${semana}`;
+    },1000
+  )
+}
+/***********************************************************************/
+//DECRAPETED
 // HORA Y FECHA EN LA CABECERA 
 //
  var meses = new Array ("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"); 
@@ -328,4 +348,47 @@ else if (document.getElementById)
  setTimeout("show5()",1000)
  
 }
- 
+/*************************************************************************************************** */ 
+jQuery.fn.dataTable.Api.register( 'sum()', function ( ) {
+  return this.flatten().reduce( function ( a, b ) {
+      if ( typeof a === 'string' ) {
+          a = a.replace(/[^\d.-]/g, '') * 1;
+      }
+      if ( typeof b === 'string' ) {
+          b = b.replace(/[^\d.-]/g, '') * 1;
+      }
+      return a + b;
+  }, 0 );
+} );
+
+function complete() {
+  $(".alert").addClass("d-none")
+}
+
+/*************************************************************/
+/* Funcion para saber si hay conexion a internet             */
+/************************************************************/
+function networkStatus(){
+  const d=document, w=window, n=navigator;    
+
+  if(n.onLine){
+    d.getElementById('statusnetwork').innerHTML=`<img src='vistas/img/wifi.gif' width='35%' alt='wifi'><span class='badge bg-primary' title='Conexión establecida'>Online</span>`;
+  }else{
+    d.getElementById('statusnetwork').innerHTML=`<span class='badge bg-danger' title='Sin conexión'>Offline</span>`;
+  }
+  
+   const isOnLine=()=>{
+    if(n.onLine){
+        d.getElementById('statusnetwork').innerHTML=`<img src='vistas/img/wifi.gif' width='35%' alt='wifi'><span class='badge bg-primary' title='Conexión establecida'>Online</span>`;
+     }else{
+        d.getElementById('statusnetwork').innerHTML=`<span class='badge bg-danger' title='Sin conexión'>Offline</span>`;
+     }
+  }
+  
+  //w.addEventListener("online",(e)=>console.log(e, n.onLine));
+  //w.addEventListener("offline",(e)=>console.log(e, n.onLine));
+
+  w.addEventListener("online",(e)=>isOnLine());
+  w.addEventListener("offline",(e)=>isOnLine());
+}
+/*************************************************************************************************** */ 

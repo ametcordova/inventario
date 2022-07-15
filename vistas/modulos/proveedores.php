@@ -90,7 +90,7 @@ error_reporting(E_ALL^E_NOTICE);
 
                     <td>'.$value["telefono"].'</td>
 
-                    <td>'.$value["contacto"].'</td>
+                    <td class="unid">'.$value["contacto"].'</td>
 
                     <td>'.$value["tel_contacto"].'</td>';
 					

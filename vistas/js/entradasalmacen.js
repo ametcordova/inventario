@@ -1,8 +1,8 @@
 var udeMedida;
 var renglonesEntradas=cantEntrante=0;
 var arrayProductos=new Array();
-
-$("#modalAgregarEntradasAlmacen").draggable({
+var ventana;
+$("#modalAgregarEntradasAlmacen, #modalUpEntradasAlmacen").draggable({
     handle: ".modal-header"
 });
 
@@ -48,26 +48,8 @@ function dt_ListarEntradasAlmacen(){
 	  "aServerSide": true,//Paginación y filtrado realizados por el servidor
     "lengthMenu": [ [10, 25, 50,100, -1], [10, 25, 50, 100, "Todos"] ],
     "language": {
-		"sProcessing":     "Procesando...",
-    "sLengthMenu":     "Mostrar _MENU_ registros &nbsp",
-    "sZeroRecords":    "No se encontraron resultados",
-    "sEmptyTable":     "Ningún dato disponible en esta tabla",
-    "sInfo":           "Mostrar registros del _START_ al _END_ de un total de _TOTAL_",
-		"sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
-		"sInfoPostFix":    "",           
-    "sSearch":         "Buscar:",
-    "sInfoThousands":  ",",
-    "sLoadingRecords": "Cargando...",
-    "oPaginate": {
-		"sFirst":    "Primero",
-		"sLast":     "Último",
-		"sNext":     "Siguiente",
-		"sPrevious": "Anterior"}
-    },
-		"oAria": {
-			"sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
-			"sSortDescending": ": Activar para ordenar la columna de manera descendente"
-		},
+      "url": "extensiones/espanol.json",
+    },    
         dom: '<clear>Bfrtip',
         buttons: [
             {
@@ -113,7 +95,6 @@ function dt_ListarEntradasAlmacen(){
 	}).DataTable();    
     
 } 
-
 
  $('#daterange-btn-EntAlmacen').daterangepicker({
   ranges   : {
@@ -401,12 +382,14 @@ function evaluarElementos(){
 ABRIR MODAL PARA SUBIR O VISUALIZAR ARCHIVOS. DESDE EL DATATABLE
 ===================================================*/
 $("#dt-entradasalmacen tbody").on("click", "button.btnUpEntradasAlmacen", function(){
-  //let idUploadEntradaAlm = $(this).attr("idUploadEntradaAlm");
+  let idUploadEntradaAlm = $(this).attr("idUploadEntradaAlm");
   let datas=$(this).data("idupentrada")
-  //console.log(idUploadEntradaAlm, datas); 
-    if(datas.length > 0){
+    
+    if(datas > 0){
+      //console.log(idUploadEntradaAlm, datas); 
       $('#modalUpEntradasAlmacen').modal('show');
       $("#numIdEntradaAlmacen").val(datas);
+      abrirDatatable(datas);
     }
 })
 /*===================================================*/
@@ -418,60 +401,69 @@ $("#dt-entradasalmacen tbody").on("click", "button.btnUpEntradasAlmacen", functi
 $("body").on("submit", "#form_upfile", (event)=>{	
   event.preventDefault();
   event.stopPropagation();
-  let sNombreFile = $("#nombre_archivo").val();   //Nombre o descripción del archivo a subir
-  let sUploadedFile = $("#uploadedFile").val();
-  let nIdEntrada=$("#numIdEntradaAlmacen").val();
-  console.log(sNombreFile, sUploadedFile, nIdEntrada )
+  let sNombreFile = $("#nombre_archivo").val();   //descripción del archivo a subir
+  let sUploadedFile = $("#uploadedFile").val();   //nombre del archivo a subir
+  let nIdEntrada=$("#numIdEntradaAlmacen").val(); //numero de entrada al almacen
+  sUploadedFile=sUploadedFile.replace(/^.*\\/,""); //quitar la ruta, solo nom de archivo
+  //console.log(sNombreFile, sUploadedFile, nIdEntrada )
   //validar que no este vacio el input file
-  subirArchivos();
-  
+  if(sNombreFile==""){
+    sNombreFile="SIN DESCRIPCION....";
+  }
+  subirArchivos(sNombreFile, sUploadedFile, nIdEntrada);
 
 });  
 /*======================================================================*/
-function subirArchivos() {
-  var numero_entrada=$("#numIdEntradaAlmacen").val();
-  var nombre_archivo=$("#nombre_archivo").val();
+function subirArchivos(sNombreFile, sUploadedFile, nIdEntrada) {
   $("#uploadedFile").upload('vistas/modulos/subir_archivo.php',{
-      nombre_archivo: $("#nombre_archivo").val(),
-      numero_entrada: $("#numIdEntradaAlmacen").val()
+      descripcion_archivo: sNombreFile,
+      nombre_archivo: sUploadedFile,
+      numero_entrada: nIdEntrada
   },
   function(respuesta) {
-     console.log(respuesta, nombre_archivo)
+     //console.log(respuesta)
       //Subida finalizada.
-      $("#barra_de_progreso").val(0);
 
-      if (respuesta === 1) {
-        var datos = new FormData();
-        datos.append("nombre_archivo", nombre_archivo);
-        datos.append("numero_entrada", numero_entrada);
-        axios({ 
-          method  : 'post', 
-          url : 'ajax/entradasalmacen.ajax.php?op=subirArchivosEntrada', 
-          data : datos,
-        }) 
-        .then((res)=>{ 
-          if(res.status==200) {
-            console.log(res.data)
-
-            //$('#dt-entradasalmacen').DataTable().ajax.reload(null, false);
-            //$('#modalAgregarEntradasAlmacen').modal('hide')
-
-            //$("#alert1").removeClass("d-none");
-            //$("#alert1" ).fadeOut( 4500, "linear", completa );
+        if (respuesta["status"]=== 1) {
+          $("#barra_de_progreso").val(0);
+          sUploadedFile=respuesta["nombre"];
+          let sRutaArchivo=respuesta["rutaarchivo"];
+          var datos = new FormData();
+          datos.append("descripcion_archivo", sNombreFile);
+          datos.append("nombre_archivo", sUploadedFile);
+          datos.append("numero_entrada", nIdEntrada);
+          datos.append("ruta_archivo", sRutaArchivo);
+          axios({ 
+            method  : 'post', 
+            url : 'ajax/entradasalmacen.ajax.php?op=subirArchivosEntrada', 
+            data : datos,
+          }) 
+          .then((res)=>{ 
+            if(res.status==200) {
+              console.log(res.data)
   
-          }            
+              $('#subirarchivosentradas').DataTable().ajax.reload(null, false);
+              $("#previewImg1").attr("src", "");
+               //$("#response").removeClass("d-none");
 
-        }) 
-        .catch((err) => {throw err}); 
+              //$("#alert1" ).fadeOut( 4500, "linear", completa );
+    
+            }            
+  
+          }) 
+          .catch((err) => {throw err}); 
+  
+            mostrarRespuesta(`<strong>Mensaje!</strong> El archivo se ha subido correctamente. <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
+            <span aria-hidden='true'>&times;</span></button>`, true);
 
-          mostrarRespuesta(`<strong>Mensaje!</strong>El archivo se ha subido correctamente. <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
-          <span aria-hidden='true'>&times;</span></button>`, true);
-          $("#nombre_archivo, #uploadedFile").val('');
-      } else {
-          mostrarRespuesta(`<strong>Mensaje!</strong>El archivo NO se ha podido subir. <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
-          <span aria-hidden='true'>&times;</span></button>`, false);
-      }
-      //mostrarArchivos();
+            $("#nombre_archivo, #uploadedFile").val('');
+        } else {
+            mostrarRespuesta(`<strong>Mensaje!</strong> El archivo NO se ha podido subir. <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
+            <span aria-hidden='true'>&times;</span></button>`, false);
+
+            $("#nombre_archivo, #uploadedFile").val('');
+        }
+        
   }, function(progreso, valor) {
      console.log(valor)
       //Barra de progreso.
@@ -480,11 +472,21 @@ function subirArchivos() {
 }
 /*======================================================================*/
 function mostrarRespuesta(mensaje, ok){
-  $("#respuesta").removeClass('alert-success').removeClass('alert-danger').removeClass('d-none').html(mensaje);
+
+  //$("#respuesta, #response").removeClass('alert-success').removeClass('alert-danger').removeClass('d-none').html(mensaje);
   if(ok){
-      $("#respuesta").addClass('alert-success').addClass('d-block');
+      $("#respuesta, #response").removeClass('d-none').html(mensaje);
+      $("#respuesta, #response").addClass('alert-success');
+      setTimeout(() => {
+        $("#respuesta, #response").addClass('d-none').removeClass('alert-success');
+      }, 3000);
   }else{
-      $("#respuesta").addClass('alert-danger').addClass('d-block');
+      $("#respuesta, #response").removeClass('d-none').html(mensaje);
+      $("#respuesta, #response").addClass('alert-danger').addClass('d-block');
+      setTimeout(() => {
+        $("#respuesta, #response").addClass('d-none').removeClass('alert-danger');
+      }, 3000);
+
   }
 }
 /*======================================================================*/
@@ -550,25 +552,6 @@ $("#dt-entradasalmacen tbody").on("click", "button.btnPrintEntradaAlmacen", func
 
 
 /*===================================================
-SUBIR O VISUALIZAR ENTRADA CARSO AL ALMACEN DESDE EL DATATABLE
-===================================================*/
-$("#dt-entradasalmacen tbody").on("click", "button.btnUpEntradasAlmacen", function(){
-  //let idUploadEntradaAlm = $(this).attr("idUploadEntradaAlm");
-  let datas=$(this).data("idupentrada")
-  //console.log(idUploadEntradaAlm, datas); 
-  $('#modalUpEntradasAlmacen').modal('show');
-  $("#numIdEntradaAlmacen").val(datas);
-  
-    if(datas.length > 0){}
-})
-
-//$("#modalUpEntradasAlmacen").on('show.bs.modal', ()=> {
-  //let idUploadEntradaAlm = $(this).attr("idUploadEntradaAlm");
-    //console.log($(this).data("idupentrada")); 
-  //$("#numIdEntradaAlmacen").val(idUploadEntradaAlm);
-//});
-
-/*===================================================
 ELIMINAR SALIDA DE ALMACEN DESDE EL DATATABLE
 ===================================================*/
 $("#dt-entradasalmacen tbody").on("click", "button.btnDelEntradasAlmacen", function(event){
@@ -622,5 +605,205 @@ $("#dt-entradasalmacen tbody").on("click", "button.btnDelEntradasAlmacen", funct
   }) 
 })
 
+/*************************************************************************** */
+function abrirDatatable(identrada){
+//console.log(identrada)
+tableforFiles=$('#subirarchivosentradas').removeAttr('width').dataTable(
+	{
+		"aProcessing": true,//Activamos el procesamiento del datatables
+	  "aServerSide": true,//Paginación y filtrado realizados por el servidor
+    "lengthMenu": [ [10, 25, 50,100, -1], [10, 25, 50, 100, "Todos"] ],
+    "language": {
+      "url": "extensiones/espanol.json",
+    },    
+    "bAutoWidth": true,
+    columnDefs: [
+      { width: "75px", targets: 0 },
+      { width: "35px", targets: 1 },
+      { width: "430px", targets: 2 },
+      { width: "100px", targets: 3 },
+      { width: "45px", targets: 4 },
+      { width: "50px", targets: 5 }
+    ],
+    //scrollX: true,
+    "ajax":
+				{
+          url: 'ajax/entradasalmacen.ajax.php?op=listarArchivos',
+          data: {"idEntrada": identrada},     
+					type : "POST",
+					dataType : "json",						
+          data: function(d){
+            d.idEntrada = identrada;
+            $('#dt-entradasalmacen').DataTable().ajax.reload(null, false);
+          },
+					error: function(e){
+						console.log(e.responseText);
+					}
+				},
+		"bDestroy": true,
+		"iDisplayLength": 10,//Paginación
+	  "order": [[ 0, "desc" ]]//Ordenar (columna,orden)
+	}).DataTable();    
+    
+}
+
+/*===================================================
+ELIMINAR ARCHIVO DE ENTRADA DE ALMACEN DESDE EL DATATABLE
+===================================================*/
+$("#subirarchivosentradas tbody").on("click", "button.btnEliminaArchivo", function(event){
+  event.preventDefault();
+	let idaborrar = $(this).data("eliminar");
+  console.log(idaborrar);
+
+  swal({
+    title: "¿Está seguro de Eliminar Archivo No. "+idaborrar+"? ",
+    text: "Si no lo esta puede cancelar la acción!",
+    icon: "vistas/img/logoaviso.jpg",
+    buttons: ["Cancelar", "Sí, Eliminar"],
+    dangerMode: true
+  })
+   .then((willDelete) => {
+    if (willDelete) {
+
+        axios.get('ajax/entradasalmacen.ajax.php?op=deletefile', {
+          params: {
+            idaborrar: idaborrar
+          }
+        })
+      
+       .then(res => {
+        console.log(res.data);
+        if(res.data=="error"){
+
+          swal({
+            title: "¡Error!",
+            text: 'No fue posible eliminar archivo, revise!!',
+            icon: "error",
+            button: "Cerrar"
+          })  //fin swal
+
+        }else{
+          $('#subirarchivosentradas').DataTable().ajax.reload(null, false);
+          swal({
+            title: 'Hecho',
+            text: 'Registro fue Eliminado!',
+            buttons: false,
+            timer: 2000
+          })          
+        } 
+      })
+
+      .catch((err) => {throw err}); 
+      
+    } else {
+      return
+    }
+  }) 
+})
+
+/************************************************************/
+/*============================================================
+DESCARGAR ARCHIVO DE ENTRADA DE ALMACEN DESDE EL DATATABLE
+=============================================================*/
+$("#subirarchivosentradas tbody").on("click", "button.btnVerArchivo", function(event){
+  event.preventDefault();
+	let idvisualizar = $(this).data("visualizar");
+  console.log(idvisualizar);
+
+  axios.get('ajax/entradasalmacen.ajax.php?op=visualizarArchivo', {
+    params: {
+      idvisualizar: idvisualizar
+    }
+  })
+
+ .then(res => {
+  if(res.data=="error"){
+    //console.log(res.data);
+  }else{
+    //console.log(res.data);
+    let file1 = res.data.nombre_archivo;
+    let rutaarchivo=`./vistas/${res.data.ruta_archivo}${file1}`;
+    const [ext, ...fileName] = file1.split('.').reverse();
+    if(ext=="pdf"){
+      VerPDF(rutaarchivo)
+    }else if(ext=="PNG" || ext=="png" || ext=="JPEG" ||ext=="jpeg" || ext=="jpg" || ext=="JPG"){
+      //console.log(rutaarchivo);
+      verImagen(rutaarchivo,file1)
+    }else if(ext=="TIF" || ext=="tif"){
+      verImgTif(rutaarchivo,file1)
+    }else{
+      swal({
+        title: "¡Lo siento mucho!!",
+        text: `No es posible abrir archivo .${ext}!!`,
+        icon: "error",
+        button: "Cerrar",
+        timer:000
+      })  //fin swal
+
+    }
+  } 
+})
+
+})
+
+/********************************************************************************* */
+function verImgTif(ruta,file1){
+  ventana=window.open('','ventana','resizable=yes,scrollbars=yes,width=1000,height=750');
+  ventana.document.write(`<html><head><title> NUNOSCO </title></head> <object width=200 height=200  data='./vistas/entradascarso/118_1643065942_ENTRADA DEVOLUCION CARSO.tif' type="image/tif"><param name="negative" value="yes"></object>`)
+} 
+function verImagen(ruta,file1)	{
+
+        ventana=window.open('','ventana','resizable=yes,scrollbars=yes,width=1000,height=750');
+
+        ventana.document.write('<html><head><title> NUNOSCO </title></head><body style="overflow-y: auto;" marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" scroll="yes" onUnload="opener.cont=0"> <div align="center" style="background-color:lightblue;"> <a href="javascript:this.close()">Cerrar</a> <a href="' + ruta + '" download="' + file1 + '" style="color:blue;"> - Descargar archivo</a> </div> <br> <img src="' + ruta + '" onLoad="opener.redimensionar(this.width, this.height)">')
+        ventana.document.close()
+}
+    
+function redimensionar(ancho, alto){
+  ventana.resizeTo(ancho+12,alto+50)
+  ventana.moveTo((screen.width-ancho)/2,(screen.height-alto)/2) //centra la ventana. quitar si no se quiere centrar el popup
+}
+
+function VerPDF(viewfile){
+  window.open(viewfile, 'resizable,scrollbars');
+}
+
+/********************************************************************/
+function previewFile1() {
+  var preview = document.querySelector(".previewImg1");
+  var file    = document.querySelector('input[type=file]').files[0];
+  var reader  = new FileReader();
+
+  reader.onloadend = function () {
+    preview.src = reader.result;
+  }
+
+  if (file) {
+    reader.readAsDataURL(file);
+  } else {
+    preview.src = "";
+  }
+}
+/********************************************************************/
+
+/*============================================================
+EDIT ARCHIVO DE ENTRADA DE ALMACEN DESDE EL DATATABLE
+=============================================================*/
+$("#subirarchivosentradas tbody").on("click", "button.btnEditArchivo", function(event){
+  event.preventDefault();
+
+  swal({
+    title: "¡Lo siento!!",
+    text: `Aun estamos trabajando en esta opción`,
+    icon: "warning",
+    button: "Cerrar",
+    timer: 4000
+  })  //fin swal
+
+
+})
+
+/*=============================================================*/
 
 init();
+

@@ -227,7 +227,7 @@ $("#dt-salidasalmacen tbody").on("click", "button.btnEditSalidaAlmacen", functio
     obtenerdatos(idEditSalida)
 })
 
-//TRAER DATOS DE SALIDA PARA EDITAR
+//TRAER DATOS DE LA SALIDA PARA EDITAR
 function obtenerdatos(idsalida){
     //oldproducts=new Array();
     axios.post('ajax/salidasalmacen.ajax.php?op=getDataOutStore', { idsalida: idsalida })
@@ -276,6 +276,9 @@ function obtenerdatos(idsalida){
     .catch((err) => {throw err}); 
 }
 
+/**============================================================ */
+// CREA INPUTs CON LOS DATOS ORIGINALES P/DESPUES COMPARAR
+/*==============================================================*/
 function itemsbefore(itemproduct, itemcant){
   let contenido=document.querySelector('#Edittbodysalidasalmacen');
   contenido.innerHTML+=`<div class="d-none">
@@ -284,7 +287,7 @@ function itemsbefore(itemproduct, itemcant){
   </div>`;
   arrayitems.push([itemproduct,itemcant]);
 }
-
+/*==============================================================*/
 function evaluaRow(totalRenglon, cantSaliente){
 	$("#Editrenglonsalidas").html(totalRenglon);
 	$("#Edittotalsalidasalmacen").html(cantSaliente);

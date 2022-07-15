@@ -24,46 +24,9 @@ $jsonpermisos3=($jsonpermisos3==NULL)?$jsonpermisos3=["SINDATO"=>0]:$jsonpermiso
 $jsonpermisos4=json_decode($permisosconf->configura, TRUE);   //convierte string a array
 $jsonpermisos4=($jsonpermisos4==NULL)?$jsonpermisos4=["SINDATO"=>0]:$jsonpermisos4;
 
-//$psalidas=$pentradas=$pcapseries=$pdevalm=$pctfacts=$pctviaticos=$posvilla=$prespaldo=0;
-//$jsonpermisos1=json_decode($permisosadmin->administracion, TRUE);   //convierte string a array
-// if (array_key_exists('pcapseries', $jsonpermisos1)) {
-//   $val=$jsonpermisos1['pcapseries'];
-//   echo "&nbsp &nbspnbsp &nbspnbsp &nbsp The 'first' element is in the array $val";
-// }
-
-// if(!$jsonpermisos1==NULL){
-//   foreach ($jsonpermisos1 as $key => $value) {
-
-//     if($key=="psalidas"){
-//       $psalidas=$value;
-//     }
-//     if($key=="pentradas"){
-//       $pentradas=$value;
-//     }
-//     if($key=="pcapseries"){
-//       $pcapseries=$value;
-//     }
-//     if($key=="pdevalm"){
-//       $pdevalm=$value;
-//     }
-//     if($key=="pctfacts"){
-//       $pctfacts=$value;
-//     }
-//     if($key=="pctviaticos"){
-//       $pctviaticos=$value;
-//     }
-//     if($key=="posvilla"){
-//       $posvilla=$value;
-//     }
-//     if($key=="prespaldo"){
-//       $prespaldo=$value;
-//     }
-//   }
-//  }
-
 ?>
 <!-- Main Sidebar Container -->
-  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+  <aside class="main-sidebar sidebar-dark-primary elevation-4" style="min-height: 550.453px;">
     <!-- Brand Logo -->
     <a href="inicio" class="brand-link">
       <img src="extensiones/dist/img/logo_nunosco_small.jpg" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
@@ -71,9 +34,8 @@ $jsonpermisos4=($jsonpermisos4==NULL)?$jsonpermisos4=["SINDATO"=>0]:$jsonpermiso
       <span class="brand-text font-weight-light">AdminInv3</span>
     </a>
 
-   
      <!-- Sidebar -->
-    <div class="sidebar">
+    <div class="sidebar" style="min-height:550.453px;">
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
@@ -100,7 +62,7 @@ $jsonpermisos4=($jsonpermisos4==NULL)?$jsonpermisos4=["SINDATO"=>0]:$jsonpermiso
                
                
           <li class="nav-item ">  <!-- menu-open si se quiere q este abierto esta opcion -->
-            <a href="inicio" class="nav-link active">
+            <a href="dash" class="nav-link active">
               <i class="nav-icon fa fa-dashboard"></i>
               <p>
                 Dashboard
@@ -139,11 +101,20 @@ $jsonpermisos4=($jsonpermisos4==NULL)?$jsonpermisos4=["SINDATO"=>0]:$jsonpermiso
               </li>
             <?php } ?>
 
-            <?php if(getAccess(array_key_exists("pcapseries",$jsonpermisos1)?$jsonpermisos1["pcapseries"]:0,ACCESS_ACC)){ ?>
+            <?php if(getAccess(array_key_exists("pcostuxtla",$jsonpermisos1)?$jsonpermisos1["pcostuxtla"]:0,ACCESS_ACC)){ ?>
               <li class="nav-item">
-                <a href="adminseries" class="nav-link">
-                  <i class="fa fa-barcode nav-icon"></i>
-                  <p>Capturar Series</p>
+                <a href="adminoservicio" class="nav-link">
+                  <i class="fa fa-pencil-square-o nav-icon"></i>
+                  <p>Capturar OS</p>
+                </a>
+              </li>
+            <?php } ?>  
+
+            <?php if(getAccess(array_key_exists("pcapquejas",$jsonpermisos1)?$jsonpermisos1["pcapquejas"]:0,ACCESS_ACC)){ ?>
+              <li class="nav-item">
+                <a href="adminquejas" class="nav-link">
+                  <i class="fa fa-phone-square nav-icon"></i>
+                  <p>Capturar Queja</p>
                 </a>
               </li>
             <?php } ?>  
@@ -188,27 +159,33 @@ $jsonpermisos4=($jsonpermisos4==NULL)?$jsonpermisos4=["SINDATO"=>0]:$jsonpermiso
             <?php } ?>  
 
             <?php 
-            if(getAccess(array_key_exists("posvilla",$jsonpermisos1)?$jsonpermisos1["posvilla"]:0,ACCESS_ACC)){ ?>
+            if(getAccess(array_key_exists("pdeposito",$jsonpermisos1)?$jsonpermisos1["pdeposito"]:0,ACCESS_ACC)){ ?>
               <li class="nav-item">
-                <a href="osvilla" class="nav-link">
-                  <i class="fa fa-circle-o nav-icon"></i>
-                  <p>OS Villa</p>
+                  <a href="control-depositos" class="nav-link">
+                    <i class="fa fa-money nav-icon"></i>
+                    <p>Control Depositos</p>
+                  </a>
+                </li>
+            <?php } ?>  
+
+            <?php if(getAccess(array_key_exists("pcapseries",$jsonpermisos1)?$jsonpermisos1["pcapseries"]:0,ACCESS_ACC)){ ?>
+              <li class="nav-item">
+                <a href="adminseries" class="nav-link">
+                  <i class="fa fa-barcode nav-icon"></i>
+                  <p>Capturar Series</p>
                 </a>
               </li>
             <?php } ?>  
 
             <?php 
-            if(getAccess(array_key_exists("prespaldo",$jsonpermisos1)?$jsonpermisos1["prespaldo"]:0,ACCESS_ACC)){ ?>
-              <li class="nav-item">
-                <a href="respaldo" class="nav-link">
-                  <i class="nav-icon fa fa-database"></i>
-                  <p>
-                    Respaldo
-                  </p>
+            //if(getAccess(array_key_exists("posvilla",$jsonpermisos1)?$jsonpermisos1["posvilla"]:0,ACCESS_ACC)){ ?>
+            <!--  <li class="nav-item">
+                <a href="osvilla" class="nav-link">
+                  <i class="fa fa-circle-o nav-icon"></i>
+                  <p>OS Villa</p>
                 </a>
-              </li>  
-            <?php } ?>
-
+              </li> -->
+            <?php //} ?>  
         </ul>
 			
         </li>
@@ -334,10 +311,10 @@ $jsonpermisos4=($jsonpermisos4==NULL)?$jsonpermisos4=["SINDATO"=>0]:$jsonpermiso
 
       
         <li class="nav-item has-treeview">
-              <a href="#" class="nav-link">
-                <i class="nav-icon fa fa-gear"></i>
-                <p>Configuración<i class="fa fa-angle-left right"></i></p>
-              </a>
+            <a href="#" class="nav-link">
+              <i class="nav-icon fa fa-gear"></i>
+              <p>Sistema<i class="fa fa-angle-left right"></i></p>
+            </a>
               
               <ul class="nav nav-treeview">
 
@@ -363,6 +340,29 @@ $jsonpermisos4=($jsonpermisos4==NULL)?$jsonpermisos4=["SINDATO"=>0]:$jsonpermiso
               </li>
             <?php } ?>            
 
+            <?php 
+            if(getAccess(array_key_exists("prespaldo",$jsonpermisos4)?$jsonpermisos4["prespaldo"]:0,ACCESS_ACC)){ ?>
+              <li class="nav-item">
+                <a href="respaldo" class="nav-link">
+                  <i class="nav-icon fa fa-database"></i>
+                  <p>
+                    Respaldo
+                  </p>
+                </a>
+              </li>  
+            <?php } ?>
+
+            <?php if(getAccess(array_key_exists("repositorio",$jsonpermisos4)?$jsonpermisos4["repositorio"]:0,ACCESS_ACC)){ ?>
+              <li class="nav-item">
+                <a href="repositorio" class="nav-link">
+                  <i class="nav-icon fa fa-cloud-upload"></i>
+                  <p>
+                    Repositorio
+                  </p>
+                </a>
+              </li>
+            <?php } ?>              
+
             <?php if(getAccess(array_key_exists("empresa",$jsonpermisos4)?$jsonpermisos4["empresa"]:0,ACCESS_ACC)){ ?>              
               <li class="nav-item">
                 <a href="gestion-empresas" class="nav-link">
@@ -373,7 +373,7 @@ $jsonpermisos4=($jsonpermisos4==NULL)?$jsonpermisos4=["SINDATO"=>0]:$jsonpermiso
                 </a>
               </li>
             <?php } ?>              
-            </ul>
+          </ul>
         </li>
 
     </ul>
@@ -384,4 +384,6 @@ $jsonpermisos4=($jsonpermisos4==NULL)?$jsonpermisos4=["SINDATO"=>0]:$jsonpermiso
     <!-- /.sidebar -->
   </aside>
 
-  
+<!--
+
+-->              

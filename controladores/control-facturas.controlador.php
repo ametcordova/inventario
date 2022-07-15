@@ -13,14 +13,15 @@ static public function ctrCrearFactura($tabla, $datos){
 }
 
 /*=============================================
-    MOSTRAR FACTURAS
+    LISTAR FACTURAS
 ============================================*/
 
-static public function ctrMostrarFacturas($item, $valor, $orden, $tipo, $year){
+static public function ctrMostrarFacturas($item, $valor, $orden, $tipo, $year, $month){
 
 		$tabla = "facturas";
 
-		$respuesta = ModeloFacturas::mdlMostrarFacturas($tabla, $item, $valor, $orden, $tipo, $year);
+
+		$respuesta = ModeloFacturas::mdlMostrarFacturas($tabla, $item, $valor, $orden, $tipo, $year, $month);
 
 		return $respuesta;
 	

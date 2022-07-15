@@ -5,9 +5,9 @@ class ControladorEntradasAlmacen{
 /*=============================================
 LISTAR REGISTROS PARA EL DATATABLE
 =============================================*/
-static public function ctrListarEntradas($tabla, $fechadev1, $fechadev2){
+static public function ctrListarEntradas($tabla, $fechadev1, $fechadev2, $usuario, $todes){
 
-	$respuesta = ModeloEntradasAlmacen::mdlListarEntradas($tabla, $fechadev1, $fechadev2);
+	$respuesta = ModeloEntradasAlmacen::mdlListarEntradas($tabla, $fechadev1, $fechadev2, $usuario, $todes);
 
 	return $respuesta;
 
@@ -182,6 +182,70 @@ static public function ctrEliminarDatos($tabla, $idaborrar, $campo){
 	return $respuesta;
 
 }  
+
+/*=============================================
+  ELIMINAR DATOS EN EL HIST_ENTRADA
+============================================*/
+static public function ctrSubirArchivosEntradas($descripcion_archivo, $nombre_archivo, $numero_entrada, $ruta_archivo, $ultusuario){
+	$tabla="tbl_doctos";
+
+	$respuesta = ModeloEntradasAlmacen::mdlSubirArchivosEntradas($tabla, $descripcion_archivo, $nombre_archivo, $numero_entrada, $ruta_archivo, $ultusuario);
+
+	return $respuesta;
+
+}  
+
+/*=============================================
+LISTAR REGISTROS PARA EL DATATABLE
+=============================================*/
+static public function ctrListarArchivos($tabla, $id_entrada, $usuario, $todes){
+
+	$respuesta = ModeloEntradasAlmacen::mdlListarArchivos($tabla, $id_entrada, $usuario, $todes);
+
+	return $respuesta;
+
+}  
+
+/*=============================================
+  ELIMINAR ARCHIVOS DE ENTRADAS
+============================================*/
+static public function ctrDeleteFile($tabla, $idaborrar, $campo){
+
+	//Borrado del archivo en el DD
+	$getDataFile=ModeloEntradasAlmacen::mdlDeleteFile($tabla, $idaborrar, $campo, $file=true);
+
+	$namefile=$getDataFile["nombre_archivo"];
+	$rootfile=$getDataFile["ruta_archivo"];
+
+	$url = "../vistas/".$rootfile.$namefile;
+	//$rutaactual=getcwd();
+	if (file_exists($url)) {
+        unlink($url);
+    }else{
+		$respuesta = "error";
+	  	return $respuesta;
+	}
+	
+	//Borrado del archivo en la tabla tbl_doctos
+	$respuesta = ModeloEntradasAlmacen::mdlDeleteFile($tabla, $idaborrar, $campo, $file=false);
+
+	return $respuesta;
+
+}  
+
+/*=============================================
+  MOSTRAR ENTRADAS AL ALMACEN PARA EDITAR 
+============================================*/
+static public function ctrGetDataFile($campo, $valor){
+
+	$tabla="tbl_doctos";
+
+	$respuesta = ModeloEntradasAlmacen::mdlGetDataFile($tabla, $campo, $valor);
+
+return $respuesta;
+
+}  
+
 
 }   //fin de la clase
 ?>

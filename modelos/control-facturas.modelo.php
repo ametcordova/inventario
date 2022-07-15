@@ -204,7 +204,7 @@ try{
 /*=============================================
 	MOSTRAR FACTURAS
 =============================================*/
-static public function mdlMostrarFacturas($tabla, $item, $valor, $orden, $tipo, $year){
+static public function mdlMostrarFacturas($tabla, $item, $valor, $orden, $tipo, $year, $month){
 try{
 		if($item != null){
 			$orden=intval($orden);
@@ -227,12 +227,16 @@ try{
 			}else{		//CANCELADOS
 				$where='borrado=1';
 			}
+
+			if(isset($month) && !empty($month)){
+				$where.=' AND MONTH(`fechafactura`) = "'.$month.'" ';
+			}
 			
 			if(isset($year) && !empty($year)){
 				//$where.=' AND EXTRACT(YEAR FROM `fechafactura`) = $year';
 				$where.=' AND YEAR(`fechafactura`) = "'.$year.'" ';
 			}
-			
+
 			$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE ".$where); 
 
 			$stmt -> execute();

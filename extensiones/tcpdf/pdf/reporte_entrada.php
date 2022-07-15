@@ -35,7 +35,7 @@ $pdf->AddPage();
 if($respuestaAlmacen){    
 // ---------------------------------------------------------
 $nombreAlmacen=$respuestaAlmacen[0]["nombrealmacen"];
-if($nombreAlmacen=="ALM_VILLAH" || $nombreAlmacen="ALM_COMAL"){
+if($nombreAlmacen=="ALM_VILLAH" || $nombreAlmacen=="ALM_COMAL"){
 	$img="images/logo_siesur.jpg";
 }else{
 	$img="images/logo_nuno.png";

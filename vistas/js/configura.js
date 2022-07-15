@@ -98,6 +98,9 @@ $('.habilitaPermisoUsuarios').on('ifChecked', function (event) {
 $('.habilitaPermisoPermisos').on('ifChecked', function (event) {
 });
 
+$('.habilitaPermisoRepositorio').on('ifChecked', function (event) {
+});
+
 $('.habilitaPermisoEmpresa').on('ifChecked', function (event) {
 });
 
@@ -112,6 +115,9 @@ $('.habilitaPermisoUsuarios').on('ifUnchecked', function (event) {
 });
 
 $('.habilitaPermisoPermisos').on('ifUnchecked', function (event) {
+});
+
+$('.habilitaPermisoRepositorio').on('ifUnchecked', function (event) {
 });
 
 $('.habilitaPermisoEmpresa').on('ifUnchecked', function (event) {

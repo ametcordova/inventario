@@ -111,11 +111,12 @@ $nombretecnico=mdlVerTecnicos($tablatecnicos, $item, $valor);
 //die();
 $nomtecnico=$nombretecnico["nombre"];
 
-//TRAER LOS DATOS DEL ALMACEN SELECCIONADO
+/*======================================================== */
+//TRAER LOS DATOS DEL ALMACEN SELECCIONADO POR TECNICO
+/*======================================================== */
 $respuestaInventario = ControladorInventario::ctrReporteInventarioPorTecnico($tabla, $campo, $valor, $idalmacen);
 if($respuestaInventario){
-
-
+/*======================================================== */
 $pdf = new MYPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 //$pdf = new TCPDF('L', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
@@ -162,7 +163,7 @@ $cantEntra=0;
 foreach ($respuestaInventario as $row) {
 
 $existe=number_format($row["existe"]);
-
+$descripcion=substr($row['descripcion'],0,45);
 $bloque4 = <<<EOF
 
  	<table style="font-size:9px; padding:5px 3px;">
@@ -170,7 +171,7 @@ $bloque4 = <<<EOF
 	  <tr>
 		<td style="border: 1px solid #666; width:56.5px; text-align:center">$row[sku]</td>
 		<td style="border: 1px solid #666; width:57px; text-align:center">$row[codigointerno]</td>
-		<td style="border: 1px solid #666; width:280.5px; text-align:left">$row[descripcion]</td>
+		<td style="border: 1px solid #666; width:280.5px; text-align:left">$descripcion</td>
 		<td style="border: 1px solid #666; width:56.5px; text-align:center">$row[medida]</td>
 		<td style="border: 1px solid #666; width:38px; text-align:center">$existe</td>
 		<td style="border: 1px solid #666; width:38px; text-align:right"></td>
@@ -290,29 +291,8 @@ $tabla=$_GET["idNomAlma"];
 $inventario -> traerReporteInventario();
 
 
-/*=============================================
-	MOSTRAR TECNICOS
-=============================================*/
-function mdlVerTecnicos($tablatecnicos, $item, $valor){
-	try{
-
-		$stmt = Conexion::conectar()->prepare("SELECT id, nombre FROM $tablatecnicos WHERE $item=:$item AND status=1");
-
-		$stmt -> bindParam(":".$item, $valor, PDO::PARAM_INT);
-
-		$stmt -> execute();
-
-		return $stmt -> fetch(PDO::FETCH_ASSOC);
-
-		$stmt = null;
-
-	} catch (Exception $e) {
-		echo "Failed: " . $e->getMessage();
-	} // fin de la funcion mdlVerTecnicos
-
-
 	
-}  // fin de la clase
+
 
 /*
 SELECT hist.`id_salida`,hist.`id_tecnico`,hist.`id_producto`, prod.sku, prod.descripcion, prod.id_medida, med.medida, hist.`estatus`, SUM(hist.cantidad) as Total, SUM(hist.disponible) AS existe
@@ -321,12 +301,35 @@ INNER JOIN productos prod ON hist.id_producto=prod.id
 INNER JOIN medidas med ON prod.id_medida=med.id
 WHERE hist.id_tecnico=1 AND hist.estatus=1
 GROUP BY hist.`id_tecnico`, hist.`id_producto`
-
-
 */
+
+
 }else{
 	echo "no tienes acceso a este reporte o no estas logueado.";
 }
 
+
+/*=============================================
+        MOSTRAR TECNICOS
+    =============================================*/
+    function mdlVerTecnicos($tablatecnicos, $item, $valor){
+        try{
+
+            $stmt = Conexion::conectar()->prepare("SELECT id, nombre FROM $tablatecnicos WHERE $item=:$item AND status=1");
+
+            $stmt -> bindParam(":".$item, $valor, PDO::PARAM_INT);
+
+            $stmt -> execute();
+
+            return $stmt -> fetch(PDO::FETCH_ASSOC);
+
+            $stmt = null;
+
+        } catch (Exception $e) {
+            echo "Failed: " . $e->getMessage();
+        } // fin de la funcion mdlVerTecnicos
+
+
+    }
 ?>
 

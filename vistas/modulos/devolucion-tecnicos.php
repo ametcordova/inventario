@@ -145,7 +145,7 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                     <input type="hidden"  name="idDeUsuario" value="<?php echo $_SESSION['id'];?>">
                       <label><i class="fa fa-tty"></i> Técnico</label>
                       <select class="form-control form-control-sm" name="TecnicoDev" id="TecnicoDev" style="width: 100%;" required>
-                      <option value="">Selecione Técnico</option>
+                      <option selected value="">Selecione Técnico</option>
                       <?php
                         $item=null;
                         $valor=null;
@@ -161,7 +161,7 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
               
                       <div class="form-group col-md-2">
                         <label class="control-label" for="inputError"><i class="fa fa-calendar"></i> F. Devol.</label>
-                        <input type="text" class="form-control form-control-sm" name="fechaDevolucion" id="datepicker3" data-date-format="dd-mm-yyyy" data-date-end-date="0d" value="<?= $fechaHoy?>" required title="Fecha Devolucion al Almacen">
+                        <input type="text" class="form-control form-control-sm" name="fechaDevolucion" id="datepicker13" data-date-format="dd-mm-yyyy" data-date-end-date="0d" value="<?= $fechaHoy?>" required title="Fecha Devolucion al Almacen">
                       </div>
               
                       <div class="form-group col-md-3">
@@ -184,6 +184,13 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                       </select>			  
                     </div>
                 
+                </div>  <!-- FIN DEL FORM-ROW -->		 
+
+                <div class="form-row">  
+                    <div class="form-group col-md-12">
+                        <label class="control-label" for="inputError"><i class="fa fa-book"></i> Motivo devolución:</label>
+                        <input type="text" class="form-control form-control-sm" name="nvomotivodevolucion" id="nvomotivodevolucion" value="" placeholder="" tabindex="4" title="Motivo de la devolución">
+                      </div>
                 </div>  <!-- FIN DEL FORM-ROW -->		 
             
                 <div class="dropdown-divider"></div>

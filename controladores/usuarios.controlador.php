@@ -1,5 +1,4 @@
-<?php
-
+ <?php
 class ControladorUsuarios{
     
     static public function ctrIngresoUsuario(){
@@ -12,8 +11,9 @@ class ControladorUsuarios{
 				
 				/*SI ESTA CHEQUEADO checkbox RECORDARME*/
 				if (isset($_POST["recordarme"]) && !empty($_POST["ingUsuario"])) {
-					setcookie("logusuario",$_POST["ingUsuario"],time()+30*24*60*60);
-				}	
+					$user=$_POST["ingUsuario"];
+					setcookie("logusuario",$user,time()+30*24*60*60*12);
+				}
 				
                $tabla="usuarios" ;
                $campo="usuario";

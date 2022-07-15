@@ -45,7 +45,6 @@ static public function mdlGuardarDevolucionTecnico($tablaDev, $tabla, $datos, $p
 			    return "error";
 		    }
         
-		$stmt->close();
     $stmt = null;
 
   } catch (Exception $e) {

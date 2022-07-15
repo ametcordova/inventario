@@ -47,7 +47,6 @@ static public function mdlGuardarOsvilla($tabla, $datos){
 		
 		}
 
-		$stmt->close();
 		$stmt = null;
 
  } catch (Exception $e) {
@@ -101,7 +100,6 @@ static public function mdlEditarOsvilla($tabla, $datos){
 		
 		}
 
-		$stmt->close();
 		$stmt = null;
 
  } catch (Exception $e) {
@@ -125,8 +123,6 @@ static public function mdlMostrarOsvilla($tabla, $item, $valor){
 	$stmt -> execute();
 
     return $stmt -> fetch();
-
-	$stmt -> close();
 
 	$stmt = null;
 
@@ -161,8 +157,6 @@ static public function mdlMostrarOsvilla($tabla, $item, $valor){
 
 		}
 
-		$stmt -> close();
-
 		$stmt = null;
 
 	}
@@ -186,8 +180,6 @@ static public function mdlEliminarrOsvilla($tabla, $item, $valor){
 			return "error";	
 
 		}
-
-		$stmt -> close();
 
 		$stmt = null;
 

@@ -34,14 +34,16 @@ static public function ctrGetPermisos($tabla, $usuario, $modulo){
 
 }
 
+
 /*=============================================
 OBTENER PERMISOS DE USUARIOS 
 =============================================*/
-// static public function ctrGetPermisosCat($tabla, $usuario){
+static public function ctrGetPermisosCat($tabla, $usuario){
 
-// 	return $respuesta = ModeloPermisos::mdlGetPermisosCat($tabla, $usuario);
+	return $respuesta = ModeloPermisos::mdlGetPermisosCat($tabla, $usuario);
 
-// }
+}
+
 
 }   //fin de la clase
 ?>

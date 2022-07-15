@@ -507,5 +507,5 @@ $fechaHoy = date("Y-m-d");
                 FIN MODAL PARA CAPTURAR LAS SALIDAS DEL ALMACEN
 ==================================================================================== -->
 
-<script defer src="vistas/js/salidasalmacen.js?v=02122020"></script>
-<script defer src="vistas/js/salidasalmacenedit.js?v=02122020"></script>
+<script defer src="vistas/js/salidasalmacen.js?v=02122021"></script>
+<script defer src="vistas/js/salidasalmacenedit.js?v=02122021"></script>

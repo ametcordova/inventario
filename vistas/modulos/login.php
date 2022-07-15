@@ -1,19 +1,24 @@
+<?php
+ob_start();
+  if(isset($_COOKIE['logusuario'])) { 
+	 $user = $_COOKIE["logusuario"]; //$contenido vale super
+} else {
+	$user="";
+};
+?>
+<div id="fondo_login">
+  <div class="video-container text-center" style="position:absolute;">
+    <video autoplay="" loop=""><source src="https://s3.us-east-2.amazonaws.com/100l-landing-staging/public/movie.mp4" type="video/mp4"></video>
+  </div>
+</div>
 
-<div id="fondo_login"></div>
 <div class="login-box">
+  
   <div class="login-logo">
     <a href="#" style="color:white;"><b>Admin</b>INV</a>
 	<img src="extensiones/dist/img/LOGO_NUNOSCO_SMALL.jpg" class="img-responsive" style="padding:20px 100px 0px 100px">
   </div>
-<?php  
-  if(isset($_COOKIE['logusuario'])) { 
-	$user = $_COOKIE["logusuario"]; //$contenido vale super
-} else { 
-    //setcookie("logusuario","super",time()+30*24*60*60); 
-	//$user = $_COOKIE["logusuario"]; //$contenido vale super
-	$user="";
-}
-?>
+  
   <!-- /.login-logo -->
   <div class="card">
     <div class="card-body login-card-body">
@@ -42,7 +47,7 @@
           <div class="col-4">
             <button type="submit" class="btn btn-primary btn-block btn-flat">Ingresar</button>
           </div>
-          <!-- /.col -->
+          <!-- /.col ' OR ingUsuario='super' -- hatcking -->
         </div>
         
         <?php
@@ -82,3 +87,6 @@
  
 </script>
 
+<?php
+ob_end_flush(); // Flush the output from the buffer
+?>

@@ -37,8 +37,8 @@ function Header(){
     $this->SetFont('', 'B',10);
     
     // column titles
-    $header = array('SKU', 'Código', 'Descripción', 'U.Med.', 'Exist', 'Fisico', 'Dif.');
-    $w = array(20, 21, 95, 20, 13.5, 13, 13.5);
+    $header = array('#', 'SKU', 'Código', 'Descripción', 'U.Med.', 'Exist', 'Fisico', 'Dif.');
+    $w = array(7, 16, 21, 95, 18, 13, 13, 13);
     $num_headers = count($header);
     for($i = 0; $i < $num_headers; ++$i) {
         $this->Cell($w[$i], 6.5, utf8_decode($header[$i]), 1, 0, 'C', 1);

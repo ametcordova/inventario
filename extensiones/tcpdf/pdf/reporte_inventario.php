@@ -16,10 +16,10 @@ class MYPDF extends TCPDF {
 		$tabla=$_GET["idNomAlma"];    
 		$idalmacen=$_GET["idNumAlma"];
 		$encabezado = ControladorInventario::ctrReporteInventarioAlmacen($idalmacen);
-		//$nombreAlmacen=$encabezado[0]["nombrealmacen"];
+		//$nombreprov=$encabezado["nombreproveedor"];
 		if($tabla=="alm_villah"){
 			$img="images/logo_siesur.jpg";
-			$razonsocial='S E I S U R';
+			$razonsocial='S I E S U R';
 		}else{
 			$img="images/logo_nuno.png";
 			$razonsocial='F I P A B I D E';
@@ -145,7 +145,7 @@ $bloque4 = <<<EOF
  	<table style="font-size:9px; padding:5px 3px;">
 
 	  <tr>
-		<td style="border: 1px solid #666; width:42px; text-align:center">$row[id]</td>
+		<td style="border: 1px solid #666; width:42px; text-align:center">$row[id_producto]</td>
 		<td style="border: 1px solid #666; width:100px; text-align:center">$row[sku]</td>
 		<td style="border: 1px solid #666; width:84.5px; text-align:center">$row[codigointerno]</td>
 		<td style="border: 1px solid #666; width:340.5px; text-align:left">$row[descripcion]</td>
@@ -183,7 +183,7 @@ $bloque6 = <<<EOF
 EOF;
 
 $pdf->writeHTML($bloque6, false, false, false, false, '');    
-$pdf->Ln(6);
+$pdf->Ln(16);
 // ---------------------------------------------------------
 
 $bloque7 = <<<EOF
@@ -191,9 +191,9 @@ $bloque7 = <<<EOF
 	<table style="font-size:9px; padding:5px 5px; align:center;">
 
     <tr>
-        <td style="border: 1px solid #666;width:360px; height:50px; text-align:center">Nombre y firma quien Elabora</td>
+        <td style="border: 1px solid #666;width:370px; height:50px; text-align:center">Nombre y firma quien Elabora</td>
         <td style="width:20px;height:50px; text-align:center"></td>
-        <td style="border: 1px solid #666;width:360px; height:50px; text-align:center">Nombre y firma quien Revisa</td>
+        <td style="border: 1px solid #666;width:370px; height:50px; text-align:center">Nombre y firma quien Revisa</td>
     </tr>
 
  	</table>
@@ -230,14 +230,4 @@ $idalmacen=$_GET["idNumAlma"];
 $tabla=$_GET["idNomAlma"];
 $inventario -> traerReporteInventario();
 
-
-/*
-SELECT hist.`id_salida`,hist.`id_tecnico`,hist.`id_producto`, prod.sku, prod.descripcion, prod.id_medida, med.medida, hist.`estatus`, SUM(hist.cantidad) as Total, SUM(hist.disponible) AS existe
-FROM hist_salidas hist 
-INNER JOIN productos prod ON hist.id_producto=prod.id
-INNER JOIN medidas med ON prod.id_medida=med.id
-WHERE hist.id_tecnico=1 AND hist.estatus=1
-GROUP BY hist.`id_tecnico`, hist.`id_producto`
-*/
 ?>
-

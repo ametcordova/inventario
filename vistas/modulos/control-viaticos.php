@@ -209,7 +209,7 @@
               <div class="input-group-prepend">
                       <span class="input-group-text"><i class="fa fa-calendar"></i></span>
               </div>
-              <input type="date" class="form-control form-control-sm" placeholder="Fecha dispersión" name="nvaFecha" id="nvaFecha" value="<?= $fechaHoy?>" title="Fecha dispersión"  required tabindex="5" >
+              <input type="date" class="form-control form-control-sm" placeholder="Fecha dispersión" name="nvaFecha" id="nvaFecha" value="<?= $fechaHoy ?>" title="Fecha dispersión"  required tabindex="5" >
             </div>
 
             <!-- <div class="input-group mb-3 col-md-6">
@@ -220,24 +220,6 @@
             </div> -->
 
           </div>
-
-          <!-- <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                      <span class="input-group-text"><i class="fa fa-cc-visa"></i></span>
-              </div>
-                <select class="form-control form-control-sm" name="nvoMedioDeposito" id="nvoMedioDeposito" required placeholder="Medio de deposito" title="Medio del deposito" tabindex="7">
-                <option value="" selected>Seleccione Medio de deposito</option>
-                <option value="1">Transferencia</option>
-                <option value="2">Deposito banco</option>
-                <option value="3">OXXO</option>
-                <option value="4">Farm. Guadalajara</option>
-                <option value="5">Farm. del Ahorro</option>
-                <option value="6">Efectivo</option>
-                <option value="7">Cheque</option>
-                <option value="8">Mexpei</option>
-                <option value="9">Otro</option>
-                </select>	
-            </div> -->
 
          </div>
         </div>
@@ -337,7 +319,7 @@
 <div class="modal fade" id="modalCheckup" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
-	 <form name="formularioCheckup" id="formularioCheckup" method="POST">
+	 <form name="formularioCheckup" id="formularioCheckup" method="POST" enctype="multipart/form-data">
       <div class="modal-header colorbackModal p-2">
         <h5 class="modal-title" id="ModalCenterTitleCheck"></h5>
 
@@ -355,7 +337,7 @@
             <div class="input-group-prepend">
                 <span class="input-group-text"><i class="fa fa-calendar-check-o"></i></span>
             </div>
-            <input type="date" class="form-control form-control" placeholder="" name="fechagasto" value=""  title="Fecha" required >
+            <input type="date" class="form-control form-control" placeholder="" name="fechagasto" value="<?php echo $fechaHoy ?>"  title="Fecha" required >
             <input type="hidden"  name="idDeUsuario" value="<?php echo $_SESSION['id'];?>">
             <input type="hidden"  name="registroid" value="">
           </div>
@@ -392,12 +374,28 @@
             <input type="number" class="form-control form-control" placeholder="Capture gasto" name="importegasto" value="" min=0 step="any"  title="Importe gasto" required >
           </div>
 			  </div>
+
+        <div class="form-group col-md-12">
+            <div class="input-group mb-0">
+                <label>Subir PDF:&nbsp</label>
+                <p class="help-block m-0 p-0">Peso máximo 2mb.</p>
+                <div class="input-group">
+                    <input type="hidden" name="MAX_FILE_SIZE" value="2097152" />
+                    <input type="file" class="nuevoPdf" id="facturaPdf" name="facturaPdf" accept="application/pdf" required>
+                </div>
+            </div>
+			  </div>
+                        
 		
       </div>	<!-- fin modal-body-->
 	  
       <div class="modal-footer colorbackModal p-2">
         <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal"><i class="fa fa-reply"></i> Cerrar</button>
         <button type="submit" id="submitGasto" class="btn btn-primary btn-sm"><i class="fa fa-save"></i> Guardar</button>
+        <div class="spin">
+            <button type="button" class="btn btn-sm btn-warning"> Espere... <i class="fa fa-spinner fa-pulse fa-1x fa-fw"></i></button>
+        </div>
+
       </div>
 	 </form>
     </div>
@@ -493,4 +491,4 @@ var printContents = document.getElementById('paraimprimir').innerHTML;
   }
 </script>
 
-<script defer src="vistas/js/control-viaticos.js?v=31012021"></script> 
+<script defer src="vistas/js/control-viaticos.js?v=02012022"></script> 

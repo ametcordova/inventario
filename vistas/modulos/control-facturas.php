@@ -1,6 +1,20 @@
-  <?php
+<script>
+  //evitar que se desconecte.
+  document.addEventListener("DOMContentLoaded", () => {
+    // Invocamos cada 5 minutos ;
+    const milisegundos = 500 * 1000;
+    setInterval(() => {
+      //console.log("500 segundos.. refrescado")
+      fetch("vistas/modulos/refrescar.php");
+      // No esperamos la respuesta de la petición porque no nos importa
+    }, milisegundos);
+  });
+</script>
+
+<?php
     $fechaHoy=date("d/m/Y");
     $yearHoy=date("Y");
+    $monthHoy=date("m");
     $tabla="usuarios";
     $module="pctfacts";
     $campo="administracion";
@@ -32,54 +46,59 @@
     <section class="content">
 
       <!-- Default box -->
-      <div class="card">
+      <div class="card" >
 
-        <div class="card-header border-success mb-3 py-1" >
-		    <div class="col-md-12">
-          <div class="input-group mb-3 col-md-9">
-              <?php if(getAccess($acceso, ACCESS_ADD)){?> 
-              <button class="btn btn-primary btn-sm mr-2" data-toggle="modal" data-target="#modalAgregarFactura"><i class="fa fa-plus-circle"></i> Agregar Factura
-              </button> 
-              <?php } ?>           
+        <div class="card-header border-success mb-2" >
 
-              <button class="btn btn-danger btn-sm mr-2" id="btnregresar" onclick="regresar()" type="button"><i class="fa fa-arrow-circle-left"></i> Regresar</button>
-              <?php if(getAccess($acceso, ACCESS_VIEW)){?>           
-                <div>	
-                  <input type="radio" name="radiofactura" value="todos" >
-                    <label class="ml-1">Todos</label>
-                  <input type="radio" class="ml-1" name="radiofactura" value="porpagar" checked>
-                    <label>Por Pagar</label>
-                  <input type="radio" class="ml-1" name="radiofactura" value="pagado">
-                    <label>Pagados</label>
-                  <input type="radio" class="ml-1" name="radiofactura" value="cancelado">
-                    <label>Cancelados</label>
-                </div>		
+          <div class="col-md-12">
+            <div class="input-group mb-3 col-md-9">
+                <?php if(getAccess($acceso, ACCESS_ADD)){?> 
+                <button class="btn btn-primary btn-sm mr-2" data-toggle="modal" data-target="#modalAgregarFactura"><i class="fa fa-plus-circle"></i> Factura
+                </button> 
+                <?php } ?>           
 
-              <div class="input-group-prepend ml-3">
-                      <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-              </div>
-                <input type="text" class="form-control form-control-sm" placeholder="" name="filterYear" id="filterYear" value="<?= $yearHoy?>" data-toggle="tooltip" title="Año" >
-                
-              <button class="btn btn-success btn-sm ml-2" onclick="listarFacturas()" ><i class="fa fa-eye"></i>
-                  Mostrar
-              </button>
-              <?php } ?>
-                
-          </div>  <!-- fin * -->        
-        </div>
+                <button class="btn btn-danger btn-sm mr-2" id="btnregresar" onclick="regresar()" type="button"><i class="fa fa-arrow-circle-left"></i> Regresar</button>
+                <?php if(getAccess($acceso, ACCESS_VIEW)){?>           
+                  <div>	
+                    <input type="radio" name="radiofactura" value="todos" >
+                      <label class="ml-1">Todos</label>
+                    <input type="radio" class="ml-1" name="radiofactura" value="porpagar" checked>
+                      <label>Por Pagar</label>
+                    <input type="radio" class="ml-1" name="radiofactura" value="pagado">
+                      <label>Pagados</label>
+                    <input type="radio" class="ml-1" name="radiofactura" value="cancelado">
+                      <label>Cancelados</label>
+                  </div>		
 
+                <div class="col-md-2 text-center">
+                  <div class="input-group-prepend ml-1">
+                          <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                          <input type="text" class="form-control form-control-sm" placeholder="" name="filterYear" id="filterYear" value="<?= $yearHoy?>" data-toggle="tooltip" title="Año" >
+                  </div>
+                </div>
 
-      
+                <div class="col-md-2 text-center">
+                  <div class="input-group-prepend ml-1">
+                          <span class="input-group-text"  title="Selecciona mes"><i class="fa fa-calendar-o"></i></span>
+                          <input type="text" class="form-control form-control-sm" placeholder="" name="filterMonth" id="filterMonth" data-toggle="tooltip" title="Selecciona mes" >
+                          <button class="btn btn-success btn-sm ml-2" onclick="listarFacturas()" ><i class="fa fa-eye"></i> Listar</button>
+                      <?php } ?>
+                  </div>
+                </div>
+                  
+            </div>  <!-- fin * -->        
+          </div>  <!-- col-md-12 -->
+     
 		
-			  <div class="card-tools">
-				<button type="button" class="btn btn-tool" data-widget="collapse" data-toggle="tooltip" title="Ocultar">
-				  <i class="fa fa-minus"></i></button>
-				<button type="button" class="btn btn-tool" onclick="regresar()" data-toggle="tooltip" title="a Inicio">
-				  <i class="fa fa-times"></i></button>			  
-			  </div>
+            <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-widget="collapse" data-toggle="tooltip" title="Ocultar">
+              <i class="fa fa-minus"></i></button>
+            <button type="button" class="btn btn-tool" onclick="regresar()" data-toggle="tooltip" title="a Inicio">
+              <i class="fa fa-times"></i></button>			  
+            </div>
 		  
 		  
-         </div>  <!-- fin del card-header -->
+        </div>  <!-- fin del card-header -->
  
         <div class="card-body p-1">
         
@@ -93,6 +112,10 @@
 
             <div class="card-body table-responsive-sm p-1">
 
+               <div class="text-center">
+                 <a class="toggle-vis btn btn-sm btn-info" data-column="11">#RP</a>
+               </div> 
+
               <table class="table table-bordered compact table-hover table-striped dt-responsive" cellspacing="0" id="TablaFacturas" width="100%">
                 <thead class="thead-dark">
                 <tr style="font-size:0.80em"> 
@@ -100,7 +123,7 @@
                     <th translate="no" style="width:3%;">#Fact</th>
                     <th translate="no" style="width:15%;">Nombre</th>
                     <th translate="no" style="width:14%;">Tipo de Trab.</th>
-                    <th translate="no"style="width:6%;"># Orden</th>
+                    <th translate="no" style="width:6%;"># Orden</th>
                     <th translate="no" style="width:7%;">F. Fact.</th>
                     <th translate="no" style="width:7%;">Subtotal</th>
                     <th translate="no" style="width:6%;">iva</th>
@@ -178,7 +201,7 @@
         <div class="card card-info">
          <div class="card-body">
           
-         <div class="input-group mb-3">
+            <div class="input-group mb-3">
               <div class="input-group-prepend">
                       <span class="input-group-text"><i class="fa fa-building-o"></i></span>
               </div>
@@ -259,7 +282,7 @@
               <div class="input-group-prepend">
                       <span class="input-group-text"><i class="fa fa-money"></i></span>
               </div>
-              <input type="number" class="form-control form-control-sm" placeholder="Importe Fact" name="nvoImporteFactura" id="nvoImporteFactura" value="" step="any" data-toggle="tooltip" data-placement="top" title="Importe factura" tabindex="10" required>
+              <input type="number" class="form-control form-control-sm" placeholder="Importe Fact" name="nvoImporteFactura" id="nvoImporteFactura" step="any" data-toggle="tooltip" data-placement="top" title="Importe factura" tabindex="10" required>
             </div>
 			
         </div>			
@@ -276,7 +299,7 @@
               <div class="input-group-prepend">
                       <span class="input-group-text"><i class="fa fa-unlock-alt"></i></span>
               </div>
-                <select class="form-control form-control-sm" name="nvoStatusFactura" id="nvoStatusFactura" required tabindex="12" placeholder="" data-toggle="tooltip" title="Estatus" tabindex="12" >
+                <select class="form-control form-control-sm" name="nvoStatusFactura" id="nvoStatusFactura" required tabindex="12" placeholder="" data-toggle="tooltip" title="Estatus" >
                 <option value="" selected>Seleccione</option>
                 <option value="1">Pagado</option>
                 <option value="0">Sin pagar</option>
@@ -487,7 +510,7 @@
         <div class="spin">
             <button type="button" class="btn btn-sm btn-warning"> Espere... <i class="fa fa-spinner fa-pulse fa-1x fa-fw"></i></button>
         </div>
-        <!--  <div hidden id="spinner"></div> -->
+        <!--  <div hidden id="spin"></div> -->
 
       </div>
 
@@ -519,7 +542,7 @@
                   <span class="input-group-text"><i class="fa fa-calendar-check-o"></i></span>
               </div>
               
-              <input type="date" class="form-control form-control-sm" placeholder="" name="fechaPagoFactura" value="" data-toggle="tooltip" title="Fecha Pago Factura" required >
+              <input type="date" class="form-control form-control-sm" placeholder="" name="fechaPagoFactura" data-toggle="tooltip" title="Fecha Pago Factura" required >
               <input type="hidden"  name="idDeUsuario" value="<?php echo $_SESSION['id'];?>">
               <input type="hidden"  name="registroid" value="">
             </div>
@@ -638,7 +661,7 @@
     </div>
   </div>
 </div>
-<script defer src="vistas/js/control-facturas.js?v=15122020"></script>
+<script defer src="vistas/js/control-facturas.js?v=12072022"></script>
 <!--===========================================================================================-->
 
 <!--================================= MODAL VER EXPEDIENTE DE FACTURA =======================================-->

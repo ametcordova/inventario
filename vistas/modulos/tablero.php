@@ -23,7 +23,8 @@
 
     <?php
         
-        include "dashboard/cajas-superiores.php";
+        //include "dashboard/cajas-superiores.php";
+        include "dashboard/clockdigitalrx.html";
         
     ?>
 <!--
@@ -38,10 +39,10 @@
 
 
     <?php
-        include "dashboard/grafica.php";
-        include "dashboard/graficasvtascompras.php";
-        include "dashboard/grafico-productos.php";
-        include "dashboard/grafico-vtas-categorias.php";        
+        // include "dashboard/grafica.php";
+        // include "dashboard/graficasvtascompras.php";
+        // include "dashboard/grafico-productos.php";
+        // include "dashboard/grafico-vtas-categorias.php";        
     ?>
    
     </section>

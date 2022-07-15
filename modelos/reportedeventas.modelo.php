@@ -168,8 +168,6 @@ static Public function MdlMostrarTotVentasFam($tablaVtaFam, $fechaInimes, $fecha
 		
 			return $stmt -> fetchAll();      
 			
-			$stmt->close();
-			   
 			$stmt=null;
 		
 		} catch (Exception $e) {

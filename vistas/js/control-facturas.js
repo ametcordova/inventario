@@ -1,4 +1,5 @@
 var tabla;
+var idfactura=new Array();
 
 $("#modalAgregarFactura, #modalEditarFactura, #modalPagarFactura, #modalVerFactura, #modal_fecha_pago").draggable({
 	  handle: ".modal-header"
@@ -323,8 +324,8 @@ $("#TablaFacturas").on("click", ".btnBorrarFactura", function(){
       text: "Si no lo esta puede cancelar la acción!",
 	    icon: "vistas/img/logoaviso.jpg",
       buttons: {
-        cancel: "Cancelar",
-        defeat: "Borrar",
+        cancel: "No, Cancelar",
+        defeat: "Sí, Borrar",
       },      
       dangerMode: true,
     })
@@ -499,7 +500,23 @@ function listarFacturas(){
               extend: 'print',
               text: 'Imprimir',
               autoPrint: false            //TRUE para abrir la impresora
-          }
+          },
+          {
+            text: 'IVA Ret.',
+            className: 'btn btn-dark btn-sm',
+            action: function ( e, dt, node, config ) {
+              let colum=7;    //columna IVA Ret.
+              ocultar(e, colum);
+            }
+          },
+          {
+            text: 'Print Selec.',
+            className: 'btn btn-warning btn-sm',
+            action: function ( e, dt, node, config ) {
+              let colum=7;    //columna IVA Ret.
+              printselec();
+            }
+          }        
           ],
           "columns" : [
             {"data": 0},
@@ -581,6 +598,25 @@ function listarFacturas(){
   }    
 } 
 
+/**************************************************/
+//OCULTAR Y DESOCULTAR COLUMNAS IVA RET 
+/*************************************************/
+function ocultar(event, colum){
+  event.preventDefault();
+  var columna= tabla.column(colum);
+  columna.visible(!columna.visible());
+}
+
+/**************************************************/
+//OCULTAR Y DESOCULTAR COLUMNAS Y #RP
+/*************************************************/
+$('a.toggle-vis').on('click',function(e){
+  e.preventDefault();
+  var columna= tabla.column($(this).data('column'));
+  columna.visible(!columna.visible());
+})
+/**************************************************/
+
 //añadir un INPUT en la columna de No. de Fact
 $('#TablaFacturas tfoot th').each( function () {
   var title=$(this).text();
@@ -622,9 +658,14 @@ $('#TablaFacturas tbody').on( 'click', 'tr', function () {
   $(".sumaseleccion").html('');
   let price1=price2=sumaselec1=sumaselec2=0;
   let x=(tabla.rows('.selected').data().length);
-  //console.log(x);
+  //console.log(tabla.rows('.selected').data().length)
+  idfactura=[];
   for(var i=0; i<x; i++) {
-    //console.log( tabla.rows('.selected').data()[i][5]);
+    idfactura.push(tabla.rows('.selected').data()[i][0]);
+
+    console.log(idfactura);
+
+    console.log( tabla.rows('.selected').data()[i][5]);
     price1=tabla.rows('.selected').data()[i][5];
     price2=tabla.rows('.selected').data()[i][8];
     strEx1 = price1.replace(",","");		//quitar la coma de los miles
@@ -666,18 +707,6 @@ $('#TablaFacturas tbody').on( 'click', 'tr', function () {
       }
    });   
 
-jQuery.fn.dataTable.Api.register( 'sum()', function ( ) {
-    return this.flatten().reduce( function ( a, b ) {
-        if ( typeof a === 'string' ) {
-            a = a.replace(/[^\d.-]/g, '') * 1;
-        }
-        if ( typeof b === 'string' ) {
-            b = b.replace(/[^\d.-]/g, '') * 1;
-        }
-        return a + b;
-    }, 0 );
-} );
-
 
 $('#filterYear').datepicker({
   format: " yyyy",
@@ -717,6 +746,36 @@ $("#modalPagarFactura").on('hidden.bs.modal', ()=> {
 /*================ AL SALIR DEL MODAL DE EDICION RESETEAR FORMULARIO==================*/
 $("#modal_fecha_pago").on('hidden.bs.modal', ()=> {
 	$('#formFechaPagoFactura')[0].reset();
+});
+
+
+
+function printselec(){
+  console.log(idfactura);
+  let datos=new FormData();
+  datos.append("idfactura", idfactura);
+  fetch('ajax/adminoservicio.ajax.php?op=printselect', {
+		method: 'POST',
+		body: datos
+	})
+
+  .then(results => {
+    return results.json();
+  })
+
+  .then(json => {
+    //const movie = json.results[0];
+    console.log(json)
+  
+  });
+
+}
+
+$('#nvoSubtotal,#nvoIva,#nvaRetencion').on( 'keyup change blur', function () {
+  let nvosubtotal=$('#nvoSubtotal').val()>0?parseFloat($('#nvoSubtotal').val()):0;
+  let nvoiva=$('#nvoIva').val()>0?parseFloat($('#nvoIva').val()):0;
+  let nvaretencion=$('#nvaRetencion').val()>0?parseFloat($('#nvaRetencion').val()):0;
+  $('#nvoImporteFactura').val(nvosubtotal+nvoiva+nvaretencion);
 });
 
 init();

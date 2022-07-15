@@ -1,3 +1,4 @@
+$( "#modalAgregarusuario, #modalEditarUsuario").draggable();
 $('#modalAgregarusuario').on('show.bs.modal', function (e) {
   $("#nuevoUsuario").val("");
   $( "input[name='nuevoPassword']" ).val("");
@@ -56,7 +57,7 @@ $(".nuevaFoto").change(function(){
 /*=============================================
 EDITAR USUARIO
 =============================================*/
-$(".activarDatatable").on("click", ".btnEditarUsuario", function(){
+$(".usuariosDatatable").on("click", ".btnEditarUsuario", function(){
 
 	var idUsuario = $(this).attr("idUsuario");
 	
@@ -102,11 +103,10 @@ $(".activarDatatable").on("click", ".btnEditarUsuario", function(){
 
 })
 
-
 /*=============================================
 ACTIVAR USUARIO
 =============================================*/
-$(".activarDatatable").on("click", ".btnActivar", function(){
+$(".usuariosDatatable").on("click", ".btnActivar", function(){
 
 	var idUsuario = $(this).attr("idUsuario");
 	var estadoUsuario = $(this).attr("estadoUsuario");
@@ -130,11 +130,13 @@ $(".activarDatatable").on("click", ".btnActivar", function(){
                         text: "¡El usuario a sido actualizado!",
                         icon: "success",
                         button: "Cerrar",
+						timer: 2000,
                        }).then(function(result){
                         if(result){
                             window.location = "usuarios";
                         }else{
                             window.location = "usuarios";
+							//$('.usuariosDatatable').DataTable().ajax.reload(null, false);
                         }
                     });                
 	      	}
@@ -143,23 +145,23 @@ $(".activarDatatable").on("click", ".btnActivar", function(){
             console.log(respuesta);
      }
 
+	 
   	})
+	  if(estadoUsuario == 0){
+		console.log(estadoUsuario);
+		  $(this).removeClass('btn-success');
+		  $(this).addClass('btn-danger');
+		  $(this).html('Desactivado');
+		  $(this).attr('estadoUsuario',1);
 
-  	if(estadoUsuario == 0){
-        console.log(estadoUsuario);
-  		$(this).removeClass('btn-success');
-  		$(this).addClass('btn-danger');
-  		$(this).html('Desactivado');
-  		$(this).attr('estadoUsuario',1);
+	  }else{
+		console.log(estadoUsuario);
+		  $(this).addClass('btn-success');
+		  $(this).removeClass('btn-danger');
+		  $(this).html('Activado');
+		  $(this).attr('estadoUsuario',0);
 
-  	}else{
-        console.log(estadoUsuario);
-  		$(this).addClass('btn-success');
-  		$(this).removeClass('btn-danger');
-  		$(this).html('Activado');
-  		$(this).attr('estadoUsuario',0);
-
-  	}
+	  }
 
 })
 
@@ -206,12 +208,12 @@ $("#nuevoUsuario").change(function(){
 /*=============================================
 ELIMINAR USUARIO
 =============================================*/
-$(".activarDatatable").on("click", ".btnEliminarUsuario", function(){
+$(".usuariosDatatable").on("click", ".btnEliminarUsuario", function(){
 
   var idUsuario = $(this).attr("idUsuario");
   var fotoUsuario = $(this).attr("fotoUsuario");
   var usuario = $(this).attr("usuario");
-
+  console.log("antes de ajax",idUsuario);
 swal({
   title: "¿Está seguro de borrar el usuario?",
   text: "¡Si no lo está puede cancelar la acción!",
@@ -248,4 +250,97 @@ swal({
     
 })
 
+/*===================================================================*/
+$('.usuariosDatatable').dataTable({
+	"lengthMenu": [ [10, 25, 50,100, -1], [10, 25, 50, 100, "Todos"] ],
+"language": {
+	"sProcessing":     "Procesando...",
+	"sLengthMenu":     "Mostrar _MENU_ registros &nbsp",
+	"sZeroRecords":    "No se encontraron resultados",
+	"sEmptyTable":     "Ningún dato disponible en esta tabla",
+	"sInfo":           "Mostrar registros del _START_ al _END_ de un total de _TOTAL_",
+	"sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+	"sInfoPostFix":    "",
+	"sSearch":         "Buscar:",
+	"sUrl":            "",
+	"sInfoThousands":  ",",
+	"sLoadingRecords": "Cargando...",
+	"oPaginate": {
+	"sFirst":    "Primero",
+	"sLast":     "Último",
+	"sNext":     "Siguiente",
+	"sPrevious": "Anterior"}
+	},
+	"oAria": {
+		"sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+		"sSortDescending": ": Activar para ordenar la columna de manera descendente"
+	},
+	dom: '<clear>Bfrtip',
+	buttons: [
+		'copyHtml5',
+		'excelHtml5',
+		'csvHtml5',
+		{
+			extend: 'pdfHtml5',
+			orientation: 'landscape',
+			title: "NUNOSCO",
+			customize: function ( doc ) {
+				pdfMake.createPdf(doc).open();
+			},
 
+		},
+   {
+		extend: 'print',
+		text: 'Imprimir',
+		autoPrint: false            //TRUE para abrir la impresora
+	}
+	],
+	initComplete: function () {
+		var btns = $('.dt-button');
+		btns.removeClass('dt-button');
+		btns.addClass('btn btn-success btn-sm');
+	  },
+
+columnDefs: [{	
+	width: "3%",	
+	targets: 0		//id
+  },
+  {
+	width: "25%",
+	targets: 1		//nombre
+  },
+  {
+	width: "10%",
+	targets: 2		//usuario
+  },
+  {
+	className: "dt-center",
+	width: "7%",	//foto
+	targets: 3
+  },
+  {
+	width: "21%",	//perfil
+	targets: 4
+  },
+  {
+	className: "dt-center",
+	width: "10%",
+	targets: 5		//estado
+  },
+  {
+	className: "dt-center",
+	width: "15%",
+	targets: 6		//ultima sesion
+  },
+  {
+	className: "dt-center",
+	width: "8%",
+	targets: 7,		//acciones
+
+  },
+],
+"drawCallback": function( settings ) {
+	$('ul.pagination').addClass("pagination-sm");
+},
+"destroy": true,
+}).DataTable(); 

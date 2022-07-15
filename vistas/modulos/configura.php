@@ -54,6 +54,15 @@
                         </tr>
                         
                         <tr>
+                            <th scope="row">Respaldo BD</th>
+                            <td class="text-center">
+                                <input class="form-check-input checkbox-inline habilitaPermisoRespaldo" type="checkbox" value="1"  id="prespaldo">
+                            </td>
+                            <td colspan="7" class="text-center">
+                            </td>
+                        </tr>
+
+                        <tr>
                             <th scope="row">Empresa</th>
                             <td class="text-center">
                                 <input class="form-check-input checkbox-inline habilitaPermisoEmpresa" type="checkbox" value="1"  id="empresa">

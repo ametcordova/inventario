@@ -45,6 +45,16 @@ switch ($_GET["op"]){
 							$opcion="pcapseries";
 							$accesos=256;
 
+						}else if($value=="pcostuxtla"){
+							$data+=[$opcion => $accesos];
+							$opcion="pcostuxtla";
+							$accesos=256;
+
+						}else if($value=="pcapquejas"){
+							$data+=[$opcion => $accesos];
+							$opcion="pcapquejas";
+							$accesos=256;
+
 						}else if($value=="ajusteinv"){
 							$data+=[$opcion => $accesos];
 							$opcion="ajusteinv";
@@ -70,11 +80,10 @@ switch ($_GET["op"]){
 							$opcion="posvilla";
 							$accesos=256;
 
-						}else if($value=="prespaldo"){
+						}else if($value=="pdeposito"){
 							$data+=[$opcion => $accesos];
-							$opcion="prespaldo";
+							$opcion="pdeposito";
 							$accesos=256;
-
 						}
 
 						$accesos=valordeacceso($value, $accesos);
@@ -303,6 +312,16 @@ switch ($_GET["op"]){
 							$opcion="permisos";
 							$accesos=256;
 
+						}else if($value=="repositorio"){
+							$data+=[$opcion => $accesos];
+							$opcion="repositorio";
+							$accesos=256;
+
+						}else if($value=="prespaldo"){
+							$data+=[$opcion => $accesos];
+							$opcion="prespaldo";
+							$accesos=256;
+
 						}else if($value=="empresa"){
 							$data+=[$opcion => $accesos];
 							$opcion="empresa";
@@ -360,23 +379,22 @@ switch ($_GET["op"]){
 		}
     break;
 
-	// case 'getPermisosCat':
-	// 	if(isset($_GET["user"]) && !empty($_GET["user"]) ){
+	 case 'getPermisosCat':
+		if(isset($_GET["user"]) && !empty($_GET["user"]) ){
 
-	// 		$usuario = htmlspecialchars($_GET["user"]);
-	// 		$tabla = "usuarios";
-	// 		$rspta = ControladorPermisos::ctrGetPermisosCat($tabla, $usuario);
+	 		$usuario = htmlspecialchars($_GET["user"]);
+	 		$tabla = "usuarios";
+			$rspta = ControladorPermisos::ctrGetPermisosCat($tabla, $usuario);
 
-	// 		//$arr = array('datos' => $rspta);
+	 		//$arr = array('datos' => $rspta);
 
-	// 		echo json_encode($rspta);
+	 		echo json_encode($rspta);
 
-	// 	}else{
-
-    //         $arr = array('sin dato' => $_GET["user"]);
-	// 		echo json_encode($arr);
-	// 	}
-    // break;
+	 	}else{
+             $arr = array('sin dato' => $_GET["user"]);
+	 		echo json_encode($arr);
+	 	}
+     break;
 
 
 }  //FIN DE SWITCH  

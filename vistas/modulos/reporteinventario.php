@@ -6,6 +6,14 @@ $module="rinventarios";
 $campo="reportes";
 $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);    
 ?>
+<script>    //evitar que se desconecte.
+    document.addEventListener("DOMContentLoaded", ()=>{
+      const milisegundos = 500*1000;
+      setInterval(()=>{
+        fetch("vistas/modulos/refrescar.php");
+      },milisegundos);
+    });
+  </script>
 
  <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -81,8 +89,9 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
 	<table id="tablalistado" class="table display compact table-bordered table-striped dt-responsive" width="100%">
                <thead>
 			   
-                 <th style="width:10px;">#</th>
+                 <th style="width:10px;">#Prod</th>
                  <th style="width:10px;">Cat.</th>
+                 <th style="width:10px;">SKU</th>
                  <th style="width:95px;">Código</th>
                  <th style="width:320px;">Descripción</th>
                  <th style="width:110px;">U.de Med</th>
@@ -96,6 +105,7 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
             </tbody>
 					  <tfoot>
                         <tr>
+                            <th></th>
                             <th></th>
                             <th></th>
                             <th></th>

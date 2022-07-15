@@ -30,9 +30,9 @@ static public function ctrConsultaExistenciaProd($tabla, $item, $valor){
 /*=============================================
 LISTAR REGISTROS PARA EL DATATABLE
 =============================================*/
-static public function ctrListarSalidas($tabla, $fechadev1, $fechadev2){
+static public function ctrListarSalidas($tabla, $fechadev1, $fechadev2, $usuario){
 
-	$respuesta = ModeloSalidasAlmacen::mdlListarSalidas($tabla, $fechadev1, $fechadev2);
+	$respuesta = ModeloSalidasAlmacen::mdlListarSalidas($tabla, $fechadev1, $fechadev2, $usuario);
 
 	return $respuesta;
 

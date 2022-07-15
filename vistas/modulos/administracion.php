@@ -29,22 +29,22 @@
                         <tr>
                         <th scope="row">Salidas</th>
                             <td class="text-center">
-                                <input class="form-check-input checkbox-inline habilitaPermisoSalidas" type="checkbox" value="1" id="psalidas">
+                                <input class="form-check-input checkbox-inline habilitaPermisoSalidas" type="checkbox" id="psalidas">
                             </td>
                             <td  class="text-center">
-                                <input class="form-check-input checkbox-inline rolSalidasAlm" type="checkbox" value="1" id="adipsal">
+                                <input class="form-check-input checkbox-inline rolSalidasAlm" type="checkbox"  id="adipsal">
                             </td>
                             <td  class="text-center">
-                                <input class="form-check-input checkbox-inline rolSalidasAlm" type="checkbox" value="1" id="edipsal">
+                                <input class="form-check-input checkbox-inline rolSalidasAlm" type="checkbox"  id="edipsal">
                             </td>
                             <td  class="text-center">
-                                <input class="form-check-input checkbox-inline rolSalidasAlm" type="checkbox" value="1" id="viepsal">
+                                <input class="form-check-input checkbox-inline rolSalidasAlm" type="checkbox"  id="viepsal">
                             </td>
                             <td  class="text-center">
-                                <input class="form-check-input checkbox-inline rolSalidasAlm" type="checkbox" value="1" id="delpsal">
+                                <input class="form-check-input checkbox-inline rolSalidasAlm" type="checkbox"  id="delpsal">
                             </td>
                             <td class="text-center">
-                                <input class="form-check-input checkbox-inline rolSalidasAlm" type="checkbox" value="1" id="pripsal">
+                                <input class="form-check-input checkbox-inline rolSalidasAlm" type="checkbox"  id="pripsal">
                             </td>
                             <td colspan="2" class="text-center">
                             </td>
@@ -56,26 +56,54 @@
                                 <input class="form-check-input checkbox-inline habilitaPermisoEntradas" type="checkbox" value="1"  id="pentradas">
                             </td>
                             <td  class="text-center">
-                                <input class="form-check-input checkbox-inline rolEntradasAlm" type="checkbox" value="1" id="adipent">
+                                <input class="form-check-input checkbox-inline rolEntradasAlm" type="checkbox" id="adipent">
                             </td>
                             <td  class="text-center">
-                                <input class="form-check-input checkbox-inline rolEntradasAlm" type="checkbox" value="1" id="edipent">
+                                <input class="form-check-input checkbox-inline rolEntradasAlm" type="checkbox" id="edipent">
                             </td>
                             <td  class="text-center">
-                                <input class="form-check-input checkbox-inline rolEntradasAlm" type="checkbox" value="1" id="viepent">
+                                <input class="form-check-input checkbox-inline rolEntradasAlm" type="checkbox" id="viepent">
                             </td>
                             <td  class="text-center">
-                                <input class="form-check-input checkbox-inline rolEntradasAlm" type="checkbox" value="1" id="delpent">
+                                <input class="form-check-input checkbox-inline rolEntradasAlm" type="checkbox" id="delpent">
                             </td>
                             <td class="text-center">
-                                <input class="form-check-input checkbox-inline rolEntradasAlm" type="checkbox" value="1" id="pripent">
+                                <input class="form-check-input checkbox-inline rolEntradasAlm" type="checkbox" id="pripent">
                             </td>
                             <td colspan="2" class="text-center">
                             </td>
                         </tr>
 
                         <tr>
-                        <th scope="row">Capturar Series</th>
+                            <th scope="row">Capturar OS-Tuxtla</th>
+                            <td class="text-center">
+                                <input class="form-check-input checkbox-inline habilitaPermisoCapOSTuxtla" type="checkbox" value="1"  id="pcostuxtla">
+                            </td>
+                            <td class="text-center">
+                                <input class="form-check-input checkbox-inline rolcapostuxtla" type="checkbox" value="1" id="adipcost">
+                            </td>
+                            <td class="text-center">
+                                <input class="form-check-input checkbox-inline rolcapostuxtla" type="checkbox" value="1" id="edipcost">
+                            </td>
+                            <td class="text-center">
+                                <input class="form-check-input checkbox-inline rolcapostuxtla" type="checkbox" value="1" id="viepcost">
+                            </td>
+                            <td class="text-center">
+                                <input class="form-check-input checkbox-inline rolcapostuxtla" type="checkbox" value="1" id="delpcost">
+                            </td>
+                            <td class="text-center">
+                                <input class="form-check-input checkbox-inline rolcapostuxtla" type="checkbox" value="1" id="pripcost">
+                            </td>
+                            <td class="text-center">    <!-- OPCION CAPTURAR -->
+                                <input class="form-check-input checkbox-inline rolcapostuxtla" type="checkbox" value="1" id="selpcost">
+                            </td>                   
+                            <td class="text-center">
+                                <input class="form-check-input checkbox-inline rolcapostuxtla" type="checkbox" value="1" id="actpcost">
+                            </td>                        
+                        </tr>
+
+                        <tr>
+                            <th scope="row">Capturar Series</th>
                             <td class="text-center">
                                 <input class="form-check-input checkbox-inline habilitaPermisoCapSeries" type="checkbox" value="1"  id="pcapseries">
                             </td>
@@ -90,14 +118,32 @@
                             </td>
                             <td colspan="3" class="text-center">
                             </td>
-
                             <td class="text-center">
                                 <input class="form-check-input checkbox-inline rolcapseries" type="checkbox" value="1" id="actpcap">
                             </td>
                         </tr>
 
                         <tr>
+                        <th scope="row">Capturar Quejas</th>
+                            <td class="text-center">
+                                <input class="form-check-input checkbox-inline habilitaPermisoCapquejas" type="checkbox" value="1"  id="pcapquejas">
+                            </td>
+                            <td  class="text-center">
+                                <input class="form-check-input checkbox-inline rolcapquejas" type="checkbox" value="1" id="adiqcap">
+                            </td>
+                            <td  class="text-center">
+                                <input class="form-check-input checkbox-inline rolcapquejas" type="checkbox" value="1" id="ediqcap">
+                            </td>
+                            <td class="text-center">
+                                <input class="form-check-input checkbox-inline rolcapquejas" type="checkbox" value="1" id="vieqcap">
+                            </td>
+                            <td class="text-center">
+                                <input class="form-check-input checkbox-inline rolcapquejas" type="checkbox" value="1" id="delqcap">
+                            </td>
+                            <td colspan="3" class="text-center"></td>
+                        </tr>
 
+                        <tr>
                         <th scope="row">Ajuste de Inventario</th>
                             <td class="text-center">
                                 <input class="form-check-input checkbox-inline habilitaPermisoAjusteInv" type="checkbox" value="1"  id="ajusteinv">
@@ -198,6 +244,30 @@
                         </tr>
 
                         <tr>
+                        <th scope="row">Control Depósitos</th>
+                            <td class="text-center">
+                                <input class="form-check-input checkbox-inline habilitaPermisoDeposito" type="checkbox" value="1" id="pdeposito">
+                            </td>
+                            <td  class="text-center">
+                                <input class="form-check-input checkbox-inline rolDeposito" type="checkbox" value="1" id="adipdep">
+                            </td>
+                            <td  class="text-center">
+                                <input class="form-check-input checkbox-inline rolDeposito" type="checkbox" value="1" id="edipdep">
+                            </td>
+                            <td  class="text-center">
+                                <input class="form-check-input checkbox-inline rolDeposito" type="checkbox" value="1" id="viepdep">
+                            </td>
+                            <td  class="text-center">
+                                <input class="form-check-input checkbox-inline rolDeposito" type="checkbox" value="1" id="delpdep">
+                            </td>
+                            <td class="text-center">
+                                <input class="form-check-input checkbox-inline rolDeposito" type="checkbox" value="1" id="pripdep">
+                            </td>
+                            <td colspan="2" class="text-center">
+                            </td>
+                        </tr>
+
+                        <tr>
                             <th scope="row">OS Villa</th>
                             <td class="text-center">
                                 <input class="form-check-input checkbox-inline habilitaPermisoOsVila" type="checkbox" value="1"  id="posvilla">
@@ -225,15 +295,6 @@
                             </td>                        
                         </tr>
                         
-                        <tr>
-                            <th scope="row">Respaldo BD</th>
-                            <td class="text-center">
-                                <input class="form-check-input checkbox-inline habilitaPermisoRespaldo" type="checkbox" value="1"  id="prespaldo">
-                            </td>
-                            <td colspan="7" class="text-center">
-                            </td>
-                        </tr>
-
                     </tbody>
                     </table>                    
                     <div class="text-center pt-2 pb-0">
@@ -243,4 +304,4 @@
                 </div>
                 </div>
             </div>
-            <script defer src="vistas/js/administracion.js"></script>
+            <script defer src="vistas/js/administracion.js?v=11092021"></script>

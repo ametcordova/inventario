@@ -25,7 +25,6 @@ static public function mdlIngresarFamilia($tabla, $datos){
     }catch(Exception $e) {
 		return $e->getMessage();
     }
-		$stmt->close();
 		$stmt = null;
 
 }
@@ -54,7 +53,6 @@ static public function mdlIngresarFamilia($tabla, $datos){
     }catch(Exception $e) {
 		return $e->getMessage();
 	}
-		$stmt->close();
 		$stmt = null;
 
 
@@ -95,7 +93,6 @@ static public function mdlMostrarFamilias($tabla, $item, $valor){
     }catch(Exception $e) {
 		return $e->getMessage();
     }
-		$stmt -> close();
 
 		$stmt = null;
 
@@ -118,7 +115,6 @@ static public function mdllistarFamilias($tabla, $item){
     }catch(Exception $e) {
 		return $e->getMessage();
     }
-		$stmt -> close();
 
 		$stmt = null;
 
@@ -145,8 +141,6 @@ static public function mdllistarFamilias($tabla, $item){
 
 		}
 
-		$stmt -> close();
-
 		$stmt = null;
 
 	}
@@ -171,8 +165,6 @@ public function mdlEliminarFamilia($tabla, $item, $valor){
 		return "error";	
 
 	}
-
-	$stmt -> close();
 
 	$stmt = null;
 

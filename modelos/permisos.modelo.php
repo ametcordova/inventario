@@ -72,5 +72,26 @@ static public function mdlGetPermisos($tabla, $usuario, $modulo){
 } 	//fin de la funcion
 
 
+/*=======================================================
+OBTENER ACCESO SEGUN ID Y MODULO PARA EL MENU PRINCIPAL
+========================================================*/
+static public function mdlGetPermisosCat($tabla, $usuario){
+	try {      
+
+		$query = Conexion::conectar()->prepare("SELECT administracion, catalogo, reportes, configura FROM $tabla WHERE id=:id");
+		
+		$query->bindParam(":id", $usuario, PDO::PARAM_INT);
+		
+		$query->execute();
+
+			return $query -> fetch(PDO::FETCH_OBJ);
+
+		  $query=null;
+
+	} catch (Exception $e) {
+		echo "Failed: " . $e->getMessage();
+    }
+} 	//fin de la funcion
+
 } //fin de la clase
 ?>

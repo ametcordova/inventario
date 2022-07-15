@@ -49,24 +49,26 @@ $cantEntra=0;
 
 foreach ($respuestaInventario as $row) {
     $existe=number_format($row["existe"]);
+    $descripcion=substr($row['descripcion'],0,47);
 
-        $pdf->Cell($w[0],6,$row['sku'],'LRB');
-        $pdf->Cell($w[1],6,$row['codigointerno'],'LRB');
-        $pdf->Cell($w[2],6,utf8_decode($row['descripcion']),'LRB',0,'L');
-        $pdf->Cell($w[3],6,$row['medida'],'LRB',0,'L');
-        $pdf->Cell($w[4],6,$existe,'LRB',0,'R');
-        $pdf->Cell($w[5],6,'','LRB',0,'R');
+        $pdf->Cell($w[0],6,$row['id_producto'],'LRB');
+        $pdf->Cell($w[1],6,$row['sku'],'LRB');
+        $pdf->Cell($w[2],6,$row['codigointerno'],'LRB');
+        $pdf->Cell($w[3],6,utf8_decode($descripcion),'LRB',0,'L');
+        $pdf->Cell($w[4],6,$row['medida'],'LRB',0,'L');
+        $pdf->Cell($w[5],6,$existe,'LRB',0,'R');
         $pdf->Cell($w[6],6,'','LRB',0,'R');
+        $pdf->Cell($w[7],6,'','LRB',0,'R');
         $pdf->Ln();
 
     $cantEntra+=$row['existe'];
 
 }   //termina el foreach
 
-    $pdf->Cell($w[0]+$w[1]+$w[2]+$w[3],6,'Totales:','LRB',0,'R');
-    $pdf->Cell($w[4],6,number_format($cantEntra),'LRB',0,'R');
-    $pdf->Cell($w[5],6,'','LRB',0,'R');
+    $pdf->Cell($w[0]+$w[1]+$w[2]+$w[3]+$w[4],6,'Totales:','LRB',0,'R');
+    $pdf->Cell($w[5],6,number_format($cantEntra),'LRB',0,'R');
     $pdf->Cell($w[6],6,'','LRB',0,'R');
+    $pdf->Cell($w[7],6,'','LRB',0,'R');
     $pdf->Ln(8);
 
     $pdf->Cell(196,5,'Observaciones:','B',0,'L');

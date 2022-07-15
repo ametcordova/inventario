@@ -3,6 +3,19 @@
         font-size:14px !important;
 	}	
 </style>
+
+<script>    //evitar que se desconecte.
+    document.addEventListener("DOMContentLoaded", ()=>{
+      // Invocamos cada 5 minutos ;
+      const milisegundos = 500*1000;
+      setInterval(()=>{
+        //console.log("500 segundos.. refrescado")
+        fetch("vistas/modulos/refrescar.php");
+        // No esperamos la respuesta de la petición porque no nos importa
+      },milisegundos);
+    });
+  </script>
+
 <?php
 $tabla="usuarios";
 $usuario=$_SESSION['id'];
@@ -321,4 +334,4 @@ $fechaHoy=date("Y-m-d");
     </div> <!-- fin del modal-content -->
   </div>
 </div>  
-<script defer src="vistas/js/ajusteinventario.js?v=010920"></script>
+<script defer src="vistas/js/ajusteinventario.js?v=01012022"></script>

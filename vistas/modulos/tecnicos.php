@@ -11,10 +11,10 @@
     <section class="content-header p-1 m-0">
       <div class="container-fluid">
         <div class="row">
-          <div class="col-sm-6">
-            <h1><i class="fa fa-tty"></i>
+          <div class="col-sm-6 py-0">
+            <h3><i class="fa fa-tty"></i>
                 <small>Admin. Técnicos</small>
-            </h1>
+            </h3>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -50,7 +50,7 @@
         <div class="card-body">
               <table id="TablaTecnicos" class="table table-bordered compact table-hover table-striped dt-responsive" cellspacing="0" width="100%">
                 <thead class="thead-dark">
-                <tr>
+                <tr style="height:10px !important; font-size:0.75em !important;">
                     <th style="width:9px;">#</th>
                     <th>Nombre</th>
                     <th>Expediente</th>
@@ -113,13 +113,10 @@
           }
 
         ?>                    
-                  
-                </tbody>
-                <tfoot>
-                <tr>
-                </tr>
-                </tfoot>
-              </table>
+        </tbody>
+          <tfoot>
+          </tfoot>
+      </table>
 
         </div>
         <!-- /.card-body -->
@@ -144,8 +141,8 @@
     <div class="modal-content">
     <form role="form" method="POST">
       <!-- Modal Header -->
-      <div class="modal-header colorbackModal py-2">
-          <h4 class="modal-title">Agregar Técnico</h4>
+      <div class="modal-header colorbackModal py-1">
+          <h4 class="modal-title py-0">Agregar Técnico</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
       
@@ -267,18 +264,19 @@
          
           <div class="form-row">
             <div class="form-group col-md-4">
-			  <select class="form-control form-control-sm" name="NacimientoEstado" id="NacimientoEstado" data-toggle="tooltip" title="Estado de nacimiento">
-				<option selected>Estado de Nacimiento</option>
-                  <?php
-                    $item=null;
-                    $valor=null;
-                    $estado=ControladorTecnicos::ctrMostrarEstados($item, $valor);
-                    foreach($estado as $key=>$value){
-                        echo '<option value="'.$value["idestado"].'">'.$value["nombreestado"].'</option>';
-                    }
-                  ?>
-			  </select>			  
+              <select class="form-control form-control-sm" name="NacimientoEstado" id="NacimientoEstado" data-toggle="tooltip" title="Estado de nacimiento">
+                <option selected>Estado de Nacimiento</option>
+                      <?php
+                        $item=null;
+                        $valor=null;
+                        $estado=ControladorTecnicos::ctrMostrarEstados($item, $valor);
+                        foreach($estado as $key=>$value){
+                            echo '<option value="'.$value["idestado"].'">'.$value["nombreestado"].'</option>';
+                        }
+                      ?>
+              </select>			  
             </div>
+
             <div class="form-group col-md-5">
 			  <select class="form-control form-control-sm" name="NuevoAlmacen" id="NuevoAlmacen" data-toggle="tooltip" title="Almacen Asignado">
 				<option selected>Almacen Asignado</option>}
@@ -307,7 +305,7 @@
       </div>    <!-- fin Modal-body  -->
 
       <!-- Modal footer -->
-      <div class="modal-footer colorbackModal py-2">
+      <div class="modal-footer colorbackModal py-1">
        
         <button type="button" class="btn btn-primary btn-sm float-left" data-dismiss="modal"><i class="fa fa-reply"></i> Salir</button>
         <button type="submit" class="btn btn-success btn-sm"><i class="fa fa-save"></i> Guardar</button>
@@ -331,7 +329,7 @@
     <div class="modal-content">
     <form role="form" method="POST">
       <!-- Modal Header -->
-      <div class="modal-header colorbackModal py-2">
+      <div class="modal-header colorbackModal py-0">
           <h4 class="modal-title">Mostrar Datos de Técnico</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
@@ -371,7 +369,7 @@
               <input type="text" class="form-control form-control-sm" id="VerCiudad" required placeholder="Ciudad" data-toggle="tooltip" title="Ciudad de Residencia">
             </div>
             <div class="form-group col-md-4">
-			  <select class="form-control form-control-sm" name="NuevoEstado" id="VerEstado" data-toggle="tooltip" title="Estado de Residencia">
+			  <select class="form-control form-control-sm" id="VerEstado" data-toggle="tooltip" title="Estado de Residencia">
 				<option selected>Seleccione Estado</option>
                   <?php
                     $item=null;
@@ -493,7 +491,7 @@
       </div>
 
       <!-- Modal footer -->
-      <div class="modal-footer colorbackModal py-2">
+      <div class="modal-footer colorbackModal py-1">
        
         <button type="button" class="btn btn-primary btn-sm float-left" data-dismiss="modal"><i class="fa fa-reply"></i> Salir</button>
       
@@ -517,7 +515,7 @@
     <div class="modal-content">
     <form role="form" method="POST">
       <!-- Modal Header -->
-      <div class="modal-header colorbackModal py-2">
+      <div class="modal-header colorbackModal py-1">
           <h4 class="modal-title">Editar Técnico</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
@@ -679,7 +677,7 @@
       </div>
 
       <!-- Modal footer -->
-      <div class="modal-footer colorbackModal py-2">
+      <div class="modal-footer colorbackModal py-1">
        
         <button type="button" class="btn btn-primary btn-sm float-left" data-dismiss="modal"><i class="fa fa-reply"></i> Salir</button>
         <button type="submit" class="btn btn-success btn-sm"><i class="fa fa-save"></i> Guardar Cambios</button>
@@ -695,45 +693,5 @@
 </div>    <!-- fin del modal -->
 
 <!--================================ 
-$_POST["NuevoNombre"],
-$_POST["NuevoRfc"],
-$_POST["NuevoCurp"],
-$_POST["NuevaDireccion"],
-$_POST["NuevoCp"],
-$_POST["NuevaCiudad"],
-$_POST["NuevoEstado"],
-$_POST["NuevoTelefono"],
-$_POST["NuevoEmail"],
-$_POST["NuevaLicencia"],
-$_POST["NuevoSeguro"],
-$_POST["NuevoExpediente"],
-$_POST["NuevoUsuario"],
-$_POST["NuevaContrasena"],
-$_POST["NuevoBanco"],
-$_POST["NuevaCuenta"],
-$_POST["NuevaClabe"],
-$_POST["NacimientoEstado"],
-$_POST["NuevoAlmacen"],
-$_POST["NuevoEstatus"];
-
-NuevoNombre,
-NuevoRfc,
-NuevoCurp,
-NuevaDireccion,
-NuevoCp,
-NuevaCiudad,
-NuevoEstado,
-NuevoTelefono,
-NuevoEmail,
-NuevaLicencia,
-NuevoSeguro,
-NuevoExpediente,
-NuevoUsuario,
-NuevaContrasena,
-NuevoBanco,
-NuevaCuenta,
-NuevaClabe,
-NacimientoEstado,
-NuevoAlmacen,
-NuevoEstatus;
 -->
+<script defer src="vistas/js/tecnicos.js?v=01122021"></script>

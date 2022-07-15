@@ -51,7 +51,31 @@ static public function ctrGetViaticoCheck($item2, $idviatico){
 	GUARDAR COMPROBACION DE VIATICOS
 =============================================*/
 static public function ctrGuardarCheckup($tabla, $datos){
-    $respuesta = ModeloViaticos::mdlGuardarCheckup($tabla, $datos);
+	$directorio="../archivos/comprobantes/";
+	if (!file_exists($directorio)) {
+		mkdir($directorio, 0755, true);
+	}
+	
+	$ruta=$directorio.$datos["ruta_factura"]["name"];
+
+	if (file_exists($ruta)) {
+		return $respuesta=500;
+	}
+
+	//SUBIR ARCHIVO A LA CARPETA ARCHIVOS/COMPROBANTES
+	if (move_uploaded_file($_FILES['facturaPdf']['tmp_name'], $ruta)) {
+		 $respuesta="El archivo " . basename($_FILES['facturaPdf']['name']) . " se ha subido con éxito";
+	} else {
+		$respuesta="Hubo un error subiendo el archivo, por favor inténtalo de nuevo!";
+	}
+
+    if(ModeloViaticos::mdlGuardarCheckup($tabla, $datos, $ruta)){
+		$respuesta = "Registro y archivo guardado correctamente!";
+	}else{
+		$respuesta = "Registro y archivo NO fue guardado. REVISE!";
+	}
+
+	return $respuesta;
 }
 
 /*=============================================

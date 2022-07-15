@@ -25,13 +25,15 @@ switch ($_GET["op"]){
 
 		$tabla="usuarios";
         $usuario=$_SESSION['id'];
+        $todes=$_SESSION['perfil']=="Administrador"?"":$_SESSION['id'];
 		$module="pentradas";
 		$campo="administracion";
 		$acceso=accesomodulo($tabla, $usuario, $module, $campo);
 
+        //renombramos la variable $tabla
         $tabla="tbl_entradas";
 		
-        $listar = ControladorEntradasAlmacen::ctrListarEntradas($tabla, $fechadev1, $fechadev2);	
+        $listar = ControladorEntradasAlmacen::ctrListarEntradas($tabla, $fechadev1, $fechadev2, $usuario, $todes);	
           
         if(count($listar) == 0){
   			echo '{"data": []}';           //arreglar, checar como va
@@ -47,7 +49,11 @@ switch ($_GET["op"]){
             $boton1 =getAccess($acceso, ACCESS_PRINTER)?"<td><button class='btn btn-success btn-sm px-1 py-1 btnPrintEntradaAlmacen' idPrintEntrada='".$value['id']."' title='Generar PDF '><i class='fa fa-file-pdf-o'></i></button></td> ":"";
             $boton2 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-primary btn-sm px-1 py-1 btnEditEntradaAlmacen' idEditarEntrada='".$value['id']."' title='Editar Entrada' data-toggle='modal' data-target='#modalEditarEntradasAlmacen'><i class='fa fa-edit'></i></button></td> ":"";
             $boton3 =getAccess($acceso, ACCESS_DELETE)?"<td><button class='btn btn-danger btn-sm px-1 py-1 btnDelEntradasAlmacen' idDeleteEntradaAlm='".$value['id']."' title='Eliminar Entrada '><i class='fa fa-trash'></i></button></td> ":"";
-            $boton4 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-info btn-sm px-1 py-1 btnUpEntradasAlmacen' idUploadEntradaAlm='".$value['id']."' title='Subir Entrada ' data-idupentrada='".$value['id']."' ><i class='fa fa-cloud-upload'></i></button></td> ":"";
+            if($value["filex"]>0){
+                $boton4 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-dark btn-sm px-1 py-1 btnUpEntradasAlmacen' idUploadEntradaAlm='".$value['id']."' title='Archivos subidos' data-idupentrada='".$value['id']."' ><i class='fa fa-cloud-upload'></i></button></td> ":"";
+            }else{
+                $boton4 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-default btn-sm px-1 py-1 btnUpEntradasAlmacen' idUploadEntradaAlm='".$value['id']."' title='Subir archivos' data-idupentrada='".$value['id']."' ><i class='fa fa-cloud'></i></button></td> ":"";
+            };
             $botones=$boton1.$boton2.$boton3.$boton4;
 
             $data[]=array(
@@ -302,23 +308,120 @@ switch ($_GET["op"]){
     case 'subirArchivosEntrada':
 
         if(isset($_POST["nombre_archivo"])){
-            $campo1=$_POST["nombre_archivo"];
-            $campo2=$_POST["numero_entrada"];
-
-            //$respuesta = array("identrada" =>$_POST["nombre_archivo"]);
-            $respuesta = array("identrada" =>$campo2,"nombre"=>$campo1);
-
-            //$respuesta = ControladorEntradasAlmacen::ctrMostrarEntradasAlmacen($campo, $_GET["idEditarEntrada"]);
+            $descripcion_archivo=$_POST["descripcion_archivo"];
+            $nombre_archivo=$_POST["nombre_archivo"];
+            $numero_entrada=$_POST["numero_entrada"];
+            $ruta_archivo=$_POST["ruta_archivo"];
+            $ultusuario=$_SESSION['id'];
+            
+            $respuesta = ControladorEntradasAlmacen::ctrSubirArchivosEntradas($descripcion_archivo, $nombre_archivo, $numero_entrada, $ruta_archivo, $ultusuario);
             
             echo json_encode($respuesta);    
 
         }else{
             
-            $respuesta = array("error" =>$campo2);;
+            $respuesta = array("error" =>$nombre_archivo);;
             echo json_encode($respuesta);
         }
         
      break;
 
+     case 'listarArchivos':
+
+		if(isset($_POST["idEntrada"])){
+			$id_entrada=$_POST["idEntrada"];	
+		}else{
+            break;
+        }
+
+		
+        $tabla="usuarios";
+        $usuario=$_SESSION['id'];
+        $todes=$_SESSION['perfil']=="Administrador"?"":$_SESSION['id'];
+		$module="pentradas";
+		$campo="administracion";
+		$acceso=accesomodulo($tabla, $usuario, $module, $campo);
+
+        $tabla="tbl_doctos";
+	    $listar = ControladorEntradasAlmacen::ctrListarArchivos($tabla, $id_entrada, $usuario, $todes);	
+          
+        if(count($listar) == 0){
+  			echo '{"data": []}';           //arreglar, checar como va
+		  	return;
+  		}    
+        $tipo="";
+        foreach($listar as $key => $value){
+            //$fechaentrada = date('d-m-Y', strtotime($value["fechaentrada"]));
+            $file=$value['nombre_archivo'];
+            $tipo = pathinfo($file, PATHINFO_EXTENSION);
+            $enlace="<a href='vistas/modulos/download.php?filename=$file' title='Pulse para descargar archivo'>$file</a>";
+            $tamano=filesize('../vistas/entradascarso/'.$file);
+            $peso=formatBytes($tamano, 2);
+
+            $trf='</tr';
+
+            $boton1 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-primary btn-sm px-1 py-1 btnEditArchivo' data-editar='".$value['id']."' title='Editar Descripción' ><i class='fa fa-edit'></i></button></td> ":"";
+            $boton2 =getAccess($acceso, ACCESS_DELETE)?"<td><button class='btn btn-danger btn-sm px-1 py-1 btnEliminaArchivo' data-eliminar='".$value['id']."' title='Eliminar Archivo '><i class='fa fa-trash'></i></button></td> ":"";
+            $boton3 =getAccess($acceso, ACCESS_VIEW)?"<td><button class='btn btn-info btn-sm px-1 py-1 btnVerArchivo' data-visualizar='".$value['id']."' title='Abrir archivo'><i class='fa fa-folder-open'></i></button></td> ":"";
+            $botones=$boton1.$boton2.$boton3;
+            $tri = '<tr><td>'.($botones).'</td>';
+            $data[]=array(
+                $botones,
+                $value["id"],
+                $value["descripcion_archivo"],
+                $enlace,
+                $tipo,
+                $peso.$trf
+            );
+        }
+  
+            $results = array(
+                  "sEcho"=>1, //Información para el datatables
+                  "iTotalRecords"=>count($data), //enviamos el total registros al datatable
+                  "iTotalDisplayRecords"=>count($data), //enviamos el total registros a visualizar
+                  "aaData"=>$data);
+          echo json_encode($results);        
+
+     break;     
+
+     case 'deletefile':
+
+        if(isset($_GET["idaborrar"])){
+            $respuesta="error";
+            $tabla="tbl_doctos";
+            $campo="id";
+
+            //TRAER LOS DATOS DE LA ENTRADA QUE SE VA A ELIMINAR
+            $respuesta = ControladorEntradasAlmacen::ctrDeleteFile($tabla, $_GET["idaborrar"], $campo);
+
+            //$respuesta = array("respuesta:" =>$respuesta);
+            echo json_encode($respuesta);    
+        }else{
+
+        }
+    break;     
+
+    case 'visualizarArchivo':
+
+        if(isset($_GET["idvisualizar"])){
+            $campo="id";
+
+            //$respuesta = array("identrada" =>$_GET["idEditarEntrada"]);
+
+            $respuesta = ControladorEntradasAlmacen::ctrGetDataFile($campo, $_GET["idvisualizar"]);
+            
+            echo json_encode($respuesta);    
+
+        }else{
+            
+            $array = array("error" =>$_GET['idvisualizar']);
+
+            echo json_encode($array);
+        }
+        
+     break;
+
+
 
 } // fin del switch
+

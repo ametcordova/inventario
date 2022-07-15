@@ -19,22 +19,6 @@ if(localStorage.getItem("capturarRango") != null){
 
 }
 
-/*
-  var start = moment();
-  var end = moment();
-
-  function cb(start, end) {
-      $('#daterange-btn1 span').html(start.format('DD-MM-YYYY') + ' - ' + end.format('DD-MM-YYYY'));
-  }
-
-  $('#daterange-btn1').daterangepicker({
-    startDate: start,
-    endDate: end
-  }, cb);
-
-  cb(start, end);  
-*/
-
   listarDevTec();
 
   var cantSolicitada=0;
@@ -48,11 +32,10 @@ if(localStorage.getItem("capturarRango") != null){
 
 
 /*  =====  QUITAR AL ESTAR EN PRODUCCION  ======*/
-
-$('#selecProductoDev').val('1').trigger('change.select2');
-$("#nuevaDevolucionAlmacen").prop("selectedIndex", 1); 
-$("#TecnicoDev").prop("selectedIndex", 1); 
-$("#cantSalidaDev").val(1); 
+//$('#selecProductoDev').val('1').trigger('change.select2');
+//$("#nuevaDevolucionAlmacen").prop("selectedIndex", 1); 
+//$("#TecnicoDev").prop("selectedIndex", 1); 
+//$("#cantSalidaDev").val(1); 
 /* =============================================*/
 
 /*  =====  SE DESHABOLITA LA OPCION DESPUES DE SELECCIONAR EL ALMACEN  ======*/
@@ -222,26 +205,12 @@ event.stopPropagation();
 		  return false;
 	  }
     }); 
-
  });
- 
- 
-/*=================== funciones de respuesta =================================*/
+ /*=================== funciones de respuesta =================================*/
     function ajaxRespPositiva(response) {
         
       console.log('response.ok: ', response.ok);
         
-/*        swal({
-          title: "Realizado!!",
-          text: "Se ha guardado correctamente ",
-          icon: "success",
-          button: "Cerrar"
-          })  //fin swal
-          .then(function(result){
-            if (result) {
-            }
-        })  //fin .then
-*/
 				$("#formularioDevolucion")[0].reset();
         $("#tbodyid").empty();
         $("#renglon").empty();
@@ -309,30 +278,16 @@ function evaluarDevolucion(){
     }
 }
 
-number_format = function (number, decimals, dec_point, thousands_sep) {
-        number = number.toFixed(decimals);
 
-        var nstr = number.toString();
-        nstr += '';
-        x = nstr.split('.');
-        x1 = x[0];
-        x2 = x.length > 1 ? dec_point + x[1] : '';
-        var rgx = /(\d+)(\d{3})/;
-
-        while (rgx.test(x1))
-            x1 = x1.replace(rgx, '$1' + thousands_sep + '$2');
-
-        return x1 + x2;
-    }
-	
-$('#datepicker3').datepicker({
+/*===================================================================================*/
+$('#datepicker13').datepicker({
     autoclose:true,
     todayHighlight:true,
     calendarWeeks:true,
     clearBtn:true,
     language:"es"
 });   
-    
+/*====================================================================================*/
 
 $(document).ready(function() {	
 $(".selProdDev").select2({
@@ -464,7 +419,7 @@ $(".daterangepicker.opensright .ranges li").on("click", function(){
 // ========= LISTAR EN EL DATATABLE REGISTROS DE LA TABLA cajas================
 function listarDevTec(){
   let rangodeFecha = $("#daterange-btn1 span").html();
-  console.log("Rango de Fecha:",rangodeFecha);
+  //console.log("Rango de Fecha:",rangodeFecha);
   if(rangodeFecha==undefined || rangodeFecha==null){
       var FechDev1=moment().format('YYYY-MM-DD');
       var FechDev2=moment().format('YYYY-MM-DD');
@@ -478,7 +433,7 @@ function listarDevTec(){
 	   var FechDev2=f2[2].concat("-").concat(f2[1]).concat("-").concat(f2[0]);
   }	   
  
-  console.log(FechDev1, FechDev2);
+  //console.log(FechDev1, FechDev2);
 
   tablaDevolucionTec=$('#DatatableDevTec').dataTable(
 	{

@@ -118,7 +118,6 @@ static Public function MdlSalidaAlm($tabla, $campo, $valor){
 
 	 }        
         
-        $stmt->close();
         
         $stmt=null;
     }

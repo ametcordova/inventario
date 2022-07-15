@@ -58,6 +58,7 @@ switch ($_GET["op"]){
 				$datos = array("id_tecnico" => $_POST["TecnicoDev"],
 					   "fecha_devolucion"	=> $fechadev,
 					   "id_almacen"			=> $id_almacen,
+					   "motivodevolucion" 	=> $_POST["nvomotivodevolucion"],
 					   "datos_devolucion" 	=> $datos_memo,
 					   "id_usuario" 		=> $_POST["idDeUsuario"]
 					   );			

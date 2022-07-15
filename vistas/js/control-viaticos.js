@@ -42,7 +42,7 @@ function agregarViatico(e){
 	e.preventDefault(); //No se activará la acción predeterminada del evento
 
 	var formData = new FormData($("#formularioAgregarViatico")[0]);
-     for (var pair of formData.entries()){console.log(pair[0]+ ', ' + pair[1]);}
+     //for (var pair of formData.entries()){console.log(pair[0]+ ', ' + pair[1]);}
 
      fetch('ajax/control-viaticos.ajax.php?op=guardar', {
       method: 'POST',
@@ -59,7 +59,7 @@ function guadarAgregaViatico(e){
 	e.preventDefault(); //No se activará la acción predeterminada del evento
 	//$("[name='editaStatusFactura']").prop('disabled',false);
 	var formData = new FormData($("#formularioAgregaViatico")[0]);
-    for (var pair of formData.entries()){console.log(pair[0]+ ', ' + pair[1]);}
+    //for (var pair of formData.entries()){console.log(pair[0]+ ', ' + pair[1]);}
     
     fetch('ajax/control-viaticos.ajax.php?op=guardarAgregaViatico', {
       method: 'POST',
@@ -71,7 +71,7 @@ function guadarAgregaViatico(e){
 
 /*=============================================*/
 function ajaxViaticos(response) {
-  //console.log('response.ok: ', response.ok);
+  console.log('response.ok: ', response);
   $('#modalAgregarViaticos, #modalAgregaViatico, #modalCheckup').modal('hide')
   
   $('#TablaViaticos').DataTable().ajax.reload(null, false);
@@ -110,20 +110,79 @@ function showViaticos(err) {
     window.location = "inicio";
 }
 
+function showErrorUpSave(err) { 
+  console.log('muestra error', err);
+  swal({
+      title: "Error!!",
+      text: err,
+      icon: "error",
+      button: "Cerrar"
+      })  //fin swal
+}
+
+function showMsgOk(response) {
+  console.log('response.ok: ', response);
+  $('#modalCheckup').modal('hide')
+  $('#TablaViaticos').DataTable().ajax.reload(null, false);
+    swal({
+      title: "Realizado!!",
+      text: response,
+	    icon: "success",
+      button: "Cerrar",
+	    timer: 3000
+      })  //fin swal
+}
+
 /*=============================================
 Guardar comprobacion de gasto
 =============================================*/
 function guadarCheckup(e){
 	e.preventDefault(); //No se activará la acción predeterminada del evento
-  $("#submitGasto").prop('disabled',true);
-	var formData = new FormData($("#formularioCheckup")[0]);
-    // for (var pair of formData.entries()){console.log(pair[0]+ ', ' + pair[1]);}
-     fetch('ajax/control-viaticos.ajax.php?op=checkup', {
-      method: 'POST',
-      body: formData
-     })
-     .then(ajaxViaticos)
-     .catch(showViaticos);     
+  //$("#submitGasto").prop('disabled',true);
+  $('#submitGasto').hide(); //ocultar botones 
+  $(".spin").show();       //mostrar spinner
+  var formData = new FormData($("#formularioCheckup")[0]);
+  axios({ 
+    method  : 'post', 
+    url : 'ajax/control-viaticos.ajax.php?op=checkup', 
+    data : formData,
+  }) 
+
+  .then((res)=>{ 
+    if(res.data.status==400) {
+      console.log(res.data.mensaje)
+        $(".spin").hide();       //mostrar spinner
+        $('#submitGasto').show(); //ocultar botones 
+        showErrorUpSave(res.data.mensaje)
+        return
+    }else if(res.data.status==200){
+      showMsgOk(res.data.mensaje)
+      console.log(res)
+    }else{
+      showErrorUpSave(res.data.mensaje)
+    }
+
+  })
+
+  .catch(function (error) {
+    if (error.response) {
+      // La respuesta fue hecha y el servidor respondió con un código de estado
+      // que esta fuera del rango de 2xx
+      console.log(error.response.data);
+      console.log(error.response.status);
+      console.log(error.response.headers);
+    } else if (error.request) {
+      // La petición fue hecha pero no se recibió respuesta
+      // `error.request` es una instancia de XMLHttpRequest en el navegador y una instancia de
+      // http.ClientRequest en node.js
+      console.log(error.request);
+    } else {
+      // Algo paso al preparar la petición que lanzo un Error
+      console.log('Error', error.message);
+    }
+    console.log(error.config);
+  });
+
 }
 
 /*===========================================================
@@ -133,6 +192,9 @@ $("#TablaViaticos").on("click", ".btnCheckup", function(){
     //alert("relatedTarget is: " + event.relatedTarget);
     var idviatico = $(this).attr("idviatico");
     //var numFactura = $(this).attr("numfactura");
+    $(".spin").hide();
+    $("#submitGasto").show();
+        
     $('#ModalCenterTitleCheck').html("");
     $('#ModalCenterTitleCheck').html('<i class="fa fa-money"></i>'+' Comprobar gasto de Viático No.: '+idviatico);
     $( "input[name='registroid']").val(idviatico);
@@ -317,7 +379,8 @@ function template2(data){
     <div class="row" style="font-size:13px;">
       <div class="col-md-2">${valor.fecha_gasto}</div>
       <div class="col-md-3">${valor.numerodocto}</div>
-      <div class="col-md-6">${valor.concepto_gasto}</div>
+      <div class="col-md-1"><a href=${'vista/'}${valor.ruta_factura} target="_blank" title="Ver comprobante"><i class="fa fa-eye"></i></a></div>
+      <div class="col-md-5">${valor.concepto_gasto}</div>
       <div class="col-md-1 text-right pl-1">${valor.importe_gasto}</div>
     </div>
     </div>
@@ -461,7 +524,7 @@ $("#modalAgregarViaticos").on('show.bs.modal', ()=> {
       if(numeroviatico>0){
         numeroviatico+=1;
 				 $("#nvoIdViatico").val(numeroviatico);
- 				 $("#nvoComisionadoV").focus();
+ 				 $("#nvoComisionadoV").first().focus();
       }else{
         $("#nvoIdViatico").val(1);
         $("#nvoComisionadoV").focus();

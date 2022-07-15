@@ -69,12 +69,11 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
               </div>
 
 			<div class="form-group col-md-3" >
-				<!-- radio -->
-				<input type="radio" name="radio1" value="todos" >
-					<label>Todos</label>
+				<!-- radio 
+				<input type="checkbox" name="radio1" value="todos" >
+					<label>Todos</label>-->
                 <?php if(getAccess($acceso, ACCESS_VIEW)){?>
-                    <!-- <button class="btn btn-success btn-sm ml-1" onclick="listarInventario()" ><i class="fa fa-eye"></i> -->
-                    <button class="btn btn-success btn-sm ml-1" onclick="alert('En Construcción!!');" ><i class="fa fa-eye"></i>
+                    <button class="btn btn-success btn-sm ml-1" onclick="listar_inventario_por_tecnico()"><i class="fa fa-eye"></i>
                         Mostrar
                     </button>
                 <?php } ?>  
@@ -92,29 +91,28 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
 		
         <div class="card-body">
 
-	<table id="tablalistado" class="table display compact table-bordered table-striped dt-responsive" width="100%">
-               <thead>
-			   
+	<table class="table table-bordered compact table-hover table-striped dt-responsive" cellspacing="0" id="tablaportecnico" width="100%">
+            <thead class="thead-dark" style="font-size:0.80em">
                  <th style="width:10px;">#</th>
                  <th style="width:10px;">SKU</th>
                  <th style="width:95px;">Código</th>
                  <th style="width:320px;">Descripción</th>
                  <th style="width:110px;">U.de Med</th>
                  <th style="width:50px;">Exist</th>
-
             </thead>
+
             <tbody>                            
             </tbody>
-					  <tfoot>
-                        <tr>
+                  <tfoot class="thead-dark">
+                      <tr style="font-size:0.80em">
                             <th></th>
                             <th></th>
                             <th></th>
                             <th></th>
                             <th></th>
                             <th></th>
-                        </tr>
-                      </tfoot>
+                      </tr>
+                  </tfoot>
             
         </table>    
 		

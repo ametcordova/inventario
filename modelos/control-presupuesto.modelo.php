@@ -28,7 +28,6 @@ static public function mdlIngreso($tabla, $datos){
 		
 		}
 
-		$stmt->close();
 		$stmt = null;
 
  } catch (Exception $e) {

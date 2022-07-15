@@ -60,7 +60,7 @@
 
                 include "reportes.php";  
 
-                include "configura.php";  
+                include "sistema.php";  
 
             ?>
 
@@ -68,7 +68,7 @@
         </div>
         <!-- /.card-body -->
         <div class="card-footer">
-          Por cada módulo pulse Guardar si hace cambios en los permisos.
+          Por cada módulo pulse <strong>Guardar</strong> sólo si hace cambios en los permisos.
         </div>
         <!-- /.card-footer-->
       </div>
@@ -77,11 +77,5 @@
     </section>
     <!-- /.content -->
   </div>
-  
-  <!-- /.content-wrapper 
-SELECT prod.id, prod.id_categoria, cat. categoria, prod.id_medida, med.medida, prod.codigointerno, prod.descripcion, prod.minimo,alm.cant, (alm.cant-prod.minimo) AS surtir, alm.precio_compra FROM productos prod
-INNER JOIN categorias cat ON prod.id_categoria=cat.id
-INNER JOIN medidas med ON prod.id_medida=med.id
-LEFT JOIN alm_villah alm ON prod.id=alm.id_producto  
-ORDER BY `surtir`
-  -->
+  <script defer src="vistas/js/permisos.js?v=02092020"></script>
+  <script defer src="vistas/js/funciones.js?v=02092020"></script>
