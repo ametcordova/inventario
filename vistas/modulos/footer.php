@@ -9,7 +9,7 @@
           <strong>Copyright &copy; 2019 - <?= date("Y");?> <a href="index.php">AdminInV</a>.</strong> Todos Los Derechos Reservados.
         </p>
 
-        <p class="col-md-5">
+        <p class="col-md-5 text-white-50">
           <?php
             include_once "funciones/funciones.php";
             echo verURL()
@@ -104,7 +104,8 @@
 <!-- Alertas ohSnap -->
 <script src="extensiones/plugins/ohSnap/ohsnap.js"></script>
 
-<!--<script src="../../codigos/rxjs/rxjs.umd.min.js"></script> -->
-<script src="https://unpkg.com/rxjs@^7/dist/bundles/rxjs.umd.min.js></script>
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/4.1.0/rx.all.js"></script> -->
+
+
 </body>
 </html>

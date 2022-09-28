@@ -87,7 +87,7 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
 
       <div class="card-body">
 
-        <div class="alert alert-success alert-dismissible fade show p-2" role="alert">
+        <div class="alert alert-success alert-dismissible p-2" style="display: none" id="msgsaveok" role="alert">
           <p class="h5"><strong>Hecho!!</strong> Registro guardado correctamente!!.</p>
           <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -110,8 +110,9 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                   <th>Teléfono</th>
                   <th>Almacen</th>
                   <th>Fecha</th>
-                  <th>status</th>
-                  <th>Accion</th>
+                  <th>Status</th>
+                  <th>Fact</th>
+                  <th class="text-center" style="width:11em;">Accion</th>
                 </tr>
               </thead>
               <tbody style="font-size:0.85em !important;">
@@ -126,7 +127,8 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                   <th>Teléfono</th>
                   <th>Almacen</th>
                   <th>Fecha</th>
-                  <th>status</th>
+                  <th>Status</th>
+                  <th>Fact</th>
                   <th>Accion</th>
                 </tr>
               </tfoot>
@@ -150,7 +152,7 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
 <!-- /.content-wrapper -->
 
 <!-- ========================================================================================-->
-<!-- ========================== MODAL AGREGAR DEVOLUCION ====================================-->
+<!-- ========================== MODAL AGREGAR OS ====================================-->
 <!-- ========================================================================================-->
 <div class="modal fade" id="modalAgregarOS" data-backdrop="static" data-keyboard="false">
 
@@ -164,7 +166,7 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
 
-      <form role="form" method="POST" id="formularioAgregaOS">
+      <form role="form" method="POST" id="formularioAgregaOS" >
 
         <!-- Modal body -->
         <div class="modal-body pb-1">
@@ -175,8 +177,22 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
 
               <div class="form-row pt-0 pb-0">
 
-                <!-- data-date-end-date=no puede seleccionar una fecha posterior a la actual -->
+              <div class="form-group col-md-4">
+                  <label for=""><i class="fa fa-male"></i> Técnico <span class="text-danger">*</span> </label>
+                  <select id="nvotecnico" class="form-control form-control-sm" name="nvotecnico" tabindex="2" required>
+                    <option value="">Selecione Técnico</option>
+                    <?php
+                    $item = 'status';
+                    $valor = 1;
+                    $tecnicos = ControladorTecnicos::ctrMostrarTecnicos($item, $valor);
+                    foreach ($tecnicos as $key => $value) {
+                      echo '<option value="' . $value["id"] . '">' . $value["nombre"] . '</option>';
+                    }
+                    ?>
+                  </select>
+                </div>
 
+                  <!-- data-date-end-date=no puede seleccionar una fecha posterior a la actual -->
                 <div class="form-group col-md-3">
                   <label for=""><i class="fa fa-hospital-o"></i> Almacen <span class="text-danger">*</span> </label>
                   <select id="nuevoAlmacenOS" class="form-control form-control-sm" name="nuevoAlmacenOS" tabindex="1" required>
@@ -194,24 +210,9 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                   <input type="hidden" name="iduser" id="iduser" value="<?php echo $_SESSION['user']; ?>">
                 </div>
 
-                <div class="form-group col-md-4">
-                  <label for=""><i class="fa fa-male"></i> Técnico <span class="text-danger">*</span> </label>
-                  <select id="nvotecnico" class="form-control form-control-sm" name="nvotecnico" tabindex="2" required>
-                    <option value="">Selecione Técnico</option>
-                    <?php
-                    $item = 'status';
-                    $valor = 1;
-                    $tecnicos = ControladorTecnicos::ctrMostrarTecnicos($item, $valor);
-                    foreach ($tecnicos as $key => $value) {
-                      echo '<option value="' . $value["id"] . '">' . $value["nombre"] . '</option>';
-                    }
-                    ?>
-                  </select>
-                </div>
-
                 <div class="form-group col-md-2">
                   <label class="control-label"><i class="fa fa-phone-square"></i> Teléfono <span class="text-danger">*</span></label>
-                  <input type="number" class="form-control form-control-sm" name="numtelefono" id="numtelefono" value="" step="any" placeholder="" tabindex="3" title="Numero de Teléfono" required>
+                  <input type="number" class="form-control form-control-sm" name="numtelefono" id="numtelefono" value="" step="any" placeholder="" tabindex="3" min="0000000001" max="9999999999" title="Numero de Teléfono 10 dig." required>
                 </div>
 
                 <div class="form-group col-md-3">
@@ -240,7 +241,7 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
 
                 <div class="form-group col-md-5">
                   <label class="control-label"><i class="fa fa-check-square-o"></i> Nombre cliente: <span class="text-danger">*</span></label>
-                  <input type="text" class="form-control form-control-sm" name="nombrecontrato" id="nombrecontrato" value="" tabindex="8" title="Numero Tipo" pattern="^[A-Za-zÑñÁáÉéÍíÓóÚúÜü\s]+$" onblur="document.getElementById('nombrefirma').value=this.value" required>
+                  <input type="text" class="form-control form-control-sm" name="nombrecontrato" id="nombrecontrato" value="" tabindex="8" accesskey="8" title="Nombre cliente" placeholder="Alt-8" pattern="^[A-Za-zÑñÁáÉéÍíÓóÚúÜü\s]+$" onblur="document.getElementById('nombrefirma').value=this.value" required>
                 </div>
               </div> <!-- FIN DEL FORM-ROW -->
 
@@ -274,7 +275,7 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                   <input type="text" class="form-control form-control-sm" name="nombrefirma" id="nombrefirma" value="" placeholder="" tabindex="14" title="Numero Tipo" required>
                 </div>
               </div>
-
+              <!--
               <div class="form-row pt-0 mb-4 text-center">
                 <div class="col-md-1">
                   <label class="control-label mr-0">Firma:</label>
@@ -282,9 +283,9 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                 <div class="d-block col-xs-12 col-md-11 mb-lg-0" id="signatureparent">
                   
                 </div>
-                <button type="button" class="btn btn-secondary btn-sm btn-block repetirfirma" > Repetir firma</button>
+                <button type="button" class="btn btn-secondary btn-sm btn-block repetirfirma"> Repetir firma</button>
               </div>
-
+              -->
               <div class="form-row pt-0 mb-2">
                 <div class="col-md-1">
                   <label class="control-label mr-0">Obs:</label>
@@ -420,7 +421,7 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
 </div> <!-- fin del modal  <div class="form-row"></div>   -->
 
 <script defer src="vistas/js/funciones.js?v=01072022"></script>
-<script defer src="extensiones/plugins/jsignature/jSignature.js?v=24062022"></script>
+<script defer src="extensiones/plugins/jsignature/jSignature.js?v=01072022"></script>
 <script defer src="extensiones/plugins/jsignature/jSignature.CompressorSVG.js"></script>
-<script defer src="vistas/js/adminoservicio.js?v=24062022"></script>
+<script defer src="vistas/js/adminoservicio.js?v=0509202201"></script>
 

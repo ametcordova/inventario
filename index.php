@@ -15,7 +15,7 @@ require_once 'controladores/entradas.controlador.php';
 require_once 'controladores/tecnicos.controlador.php';
 require_once 'controladores/respaldo.controlador.php';
 require_once 'controladores/ajusteinventario.controlador.php';
-//require_once 'controladores/control-depositos.controlador.php';
+require_once 'controladores/facturaingreso.controlador.php';
 
 
 require_once 'modelos/salidas.modelo.php';
@@ -31,7 +31,7 @@ require_once 'modelos/salidasalmacen.modelo.php';
 require_once 'modelos/entradasalmacen.modelo.php';
 require_once 'modelos/tecnicos.modelo.php';
 require_once 'modelos/ajusteinventario.modelo.php';
-//require_once 'modelos/control-depositos.modelo.php';
+require_once 'modelos/facturaingreso.modelo.php';
 
 
 $plantilla=new ControladorPlantilla();

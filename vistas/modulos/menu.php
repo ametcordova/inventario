@@ -190,7 +190,7 @@ $jsonpermisos4=($jsonpermisos4==NULL)?$jsonpermisos4=["SINDATO"=>0]:$jsonpermiso
 			
         </li>
 
-
+        <!-- EMPIEZA MENU CATALOGO -->
 	      <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
               <i class="nav-icon fa fa-table"></i>
@@ -276,10 +276,54 @@ $jsonpermisos4=($jsonpermisos4==NULL)?$jsonpermisos4=["SINDATO"=>0]:$jsonpermiso
 
     			</ul>
 		  	</li>
+        <!-- TERMINA MENU CATALOGO -->
       
+        <!-- EMPIEZA MENU FACTURACION -->
+	      <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fa fa-file-text"></i>
+              <p>
+                Facturación
+                <i class="fa fa-angle-left right"></i>
+              </p>
+            </a>
+          
+            <ul class="nav nav-treeview">
+
+            <?php if(getAccess(array_key_exists("pproductos",$jsonpermisos2)?$jsonpermisos2["pproductos"]:0,ACCESS_ACC)){ ?>
+              <li class="nav-item">
+                <a href="facturaingreso" class="nav-link">
+                  <i class="fa fa-tag nav-icon"></i>
+                  <p>Factura</p>
+                </a>
+              </li>
+            <?php } ?>
+
+            <?php if(getAccess(array_key_exists("proveedores",$jsonpermisos2)?$jsonpermisos2["proveedores"]:0,ACCESS_ACC)){ ?>
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="fa fa-male nav-icon"></i>
+                  <p>Recibo de Pago</p>
+                </a>
+              </li>
+            <?php } ?>
+
+            <?php if(getAccess(array_key_exists("proveedores",$jsonpermisos2)?$jsonpermisos2["proveedores"]:0,ACCESS_ACC)){ ?>
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="fa fa-male nav-icon"></i>
+                  <p>Catalogos SAT</p>
+                </a>
+              </li>
+            <?php } ?>
+
+    			</ul>
+		  	</li>
+        <!-- TERMINA MENU FACTURACION -->
+
 			<li class="nav-item has-treeview">
             <a href="#" class="nav-link">
-              <i class="nav-icon fa fa-file"></i>
+              <i class="nav-icon fa fa-print"></i>
               <p>
                 Reportes
                 <i class="fa fa-angle-left right"></i>
@@ -374,6 +418,15 @@ $jsonpermisos4=($jsonpermisos4==NULL)?$jsonpermisos4=["SINDATO"=>0]:$jsonpermiso
               </li>
             <?php } ?>              
           </ul>
+        </li>
+
+        <li class="nav-item ">  <!-- menu-open si se quiere q este abierto esta opcion -->
+            <a href="salir" class="nav-link">
+              <i class="nav-icon fa fa-sign-out"></i>
+              <p>
+                Logout
+              </p>
+            </a>
         </li>
 
     </ul>

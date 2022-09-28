@@ -172,12 +172,12 @@ function getFileExtension(filename) {
 }
 
 /*======================================================================*/
-function mensajenotie(tipo, text, pos){
+function mensajenotie(tipo, text, pos, timer=null){
   notie.alert({ 
     type: `${tipo}`,
     text: `${text}`,
     stay: false, 
-    time: 4,
+    time: timer,
     position: `${pos}` // optional, default = 'top', enum: ['top', 'bottom']
   }) // Hides after 4 seconds
 }
@@ -198,19 +198,26 @@ function mensajenotie(tipo, text, pos){
  * Funcion que retorna la fecha actual
  * @returns fecha actual
  ******************************************************************/
- const getFecha = (arrayfecha) => {
-  if(arrayfecha.length == 0) {
+ function getFecha(arrayfecha) {
+  if(arrayfecha) {
+    if(arrayfecha.length == 0) {
+      return { 
+        fecha1: moment().format('YYYY-MM-DD'), 
+        fecha2: moment().format('YYYY-MM-DD')
+      }
+    }else{
+      return{
+        fecha1: moment(arrayfecha[0],'DD-MM-YYYY').format('YYYY-MM-DD'),
+        fecha2: moment(arrayfecha[1],'DD-MM-YYYY').format('YYYY-MM-DD')
+      }
+    }
+  }else{
     return { 
       fecha1: moment().format('YYYY-MM-DD'), 
       fecha2: moment().format('YYYY-MM-DD')
     }
-  }else{
-    return{
-      fecha1: moment(arrayfecha[0],'DD-MM-YYYY').format('YYYY-MM-DD'),
-      fecha2: moment(arrayfecha[1],'DD-MM-YYYY').format('YYYY-MM-DD')
-    }
   }
-}
+};
 /*===================================================*/
 
 /*===================================================
@@ -222,12 +229,26 @@ function iniciarangodefecha(){
   $('#daterange-btnOS span').html(start + ' - ' + end);
   //captRangoFecha=$('#daterange-btnOS span').html(start.format('DD-MM-YYYY') + ' - ' + end.format('DD-MM-YYYY'));
   captRangoFecha=start+' - '+end;
+  
   localStorage.setItem("captRangoFecha", captRangoFecha);
+  
+}
+
+/*===================================================
+ASIGNAR FECHA
+/*===================================================*/
+function iniciarangodefechaQuejas(){
+  start=moment().subtract(1, 'months').format('DD-MM-YYYY');   // 1 mes atras. 
+  end=moment().format('DD-MM-YYYY')
+  $('#daterange-btnQuejas span').html(start + ' - ' + end);
+  //captRangoFecha=$('#daterange-btnOS span').html(start.format('DD-MM-YYYY') + ' - ' + end.format('DD-MM-YYYY'));
+  rangodeFechaQuejas=start+' - '+end;
+  localStorage.setItem("captRangoFechaQuejas", rangodeFechaQuejas);
 }
 
 /*==================================================================*/
-$('#daterange-btnOS').daterangepicker({
-  ranges   : {
+$('#daterange-btnOS, #daterange-btnQuejas').daterangepicker({
+    ranges   : {
     'Hoy'       : [moment(), moment()],
     'Ayer'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
     'Últimos 7 Días' : [moment().subtract(6, 'days'), moment()],
@@ -269,12 +290,19 @@ $('#daterange-btnOS').daterangepicker({
   start: moment(),
   end  : moment()
 },
- function (start, end) {
-  $('#daterange-btnOS span').html(start.format('DD-MM-YYYY') + ' - ' + end.format('DD-MM-YYYY'));
-  captRangoFecha=start.format('DD-MM-YYYY') + ' - ' + end.format('DD-MM-YYYY');
-  localStorage.setItem("captRangoFecha", captRangoFecha);
- }
+  function(start, end){
+    putRangoFecha(start, end)
+  },
+
 )
+
+function putRangoFecha(start, end){
+  $('#daterange-btnOS span, #daterange-btnQuejas span').html(start.format('DD-MM-YYYY') + ' - ' + end.format('DD-MM-YYYY'));
+  captRangoFecha=start.format('DD-MM-YYYY') + ' - ' + end.format('DD-MM-YYYY');
+  captRangoFechaQuejas=start.format('DD-MM-YYYY') + ' - ' + end.format('DD-MM-YYYY');
+  localStorage.setItem("captRangoFecha", captRangoFecha);
+  localStorage.setItem("captRangoFechaQuejas", captRangoFechaQuejas);
+}
 
 /*====================================================================================*/
 /*  This functionality is not built into JavaScript, so custom code needs to be used. 

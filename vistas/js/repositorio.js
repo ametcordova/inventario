@@ -282,8 +282,7 @@ function subirArchivos(sDescripcion_Archivo, sName_File, lIs_Public) {
               mensajenotie('success', 'Archivo cargado correctamete!', 'bottom');
               $(".previewImg").attr("src", "");
               pvw.innerHTML='';
-          
-              
+                        
             }else{
               $("#descripcion_archivo, #uploadFile").val('');
               mensajenotie('error', 'Archivo no fue cargado!');
@@ -421,11 +420,11 @@ $("#TablaRepositorio tbody").on("click", ".btnViewFile", function(){
     `;
   }else if(wext=="pdf" || wext=="PDF"){
     html.innerHTML+=`
-      <object type="application/pdf" data='${dataviewruta+dataviewfile} ' width="670" height="650"></object>
+      <object type="application/pdf" data='${dataviewruta+dataviewfile} '" width="100%" height="550" style="height: 62vh;"></object>
     `;    
   }else{
     html.innerHTML+=`
-      <img src='vistas/img/No_image_available.png' id="imagen-modal" class="img-fluid imagen" alt=""  width="200" height="230"></img>
+      <img src='vistas/img/No_image_available.png' id="imagen-modal" class="img-fluid imagen" alt=""  width="100%" height="550" style="height: 62vh;"></img>
     `;
   }
 
@@ -434,3 +433,29 @@ $("#TablaRepositorio tbody").on("click", ".btnViewFile", function(){
 /*======================================================================*/
 
 /*======================================================================*/
+// MODAL PARA PERMISOS
+/*======================================================================*/
+$("#TablaRepositorio tbody").on("click", ".btnEditFile", function(){
+let file=$(this).data('idfile');
+console.log(file);
+
+})
+/*======================================================================*/
+
+function formatState (state) {
+  if(!state.element) return;
+  var os = $(state.element).attr('onlyslave');
+  return $('<span onlyslave="' + os + '">' + state.text + '</span>');
+}
+
+
+ $(document).ready(function() {
+      $("#selUsuario").select2({
+        placeholder: 'Filtro por Usuarios',
+        escapeMarkup: function(m) { 
+           return m; 
+        },
+        allowClear: true,
+        templateResult: formatState
+    });
+});

@@ -1,4 +1,6 @@
 var udeMedida;
+var codigosku;
+var codigointerno;
 var renglonesEntradas=cantEntrante=0;
 var arrayProductos=new Array();
 var ventana;
@@ -195,7 +197,7 @@ async function UltimoNumEntradaAlmacen(){
   let resulta=0;
   let response = await fetch("ajax/entradasalmacen.ajax.php?op=obtenerUltimoNumero");
   let result = await response.json();
-  console.log(result.id);
+  //console.log(result.id);
   if(result.id===null){
     $("#numEntradaAlmacen").val(1);
   }else{
@@ -229,7 +231,7 @@ $('#selProdEntAlm').select2({
       return {
           results: $.map(data, function (item) {
               return {
-                  text: item.codigointerno+' - '+item.descripcion,
+                  text: item.sku+' - '+item.descripcion,
                   id: item.id,
                   descripcion:item.descripcion
               }
@@ -240,6 +242,7 @@ $('#selProdEntAlm').select2({
   },
   minimumInputLength: 1
 });
+
 
 //CONSULTA EXISTENCIA DE PRODUCTO SELECCIONADO
 $("#selProdEntAlm").change(function(event){
@@ -267,9 +270,13 @@ $("#selProdEntAlm").change(function(event){
         //console.log(res.data)
         if(res.data==false){
           $("#cantExistenciaAlmacen").val(0);
+          $("#unidaddemedida").val('');
         }else{
           $("#cantExistenciaAlmacen").val(res.data.cant);
+          $("#unidaddemedida").val(res.data.medida);
           udeMedida=res.data.medida;
+          //codigosku=res.data.sku;
+          codigointerno=res.data.codigointerno;
         }
       }          
     }) 
@@ -287,6 +294,7 @@ $("#agregaEntradaProd").click(function(event){
     event.preventDefault();
     let cantEntrada=$("#cantEntradaAlmacen").val();
     let idProducto=$("#selProdEntAlm").val();
+    let unidaddemedida=$("#unidaddemedida").val();
     let producto=$("#selProdEntAlm option:selected" ).text();       //obtener el texto del valor seleccionado
     idProducto=parseInt(idProducto); 
     cantEntrada=parseFloat(cantEntrada);
@@ -297,22 +305,22 @@ $("#agregaEntradaProd").click(function(event){
       }  
     
     //SEPARA EL CODIGO DEL PROD. SELECCIONADO
-    let codigointerno= producto.substr(0, producto.indexOf('-'));
-    codigointerno.trim();
+    codigosku= producto.substr(0, producto.indexOf('-'));
+    codigosku=codigosku.trim();
+    codigointerno=codigointerno.trim();
       
     //SEPARA LA DESCRIPCION DEL PROD. SELECCIONADO        
     let descripcion= producto.substr(producto.lastIndexOf("-") + 1);
     descripcion.trim();
          
-    //let udemedida=udeMedida;
-      
-    //console.log("prod:",idProducto, "cant:",cantEntrada, "medida:",udeMedida, "codInt:",codigointerno, "descrip:",descripcion);
+    //console.log("prod:",idProducto, "cant:",cantEntrada, "medida:",udeMedida, "codInt:",codigointerno, "descrip:",descripcion, 'codigo SKU:',codigosku);
     
+    //CHECA QUE PRODUCTO NO SE HAYA CAPTURADO
     let encontrado=arrayProductos.includes(idProducto)
-      console.log("encontrado:", encontrado)
+      //console.log("encontrado:", encontrado)
       if(!encontrado){
         arrayProductos.push(idProducto);
-        addProductoEntrada(idProducto, cantEntrada, udeMedida, codigointerno, descripcion);
+        addProductoEntrada(idProducto, cantEntrada, udeMedida, codigointerno, descripcion, codigosku);
       }else{
         mensajedeerror();
       }
@@ -330,6 +338,7 @@ function addProductoEntrada(...argsProductos){
   <tr class="filas" id="fila${argsProductos[0]}">
     <td><button type="button" class="botonQuitar" onclick="eliminarProducto(${argsProductos[0]}, ${argsProductos[1]} )" title="Quitar concepto">X</button></td>
     <td class='text-center'>${argsProductos[0]} <input type="hidden" name="idproducto[]" value="${argsProductos[0]}"</td>
+    <td class='text-center'>${argsProductos[5]}</td>
     <td class='text-center'>${argsProductos[3]}</td>
     <td class='text-left'>${argsProductos[4]}</td>
     <td class='text-center'>${argsProductos[2]}</td>
@@ -344,6 +353,7 @@ function addProductoEntrada(...argsProductos){
     $('#selProdEntAlm').val(null).trigger('change');	
     $("#cantExistenciaAlmacen").val(0);
     $("#cantEntradaAlmacen").val(0);
+    $("#unidaddemedida").val('');
   
 }
 
@@ -378,118 +388,6 @@ function evaluarElementos(){
   }
 }
 
-/*===================================================
-ABRIR MODAL PARA SUBIR O VISUALIZAR ARCHIVOS. DESDE EL DATATABLE
-===================================================*/
-$("#dt-entradasalmacen tbody").on("click", "button.btnUpEntradasAlmacen", function(){
-  let idUploadEntradaAlm = $(this).attr("idUploadEntradaAlm");
-  let datas=$(this).data("idupentrada")
-    
-    if(datas > 0){
-      //console.log(idUploadEntradaAlm, datas); 
-      $('#modalUpEntradasAlmacen').modal('show');
-      $("#numIdEntradaAlmacen").val(datas);
-      abrirDatatable(datas);
-    }
-})
-/*===================================================*/
-
-
-/*======================================================================*/
-//ENVIAR FORMULARIO PARA GUARDAR ARCHIVOS DE ENTRADA
-/*======================================================================*/
-$("body").on("submit", "#form_upfile", (event)=>{	
-  event.preventDefault();
-  event.stopPropagation();
-  let sNombreFile = $("#nombre_archivo").val();   //descripción del archivo a subir
-  let sUploadedFile = $("#uploadedFile").val();   //nombre del archivo a subir
-  let nIdEntrada=$("#numIdEntradaAlmacen").val(); //numero de entrada al almacen
-  sUploadedFile=sUploadedFile.replace(/^.*\\/,""); //quitar la ruta, solo nom de archivo
-  //console.log(sNombreFile, sUploadedFile, nIdEntrada )
-  //validar que no este vacio el input file
-  if(sNombreFile==""){
-    sNombreFile="SIN DESCRIPCION....";
-  }
-  subirArchivos(sNombreFile, sUploadedFile, nIdEntrada);
-
-});  
-/*======================================================================*/
-function subirArchivos(sNombreFile, sUploadedFile, nIdEntrada) {
-  $("#uploadedFile").upload('vistas/modulos/subir_archivo.php',{
-      descripcion_archivo: sNombreFile,
-      nombre_archivo: sUploadedFile,
-      numero_entrada: nIdEntrada
-  },
-  function(respuesta) {
-     //console.log(respuesta)
-      //Subida finalizada.
-
-        if (respuesta["status"]=== 1) {
-          $("#barra_de_progreso").val(0);
-          sUploadedFile=respuesta["nombre"];
-          let sRutaArchivo=respuesta["rutaarchivo"];
-          var datos = new FormData();
-          datos.append("descripcion_archivo", sNombreFile);
-          datos.append("nombre_archivo", sUploadedFile);
-          datos.append("numero_entrada", nIdEntrada);
-          datos.append("ruta_archivo", sRutaArchivo);
-          axios({ 
-            method  : 'post', 
-            url : 'ajax/entradasalmacen.ajax.php?op=subirArchivosEntrada', 
-            data : datos,
-          }) 
-          .then((res)=>{ 
-            if(res.status==200) {
-              console.log(res.data)
-  
-              $('#subirarchivosentradas').DataTable().ajax.reload(null, false);
-              $("#previewImg1").attr("src", "");
-               //$("#response").removeClass("d-none");
-
-              //$("#alert1" ).fadeOut( 4500, "linear", completa );
-    
-            }            
-  
-          }) 
-          .catch((err) => {throw err}); 
-  
-            mostrarRespuesta(`<strong>Mensaje!</strong> El archivo se ha subido correctamente. <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
-            <span aria-hidden='true'>&times;</span></button>`, true);
-
-            $("#nombre_archivo, #uploadedFile").val('');
-        } else {
-            mostrarRespuesta(`<strong>Mensaje!</strong> El archivo NO se ha podido subir. <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
-            <span aria-hidden='true'>&times;</span></button>`, false);
-
-            $("#nombre_archivo, #uploadedFile").val('');
-        }
-        
-  }, function(progreso, valor) {
-     console.log(valor)
-      //Barra de progreso.
-      $("#barra_de_progreso").val(valor);
-  });
-}
-/*======================================================================*/
-function mostrarRespuesta(mensaje, ok){
-
-  //$("#respuesta, #response").removeClass('alert-success').removeClass('alert-danger').removeClass('d-none').html(mensaje);
-  if(ok){
-      $("#respuesta, #response").removeClass('d-none').html(mensaje);
-      $("#respuesta, #response").addClass('alert-success');
-      setTimeout(() => {
-        $("#respuesta, #response").addClass('d-none').removeClass('alert-success');
-      }, 3000);
-  }else{
-      $("#respuesta, #response").removeClass('d-none').html(mensaje);
-      $("#respuesta, #response").addClass('alert-danger').addClass('d-block');
-      setTimeout(() => {
-        $("#respuesta, #response").addClass('d-none').removeClass('alert-danger');
-      }, 3000);
-
-  }
-}
-/*======================================================================*/
 
 /*======================================================================*/
 //ENVIAR FORMULARIO PARA GUARDAR DATOS DE ENTRADA
@@ -646,6 +544,119 @@ tableforFiles=$('#subirarchivosentradas').removeAttr('width').dataTable(
 	}).DataTable();    
     
 }
+
+/*===================================================
+ABRIR MODAL PARA SUBIR O VISUALIZAR ARCHIVOS. DESDE EL DATATABLE
+===================================================*/
+$("#dt-entradasalmacen tbody").on("click", "button.btnUpEntradasAlmacen", function(){
+  let idUploadEntradaAlm = $(this).attr("idUploadEntradaAlm");
+  let datas=$(this).data("idupentrada")
+    
+    if(datas > 0){
+      //console.log(idUploadEntradaAlm, datas); 
+      $('#modalUpEntradasAlmacen').modal('show');
+      $("#numIdEntradaAlmacen").val(datas);
+      abrirDatatable(datas);
+    }
+})
+/*===================================================*/
+
+
+/*======================================================================*/
+//ENVIAR FORMULARIO PARA GUARDAR ESCANEADO DE LAS ENTRADAS
+/*======================================================================*/
+$("body").on("submit", "#form_upfile", (event)=>{	
+  event.preventDefault();
+  event.stopPropagation();
+  let sNombreFile = $("#nombre_archivo").val();   //descripción del archivo a subir
+  let sUploadedFile = $("#uploadedFile").val();   //nombre del archivo a subir
+  let nIdEntrada=$("#numIdEntradaAlmacen").val(); //numero de entrada al almacen
+  sUploadedFile=sUploadedFile.replace(/^.*\\/,""); //quitar la ruta, solo nom de archivo
+  //console.log(sNombreFile, sUploadedFile, nIdEntrada )
+  //validar que no este vacio el input file
+  if(sNombreFile==""){
+    sNombreFile="SIN DESCRIPCION....";
+  }
+  subirArchivos(sNombreFile, sUploadedFile, nIdEntrada);
+
+});  
+/*======================================================================*/
+function subirArchivos(sNombreFile, sUploadedFile, nIdEntrada) {
+  $("#uploadedFile").upload('vistas/modulos/subir_archivo.php',{
+      descripcion_archivo: sNombreFile,
+      nombre_archivo: sUploadedFile,
+      numero_entrada: nIdEntrada
+  },
+  function(respuesta) {
+     //console.log(respuesta)
+      //Subida finalizada.
+
+        if (respuesta["status"]=== 1) {
+          $("#barra_de_progreso").val(0);
+          sUploadedFile=respuesta["nombre"];
+          let sRutaArchivo=respuesta["rutaarchivo"];
+          var datos = new FormData();
+          datos.append("descripcion_archivo", sNombreFile);
+          datos.append("nombre_archivo", sUploadedFile);
+          datos.append("numero_entrada", nIdEntrada);
+          datos.append("ruta_archivo", sRutaArchivo);
+          axios({ 
+            method  : 'post', 
+            url : 'ajax/entradasalmacen.ajax.php?op=subirArchivosEntrada', 
+            data : datos,
+          }) 
+          .then((res)=>{ 
+            if(res.status==200) {
+              console.log(res.data)
+  
+              $('#subirarchivosentradas').DataTable().ajax.reload(null, false);
+              $("#previewImg1").attr("src", "");
+               //$("#response").removeClass("d-none");
+
+              //$("#alert1" ).fadeOut( 4500, "linear", completa );
+    
+            }            
+  
+          }) 
+          .catch((err) => {throw err}); 
+  
+            mostrarRespuesta(`<strong>Mensaje!</strong> El archivo se ha subido correctamente. <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
+            <span aria-hidden='true'>&times;</span></button>`, true);
+
+            $("#nombre_archivo, #uploadedFile").val('');
+        } else {
+            mostrarRespuesta(`<strong>Mensaje!</strong> El archivo NO se ha podido subir. <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
+            <span aria-hidden='true'>&times;</span></button>`, false);
+
+            $("#nombre_archivo, #uploadedFile").val('');
+        }
+        
+  }, function(progreso, valor) {
+     console.log(valor)
+      //Barra de progreso.
+      $("#barra_de_progreso").val(valor);
+  });
+}
+/*======================================================================*/
+function mostrarRespuesta(mensaje, ok){
+
+  //$("#respuesta, #response").removeClass('alert-success').removeClass('alert-danger').removeClass('d-none').html(mensaje);
+  if(ok){
+      $("#respuesta, #response").removeClass('d-none').html(mensaje);
+      $("#respuesta, #response").addClass('alert-success');
+      setTimeout(() => {
+        $("#respuesta, #response").addClass('d-none').removeClass('alert-success');
+      }, 3000);
+  }else{
+      $("#respuesta, #response").removeClass('d-none').html(mensaje);
+      $("#respuesta, #response").addClass('alert-danger').addClass('d-block');
+      setTimeout(() => {
+        $("#respuesta, #response").addClass('d-none').removeClass('alert-danger');
+      }, 3000);
+
+  }
+}
+/*======================================================================*/
 
 /*===================================================
 ELIMINAR ARCHIVO DE ENTRADA DE ALMACEN DESDE EL DATATABLE

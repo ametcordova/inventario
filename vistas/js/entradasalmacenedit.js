@@ -1,4 +1,5 @@
 var udeMedida="S/I";
+var codigosku;
 var renglonEditarEntradas=cantEditarEntrante=0;
 var arrayEditarProductos=new Array();
 var arrayitems=new Array();
@@ -62,12 +63,13 @@ function showItemsOldProducts(data){
       //console.log(i.id_producto, i.cantidad, i.medida, i.codigointerno, i.descripcion,  )
       let amount=parseInt(i.cantidad);
 
-        itemsbeforeProducts(i.id_producto, amount);   //array de productos de la entrada editar
+        itemsbeforeProducts(i.id_producto, amount);   //array de productos de la entrada a editar
 
       contenido.innerHTML+=`
       <tr class="filas" id="fila${i.id_producto}">
         <td class='text-center'><button type="button" class="botonQuitar" onclick="deleteProducts(${i.id_producto}, ${amount} )" title="Quitar concepto">X</button></td>
         <td class='text-center'>${i.id_producto} <input type="hidden" name="idproducto[]" value="${i.id_producto}"</td>
+        <td class='text-center'>${i.sku}</td>
         <td class='text-center'>${i.codigointerno}</td>
         <td class='text-left'>${i.descripcion}</td>
         <td class='text-center'>${i.medida}</td>
@@ -132,7 +134,7 @@ $('#selEditarProdEntAlm').select2({
       return {
           results: $.map(data, function (item) {
               return {
-                  text: item.codigointerno+' - '+item.descripcion,
+                  text: item.sku+' - '+item.descripcion,
                   id: item.id,
                   descripcion:item.descripcion,
               }
@@ -163,8 +165,6 @@ event.preventDefault();
       return false;	
   }
 
-  //console.log(idprod, idalmacen, tbl_almacen)
-  
   axios.get('ajax/entradasalmacen.ajax.php?op=consultaExistenciaProd', {
     params: {
       idprod: idprod,
@@ -173,33 +173,34 @@ event.preventDefault();
   })
   .then((res)=>{ 
     if(res.status==200) {
-      console.log(res.data)
-      if(res.data==false){
-        $("#cantEditarExistenciaAlmacen").css("background", "#E8EF00");
-        $("#cantEditarExistenciaAlmacen").val(0);
-        $("#cantEditarEntradaAlmacen").val("");
-        $('#mensajeEditarerrorentrada').text('Prod. no existe en este almacén. Se agregará.');
-        $("#mensajeEditarerrorentrada").removeClass("d-none");
-        setTimeout(function(){$("#mensajeEditarerrorentrada").addClass("d-none")}, 2500);
-  
-      }else{
-
-        let approved = arrayitems.filter(items => items[0]===idprod);
-        if(typeof approved !== "undefined" && approved != null && approved.length > 0){
-          //console.log(approved[0][1])
-          let disminuye=approved[0][1];    //obtiene valor de cant
+      //console.log(res.data)
+        if(res.data==false){
           $("#cantEditarExistenciaAlmacen").css("background", "#E8EF00");
-          $("#cantEditarExistenciaAlmacen").val(parseInt(res.data.cant)-disminuye);
+          $("#cantEditarExistenciaAlmacen").val(0);
+          $("#cantEditarEntradaAlmacen").val("");
+          $('#mensajeEditarerrorentrada').text('Prod. no existe en este almacén. Se agregará.');
+          $("#mensajeEditarerrorentrada").removeClass("d-none");
+          setTimeout(function(){$("#mensajeEditarerrorentrada").addClass("d-none")}, 2500);
+    
         }else{
-          $("#cantEditarExistenciaAlmacen").val(res.data.cant);
-          $("#cantEditarExistenciaAlmacen").css(nuevoCSS);
+
+          let approved = arrayitems.filter(items => items[0]===idprod);
+          if(typeof approved !== "undefined" && approved != null && approved.length > 0){
+            //console.log(approved[0][1])
+            let disminuye=approved[0][1];    //obtiene valor de cant
+            $("#cantEditarExistenciaAlmacen").css("background", "#E8EF00");
+            $("#cantEditarExistenciaAlmacen").val(parseInt(res.data.cant)-disminuye);
+          }else{
+            $("#cantEditarExistenciaAlmacen").val(res.data.cant);
+            $("#cantEditarExistenciaAlmacen").css(nuevoCSS);
+          }
         }
-      }
 
       if(res.data.medida!=undefined){
+        $("#editunidaddemedida").val(res.data.medida);
         udeMedida=res.data.medida;
+        codigointerno=res.data.codigointerno;
       }
-      
       
       //$('#servicioEditarSelecionado').html(udeMedida);
     }          
@@ -225,8 +226,10 @@ $("#EditarEntradaProd").click(function(event){
     }  
   
   //SEPARA EL CODIGO DEL PROD. SELECCIONADO
-  let codigointerno= producto.substr(0, producto.indexOf('-'));
-  codigointerno.trim();
+  codigosku= producto.substr(0, producto.indexOf('-'));
+  codigosku=codigosku.trim();
+  codigointerno=codigointerno.trim();
+
     
   //SEPARA LA DESCRIPCION DEL PROD. SELECCIONADO        
   let descripcion= producto.substr(producto.lastIndexOf("-") + 1);
@@ -235,10 +238,10 @@ $("#EditarEntradaProd").click(function(event){
   //console.log("prod:",idProducto, "cant:",cantEntrada, "medida:",udeMedida, "codInt:",codigointerno, "descrip:",descripcion);
   
   let encontrado=arrayEditarProductos.includes(idProducto)
-    console.log("encontrado:", encontrado)
+    //console.log("encontrado:", encontrado)
     if(!encontrado){
       arrayEditarProductos.push(idProducto);
-      addEditarProductoEntrada(idProducto, cantEntrada, udeMedida, codigointerno, descripcion);
+      addEditarProductoEntrada(idProducto, cantEntrada, udeMedida, codigointerno, descripcion, codigosku);
     }else{
       mensajedeerror();
     }
@@ -256,6 +259,7 @@ function addEditarProductoEntrada(...argsProductos){
   <tr class="filas" id="fila${argsProductos[0]}">
     <td class='text-center'><button type="button" class="botonQuitar" onclick="deleteProducts(${argsProductos[0]}, ${argsProductos[1]} )" title="Quitar concepto">X</button></td>
     <td class='text-center'>${argsProductos[0]} <input type="hidden" name="idproducto[]" value="${argsProductos[0]}"</td>
+    <td class='text-center'>${argsProductos[5]}</td>
     <td class='text-center'>${argsProductos[3]}</td>
     <td class='text-left'>${argsProductos[4]}</td>
     <td class='text-center'>${argsProductos[2]}</td>

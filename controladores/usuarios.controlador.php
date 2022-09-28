@@ -1,6 +1,9 @@
  <?php
 class ControladorUsuarios{
     
+	/*================= LOGIN ================================ */
+	/* FUNCION PARA INGRESAR AL SISTEMA ADMIN                 */
+	/*======================================================= */
     static public function ctrIngresoUsuario(){
 		
         if(isset($_POST["ingUsuario"])){

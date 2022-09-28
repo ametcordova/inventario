@@ -63,7 +63,7 @@ static public function mdlGuardarQueja($tabla, $datos){
 static public function mdlActualizarQueja($tabla, $datos){
 	try{
 
-		 $stmt = Conexion::conectar()->prepare("UPDATE $tabla SET id_tecnico=:id_tecnico, fecha=:fecha, os=:os, telefono=:telefono, distrito=:distrito, cliente=:cliente, motivo=:motivo, operador=:operador, folio_oci=:folio_oci, inicio_llamada=:inicio_llamada, fin_llamada=:fin_llamada, minutos=:minutos, observaciones=:observaciones, estatus=:estatus, ultusuario=:ultusuario WHERE id=:id");
+		 $stmt = Conexion::conectar()->prepare("UPDATE $tabla SET fecha=:fecha, os=:os, telefono=:telefono, distrito=:distrito, cliente=:cliente, motivo=:motivo, operador=:operador, folio_oci=:folio_oci, inicio_llamada=:inicio_llamada, fin_llamada=:fin_llamada, minutos=:minutos, observaciones=:observaciones, estatus=:estatus, ultusuario=:ultusuario WHERE id=:id");
 
 		$dateTimeObject1 = date_create($datos["inicio_llamada"]); 
 		$dateTimeObject2 = date_create($datos["fin_llamada"]); 
@@ -73,7 +73,6 @@ static public function mdlActualizarQueja($tabla, $datos){
 		$minutes += $diferencia->i*100;
 
 		$stmt->bindParam(":id",     		$datos["id"], PDO::PARAM_INT);
-		$stmt->bindParam(":id_tecnico",     $datos["id_tecnico"], PDO::PARAM_INT);
 		$stmt->bindParam(":fecha",          $datos["fecha"], PDO::PARAM_STR);
 		$stmt->bindParam(":os",             $datos["os"], PDO::PARAM_STR);
 		$stmt->bindParam(":telefono",       $datos["telefono"], PDO::PARAM_STR);
@@ -108,13 +107,16 @@ static public function mdlActualizarQueja($tabla, $datos){
 /*=============================================
 	LISTAR ORDENES DE SERVICIO
 =============================================*/
-static public function mdlListarQuejas($tabla, $fecha1, $fecha2){
+static public function mdlListarQuejas($tabla, $fecha1, $fecha2, $idtecnico){
 	try{
 	
 			  
 		$where="os.fecha>='".$fecha1."' AND os.fecha<='".$fecha2."' ";
-
 		$where.="AND os.estatus>0";
+		if($idtecnico!=null){
+			$where.=" AND os.id_tecnico=".$idtecnico;
+		}
+		
 	  
 		$stmt = Conexion::conectar()->prepare("SELECT os.*, usu.nombre AS tecnico 
 		FROM $tabla os

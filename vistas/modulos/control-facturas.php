@@ -50,43 +50,62 @@
 
         <div class="card-header border-success mb-2" >
 
-          <div class="col-md-12">
-            <div class="input-group mb-3 col-md-9">
-                <?php if(getAccess($acceso, ACCESS_ADD)){?> 
-                <button class="btn btn-primary btn-sm mr-2" data-toggle="modal" data-target="#modalAgregarFactura"><i class="fa fa-plus-circle"></i> Factura
+          <div class="col-md-12 d-inline-block px-0" style="background-color:azure;">
+
+            <div class="input-group col-md-3 col-md-auto d-inline-block my-0 nopadding" style="width:fit-content;">
+              <?php if(getAccess($acceso, ACCESS_ADD)){?> 
+                <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalAgregarFactura" title="Agrega nueva factura"><i class="fa fa-plus-circle"></i> Agregar Factura
                 </button> 
-                <?php } ?>           
+                <button class="btn btn-danger btn-sm ml-1" id="btnregresar" onclick="regresar()" type="button" title="Regresar a Inicio"><i class="fa fa-backward"></i> a Inicio</button>
+              <?php } ?>           
+            </div>
 
-                <button class="btn btn-danger btn-sm mr-2" id="btnregresar" onclick="regresar()" type="button"><i class="fa fa-arrow-circle-left"></i> Regresar</button>
-                <?php if(getAccess($acceso, ACCESS_VIEW)){?>           
-                  <div>	
+              <?php if(getAccess($acceso, ACCESS_VIEW)){?>           
+                <div class="col-md-4 d-sm-inline-block p-0" style="width:fit-content;">	
                     <input type="radio" name="radiofactura" value="todos" >
-                      <label class="ml-1">Todos</label>
+                      <label class="mr-2">Todos</label>
                     <input type="radio" class="ml-1" name="radiofactura" value="porpagar" checked>
-                      <label>Por Pagar</label>
+                      <label class="mr-2">Por Pagar</label>
                     <input type="radio" class="ml-1" name="radiofactura" value="pagado">
-                      <label>Pagados</label>
+                      <label class="mr-2">Pagados</label>
                     <input type="radio" class="ml-1" name="radiofactura" value="cancelado">
-                      <label>Cancelados</label>
-                  </div>		
+                      <label >Cancelados</label>
+                </div>		
 
-                <div class="col-md-2 text-center">
-                  <div class="input-group-prepend ml-1">
-                          <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                          <input type="text" class="form-control form-control-sm" placeholder="" name="filterYear" id="filterYear" value="<?= $yearHoy?>" data-toggle="tooltip" title="Año" >
+                  <div class="col-md-1 text-center mb-1 d-sm-inline-block">
+                    <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                            <input type="text" class="form-control form-control-sm" placeholder="" name="filterYear" id="filterYear" value="<?= $yearHoy?>" data-toggle="tooltip" title="Año" >
+                    </div>
                   </div>
-                </div>
 
-                <div class="col-md-2 text-center">
-                  <div class="input-group-prepend ml-1">
-                          <span class="input-group-text"  title="Selecciona mes"><i class="fa fa-calendar-o"></i></span>
-                          <input type="text" class="form-control form-control-sm" placeholder="" name="filterMonth" id="filterMonth" data-toggle="tooltip" title="Selecciona mes" >
-                          <button class="btn btn-success btn-sm ml-2" onclick="listarFacturas()" ><i class="fa fa-eye"></i> Listar</button>
-                      <?php } ?>
+                  <div class="col-md-1 text-center d-sm-inline-block">
+                    <div class="input-group-prepend ml-1">
+                            <span class="input-group-text"  title="Selecciona mes de facturación"><i class="fa fa-calendar-o"></i></span>
+                            <input type="text" class="form-control form-control-sm" placeholder="M. Ini" name="filterMonthStart" id="filterMonthStart" data-toggle="tooltip" title="Selecciona mes Inicial" >
+                    </div>
                   </div>
-                </div>
-                  
-            </div>  <!-- fin * -->        
+
+                  <div class="col-md-1 text-center mt-1 d-sm-inline-block">
+                    <div class="input-group-prepend">
+                            <span class="input-group-text"  title="Selecciona mes de facturación"><i class="fa fa-calendar-o"></i></span>
+                            <input type="text" class="form-control form-control-sm" placeholder="M. Fin" name="filterMonthEnd" id="filterMonthEnd" data-toggle="tooltip" title="Selecciona mes Final" >
+                    </div>
+                  </div>
+
+                  <div class="col-md-1 d-sm-inline-block text-bold" style="font-size:.8em">
+                      <input class="form-check-input checkbox-inline factpagadas" type="checkbox" id="factpagadas">
+                      Solo Pagadas
+                  </div>
+
+
+                  <div class="col-md-1 text-center d-sm-inline-block" >
+                      <button class="btn btn-success btn-sm" onclick="listarFacturas()" title="Listar facturas"><i class="fa fa-eye"></i> Listar</button>
+                      <button class="btn btn-dark btn-sm" onclick="location.reload()" title="Reset filtros"><i class="fa fa-refresh"></i></button>
+                  </div>
+
+              <?php } ?>          
+
           </div>  <!-- col-md-12 -->
      
 		
@@ -133,7 +152,7 @@
                     <th translate="no" style="width:7%;">F.Pag/Can</th>
                     <th translate="no" style="width:3%;">#RP</th>
                     <th translate="no" style="width:5%;">Stat</th>
-                    <th translate="no" style="width:7%;">Acción</th>
+                    <th translate="no" style="width:7%;" class="text-center">Acción</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -661,7 +680,7 @@
     </div>
   </div>
 </div>
-<script defer src="vistas/js/control-facturas.js?v=12072022"></script>
+<script defer src="vistas/js/control-facturas.js?v=13092022"></script>
 <!--===========================================================================================-->
 
 <!--================================= MODAL VER EXPEDIENTE DE FACTURA =======================================-->

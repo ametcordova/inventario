@@ -54,7 +54,7 @@ switch ($_GET["op"]){
 				$peso='0';
 			}
 			
-			$boton1=getAccess($acceso, ACCESS_EDIT)?"<button class='btn btn-circle btn-primary btn-sm px-1 py-1 btnEditarFactura' idFile='".$value['id']."' title='Editar datos'><i class='fa fa-pencil'></i></button> ":"";
+			$boton1=getAccess($acceso, ACCESS_EDIT)?"<button class='btn btn-circle btn-primary btn-sm px-1 py-1 btnEditFile' data-idfile='".$value['id']."' data-toggle='modal' data-target='#modalEditFile' title='Editar datos'><i class='fa fa-pencil'></i></button> ":"";
 			$boton2=getAccess($acceso, ACCESS_PRINTER)?"<button class='btn btn-circle btn-info btn-sm px-1 py-1 btnViewFile' data-description='".$value['descripcion']."' data-viewfile='".$value['nombrearchivo']."' data-viewruta='".$value['ruta']."' data-toggle='modal' data-target='#modalViewFile' title='Visualizar archivo '><i class='fa fa-eye'></i></button> ":"";
     	  	$boton3=getAccess($acceso, ACCESS_DELETE)?"<button class='btn btn-circle btn-danger btn-sm px-1 py-1 btnDeleteFile' data-deletefile='".$value['id']."' data-namefile='".$value['nombrearchivo']."' title='Borrar archivo'><i class='fa fa-trash'></i></button> ":"";
     	  	$boton4=getAccess($acceso, ACCESS_VIEW)?"<a class='btn btn-circle btn-dark btn-sm px-1' href='".urldecode($enlace)."' role='button' title='Descargar archivo' download target='_blank'><i class='fa fa-download'></i></a>":"";

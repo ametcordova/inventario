@@ -1,19 +1,18 @@
 <?php
-
 require_once "../../../controladores/reporteinventario.controlador.php";
 require_once "../../../modelos/reporteinventario.modelo.php";
 require_once "../../../funciones/funciones.php";
 
 //REQUERIMOS LA CLASE TCPDF
 require_once('tcpdf_include.php');
-
+ob_start();
 
 // Extend the TCPDF class to create custom Header and Footer
 class MYPDF extends TCPDF {
 	
     //Page header
     public function Header() {
-		$tabla=$_GET["idNomAlma"];    
+		$tabla=$_GET["idNomAlma"];
 		$idalmacen=$_GET["idNumAlma"];
 		$encabezado = ControladorInventario::ctrReporteInventarioAlmacen($idalmacen);
 		//$nombreprov=$encabezado["nombreproveedor"];
@@ -165,7 +164,6 @@ $cantEntra+=$row['cant'];
 $pdf->writeHTML($bloque4, false, false, false, false, '');
 }
 // ---------------------------------------------------------
-
 $cantEntra=number_format($cantEntra);
 $bloque6 = <<<EOF
 
@@ -202,28 +200,30 @@ EOF;
 
 $pdf->writeHTML($bloque7, false, false, false, false, '');    
 
+
 // ---------------------------------------------------------    
 //SALIDA DEL ARCHIVO 
-$fechahoy=fechaHoraMexico(date("d-m-Y G:i:s"));
 $hoy1 = date("Ymd");    
 $hoy2 = date("His");
 $fecha_elabora=$hoy1.$hoy2;
 
  $nombre_archivo="inventario_".$fecha_elabora.".pdf";   //genera el nombre del archivo para descargarlo
  $pdf->Output($nombre_archivo);
+ ob_end_flush();
 }else{
-  //$nombre_archivo="inventario";
+//$nombre_archivo="inventario";
 $pdf = new MYPDF('L', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 $pdf->Output("inventario.pdf");
+ob_end_flush();
 }
 }
 
 }
 
-$fechahoy=fechaHoraMexico(date("d-m-Y G:i:s"));
-$hoy1 = date("Ymd");    
-$hoy2 = date("His");
-$fecha_elabora=$hoy1.$hoy2;
+//$fechahoy=fechaHoraMexico(date("d-m-Y G:i:s"));
+//$hoy1 = date("Ymd");    
+//$hoy2 = date("His");
+//$fecha_elabora=$hoy1.$hoy2;
 
 $inventario = new reporteInventario();
 $idalmacen=$_GET["idNumAlma"];

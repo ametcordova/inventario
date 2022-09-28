@@ -9,8 +9,8 @@ static public function ctrGuardarOS($tabla, $datos, $productos, $cantidades){
 	$respuesta = ModeloOServicios::mdlGuardarOS($tabla, $datos, $productos, $cantidades);
 
 	if($respuesta=='ok'){
-		$tabla='hist_salidas';
-		$respuesta = ModeloOServicios::mdlActualizarTransito($tabla, $datos, $productos, $cantidades);
+		 $tabla='hist_salidas';
+		 $respuesta = ModeloOServicios::mdlActualizarTransito($tabla, $datos, $productos, $cantidades);
 		return $respuesta;
 	}else{
 		return array('status' => 400);

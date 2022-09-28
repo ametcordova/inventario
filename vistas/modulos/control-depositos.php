@@ -119,15 +119,15 @@ $fechaHoy = date("Y-m-d");
               <thead class="thead-dark" >
                 <tr style="font-size:0.80em">
                   <th translate="no" style="width:2em;">#</th>
-                  <th translate="no" style="width:22em;">Nombre</th>
+                  <th translate="no" style="width:21em;">Nombre</th>
                   <th translate="no">Motivo</th>
                   <th translate="no" style="width:6em;">Importe</th>
                   <th translate="no" style="width:5em;">Comisión</th>
                   <th translate="no" style="width:12em;">Destino</th>
                   <th translate="no" style="width:14em;">Referencia</th>
-                  <th translate="no" style="width:7em;">F. Pago</th>
+                  <th translate="no" style="width:7em;">F. Movto</th>
                   <th translate="no" style="width:4em;">Suc.</th>
-                  <th translate="no" style="width:6em;">Acción</th>
+                  <th translate="no" style="width:5.5em;">Acción</th>
                 </tr>
               </thead>
               <tbody style="font-size:0.90em">
@@ -366,5 +366,5 @@ $fechaHoy = date("Y-m-d");
 <!-- ==================================================================================== -->
 
 
-<script defer src="vistas/js/control-depositos.js?v=10022022"></script>
+<script defer src="vistas/js/control-depositos.js?v=02082022"></script>
 

@@ -195,25 +195,30 @@ $('[data-mask]').inputmask()
 
  /*=============================================*/
  $('.activarDatatable').DataTable({
-  "lengthMenu": [ [10, 25, 50,100, -1], [10, 25, 50, 100, "Todos"] ],
+  "aProcessing": true,//Activamos el procesamiento del datatables
+  "aServerSide": true,//Paginación y filtrado realizados por el servidor
+  "paging": true,  //mostrar la paginación con los datos lengthMenu
+  "lengthMenu": [ [10, 15, 25, 50,100, -1], [10, 15, 25, 50, 100, "Todos"] ],
   "language": {
   "sProcessing":     "Procesando...",
   "sLengthMenu":     "Mostrar _MENU_ registros &nbsp",
   "sZeroRecords":    "No se encontraron resultados",
   "sEmptyTable":     "Ningún dato disponible en esta tabla",
   "sInfo":           "Mostrar registros del _START_ al _END_ de un total de _TOTAL_",
+  "sInfoEmpty":      "Mostrar _START_ de _END_ de un _TOTAL_ entradas",
   "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
-  "sInfoPostFix":    "",
+  "sInfoPostFix":    "",           
   "sSearch":         "Buscar:",
-  "sUrl":            "",
   "sInfoThousands":  ",",
+  "sDecimal":        ".",
   "sLoadingRecords": "Cargando...",
+  "sPaginationType": "full_numbers",
   "oPaginate": {
   "sFirst":    "Primero",
   "sLast":     "Último",
-  "sNext":     "Siguiente",
-  "sPrevious": "Anterior"}
-  },
+  "sNext":     "Sig.",
+  "sPrevious": "Ant."}
+      },
   "oAria": {
     "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
     "sSortDescending": ": Activar para ordenar la columna de manera descendente"

@@ -78,6 +78,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <!-- https://getdatepicker.com/5-4/Usage/ -->
 <link rel="stylesheet" href="extensiones/plugins/tempusdominus-bootstrap4/tempusdominus-bootstrap-4.min.css" />
 
+<script src="extensiones/plugins/rxjs/rxjs.umd.min.js"></script>
+
 </head>
 
 	<!--==== CUERPO DEL DOCUMENTO MANDA A LLAMAR fechahora y networkStatus===-->
@@ -121,6 +123,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 				$_GET["ruta"]=="reporteinventario" ||
 				$_GET["ruta"]=="respaldo" ||
 				$_GET["ruta"]=="control-facturas" ||
+				$_GET["ruta"]=="facturaingreso" ||
 				$_GET["ruta"]=="control-viaticos" ||
 				$_GET["ruta"]=="ajusteinventario" ||
 				$_GET["ruta"]=="adminseries" ||
@@ -142,12 +145,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
 		}
 			
 			/* Main Footer */
-			include_once 'modulos/footer.php';
+			require_once 'modulos/footer.php';
 		
 		echo '</div>';
 		/*-- fin de wrapper --*/
 	}else{
 		include 'modulos/login.php';
+		require_once 'modulos/footer.php';
 	}	
 ?>
 <!-- AQUI SE VINCULAN LOS ARCHIVOS JS -->
@@ -156,7 +160,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="vistas/js/usuario.js?v=03032022"></script>
 <script src="vistas/js/categorias.js?v=02092020"></script>
 <script src="vistas/js/medidas.js?v=02092020"></script>
-<script src="vistas/js/clientes.js?v=02092020"></script>
 <script src="vistas/js/proveedores.js?v=02092020"></script>
 <script src="vistas/js/productos.js?v=01122020"></script>
 <script src="vistas/js/devolucion-tecnicos.js?v=02092020"></script>

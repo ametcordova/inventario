@@ -75,7 +75,7 @@ switch ($_GET["op"]){
 			$valor = $_POST["idFactura"];
 			$orden = $_POST["idBorrado"];
 
-            $respuesta = ControladorFacturas::ctrMostrarFacturas($item, $valor, $orden, $tipo=null, $year=null, $month=null);
+            $respuesta = ControladorFacturas::ctrMostrarFacturas($item, $valor, $orden, $tipo=null, $year=null, $monthinicial=null, $monthfinal=null, $solopagadas=null);
 
             echo json_encode($respuesta);
 
@@ -204,12 +204,14 @@ switch ($_GET["op"]){
 	
 	    $tipo = $_GET["tiporeporte"];
 	    $year = $_GET["filteryear"];
-	    $month = isset($_GET["filtermonth"]) ? $_GET["filtermonth"] : null;
+	    $monthinicial = isset($_GET["filtermonthstart"]) ? $_GET["filtermonthstart"] : null;
+	    $monthfinal = isset($_GET["filtermonthend"]) ? $_GET["filtermonthend"] : null;
+	    $solopagadas = isset($_GET["factpagadas"]) ? $_GET["factpagadas"] : 0;
 		$item = null;
     	$valor = null;
     	$orden = "id";
 		$conter=0;
-  		$facturas = ControladorFacturas::ctrMostrarFacturas($item, $valor, $orden,$tipo, $year, $month);	
+  		$facturas = ControladorFacturas::ctrMostrarFacturas($item, $valor, $orden,$tipo, $year, $monthinicial, $monthfinal, $solopagadas);	
 
   		if(count($facturas) == 0){
   			echo '{"data": []}';           //arreglar, checar como va

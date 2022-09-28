@@ -6,7 +6,10 @@ var renglonesOS=cantSalidaOS=0;
 var numserie=alfanumerico='';
 var captRangoFecha;
 var idsfacturas=new Array();
-$(".alert").addClass("d-none");
+//$("#msgsaveok").addClass("d-none");
+
+
+//Rx.Observable.fromEvent(document.getElementById("DatatableOS"), 'click').subscribe(() => console.log('Haz hecho click!'));
 
 function init(){
 
@@ -108,7 +111,8 @@ function listarOServicios(){
             btns.addClass('btn btn-success btn-sm');
           },  
           "columnDefs": [
-            {"className": "dt-center", "targets": [1,3,4,6,7,8]}
+            {"className": "dt-center", "targets": [1,3,4,6,7,8]},
+          
             //{"className": "dt-right", "targets": [3,4]}				//"_all" para todas las columnas
             ],    
             select: false,     //se puso a false para poder seleccionar varios filas. true=1 fila
@@ -132,6 +136,24 @@ function listarOServicios(){
 }
 // ========= FIN LISTAR EN EL DATATABLE REGISTROS DE LA TABLA TABLAOS================
 
+//añadir un INPUT en la columna de No. de Fact
+$('#DatatableOS tfoot th').each( function () {
+  var title=$(this).text();
+    //console.log(title);
+    if(title=="Fact"){
+      $(this).html('<input type="text" id="myFact" style="width:40px; height:20px;" placeholder="'+title+'"/>');
+  }
+});
+
+//Hacer busqueda por la columna de No. de Fact. segun el dato del INPUT
+$('#myFact').on( 'keyup change clear', function () {
+  if(tblOrdendeServicios.column(8)){
+     //console.log(tblOrdendeServicios.column(8))
+     tblOrdendeServicios.column(8).search(this.value).draw();
+  };
+} );
+
+
 /* ====================click para seleccionar OS ====================*/
 $('#DatatableOS tbody').on( 'click', 'tr', function () {
   $(this).toggleClass('selected');
@@ -147,8 +169,11 @@ $('#DatatableOS tbody').on( 'click', 'tr', function () {
 
 /* ====================CAMBIAR ESTADO DE OS ====================*/
 $('#DatatableOS tbody').on( 'click', 'button.btnEstado', function (event) {
+  var dtr=document.getElementById("DatatableOS");
   let elemento = this;
-  console.log(elemento);
+  const $button = document.getElementById('DatatableOS');
+  const click$ = Rx.Observable.fromEvent($button, 'click');
+  //console.log(elemento);
   let id = elemento.getAttribute('data-id');
   let st = elemento.getAttribute('data-estado');
 
@@ -172,7 +197,15 @@ $('#DatatableOS tbody').on( 'click', 'button.btnEstado', function (event) {
         .then(function (response) {
           //console.log(response.status);
           if (response.status==200) {
-            $('#DatatableOS').DataTable().ajax.reload(null, false);
+            if($('#DatatableOS').DataTable().ajax.reload(null, false)){
+              var subscription = click$.subscribe({
+                next: (e) => console.log('Event :', e)
+              });
+              // Rx.Observable.fromEvent(dtr, 'change').subscribe(() => 
+              //   console.log('se actualizo registro!!')
+              // );
+            };
+            console.log(subscription);
           } else {
             alert("ERROR!!")
           }
@@ -289,9 +322,9 @@ var $eventSelect = $('#selecProductoOS').select2({
 
 /************************************************************************************* */
  // Bind an event
-$('#selecProductoOS').on('select2:select', function (e) { 
-  console.log('select event');
-});
+// $('#selecProductoOS').on('select2:select', function (e) { 
+//   console.log('select event');
+// });
 
 //SI ABRE EL SELECT, INICIALIZA VALORES DE SALIDA
 $eventSelect.on("select2:open", function (e) { 
@@ -388,10 +421,10 @@ $("#agregarProductoOS").click(function(event){
   let descripcion=$("#selecProductoOS").text();   //extrae la descripcion del prod
   descripcion=descripcion.trim();
 
-  console.log("prod:",id_producto, "cant:",cantidad, "descrip:",descripcion, 'CON SERIE',conserie, 'numserie:',numserie);
+  //console.log("prod:",id_producto, "cant:",cantidad, "descrip:",descripcion, 'CON SERIE',conserie, 'numserie:',numserie);
   
   let encontrado=arrayProductosOS.includes(id_producto)
-  console.log("encontrado:", encontrado)
+  //console.log("encontrado:", encontrado)
 
     if(!encontrado){
       arrayProductosOS.push(id_producto);
@@ -411,7 +444,7 @@ ADICIONA PRODUCTOS AL TBODY
 function addProductosSalida(...argsProductos){
   //console.log("manyMoreArgs", argsProductos);
   let contenido=document.querySelector('#tbodyOS');
-  console.log(argsProductos[4]);
+  //console.log(argsProductos[4]);
   contenido.innerHTML+=`
   <tr class="filas" id="fila${argsProductos[0]}">
     <td> <button type="button" class="botonQuitar" onclick="eliminarProductoOS(${argsProductos[0]}, ${argsProductos[2]})" title="Quitar concepto">X</button> </td>
@@ -482,28 +515,46 @@ $("body").on("submit", "#formularioAgregaOS", function( event ) {
           let formData = new FormData($("#formularioAgregaOS")[0]);
   
           if($("#signatureparent").jSignature("isModified")){
-            let firma = $("#signatureparent").jSignature("getData", "image/svg+xml");
-            formData.append("firma", firma);
+            //let firma = $("#signatureparent").jSignature("getData", "image/svg+xml");
+            let firma = $("#signatureparent").jSignature("getData", "svg");
+            //blob = (firma[1], "image/svg+xml");
+            //formData.append("firma", blob);
+
+            //CODIFICAR INSERTAR EN BD
+             for (var i = 0; i < firma.length; i++) {
+               var file = firma[i];
+               //console.log("FIRMA: ",file);
+             }
+             formData.append("firma", file);
+  
           }
 
-          //for (var pair of formData.entries()){console.log(pair[0]+ ', ' + pair[1]);}
-          //CODIFICAR INSERTAR EN BD
-          //return 0;          
-          axios({ 
-            method  : 'post', 
-            url : 'ajax/adminoservicio.ajax.php?op=guardarOS', 
-            data : formData, 
-          }) 
-          .then((res)=>{ 
-            if(res.status==200) {
-              console.log(res.data, res.status, res.statusText)
+          //for (var pair of formData.entries()){console.log(pair[0]+ ', ' + pair[1]);}          
 
-              $('#modalAgregarOS').modal('hide')
+           axios({ 
+             method  : 'post', 
+             url : 'ajax/adminoservicio.ajax.php?op=guardarOS', 
+             data : formData, 
+             headers: {'Content-Type': 'image/svg+xml'},
+           }) 
+          // fetch('ajax/adminoservicio.ajax.php?op=guardarOS', {
+          //   method: 'POST',
+          //   data : formData
+          // })
+        
+          .then((res)=>{  
+            if(res.status==200) {
+              //console.log(res.data, res.status)
+
               $('#DatatableOS').DataTable().ajax.reload(null, false);
-              $(".alert").removeClass("d-none");
-              $(".alert" ).fadeOut( 4500, "linear", complete );
+
+              //$('body#msgsaveok').fadeIn(1000);
+              //$("#msgsaveok").removeClass("d-none");
+              //$("body#msgsaveok" ).fadeOut( 4500, "linear", complete );
               //$(".alert").addClass("d-none");
-              setTimeout(function(){$(".alert").addClass("d-none")}, 4600);
+              //setTimeout(function(){$(".alert").addClass("d-none")}, 4600);
+              $('#modalAgregarOS').modal('hide')
+              mensajenotie('success', 'guardado OS!', 'top', 1);
             }else{
               mensajenotie('Error', 'Hubo problemas al guardar OS!', 'bottom');
             }          

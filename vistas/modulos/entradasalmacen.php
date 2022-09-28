@@ -1,6 +1,6 @@
 <style>
   .select2-results__options {
-    font-size: 13px !important;
+    font-size: 12px !important;
   }
 
 table.dataTable.dataTable_width_auto {
@@ -236,13 +236,17 @@ $fechaHoy = date("Y-m-d");
             <div class="form-row d-none" id="agregarProdEntrada">        
 
               <!--CONSULTA DE PRODUCTOS POR AJAX REMOTE DATA-->
-              <div class="col-md-5">
+              <div class="col-md-4">
                  <div class="form-group">
-                    <select class="form-control " name="selProdEntAlm" id="selProdEntAlm" style="width:100%;" tabindex="5">
+                    <select class="form-control " name="selProdEntAlm" id="selProdEntAlm" style="width:100%; font-size:12px !important;" tabindex="5">
                     </select>
                   </div>
               </div>
                             
+              <div class="col-md-1">
+                <input type="text" class="form-control form-control-sm text-center mb-1" name="unidaddemedida" id="unidaddemedida" value="" readonly title="Unidad">
+              </div>
+
               <div class="col-md-1">
                 <input type="number" class="form-control form-control-sm text-center mb-1" name="cantExistenciaAlmacen" id="cantExistenciaAlmacen" value="" step="any" tabindex="6" readonly title="cantidad Existente">
               </div>
@@ -265,13 +269,14 @@ $fechaHoy = date("Y-m-d");
               <section class="invoice">
                 <div class="row">
                   <div class="col-12 col-sm-12 table-hover table-compact table-responsive-sm">
-                    <table class="table table-sm table-compact table-bordered table-striped" id="detalleEntradasAlmacen" >
+                    <table class="table table-sm compact table-bordered table-striped" id="detalleEntradasAlmacen" width="100%">
 
-                      <thead class="thead-dark">
+                      <thead class="thead-dark" style="font-size:.8rem; height:1px">
                         <tr translate="no" class="text-center">
                         <th translate="no" style="width:2.5rem">Acción</th>
                         <th translate="no" style="width:2.5rem">#</th>
-                        <th translate="no" style="width:15rem">Código</th>
+                        <th translate="no" style="width:6rem">SKU</th>
+                        <th translate="no" style="width:09rem">Código</th>
                         <th translate="no">Producto</th>
                         <th translate="no" style="width:10rem">U. Med</th>
                         <th translate="no" style="width:5rem">Cant</th>
@@ -414,13 +419,17 @@ $fechaHoy = date("Y-m-d");
             <div class="form-row " id="EditarProdEntrada">
 
               <!--CONSULTA DE PRODUCTOS POR AJAX REMOTE DATA-->
-              <div class="col-md-5">
+              <div class="col-md-4">
                  <div class="form-group">
                     <select class="form-control " name="selEditarProdEntAlm" id="selEditarProdEntAlm" style="width:100%;" tabindex="">
                     </select>
                   </div>
               </div>
-                            
+                    
+              <div class="col-md-1">
+                <input type="text" class="form-control form-control-sm text-center mb-1" name="editunidaddemedida" id="editunidaddemedida" value="" readonly title="Unidad">
+              </div>
+              
               <div class="col-md-1">
                 <input type="number" class="form-control form-control-sm text-center mb-1" name="cantEditarExistenciaAlmacen" id="cantEditarExistenciaAlmacen" value="" tabindex="6" readonly title="cantidad Existente">
               </div>
@@ -449,7 +458,8 @@ $fechaHoy = date("Y-m-d");
                         <tr translate="no" class="text-center">
                         <th translate="no" style="width:2.5rem">Acción</th>
                         <th translate="no" style="width:2.5rem">#</th>
-                        <th translate="no" style="width:15rem">Código</th>
+                        <th translate="no" style="width:6rem">SKU</th>
+                        <th translate="no" style="width:09rem">Código</th>
                         <th translate="no">Producto</th>
                         <th translate="no" style="width:10rem">U. Med</th>
                         <th translate="no" style="width:5rem">Cant</th>
@@ -600,6 +610,6 @@ $fechaHoy = date("Y-m-d");
                 FIN MODAL PARA SUBIR ARCHIVOS DE ENTRADA CARSO AL ALMACEN 
 ==================================================================================== -->
 
-<script defer src="vistas/js/entradasalmacen.js?v=01042022"></script>
-<script defer src="vistas/js/entradasalmacenedit.js?v=05102020"></script>
+<script defer src="vistas/js/entradasalmacen.js?v=01092022"></script>
+<script defer src="vistas/js/entradasalmacenedit.js?v=01092022"></script>
 <script defer src="extensiones/upload.js?v=05102020"></script>

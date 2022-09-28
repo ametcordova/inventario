@@ -84,16 +84,15 @@ try {
 }
 
 /*=============================================
-	MOSTRAR TIPO DE MOV DE SALIDA
+	BUSCAR PRODUCTO EN LA TABLA PRODUCTOS
 =============================================*/
 static public function MdlAjaxProductos($tabla, $campo, $valor){
     try {    
 
-        $stmt = Conexion::conectar()->prepare("SELECT tb1.id, tb1.codigointerno, tb1.descripcion, med.medida 
+        $stmt = Conexion::conectar()->prepare("SELECT tb1.id, tb1.codigointerno, tb1.descripcion, med.medida, tb1.sku 
         FROM $tabla tb1
         INNER JOIN medidas med ON tb1.id_medida=med.id
-        WHERE tb1.$campo LIKE '%".$valor."%' OR tb1.codigointerno LIKE '%".$valor."%' ");
-        //$stmt = Conexion::conectar()->prepare("SELECT id, codigointerno, descripcion FROM $tabla");
+        WHERE tb1.$campo LIKE '%".$valor."%' OR tb1.sku LIKE '%".$valor."%' ");
         
         //$stmt->bindParam(":".$campo, $valor, PDO::PARAM_STR);
         //$stmt->bindParam(":estado", $estado, PDO::PARAM_INT);
@@ -112,7 +111,7 @@ static public function MdlAjaxProductos($tabla, $campo, $valor){
 /*==========================================================*/
 static Public function mdlConsultaExistenciaProd($tabla, $campo, $valor){
     try {        
-        $stmt = Conexion::conectar()->prepare("SELECT a.cant , m.medida 
+        $stmt = Conexion::conectar()->prepare("SELECT a.cant , m.medida, p.codigointerno, p.sku 
         FROM $tabla a 
         INNER JOIN productos p ON a.id_producto=p.id
         INNER JOIN medidas m ON p.id_medida=m.id
@@ -279,7 +278,7 @@ static public function mdlMostrarEntradasAlmacen($tabla, $campo, $valor){
     try {          
 
         $sql="SELECT tbl.id, tbl.id_proveedor,prov.nombre AS nombreproveedor, tbl.fechaentrada, h.cantidad,tbl.observacion, h.id_producto,
-        a.descripcion,a.codigointerno, a.id_medida, m.medida, tbl.id_almacen,b.nombre AS nombrealmacen,tbl.id_tipomov,
+        a.descripcion,a.codigointerno, a.id_medida, m.medida, a.sku, tbl.id_almacen,b.nombre AS nombrealmacen,tbl.id_tipomov,
         tm.nombre_tipo,tbl.ultusuario,u.nombre AS nombreusuario 
         FROM $tabla tbl
         INNER JOIN hist_entrada h ON tbl.id=h.id_entrada

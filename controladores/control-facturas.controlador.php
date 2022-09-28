@@ -16,12 +16,12 @@ static public function ctrCrearFactura($tabla, $datos){
     LISTAR FACTURAS
 ============================================*/
 
-static public function ctrMostrarFacturas($item, $valor, $orden, $tipo, $year, $month){
+static public function ctrMostrarFacturas($item, $valor, $orden, $tipo, $year, $monthinicial, $monthfinal, $solopagadas){
 
 		$tabla = "facturas";
 
 
-		$respuesta = ModeloFacturas::mdlMostrarFacturas($tabla, $item, $valor, $orden, $tipo, $year, $month);
+		$respuesta = ModeloFacturas::mdlMostrarFacturas($tabla, $item, $valor, $orden, $tipo, $year, $monthinicial, $monthfinal, $solopagadas);
 
 		return $respuesta;
 	

@@ -1,17 +1,10 @@
-$( "#modalAgregarLORG" ).draggable();
-var captRangoFecha;
+  $( "#modalAgregarLORG" ).draggable();
+var captRangoFechaQuejas;
+var rangodeFechaQuejas;
 var modalEvento='';
 
 function init(){
-/*=============================================
-  VARIABLE LOCAL STORAGE
-  =============================================*/
-  if(localStorage.getItem("captRangoFecha") != null){
-    $("#daterange-btnOS span").html(localStorage.getItem("captRangoFecha"));
-  }else{
-    iniciarangodefecha()
-  }
-    listarQuejas();   //LISTAR OS EN EL DATATABLE
+
 }
 /*****************************************************/
 
@@ -20,21 +13,32 @@ function init(){
 /*****************************************************/
 $(document).ready(function(){
   $('#datetimepicker1, #datetimepicker3').datetimepicker({
-      format: 'LT'
-  });
+      format: 'LT',
+      stepping: 5, 
+      autoclose: true,
+ });
+/*=============================================
+  VARIABLE LOCAL STORAGE
+  =============================================*/
+  if(localStorage.getItem("captRangoFechaQuejas") != null){
+    $("#daterange-btnQuejas span").html(localStorage.getItem("captRangoFechaQuejas"));
+  }else{
+    iniciarangodefecha()
+  }
+    listarQuejas();   //LISTAR OS EN EL DATATABLE
 });
 /*****************************************************/
 function listarQuejas(){
-
-  let rangodeFecha = $("#daterange-btnOS span").html();
-  if(rangodeFecha==undefined || rangodeFecha==null){
+  var captRangoFechaQuejas = $("#daterange-btnQuejas span").html();
+  if(captRangoFechaQuejas==undefined || captRangoFechaQuejas==null){
     var {fecha1, fecha2 } = getFecha()
     //console.log('fecha hoy:',fecha1,fecha2);
   }else{
-    let arrayFecha = rangodeFecha.split(" - ", 2);
+    let arrayFecha = captRangoFechaQuejas.split(" - ", 2);
     var {fecha1, fecha2 } = getFecha(arrayFecha);
-    //console.log('rango de fecha:',fecha1,fecha2);
   }	   
+
+  let iduser=$("#idusuario").val();
 
   tblQuejas=$('#DatatableQuejas').dataTable({
       "aProcessing": true,//Activamos el procesamiento del datatables
@@ -47,6 +51,7 @@ function listarQuejas(){
       "sEmptyTable":     "Ningún dato disponible en esta tabla",
       "sInfo":           "Mostrar registros del _START_ al _END_ de un total de _TOTAL_",
       "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+      "sInfoEmpty":      "Mostrar   _TOTAL_ entradas",
       "sInfoPostFix":    "",           
       "sSearch":         "Buscar:",
       "sInfoThousands":  ",",
@@ -97,7 +102,7 @@ function listarQuejas(){
           "ajax":
             {
               url: 'ajax/adminquejas.ajax.php?op=listar',
-              data: {"fecha1":fecha1,  "fecha2": fecha2},     
+              data: {"fecha1":fecha1,  "fecha2": fecha2, "iduser": iduser},     
               type : "POST",
               dataType : "json",
               // success: function(data){
@@ -299,7 +304,6 @@ $("#DatatableQuejas tbody").on("click", ".btnBorraQueja", function(){
 
 /*======================================================================*/
 $('#datetimepicker1,#datetimepicker3').on( 'keyup change blur', function () {
-
   let initialdate=enddate=moment().format('YYYY-MM-DD');
   let start_time = $('#datetimepicker1').val();
   let end_time = $('#datetimepicker3').val();

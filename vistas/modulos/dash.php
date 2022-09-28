@@ -7,8 +7,11 @@
   align-items: center;
   justify-content: center;
 }
+
 </style>
+<!--
   <script defer src="./vistas/js/dash.js"></script>
+  -->
 </html>
 <?php
 date_default_timezone_set('America/Mexico_City');
@@ -42,7 +45,7 @@ require_once "modelos/conexion.php";
         $sql = "SELECT ctah.id, ctah.`nombrecuentahab`,ctah.`id_destino`, dest.nombre, ctah.`numerotarjeta`,ctah.`usodeposito`, date_format(ctah.`fechapago`, '%d-%m-%Y') as fecha_pago, EXTRACT(DAY FROM ctah.fechapago) AS dia, EXTRACT(DAY FROM CURDATE()) as ahora, date_format(ctah.ultmodificacion, '%d-%m-%Y') as fecha_deposito 
         FROM `cuentahabientes` ctah
         INNER JOIN destinatarios dest ON dest.id=ctah.id_destino
-        WHERE ctah.`notificacion`>0 ORDER BY ctah.fechapago ASC";
+        WHERE ctah.`notificacion`>0 ORDER BY EXTRACT(DAY FROM ctah.fechapago) ASC";
 
         $query = Conexion::conectar()->prepare($sql);
         $query->execute();
@@ -52,7 +55,7 @@ require_once "modelos/conexion.php";
         //print_r($resultado);
         ?>
 
-        <div class="row ml-1 table-responsive" style="background-color:ghostwhite;">
+        <div class="row ml-1 table-responsive" >
           <table class="table table-sm table-bordered compact table-hover table-striped" id="depot">
             <thead class="thead-dark">
               <tr style="font-size:0.80rem;" class="text-center">

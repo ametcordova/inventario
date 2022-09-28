@@ -3,7 +3,7 @@
 class ControladorClientes{
 
 	/*=============================================
-	CREAR CLIENTES
+	CREAR CLIENTES preg_match('/^[\/a-zA-Z0-9]+$/', $_POST["nuevoRFC"]) &&
 	=============================================*/
 
 	   public function ctrCrearCliente(){
@@ -11,9 +11,10 @@ class ControladorClientes{
 		if(isset($_POST["nuevoCliente"])){
 
 			if(preg_match('/^[#\.\,\a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ ]+$/', $_POST["nuevoCliente"]) &&
-               preg_match('/^[\/a-zA-Z0-9 ]+$/', $_POST["nuevoDocumento"]) &&
+               preg_match('/^[A-ZÑ&]{3,4}\d{6}(?:[A-Z\d]{3})?$/', $_POST["nuevoRFC"]) &&
                preg_match('/^[^0-9][a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[@][a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,4}$/', $_POST["nuevoEmail"]) &&                
 			   preg_match('/^[()\-0-9 ]+$/', $_POST["nuevoTelefono"]) &&
+			   preg_match('/^[0-9]{5}$/', $_POST["nuevoCP"]) &&
 			   preg_match('/^[#\.\,\-a-zA-Z0-9 ]+$/', $_POST["nuevaDireccion"]) ){
 
 			   	$tabla = "clientes";
@@ -21,12 +22,21 @@ class ControladorClientes{
 				$vienede=isset($_POST["scriptSource"])? $_POST["scriptSource"]:"clientes";
 				
                 //$newDate = date("Y-d-m", strtotime($_POST["nuevaFechaNacimiento"]));
-			   	$datos = array("nombre"=>   strtoupper($_POST["nuevoCliente"]),
-					           "rfc"=>      strtoupper($_POST["nuevoDocumento"]),
-					           "email"=>               $_POST["nuevoEmail"],
-					           "telefono"=>            $_POST["nuevoTelefono"],
-					           "direccion"=>strtoupper($_POST["nuevaDireccion"]),
-					           "fecha_nacimiento"=>    $_POST["nuevaFechaNacimiento"]);
+			   	$datos = array("nombre"			=>strtoupper($_POST["nuevoCliente"]),
+					           "rfc"			=>strtoupper($_POST["nuevoRFC"]),
+					           "curp"			=>strtoupper($_POST["nuevoCurp"]),
+					           "num_int_ext"	=>$_POST["nuevoNumInt"],
+					           "telefono"		=>$_POST["nuevoTelefono"],
+					           "direccion"		=>strtoupper($_POST["nuevaDireccion"]),
+					           "colonia"		=>strtoupper($_POST["nuevaColonia"]),
+					           "codpostal"		=>$_POST["nuevoCP"],
+					           "ciudad"			=>strtoupper($_POST["nuevaCiudad"]),
+					           "estado"			=>$_POST["nuevoEstado"],
+					           "regimenfiscal"	=>$_POST["nuevoRegFiscal"],
+					           "act_economica"	=>strtoupper($_POST["nvaActividadEconomica"]),
+					           "formadepago"	=>$_POST["nuevaFormaPago"],	
+							   "email"			=>$_POST["nuevoEmail"],
+					           "fecha_creacion"	=>$_POST["nuevaFechaCreacion"]);
                 
 			   	$respuesta = ModeloClientes::mdlIngresarCliente($tabla, $datos);
 
@@ -38,14 +48,12 @@ class ControladorClientes{
 						  icon: "success",
 						  title: "El cliente ha sido guardado correctamente",
 						  button: "Cerrar",
-						  }).then((result)=>{
-									if (result) {
-
+						  })
+						  .then((result)=>{
+								if (result) {
 									window.location = varjs;
-
-									}
-								})
-
+								}
+							})
 					</script>';
 
 				}else{
@@ -56,9 +64,9 @@ class ControladorClientes{
                         icon: "success",
                         button: "Cerrar",
                        }).then(function(result){
-                        if(result){
-                            window.location = varjs;
-                        }
+							if(result){
+								window.location = varjs;
+							}
                         });                    
                     </script>'; 
                 }
@@ -68,25 +76,19 @@ class ControladorClientes{
 				echo'<script>
 
 					swal({
-						  icon: "error",
-						  title: "¡El cliente no puede ir vacío o llevar caracteres especiales!",
-						  button: "Cerrar"
+						title: "Algo esta mal!!",
+						icon: "error",
+						title: "Revise su datos, no capturar caracteres especiales!",
+						button: "Cerrar"
 						  }).then((result)=>{
 							if (result) {
-
-							window.location = varjs;
-
+								window.location = varjs;
 							}
 						})
 
 			  	</script>';
-
-
-
 			}
-
 		}
-
 	}
 
 /*=============================================

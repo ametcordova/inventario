@@ -19,9 +19,9 @@ static public function ctrActualizarQueja($tabla, $datos){
     LISTAR QUEJAS PARA EL DATATABLE
 ============================================*/
 
-static public function ctrListarQuejas($tabla, $fecha1, $fecha2){
+static public function ctrListarQuejas($tabla, $fecha1, $fecha2, $idtecnico){
 
-	$respuesta = ModeloAdminQueja::mdlListarQuejas($tabla, $fecha1, $fecha2);
+	$respuesta = ModeloAdminQueja::mdlListarQuejas($tabla, $fecha1, $fecha2, $idtecnico);
 
 	return $respuesta;
 

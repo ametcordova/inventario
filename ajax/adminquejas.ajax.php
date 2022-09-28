@@ -24,17 +24,23 @@ switch ($_GET["op"]){
 		}else{
 			$fecha1=$fecha2=$fechaHoy;
 		}
-
-
-		$tabla="usuarios";
-        $usuario=$_SESSION['id'];
+        $tabla="usuarios";
 		$module="pcapquejas";
 		$campo="administracion";
-		$acceso=accesomodulo($tabla, $usuario, $module, $campo);
+        
+
+		$acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
+
+		
+        if($_SESSION["perfil"]=="Administrador"){
+            $idtecnico=null; 
+        }else{
+            $idtecnico=$_SESSION['user'];
+        }
 
         $tabla="tbl_lorg";
 		
-        $listarQuejas = ControladorAdminQueja::ctrListarQuejas($tabla, $fecha1, $fecha2);	
+        $listarQuejas = ControladorAdminQueja::ctrListarQuejas($tabla, $fecha1, $fecha2, $idtecnico);	
           
         if(count($listarQuejas) == 0){
   			echo '{"data": []}';           //arreglar, checar como va
@@ -81,7 +87,7 @@ switch ($_GET["op"]){
 
     case 'guardarQueja':
 
-        if(isset($_POST["idDeUsuario"])){
+        if(isset($_POST["idusuario"])){
 
             $respuesta=[];
             $tabla="tbl_lorg";
@@ -132,7 +138,7 @@ switch ($_GET["op"]){
             }
 
 
-                $idDeUsuario=$_POST["idDeUsuario"];
+                $idDeUsuario=$_POST["idusuario"];
                 if (filter_var($idDeUsuario, FILTER_VALIDATE_INT) || !filter_var($idDeUsuario, FILTER_VALIDATE_INT) === false) {
                     //$respuesta += array('idDeUsuario' => $idDeUsuario, 'result' => 'entero');
                 }else{
@@ -152,7 +158,7 @@ switch ($_GET["op"]){
                 $totalmin=$_POST["totalmin"].'00';
 
                 $datos = array(
-                "id_tecnico"    =>$_POST["idDeUsuario"],
+                "id_tecnico"    =>$_POST["idusuario"],
                 "fecha"         =>$_POST["fechacapt"],
                 "os"            =>$numeroos,
                 "telefono"      =>$numtelefono,
@@ -185,7 +191,7 @@ switch ($_GET["op"]){
 
     case 'actualizarQueja':
 
-        if(isset($_POST["idDeUsuario"])){
+        if(isset($_POST["idusuario"])){
 
             $respuesta=[];
             $tabla="tbl_lorg";
@@ -231,11 +237,11 @@ switch ($_GET["op"]){
             }
 
 
-                $idDeUsuario=$_POST["idDeUsuario"];
+                $idDeUsuario=$_POST["idusuario"];
                 if (filter_var($idDeUsuario, FILTER_VALIDATE_INT) || !filter_var($idDeUsuario, FILTER_VALIDATE_INT) === false) {
                     //$respuesta += array('idDeUsuario' => $idDeUsuario, 'result' => 'entero');
                 }else{
-                    $respuesta += array('idDeUsuario' => $idDeUsuario, 'result' => 'noentero');
+                    $respuesta += array('iduser' => $idDeUsuario, 'result' => 'noentero');
                 }
 
                 $numeroos=$_POST["numeroos"];
@@ -252,7 +258,6 @@ switch ($_GET["op"]){
 
                 $datos = array(
                 "id"            =>$_POST["ctrlid"],
-                "id_tecnico"    =>$_POST["idDeUsuario"],
                 "fecha"         =>$_POST["fechacapt"],
                 "os"            =>$numeroos,
                 "telefono"      =>$numtelefono,

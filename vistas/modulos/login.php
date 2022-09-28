@@ -7,9 +7,9 @@ ob_start();
 };
 ?>
 <div id="fondo_login">
-  <div class="video-container text-center" style="position:absolute;">
+  <!-- <div class="video-container text-center" style="position:absolute;">
     <video autoplay="" loop=""><source src="https://s3.us-east-2.amazonaws.com/100l-landing-staging/public/movie.mp4" type="video/mp4"></video>
-  </div>
+  </div> -->
 </div>
 
 <div class="login-box">
@@ -58,24 +58,49 @@ ob_start();
       </form>
 
  
-      <p class="mb-1">
-        <a href="#">He olvidado mi password</a>
-      </p>
-      <p class="mb-0 text-center">
-        <a href="#" class="text-center">Registrarse</a>
-      </p>
+        <p class="mb-1">
+          <a href="#modalViewGuia" class="btnViewGuia" data-toggle='modal' data-target='#modalViewGuia'>Guia Migración FTTH</a>
+        </p>
+        <p class="mb-0 text-center">
+          <a href="#" class="text-center">Registrarse</a>
+        </p>
+        
     </div>
     <!-- /.login-card-body -->
   </div>
+
+<!-- ********************************************************************** */ -->
+<!-- Modal para visualizar imagen del producto -->
+<div class="modal fade p-0 m-0" id="modalViewGuia" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-content p-1">
+      <div class="modal-header p-2 text-center">
+        <h6 class="modal-title" id="CenterTitleGuia"></h6>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span class="btn-danger rounded-circle" aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+        <div class="modal-body text-center ForViewGuia p-0"></div>
+
+      <div class="modal-footer p-1">
+        <button type="button" class="btn btn-sm btn-danger float-left" data-dismiss="modal">Entendido</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ********************************************************************** */ -->
+
 </div>
 <!-- /.login-box -->
 
- 
 
 <!-- jQuery -->
 <script src="extensiones/plugins/jquery/jquery.min.js"></script>
+<script src="extensiones/plugins/jquery-ui-1.12.1/jquery-ui.js"></script> 
 <!-- iCheck -->
 <script src="extensiones/plugins/iCheck/icheck.min.js"></script>
+<script src="vistas/js/login.js?v=10092022"></script>
 <script>
   $(function () {
     $('input').iCheck({

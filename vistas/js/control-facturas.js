@@ -1,5 +1,6 @@
 var tabla;
 var idfactura=new Array();
+var valorcheck=0;
 
 $("#modalAgregarFactura, #modalEditarFactura, #modalPagarFactura, #modalVerFactura, #modal_fecha_pago").draggable({
 	  handle: ".modal-header"
@@ -201,7 +202,7 @@ Guardar Fecha de Pago de Factura
 function guadarFechaPagoFactura(e){
 	e.preventDefault(); //No se activará la acción predeterminada del evento
 	var formData = new FormData($("#formFechaPagoFactura")[0]);
-    for (var pair of formData.entries()){console.log(pair[0]+ ', ' + pair[1]);}
+    //for (var pair of formData.entries()){console.log(pair[0]+ ', ' + pair[1]);}
 
      fetch('ajax/control-facturas.ajax.php?op=fechapagofactura', {
       method: 'POST',
@@ -439,17 +440,35 @@ $("#TablaFacturas").on("click", ".btnPagarFactura", function(){
     //alert("relatedTarget is: " + event.relatedTarget);
     var idFactura = $(this).attr("idFactura");
     var numFactura = $(this).attr("numfactura");
+    var dFechaPago = $(this).attr("dFechaPago");
     $('#ModalCenterTitleFact').html("");
-    $('#ModalCenterTitleFact').html('<i class="fa fa-calendar"></i>'+' Factura No.: '+numFactura);
+    $('#ModalCenterTitleFact').html('<i class="fa fa-calendar"></i>'+' Factura No.: '+numFactura+' '+dFechaPago );
     $( "input[name='registroid']").val(idFactura);
+    $( "input[name='fechaPagoFactura']").val(dFechaPago);
 })
 /*===========================================================*/
-
 // LISTAR EN EL DATATABLE REGISTROS DE LA TABLA Facturas
+/*===========================================================*/
 function listarFacturas(){
  let valorradio=($('input:radio[name=radiofactura]:checked').val());
  let valoryear=$("input[name='filterYear']").val();
- console.log(valoryear, valorradio);
+ let valormonthstart=$("input[name='filterMonthStart']").val();
+ let valormonthend=$("input[name='filterMonthEnd']").val();
+ //let valorcheck=0; Ya esta asignado al principio del script
+
+ $('#factpagadas').on('ifChecked', function (event) {
+  valorcheck=1;
+  //console.log("chekeado OK", valorcheck)
+});
+
+$('#factpagadas').on('ifUnchecked', function (event) {
+  valorcheck=0;
+  //console.log("No chekeado", valorcheck)
+});
+
+  
+
+ //console.log(valoryear, valorradio, valormonth);
   if(valorradio!==undefined){
     tabla=$('#TablaFacturas').DataTable(
     {
@@ -457,17 +476,18 @@ function listarFacturas(){
       "aServerSide": true,//Paginación y filtrado realizados por el servidor
       "paging": true,  //mostrar la paginación con los datos lengthMenu
       "lengthMenu": [ [10, 15, 25, 50,100, -1], [10, 15, 25, 50, 100, "Todos"] ],
-      "stateSave": true,
       "language": {
       "sProcessing":     "Procesando...",
       "sLengthMenu":     "Mostrar _MENU_ registros &nbsp",
       "sZeroRecords":    "No se encontraron resultados",
       "sEmptyTable":     "Ningún dato disponible en esta tabla",
       "sInfo":           "Mostrar registros del _START_ al _END_ de un total de _TOTAL_",
+      "sInfoEmpty":      "Mostrar _START_ de _END_ de un _TOTAL_ entradas",
       "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
       "sInfoPostFix":    "",           
       "sSearch":         "Buscar:",
       "sInfoThousands":  ",",
+      "sDecimal":        ".",
       "sLoadingRecords": "Cargando...",
       "sPaginationType": "full_numbers",
       "oPaginate": {
@@ -584,7 +604,7 @@ function listarFacturas(){
   },
       "ajax":{
             url: 'ajax/control-facturas.ajax.php?op=listar',
-            data:{tiporeporte: valorradio, filteryear: valoryear},
+            data:{tiporeporte: valorradio, filteryear: valoryear, filtermonthstart: valormonthstart, filtermonthend: valormonthend, factpagadas: valorcheck},
             type : "get",
             dataType : "json",						
             error: function(e){
@@ -634,7 +654,8 @@ $('#myInput').on( 'keyup change clear', function () {
   };
 } );
 
-$(document).ready(function (){ 
+//$(document).ready(function (){
+$(function() {  
   $(".spin").hide();
 } );
 
@@ -663,9 +684,7 @@ $('#TablaFacturas tbody').on( 'click', 'tr', function () {
   for(var i=0; i<x; i++) {
     idfactura.push(tabla.rows('.selected').data()[i][0]);
 
-    console.log(idfactura);
-
-    console.log( tabla.rows('.selected').data()[i][5]);
+    //console.log( tabla.rows('.selected').data()[i][5]);
     price1=tabla.rows('.selected').data()[i][5];
     price2=tabla.rows('.selected').data()[i][8];
     strEx1 = price1.replace(",","");		//quitar la coma de los miles
@@ -715,7 +734,22 @@ $('#filterYear').datepicker({
   clearBtn:true,
   language:"es",
   todayHighlight:true,
+  autoclose: true,
 }); 
+
+$('#filterMonthStart, #filterMonthEnd').datepicker({
+    format: "mm",
+    viewMode: "months",
+    minViewMode: "months",
+    clearBtn:true,
+    language:"es",
+    todayHighlight:true,
+    showButtonPanel: true,
+    defaultViewDate:0,
+    startView: "months",
+    autoclose: true,
+}); 
+
 
 /*===========================================================
 ENCABEZADO DEL MODAL DE AGREGA GASTOS

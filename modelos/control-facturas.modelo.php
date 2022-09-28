@@ -204,11 +204,11 @@ try{
 /*=============================================
 	MOSTRAR FACTURAS
 =============================================*/
-static public function mdlMostrarFacturas($tabla, $item, $valor, $orden, $tipo, $year, $month){
+static public function mdlMostrarFacturas($tabla, $item, $valor, $orden, $tipo, $year, $monthinicial, $monthfinal, $solopagadas){
 try{
 		if($item != null){
 			$orden=intval($orden);
-			$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item =:$item AND borrado=$orden"); 
+			$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item =:$item AND borrado=0"); 
 			
 			$stmt -> bindParam(":".$item, $valor, PDO::PARAM_STR);
 
@@ -217,30 +217,64 @@ try{
 			return $stmt -> fetch();
 
 		}else{
+			//$solopagadas=intval($solopagadas);
+			$solopagadas = (int)$solopagadas;
+			if($solopagadas===0) {
 
-			if($tipo=='todos'){
-				$where='1=1';
-			}elseif($tipo=='porpagar'){
-				$where='status=0 AND borrado="'.$orden.'"';
-			}elseif($tipo=='pagado'){
-				$where='status=1 AND borrado="'.$orden.'"';
-			}else{		//CANCELADOS
-				$where='borrado=1';
-			}
+				if($tipo=='todos'){
+					$where='1=1';
+				}elseif($tipo=='porpagar'){
+					$where='status=0 AND borrado=0';
+				}elseif($tipo=='pagado'){
+					$where='status=1 AND borrado=0';
+				}else{		//CANCELADOS
+					$where='borrado=1';
+				}
 
-			if(isset($month) && !empty($month)){
-				$where.=' AND MONTH(`fechafactura`) = "'.$month.'" ';
+
+				if(isset($year) && !empty($year)){
+					//$where.=' AND EXTRACT(YEAR FROM `fechafactura`) = "'.$year.'" ';
+					$where.=' AND YEAR(`fechafactura`) = "'.$year.'" ';
+				}
+
+				if(isset($monthinicial) && !empty($monthinicial)){
+					$where.=' AND MONTH(`fechafactura`) >= "'.$monthinicial.'" ';
+				}
+
+				if(isset($monthfinal) && !empty($monthfinal)){
+					$where.=' AND MONTH(`fechafactura`) <= "'.$monthfinal.'" ';
+				}
+			}else{
+				
+				if($tipo=='pagado'){
+					$where='status=1 AND borrado=0';
+				}elseif($tipo=='borrado'){		//CANCELADOS
+					$where='borrado=1';
+				}else{
+					$where='status=1 AND borrado=0';
+				}
+
+				if(isset($year) && !empty($year)){
+					//$where.=' AND EXTRACT(YEAR FROM `fechapagado`) = "'.$year.'" ';
+					$where.=' AND YEAR(`fechapagado`) = "'.$year.'" ';
+				}
+
+				if(isset($monthinicial) && !empty($monthinicial)){
+					$where.=' AND MONTH(`fechapagado`) >= "'.$monthinicial.'" ';
+				}
+
+				if(isset($monthfinal) && !empty($monthfinal)){
+					$where.=' AND MONTH(`fechapagado`) <= "'.$monthfinal.'" ';
+				}
+
 			}
 			
-			if(isset($year) && !empty($year)){
-				//$where.=' AND EXTRACT(YEAR FROM `fechafactura`) = $year';
-				$where.=' AND YEAR(`fechafactura`) = "'.$year.'" ';
-			}
-
 			$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE ".$where); 
 
 			$stmt -> execute();
 
+			//echo sprintf('Consulta es: %s %s', $where, $solopagadas);
+			//die();
 			return $stmt -> fetchAll();
 
 		}

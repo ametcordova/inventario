@@ -8,6 +8,7 @@ class ModeloOServicios{
 	REGISTRO ORDEN DE SERVICIO
 =============================================*/
 static public function mdlGuardarOS($tabla, $datos, $productos, $cantidades){
+	
 	try {      
 		 $estatus=1; 
 		 $stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(ordenservicio, telefono, id_almacen, id_tecnico, fecha_instalacion, nombrecontrato, datos_instalacion, datos_material, firma, observaciones, estatus, ultusuario) VALUES (:ordenservicio, :telefono, :id_almacen, :id_tecnico, :fecha_instalacion, :nombrecontrato, :datos_instalacion, :datos_material, :firma, :observaciones, :estatus, :ultusuario)");
@@ -85,8 +86,8 @@ static public function mdlActualizarTransito($tabla, $datos, $productos, $cantid
 			
 		}		//FIN DEL FOR
 
-		return 'resp:'.$rsp.' id:'.$id.' disp:'.$disponible.' cant:'.$cant.' entra:'.$entra;
-		//return 'ok';
+		//return 'resp:'.$rsp.' id:'.$id.' disp:'.$disponible.' cant:'.$cant.' entra:'.$entra;
+		return http_response_code(200);
 
 		$sql = null;		
 
@@ -106,7 +107,13 @@ try{
  	//$where='1=1' AND os.estatus>0;
 		  
 	$where="os.fecha_instalacion>='".$fechadev1."' AND os.fecha_instalacion<='".$fechadev2."' ";
-	$where.=" AND os.id_tecnico='".$valor."' ";
+	$admon=$_SESSION["perfil"];
+	if($admon=="Administrador"){
+		$where.=" AND os.id_tecnico>0";
+	}else{
+		$where.=" AND os.id_tecnico='".$valor."' ";
+	}
+	
 
     $stmt = Conexion::conectar()->prepare("SELECT os.`id`,os.`id_empresa`, os.id_tecnico, os.`ordenservicio`,os.`telefono`,user.nombre AS tecnico, alm.nombre AS almacen, os.`fecha_instalacion`, os.`estatus`, os.factura
     FROM $tabla os
@@ -383,5 +390,12 @@ SELECT * FROM hist_salidas WHERE id_producto = 4 AND id_tecnico=13 AND id_almace
 		$stmt=Conexion::conectar()->prepare("UPDATE $tabla SET disponible=disponible-(:disponible), ultusuario=:ultusuario 
 		WHERE id = :id AND id_producto = :id_producto AND id_tecnico= :id_tecnico AND id_almacen= :id_almacen AND id_tipomov>0 AND disponible>0
 		ORDER BY fecha_salida");
+
+//Si el usuario no existe lo insertamos,
+//y si ya existe lo actualizamos
+$consulta_sql = "INSERT INTO usuarios(id, imagen, nombre)\n".
+                "    VALUES ('$id', '$img', '$nombre')\n".
+                "ON DUPLICATE KEY\n".
+                "    UPDATE imagen = VALUES(imagen), nombre=VALUES(nombre);";		
 
 */	

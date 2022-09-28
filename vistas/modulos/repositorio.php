@@ -73,9 +73,9 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
             </div>
 
             <div class="col-md-0.5 col-auto">
-              <div class="form-check mb-2">
+              <div class="form-check mb-1">
                 <input class="form-check-input" type="checkbox" id="CheckPublic">
-                <label class="form-check-label" for="autoSizingCheck">Público</label>
+                <label class="form-check-label bg-warning text-dark px-1 rounded" for="autoSizingCheck">Público</label>
               </div>
             </div>
 
@@ -107,7 +107,7 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                 <tr style="font-size:0.80em">
                   <th translate="no" style="width:4%;">#</th>
                   <th translate="no" style="width:34%;">Descripción.</th>
-                  <th translate="no" style="width:24%;">Nombre archivo</th>
+                  <th translate="no" style="width:20%;">Nombre archivo</th>
                   <th translate="no" style="width:9%;">Usuario</th>
                   <th translate="no" style="width:9%;">Stat</th>
                   <th translate="no" style="width:4%;">Tipo</th>
@@ -150,6 +150,41 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
   </div>
 </div>
 
-<script defer src="vistas/js/repositorio.js?v=06012022"></script>
+<!-- ********************************************************************** */ -->
+<!-- Modal para visualizar imagen del producto -->
+<div class="modal fade" id="modalEditFile" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 class="modal-title" id="ModalEditTitle"></h6>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body text-center">
+            <div class="form-group col-md-6">
+            <label for="usuariopermitidos">Seleccionar Usuarios permitidos:</label>
+                <select multiple="multiple[]" class="form-control form-control-sm usuariospermitidos" id="selUsuario" name="selUsuario[]" tabindex="2" title='Usuarios permitidos'>
+                 <?php
+                  $campo=null;
+                  $valor=null;
+                  $usuarios=ControladorUsuarios::ctrMostrarUsuarios($campo, $valor);
+                    foreach($usuarios as $key=>$value){
+                        echo '<option onlyslave="True" value="'.$value["id"].'">'.$value["nombre"].'</option>';
+                    }                    
+                  ?>								
+				        </select>
+            </div>
+          
+      </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--*/ -->
+
+<script defer src="vistas/js/repositorio.js?v=07092022"></script>
 <!-- <script defer src="vistas/js/progreso.js?v=05012022"></script> -->
 <script defer src="extensiones/upload.js?v=06102020"></script>

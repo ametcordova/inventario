@@ -1,6 +1,7 @@
 <?php
 session_start();
 date_default_timezone_set("America/Mexico_City");
+
 $fechaHoy=date("Y-m-d");
 
 require_once "../controladores/adminoservicios.controlador.php";
@@ -53,18 +54,12 @@ switch ($_GET["op"]){
 
 			if(getAccess($acceso, ACCESS_ACTIVAR)){
 			$botones='<td>
-                  <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Acción
-                  </button>
-                  <div class="dropdown-menu btn-sm">
-                    <a class="dropdown-item text-info bg-light" href="#" title="Ver"><i class="fa fa-eye"></i> &nbspVisualizar </a>
-                    <a class="dropdown-item text-warning bg-light btnEditarOS" data-id="'.$value['id'].'" editarDev="'.$value['id'].'" data-toggle="modal" href="#modalAgregarOS" title="Editar"><i class="fa fa-pencil"></i> &nbspEditar </a>
-                    <a class="dropdown-item text-primary bg-light btnPrintOS" idos="'.$value['id'].'" href="#" title="Generar PDF "><i class="fa fa-file-pdf-o"></i> &nbspReporte en PDF</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item text-danger bg-light btnBorrarDev" href="#" idDev="'.$value['id'].'"  title="Eliminar"><i class="fa fa-eraser"></i> &nbspEliminar </a>
-                  </div>
+                    <button class="btn btn-sm btn-info" href="#" title="Ver"><i class="fa fa-eye"></i></button>
+                    <button class="btn btn-sm btn-warning btnEditarOS" data-id="'.$value['id'].'" editarDev="'.$value['id'].'" data-toggle="modal" href="#modalAgregarOS" title="Editar"><i class="fa fa-pencil"></i></button>
+                    <button class="btn btn-sm btn-primary  btnPrintOS" idos="'.$value['id'].'" href="#" title="Generar PDF "><i class="fa fa-file-pdf-o"></i></button>
+                    <button class="btn btn-sm btn-danger  btnBorrarDev" href="#" idDev="'.$value['id'].'"  title="Eliminar"><i class="fa fa-eraser"></i></button>
                  </td>
-				</tr>';
+				';
 			}else{
 				$botones='<td></td>';
 			}
@@ -78,6 +73,7 @@ switch ($_GET["op"]){
 			      $value["almacen"],
 			      $fecha,
 			      $botonestado,
+				  $value["factura"],
                   $botones,
            );
         }
@@ -145,6 +141,9 @@ switch ($_GET["op"]){
 			//Creamos el JSON
 			$datos_material=json_encode($datos_material_array);
 
+			//$archivo=$_FILES['imagen']['tmp_name'];//Contiene el archivo
+			$firma=isset($_POST["firma"])?$_POST["firma"]:"Sin Firma";
+
 			$datos = array(
 				"ordenservicio"		=>$_POST["numeroos"],
 				"telefono" 			=>$_POST["numtelefono"],
@@ -154,17 +153,19 @@ switch ($_GET["op"]){
 				"nombrecontrato"	=>$_POST["nombrecontrato"],
 				"datos_instalacion"	=>$datos_instalacion,
 				"datos_material"	=>$datos_material,
-				"firma"				=>$firma=isset($_POST["firma"])?$_POST["firma"]:"",
+				"firma"				=>$firma,
+				//"firma"				=>$archivo,
 				"observaciones"		=>$_POST["observacionesos"],
 				"ultusuario"		=>$_POST["idDeUsuario"]
 			);
 
 			$rspta = ControladorOServicios::ctrGuardarOS($tabla, $datos, $productos, $cantidades);
-				
 			echo json_encode($rspta);
 
+			//echo json_encode($_POST["firma"]);
+
 		}else{
-            $respuesta = array('idproducto' => $idproducto, 'error' => 'sindatos');		           
+            $respuesta = array('idproducto' => $idproducto, 'error' => 'sindatos', 'status'=>http_response_code(400));		           
             echo json_encode($respuesta);
        }
     break;    

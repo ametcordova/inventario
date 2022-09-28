@@ -8,18 +8,26 @@ class ModeloClientes{
 	CREAR CLIENTE
 =============================================*/
 
-public function mdlIngresarCliente($tabla, $datos){
+static public function mdlIngresarCliente($tabla, $datos){
 	try{
 
-		$stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(nombre, rfc, email, telefono, direccion, fecha_nacimiento) 
-														VALUES (:nombre, :rfc, :email, :telefono, :direccion, :fecha_nacimiento)");
+		$stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(nombre, rfc, curp, num_int_ext, colonia, codpostal, ciudad, estado, regimenfiscal, act_economica, formadepago, email, telefono, direccion, fecha_creacion) VALUES (:nombre, :rfc, :curp, :num_int_ext, :colonia, :codpostal, :ciudad, :estado, :regimenfiscal, :act_economica, :formadepago, :email, :telefono, :direccion, :fecha_creacion)");
 
 		$stmt->bindParam(":nombre", $datos["nombre"], PDO::PARAM_STR);
 		$stmt->bindParam(":rfc", $datos["rfc"], PDO::PARAM_STR);
-		$stmt->bindParam(":email", $datos["email"], PDO::PARAM_STR);
-		$stmt->bindParam(":telefono", $datos["telefono"], PDO::PARAM_STR);
+		$stmt->bindParam(":curp", $datos["curp"], PDO::PARAM_STR);
 		$stmt->bindParam(":direccion", $datos["direccion"], PDO::PARAM_STR);
-		$stmt->bindParam(":fecha_nacimiento", $datos["fecha_nacimiento"], PDO::PARAM_STR);
+		$stmt->bindParam(":num_int_ext", $datos["num_int_ext"], PDO::PARAM_STR);
+		$stmt->bindParam(":colonia", $datos["colonia"], PDO::PARAM_STR);
+		$stmt->bindParam(":codpostal", $datos["codpostal"], PDO::PARAM_INT);
+		$stmt->bindParam(":telefono", $datos["telefono"], PDO::PARAM_STR);
+		$stmt->bindParam(":ciudad", $datos["ciudad"], PDO::PARAM_STR);
+		$stmt->bindParam(":estado", $datos["estado"], PDO::PARAM_INT);
+		$stmt->bindParam(":regimenfiscal", $datos["regimenfiscal"], PDO::PARAM_INT);
+		$stmt->bindParam(":act_economica", $datos["act_economica"], PDO::PARAM_STR);
+		$stmt->bindParam(":formadepago", $datos["formadepago"], PDO::PARAM_INT);
+		$stmt->bindParam(":email", $datos["email"], PDO::PARAM_STR);
+		$stmt->bindParam(":fecha_creacion", $datos["fecha_creacion"], PDO::PARAM_STR);
 
 		if($stmt->execute()){
 
@@ -31,7 +39,6 @@ public function mdlIngresarCliente($tabla, $datos){
 		
 		}
 
-		$stmt->close();
 		$stmt = null;
 
 	} catch (Exception $e) {
@@ -43,7 +50,7 @@ public function mdlIngresarCliente($tabla, $datos){
 
 /*=============================================
 	MOSTRAR CLIENTES
-	=============================================*/
+=============================================*/
 static public function mdlMostrarClientes($tabla, $item, $valor){
 	try{
 		if($item != null){

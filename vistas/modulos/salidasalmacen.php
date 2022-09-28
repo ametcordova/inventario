@@ -92,7 +92,7 @@ $fechaHoy = date("Y-m-d");
 
         <div class="card">
           <div class="card-body">
-            <table class="table table-bordered table-hover table-compact table-sm table-striped dt-responsive" id="dt-salidasalmacen" cellspacing="0" width="100%">
+            <table class="table table-bordered table-hover compact table-sm table-striped dt-responsive" id="dt-salidasalmacen" cellspacing="0" width="100%">
               <thead class="thead-dark" style="font-size:.8rem; height:1.4px">
                 <tr>
                   <th style="width:9px;">#</th>
@@ -261,10 +261,10 @@ $fechaHoy = date("Y-m-d");
             <div class="wrapper">
               <section class="invoice">
                 <div class="row">
-                  <div class="col-12 col-sm-12 table-hover table-compact table-responsive-sm">
-                    <table class="table table-sm table-compact table-bordered table-striped" id="detalleSalidasAlmacen" >
+                  <!-- <div class="col-12 col-sm-12 table-hover table-compact table-responsive-sm">  -->
+                    <table class="table table-bordered table-hover compact table-sm table-striped dt-responsive" id="detalleSalidasAlmacen" cellspacing="0" width="100%">
 
-                      <thead class="thead-dark">
+                      <thead class="thead-dark" style="font-size:.8rem; height:1px">
                         <tr translate="no" class="text-center">
                         <th translate="no" style="width:2.5rem">Acción</th>
                         <th translate="no" style="width:2.5rem">#</th>
@@ -279,7 +279,7 @@ $fechaHoy = date("Y-m-d");
                         </tbody>
 
                     </table>
-                   </div>   <!-- /.col -->
+                   <!--</div>    /.col -->
                 </div>  <!-- /.row -->
 
                   <div class="row">

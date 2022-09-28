@@ -1,12 +1,14 @@
 <?php
 session_start();
 if(isset($_SESSION["iniciarSesion"]) && $_SESSION["iniciarSesion"]=="ok"){
+date_default_timezone_set('UTC');
+date_default_timezone_set("America/Mexico_City");
 setlocale(LC_ALL,"es_ES");
 ob_start();
 
 require_once "../../../controladores/salidasalmacen.controlador.php";
 require_once "../../../modelos/salidasalmacen.modelo.php";
-require_once "../../../funciones/funciones.php";
+//require_once "../../../funciones/funciones.php";
 require_once '../../../config/parametros.php';
 
 class imprimirSalida{
@@ -15,14 +17,13 @@ public $codigo;
 
 public function traerImpresionSalida(){
 
-$fechahoy=fechaHoraMexico(date("d-m-Y G:i:s"));
+$fechahoy = date('d-m-Y h:i:s a', time());
 
 //TRAEMOS LA INFORMACIÓN DE LA SALIDA
 $campo = "id_salida";
 $valor = $_GET["codigo"];
 
 $respuestaAlmacen = ControladorSalidasAlmacen::ctrPrintSalidaAlmacen($campo, $valor);
-
 
 /*
 $fecha = substr($respuestaVenta["fecha"],0,-8);
@@ -245,6 +246,7 @@ $pdf->writeHTML($bloque7, false, false, false, false, '');
 //SALIDA DEL ARCHIVO 
  $nombre_archivo="reporte_salida".trim($valor).".pdf";   //genera el nombre del archivo para descargarlo
  $pdf->Output($nombre_archivo);
+ ob_end_flush();
 }else{
   
 $js = <<<EOD
@@ -265,11 +267,11 @@ $pdf->Output("salida.pdf","I");
 }else{
 	//include '../../../vistas/plantilla.php'; <td style="width:65px"><img src="../../../config/logotipo.png"></td>
 	echo "no tienes acceso a este reporte.";
+	ob_end_flush();
 }
 
 
 $salida = new imprimirSalida();
 $salida -> codigo = $_GET["codigo"];
 $salida -> traerImpresionSalida();
-
 ?>
