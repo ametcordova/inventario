@@ -1,6 +1,6 @@
 <style>
   .select2-results__options {
-    font-size: 12px !important;
+    font-size: 11px !important;
   }
 
 table.dataTable.dataTable_width_auto {
@@ -96,7 +96,7 @@ $fechaHoy = date("Y-m-d");
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-
+          
         <div class="card">
           <div class="card-body">
             <table class="table table-bordered table-hover compact table-sm table-striped dt-responsive" id="dt-FacturaIngreso" cellspacing="0" width="100%">
@@ -104,6 +104,7 @@ $fechaHoy = date("Y-m-d");
                 <tr style="font-size:0.95em">
                   <th class="text-center" style="width:1em;">#</th>
                   <th class="text-center" style="width:1em;">Folio</th>
+                  <th class="text-center" style="width:1em;">F. Elab.</th>
                   <th class="text-center" style="width:1em;">F. Timb.</th>
                   <th style="width:14em;">Receptor</th>
                   <th class="text-center" style="width:4em;">Tipo Comp.</th>
@@ -153,6 +154,7 @@ $fechaHoy = date("Y-m-d");
                 <input type="hidden" name="idDeUsuario" value="<?php echo $_SESSION['id']; ?>">
                 <input type="hidden" name="idtipocomprobante" value='I'>
                 <input type="hidden" name="idexportacion" value='01'>
+                <input type="hidden" name="tasaimpuesto" value='16.00'>
               </div>
 
               <div class="form-group col-md-1">
@@ -188,9 +190,9 @@ $fechaHoy = date("Y-m-d");
                     $valor=null;
                     $clientes=ControladorClientes::ctrMostrarClientes($item, $valor);
                     foreach($clientes as $key=>$value){
-                        // if($value["id"]=="5"){
-                        //   echo '<option selected value="'.$value["id"]. '-' . $value["nombre"] .'">'.$value["nombre"].'</option>';    
-                        // }else{
+                        //  if($value["id"]=="5"){
+                        //    echo '<option selected value="'.$value["id"].'">'.$value["rfc"].'-'.$value["nombre"].'</option>';
+                        //  }else{
                           echo '<option value="'.$value["id"].'">'.$value["rfc"].'-'.$value["nombre"].'</option>';
                         //}
                     }
@@ -279,14 +281,16 @@ $fechaHoy = date("Y-m-d");
 
               <div class="col-md-1">
                 <input type="text" class="form-control form-control-sm text-center mb-1" name="unidaddemedida" id="unidaddemedida" readonly title="Unidad">
+                <input type="hidden" name="nvonombreudemed" id="nvonombreudemed">
               </div>
 
               <div class="col-md-1">
                 <input type="number" class="form-control form-control-sm text-center mb-1" name="nvacantidad" id="nvacantidad" value="" step="any" tabindex="12" title="cantidad">
+                <input type="hidden" name="nvoobjetoimp" id="nvoobjetoimp">
               </div>
 
               <div class="col-md-2">
-                <input type="number" class="form-control form-control-sm mb-1 text-right" name="nvopreciounitario" id="nvopreciounitario" value="0" step="any" min="0" tabindex="13" title="Precio Unitario">
+                <input type="number" class="form-control form-control-sm mb-1 text-right" name="nvovalorunitario" id="nvovalorunitario" value="0" step="any" min="0" tabindex="13" title="Precio Unitario">
               </div>
 
               <div class="col-md-1">
@@ -307,13 +311,13 @@ $fechaHoy = date("Y-m-d");
 
                       <thead class="thead-dark" style="font-size:.8rem; height:1px">
                         <tr translate="no" class="text-center">
-                          <th translate="no" style="width:2.5rem">Acción</th>
+                          <th translate="no" class="text-center" style="width:4.4rem">Acción</th>
                           <th translate="no" style="width:2.5rem">#</th>
                           <th translate="no" style="width:6rem">Clave</th>
                           <th translate="no">Descripción Producto</th>
-                          <th translate="no" style="width:5rem">Cant</th>
-                          <th translate="no" style="width:09rem">P.U.</th>
-                          <th translate="no" style="width:10rem">Precio Tot.</th>
+                          <th translate="no" style="width:4rem">Cant</th>
+                          <th translate="no" style="width:6rem">P.U.</th>
+                          <th translate="no" style="width:6rem">Precio Tot.</th>
                         </tr>
                       </thead>
                         <tbody id="tabladedetalles">
@@ -340,13 +344,13 @@ $fechaHoy = date("Y-m-d");
                         </button>
                     </div>
 
-                    <div class="col-lg-2 col-md-2 col-sm-10 text-right" id="count-row">
+                    <div class="col-lg-2 col-md-2 col-sm-10 text-right">
                         <button type="button" class="btn badge-warning btn-sm mb-1 mr-1 p-0">Impuesto: &nbsp 
                           <span class="badge badge-warning" id="impuesto" style="font-size:1rem;"></span>
                         </button>
                     </div>
 
-                    <div class="col-lg-2 col-md-2 col-sm-10 text-right" id="count-row">
+                    <div class="col-lg-2 col-md-2 col-sm-10 text-right">
                         <button type="button" class="btn badge-warning btn-sm mb-1 mr-1 p-0">Total: &nbsp 
                           <span class="badge badge-warning" id="total" style="font-size:1rem;"></span>
                         </button>

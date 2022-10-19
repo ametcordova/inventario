@@ -142,7 +142,7 @@
                     <th translate="no" style="width:3%;">#Fact</th>
                     <th translate="no" style="width:15%;">Nombre</th>
                     <th translate="no" style="width:14%;">Tipo de Trab.</th>
-                    <th translate="no" style="width:6%;"># Orden</th>
+                    <th translate="no" style="width:6%;">#Orden</th>
                     <th translate="no" style="width:7%;">F. Fact.</th>
                     <th translate="no" style="width:7%;">Subtotal</th>
                     <th translate="no" style="width:6%;">iva</th>
@@ -151,7 +151,7 @@
                     <th translate="no" style="width:7%;">F. Entregado</th>
                     <th translate="no" style="width:7%;">F.Pag/Can</th>
                     <th translate="no" style="width:3%;">#RP</th>
-                    <th translate="no" style="width:5%;">Stat</th>
+                    <th translate="no" style="width:5%;" class="text-center"  >Stat</th>
                     <th translate="no" style="width:7%;" class="text-center">Acción</th>
                 </tr>
                 </thead>
@@ -163,7 +163,7 @@
                     <th>No.</th>
                     <th></th>
                     <th></th>
-                    <th></th>
+                    <th>Orden</th>
                     <th></th>
                     <th></th>
                     <th></th>
@@ -441,7 +441,8 @@
               <div class="input-group-prepend">
                       <span class="input-group-text"><i class="fa fa-plus"></i></span>
               </div>
-              <input type="number" class="form-control form-control-sm" placeholder="Subtotal" name="editaSubtotal" id="editaSubtotal" value="" step="any" data-toggle="tooltip" data-placement="top" title="Subtotal" tabindex="7" required>
+              <input type="number" class="form-control form-control-sm" placeholder="Subtotal" name="editaSubtotal" id="editaSubtotal" step="any" data-toggle="tooltip" data-placement="top" title="Subtotal" tabindex="7" required>
+              <input type="hidden" name="subtotalanterior" id="subtotalanterior">
             </div>
 
             <div class="input-group mb-3 col-md-6">
@@ -680,7 +681,7 @@
     </div>
   </div>
 </div>
-<script defer src="vistas/js/control-facturas.js?v=13092022"></script>
+<script defer src="vistas/js/control-facturas.js?v=01102022"></script>
 <!--===========================================================================================-->
 
 <!--================================= MODAL VER EXPEDIENTE DE FACTURA =======================================-->

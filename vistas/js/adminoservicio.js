@@ -1,4 +1,4 @@
-//  $( "#modalAgregarOS" ).draggable();
+//$( "#modalAgregarOS" ).draggable();
 var item;
 var data;
 var arrayProductosOS=new Array();
@@ -6,6 +6,7 @@ var renglonesOS=cantSalidaOS=0;
 var numserie=alfanumerico='';
 var captRangoFecha;
 var idsfacturas=new Array();
+const { fromEvent } = rxjs;
 //$("#msgsaveok").addClass("d-none");
 
 
@@ -111,7 +112,7 @@ function listarOServicios(){
             btns.addClass('btn btn-success btn-sm');
           },  
           "columnDefs": [
-            {"className": "dt-center", "targets": [1,3,4,6,7,8]},
+            {"className": "dt-center", "targets": [1,3,4,6,7,8,9,10]},
           
             //{"className": "dt-right", "targets": [3,4]}				//"_all" para todas las columnas
             ],    
@@ -129,30 +130,60 @@ function listarOServicios(){
             },
       "bDestroy": true,
       "iDisplayLength": 10,//Paginación
-      "order": [[ 7, 'desc' ], [ 0, 'desc' ]] //Ordenar (columna,orden)
+      "order": [[ 6, 'desc' ], [ 0, 'desc' ]] //Ordenar (columna,orden)
     }).DataTable();    
       
 
 }
 // ========= FIN LISTAR EN EL DATATABLE REGISTROS DE LA TABLA TABLAOS================
 
+/**************************************************************/
 //añadir un INPUT en la columna de No. de Fact
 $('#DatatableOS tfoot th').each( function () {
   var title=$(this).text();
-    //console.log(title);
-    if(title=="Fact"){
-      $(this).html('<input type="text" id="myFact" style="width:40px; height:20px;" placeholder="'+title+'"/>');
+
+  if(title=="ID"){
+    $(this).html('<input type="text" id="myID" style="width:25px; height:20px;" placeholder="'+title+'"/>');
+  }
+  
+  if(title=="OS"){
+    $(this).html('<input type="text" id="myOS" style="width:50px; height:20px;" placeholder="'+title+'"/>');
+    //Hacer busqueda por la columna de No. de Fact. segun el dato del INPUT
+    $('#myOS').on( 'keyup change clear', function () {
+      if(tblOrdendeServicios.column(3)){
+        tblOrdendeServicios.column(3).search(this.value).draw();
+      };
+    } );
+  }
+  
+  if(title=="Teléfono"){
+    $(this).html('<input type="text" id="myTelefono" style="width:60px; height:20px;" placeholder="'+title+'"/>');
+      //Hacer busqueda por la columna de No. de Fact. segun el dato del INPUT
+      $('#myTelefono').on( 'keyup change clear', function () {
+        if(tblOrdendeServicios.column(4)){
+          tblOrdendeServicios.column(4).search(this.value).draw();
+        };
+      } );
+  }
+  
+  if(title=="Fact"){
+    $(this).html('<input type="text" id="myFact" style="width:40px; height:20px;" placeholder="'+title+'"/>');
+    $('#myFact').on( 'keyup change clear', function () {
+      if(tblOrdendeServicios.column(9)){
+         tblOrdendeServicios.column(9).search(this.value).draw();
+      };
+    } );
+    
   }
 });
 
 //Hacer busqueda por la columna de No. de Fact. segun el dato del INPUT
-$('#myFact').on( 'keyup change clear', function () {
-  if(tblOrdendeServicios.column(8)){
-     //console.log(tblOrdendeServicios.column(8))
-     tblOrdendeServicios.column(8).search(this.value).draw();
+$('#myID').on( 'keyup change clear', function () {
+  if(tblOrdendeServicios.column(0)){
+     tblOrdendeServicios.column(0).search(this.value).draw();
   };
 } );
-
+/**************************************************************/
 
 /* ====================click para seleccionar OS ====================*/
 $('#DatatableOS tbody').on( 'click', 'tr', function () {
@@ -162,7 +193,6 @@ $('#DatatableOS tbody').on( 'click', 'tr', function () {
   idsfacturas=[];
     for(var i=0; i<x; i++) {
       idsfacturas.push(tblOrdendeServicios.rows('.selected').data()[i][0]);
-      //console.log(idsfacturas[i]);
     };
 });
 /* ====================Fin para seleccionar OS ====================*/
@@ -172,15 +202,14 @@ $('#DatatableOS tbody').on( 'click', 'button.btnEstado', function (event) {
   var dtr=document.getElementById("DatatableOS");
   let elemento = this;
   const $button = document.getElementById('DatatableOS');
-  const click$ = Rx.Observable.fromEvent($button, 'click');
+  const click$ = fromEvent($button, 'click');
   //console.log(elemento);
   let id = elemento.getAttribute('data-id');
   let st = elemento.getAttribute('data-estado');
 
   if(st==0){    //si OS esta facturado
-  
-    swal({
-      title: "¿Cambiar estatus de OS?",
+      swal({
+      title: "¿Cambiar estatus de Facturado a OS?",
       text: "¡Si no está seguro, puede Cancelar la acción!",
       icon: "warning",
       buttons: ["Cancelar", "Sí, Cambiar"],
@@ -395,6 +424,8 @@ if(sald>cant || sald<0){
 $("#agregarProductoOS").click(function(event){
   event.preventDefault();
   let cadena=$("#selecProductoOS").val();
+  if(cadena==null)
+  return;
   let idproducto= cadena.substr(0, cadena.indexOf('-'));  //extrae el Id del prod
   let largo=idproducto.length;
   let id_producto=parseInt(idproducto);
@@ -514,20 +545,20 @@ $("body").on("submit", "#formularioAgregaOS", function( event ) {
       if (aceptado) {
           let formData = new FormData($("#formularioAgregaOS")[0]);
   
-          if($("#signatureparent").jSignature("isModified")){
+          //if($("#signatureparent").jSignature("isModified")){
             //let firma = $("#signatureparent").jSignature("getData", "image/svg+xml");
-            let firma = $("#signatureparent").jSignature("getData", "svg");
+            //let firma = $("#signatureparent").jSignature("getData", "svg");
             //blob = (firma[1], "image/svg+xml");
             //formData.append("firma", blob);
 
             //CODIFICAR INSERTAR EN BD
-             for (var i = 0; i < firma.length; i++) {
-               var file = firma[i];
-               //console.log("FIRMA: ",file);
-             }
-             formData.append("firma", file);
+            //  for (var i = 0; i < firma.length; i++) {
+            //    var file = firma[i];
+            //    //console.log("FIRMA: ",file);
+            //  }
+             //formData.append("firma", file);
   
-          }
+          //}
 
           //for (var pair of formData.entries()){console.log(pair[0]+ ', ' + pair[1]);}          
 
@@ -535,7 +566,7 @@ $("body").on("submit", "#formularioAgregaOS", function( event ) {
              method  : 'post', 
              url : 'ajax/adminoservicio.ajax.php?op=guardarOS', 
              data : formData, 
-             headers: {'Content-Type': 'image/svg+xml'},
+             //headers: {'Content-Type': 'image/svg+xml'},
            }) 
           // fetch('ajax/adminoservicio.ajax.php?op=guardarOS', {
           //   method: 'POST',
@@ -544,7 +575,9 @@ $("body").on("submit", "#formularioAgregaOS", function( event ) {
         
           .then((res)=>{  
             if(res.status==200) {
-              //console.log(res.data, res.status)
+              console.log(res.status)
+              console.log(res.data['status'])
+              console.log(res.data)
 
               $('#DatatableOS').DataTable().ajax.reload(null, false);
 
@@ -625,7 +658,7 @@ $('#daterange-btnOS').daterangepicker({
           "Junio",
           "Julio",
           "Agosto",
-          "Setiembre",
+          "Septiembre",
           "Octubre",
           "Noviembre",
           "Diciembre"

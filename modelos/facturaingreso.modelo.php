@@ -108,7 +108,7 @@ static public function mdlMostrarUsoCFDI($tabla, $item, $valor, $aplica){
 static public function mdlgetClavesfact($tabla, $campo, $valor){
     try {    
 
-        $stmt = Conexion::conectar()->prepare("SELECT tb1.id, tb1.idprodservicio, tb1.concepto, tb1.cantidad, tb1.preciounitario, tb1.unidadmedida, uni.nombre
+        $stmt = Conexion::conectar()->prepare("SELECT tb1.id, tb1.idprodservicio, tb1.concepto, tb1.objimpuesto, tb1.cantidad, tb1.preciounitario, tb1.unidadmedida, uni.nombre
         FROM $tabla tb1
         INNER JOIN c_claveunidad uni ON tb1.unidadmedida=uni.id_cfdi
         WHERE tb1.$campo LIKE '%".$valor."%' OR tb1.concepto LIKE '%".$valor."%' ");
@@ -182,7 +182,29 @@ static public function mdlCrearFacturaIngreso($tabla, $facturaingreso){
 
 }
 
+/*=============================================
+	BUSCAR 
+=============================================*/
+static public function mdlTimbrarFactura($tabla, $campo, $valor){
+    try {    
 
+        $stmt = Conexion::conectar()->prepare("SELECT tb1.*
+        FROM $tabla tb1
+        WHERE tb1.$campo= :$campo");
+        
+        $stmt->bindParam(":".$campo, $valor, PDO::PARAM_INT);
+
+        $stmt -> execute();
+
+        return $stmt -> fetch();
+
+        $stmt = null;
+
+    } catch (Exception $e) {
+        echo "Failed: " . $e->getMessage();
+    }
+
+}
 
 
 } //fin de la clase

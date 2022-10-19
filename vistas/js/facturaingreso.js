@@ -83,8 +83,15 @@ function dt_ListarFacturasIngreso(){
           btns.addClass('btn btn-success btn-sm');
         }, 
         "columnDefs": [
-          {"className": "dt-center", "targets": [0,1,2,4,6,7]},
-          {"className": "dt-right", "targets": [5]}				//"_all" para todas las columnas
+          {"width:":"10px", "className": "dt-center", "targets": [0]},
+          {"width:":"12px", "className": "dt-center", "targets": [1]},
+          {"width:":"25px", "className": "dt-center", "targets": [2]},
+          {"width:":"25px", "className": "dt-center", "targets": [3]},
+          {"width:":"100px", "className": "dt-left", "targets": [4]},
+          {"width:":"15px", "className": "dt-center", "targets": [5]},
+          {"width:":"15px", "className": "dt-right", "targets": [6]},
+          {"className": "dt-center", "targets": [7]},
+          {"className": "dt-center", "targets": [8]}				//"_all" para todas las columnas
           ],
 		"ajax":
 				{
@@ -134,7 +141,7 @@ function dt_ListarFacturasIngreso(){
           "Junio",
           "Julio",
           "Agosto",
-          "Setiembre",
+          "Septiembre",
           "Octubre",
           "Noviembre",
           "Diciembre"
@@ -215,7 +222,7 @@ $("#nvoClienteReceptor").change(function(){
   let rfc=$("#nvoClienteReceptor option:selected" ).text();       //obtener el texto del valor seleccionado
   rfccliente= rfc.substr(0, rfc.indexOf('-'));
   rfccliente=rfccliente.trim();
-  console.log(rfccliente)
+  //console.log(rfccliente)
 
   $('input[name=rfcreceptor]').val(rfccliente);
 
@@ -227,7 +234,7 @@ $("#nvoClienteReceptor").change(function(){
     })
     .then((res)=>{ 
       if(res.status==200) {
-        console.log(res.data)
+        //console.log(res.data)
         if(res.data==false){
           $("#nvoregimenfiscalreceptor").val(0);
           $("#nvoFormaPago").val('');
@@ -274,7 +281,10 @@ function recorrerjson(data){
       $nuevaformapago.append('<option value='+data[i].id + '>' + data[i].id+'-'+data[i].descripcion + '</option>');
     })
 }
-/************************************************************ */
+
+/************************************************************** */
+/* FUNCION PARA MOSTRAR Y SELECCIONAR LA CLAVE DE PROD/SERVICIO*/
+/***************************************************************/
 $('#cveprodfactura').select2({
   placeholder: 'Selecciona.......',
   ajax: {
@@ -305,7 +315,7 @@ $('#cveprodfactura').select2({
   },
   minimumInputLength: 1
 });
-
+/************************************************************ */
 
 //CONSULTA EXISTENCIA DE PRODUCTO SELECCIONADO
 $("#cveprodfactura").change(function(event){
@@ -333,9 +343,11 @@ $("#cveprodfactura").change(function(event){
           $("#unidaddemedida").val('');
         }else{
           $("#nvoconcepto").val(res.data[0].concepto);
+          $("#nvoobjetoimp").val(res.data[0].objimpuesto);
           $("#unidaddemedida").val(res.data[0].unidadmedida);
+          $("#nvonombreudemed").val(res.data[0].nombre);
           $("#nvacantidad").val(res.data[0].cantidad);
-          $("#nvopreciounitario").val(res.data[0].preciounitario);
+          $("#nvovalorunitario").val(res.data[0].preciounitario);
         }
       }          
     }) 
@@ -354,23 +366,25 @@ $("#agregaProdFactura").click(function(event){
     let cantidad=$("#nvacantidad").val();
     let idProducto=$("#cveprodfactura").val();
     let unidaddemedida=$("#unidaddemedida").val();
+    let nombreudemed=$("#nvonombreudemed").val();
     let producto=$("#nvoconcepto").val();
-    let preciounitario=$("#nvopreciounitario" ).val();
+    let objimpuesto=$("#nvoobjetoimp").val();
+    let valorunitario=$("#nvovalorunitario" ).val();
     idProducto=parseInt(idProducto); 
     cantidad=parseFloat(cantidad);
-    preciototal=cantidad*preciounitario;
+    preciototal=cantidad*valorunitario;
        
     //Si no selecciona producto retorna o cantidad
       if(isNaN(idProducto) || isNaN(cantidad) || cantidad<1 ){
         return true;
       }  
     
-    console.log("prod:",idProducto, "cant:",cantidad, "medida:",unidaddemedida, "concepto:",producto, 'PU:',preciounitario, 'preciototal:',preciototal);
+    //console.log("prod:",idProducto, "cant:",cantidad, "medida:",unidaddemedida, "nombre med:",nombreudemed, "concepto:",producto,  'PU:',valorunitario, 'preciototal:',preciototal, "obj_imp:", objimpuesto);
     
     //GUARDA Y AGREGA PRODUCTOS A FACTURAR AL TBODY
     arrayProductos.push(idProducto);
-    addProductofactura(idProducto, cantidad, unidaddemedida, producto, preciounitario, preciototal);
-    //addProductoEntrada(idProducto, cantEntrada, udeMedida, codigointerno, descripcion, codigosku);
+    addProductofactura(idProducto, cantidad, unidaddemedida, nombreudemed, producto, valorunitario, preciototal, objimpuesto);
+  //addProductofactura(     0,         1,           2,           3,           4,            5           6             7);
 
 });  
 
@@ -383,53 +397,72 @@ function addProductofactura(...argsProductos){
   renglonesfacturar++;
   contenido.innerHTML+=`
   <tr class="filas" id="fila${renglonesfacturar}">
-    <td><button type="button" class="botonQuitar" onclick="eliminarProducto(${renglonesfacturar}, ${argsProductos[1]}, ${argsProductos[5]})" title="Quitar concepto"><i class="fa fa-window-close-o" aria-hidden="true"></i></button></td>
-    <td class='text-center'>${renglonesfacturar} <input type="hidden" name="idproducto[]" value="${argsProductos[0]}"</td>
-    <td class='text-center'>${argsProductos[0]}</td>
-    <td class='text-left'>${argsProductos[3]}</td>
+    <td><button type="button" class="btn btn-sm text-danger px-0 py-1 m-0" onclick="eliminarProducto(${renglonesfacturar}, ${argsProductos[1]}, ${argsProductos[6]})" title="Quitar concepto"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+    <button type="button" class="btn btn-sm text-info px-0 py-1 m-0" onclick="duplicarconcepto(${argsProductos[0]}, ${argsProductos[1]}, '${argsProductos[4]}', )" title="Duplicar concepto"><i class="fa fa-clone" aria-hidden="true"></i></button>
+    <input type="hidden" name="claveunidad[]" value="${argsProductos[2]}-${argsProductos[3]}"
+    </td>
+    <td class='text-center'>${renglonesfacturar} <input type="hidden" name="objetodeimpuesto[]" value="${argsProductos[7]}" </td>
+    <td class='text-center'>${argsProductos[0]} <input type="hidden" name="idproducto[]" value="${argsProductos[0]}" </td>
+    <td class='text-left'><input class="form-control form-control-sm" type="text" name="descripcion[]" value="${argsProductos[4]}"</td>  
     <td class='text-center'>${argsProductos[1]} <input type="hidden" name="cantidad[]" value="${argsProductos[1]}"</td>
-    <td class='text-right'>${argsProductos[4]} <input type="hidden" name="tasaimpuesto[]" value="16.00"</td>
     <td class='text-right'>${argsProductos[5]} <input type="hidden" name="preciounitario[]" value="${argsProductos[5]}"</td>
-    
+    <td class='text-right'>${argsProductos[6]} <input type="hidden" name="importe[]" value="${argsProductos[6]}"</td>
     </tr>
   `;
     cantidadfacturar+=argsProductos[1];
-    evaluaFilas(renglonesfacturar, cantidadfacturar, argsProductos[5]);
+    evaluaFilas(renglonesfacturar, cantidadfacturar, argsProductos[6],0);
   
     //DESPUES DE AÑADIR, SE INICIALIZAN SELECT E INPUT
-    $('#cveprodfactura').val(null).trigger('change');	
     $("#nvoconcepto").val('');
     $("#unidaddemedida").val('');
     $("#nvacantidad").val(0);
-    $("#nvopreciounitario").val(0);
+    $("#nvovalorunitario").val(0);
+    $('#cveprodfactura').val(null).trigger('change');
+    $("#cveprodfactura").val("0");	
+}
+
+function duplicarconcepto(cve, canti, descripcion){
+  $("#cveprodfactura").select2().val(cve).trigger('change');
+  setTimeout(function() { 
+    $("#nvacantidad").val(canti);
+    $("#nvoconcepto").val(descripcion);
+  }, 1000);
 }
 
 //QUITA ELEMENTO 
 function eliminarProducto(indice, restarcantidad, restarimporte){
-  console.log("entra a eliminar",indice)
+  //console.log("entra a eliminar",indice)
   $("#fila" + indice).remove();
   cantidadfacturar-=restarcantidad;
   cantidadimporte-=restarimporte;
   renglonesfacturar--;
   removeItemFromArr(arrayProductos, indice)
-  evaluaFilas(renglonesfacturar, cantidadfacturar, cantidadimporte);
+  //console.log(renglonesfacturar, cantidadfacturar, cantidadimporte,1);
+  evaluaFilas(renglonesfacturar, cantidadfacturar, cantidadimporte,1);
   evaluarElementos();
 }
 
-function evaluaFilas(totalRenglon, cantEntrante, subtotal){
-  sumasubtotal+=subtotal;
+function evaluaFilas(totalRenglon, cantEntrante, subtotal, flag){
+  flag==0?sumasubtotal+=subtotal:sumasubtotal=subtotal;
 	$("#subtotal").html(sumasubtotal);
+  cantidadimporte=sumasubtotal;   //para llevar el total en la variable global
   impuesto=(sumasubtotal*16)/100;
   sumatotal=sumasubtotal+impuesto;
-	$("#impuesto").html(impuesto);
-	$("#total").html(sumatotal);
+
+  let sumasubtotalTot=new Intl.NumberFormat('en', {style: 'currency',currency: 'USD',currencySign: 'accounting',}).format(sumasubtotal);
+  $("#subtotal").html(sumasubtotalTot);
+  let impuestoTot=new Intl.NumberFormat('en', {style: 'currency',currency: 'USD',currencySign: 'accounting',}).format(impuesto);
+	$("#impuesto").html(impuestoTot);
+  let sumatotalTot=new Intl.NumberFormat('en', {style: 'currency',currency: 'USD',currencySign: 'accounting',}).format(sumatotal);
+	$("#total").html(sumatotalTot);
+
 	$("#renglonentradas").html(totalRenglon);
 	$("#totalentradasalmacen").html(cantEntrante);
 	if(totalRenglon>0){
-	  $("#btnGuardarEntradasAlmacen").show();
+	  $("#btnGuardarFactura").show();
 	  $("#count-row").show();
-    }else{
-		//$("#btnGuardar").hide();
+  }else{
+		$("#btnGuardarFactura").hide();
 	}
 }
 
@@ -473,8 +506,8 @@ $("body").on("submit", "#formularioFactura", function( event ) {
           }) 
           .then((res)=>{ 
             if(res.status===200) {
-              //console.log(res.data)
-              console.log(res.data.status, res.data.data, res.data.msg)
+              console.log(res.data['status'])
+              //console.log(res.data.status, res.data.data, res.data.msg)
 
               $('#dt-FacturaIngreso').DataTable().ajax.reload(null, false);
               $('#modalCrearFactura').modal('hide')
@@ -497,9 +530,6 @@ function completa() {
   $("#alert1").addClass("d-none")
 }
 
-
-
-
 /*======================================================================*/
 function mostrarRespuesta(mensaje, ok){
 
@@ -520,14 +550,54 @@ function mostrarRespuesta(mensaje, ok){
   }
 }
 /*======================================================================*/
+/*=============================================
+
+=============================================*/
+function getIdFactura(elem){
+  let dataid = elem.dataset.idfactura;
+  let datafecha = elem.dataset.fechaelabora;
+  //console.log('id:',dataid, datafecha);
+  (async () => {
+    await axios.get('ajax/facturaingreso.ajax.php?op=TimbrarFact', {
+      params: {
+        dataid: dataid,
+        datafecha: datafecha
+      }
+    })
+
+    .then((res)=>{ 
+      if(res.status==200) {
+        console.log(res.data)
 
 
+        if(res.data==false){
+          console.log(res.data)
+        }
+      }          
+    }) 
+
+    .catch((err) => {throw err}); 
+  
+  })();  //fin del async
+
+}
 /************************************************************/
 
+/*===================================================
+ENVIA REPORTE DE ENTRADA AL ALMACEN DESDE EL DATATABLE
+===================================================*/
+$("#dt-FacturaIngreso tbody").on("click", "button.btnPrintPdf", function(){
+  let idPrintPdf = $(this).attr("data-id");
+  console.log(idPrintPdf); 
+    if(idPrintPdf.length > 0){
+     window.open("extensiones/fpdf/reportes/facturatimbrada.php?codigo="+idPrintPdf, "_blank");
+    }
+})
+/*===================================================
 
 /*================ AL SALIR DEL MODAL RESETEAR FORMULARIO ==================*/
 $("#modalCrearFactura").on('hidden.bs.modal', ()=> {
-  $("#agregaProdFactura").addClass("d-none");
+  //$("#agregaProdFactura").addClass("d-none");
   $('#formularioFactura')[0].reset();                //resetea el formulario
   $("#nvacantidad").val(0);                   //inicializa campo existencia
   $("#nvopreciounitario").val(0);                     //inicializa campo salida

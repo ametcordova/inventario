@@ -179,7 +179,7 @@ function dt_crtl_depositos(){
           {"className": "dt-right", "targets": [3,4]}				//"_all" para todas las columnas
           ],
           "footerCallback": function ( row, data, start, end, display ) {
-          var api = this.api();
+          //var api = this.api();
 
           // Total over this page subtotal
           var pageSubTot = api.column(3, {page:'current'}).data().sum();
@@ -199,7 +199,6 @@ function dt_crtl_depositos(){
           total=new Intl.NumberFormat('en', {style: 'currency',currency: 'USD',currencySign: 'accounting',}).format(total);
 
           //console.log(total);
-          
           $(api.column(2).footer()).html('<p class="text-right" >Total de la semana:</p>');
           $(api.column(3).footer()).html(subtotal);
           $(api.column(4).footer()).html(comision);

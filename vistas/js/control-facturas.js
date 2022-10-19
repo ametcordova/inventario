@@ -302,16 +302,18 @@ Borrar Factura
 $("#TablaFacturas").on("click", ".btnBorrarFactura", function(){
 
   var idFactura = $(this).attr("idFactura");
-  var numFactura = $(this).attr("numFactura");
+  var subtotalFactura = $(this).attr("subtotalFactura");
   var idEstatus = $(this).attr("idEstado");
+  var numFactura = $(this).attr("numFactura");
 
   var datos = new FormData();
-  let idEstado=parseInt(idEstatus)==1?0:1;
+  let idEstado=parseInt(idEstatus)==1?1:0;
+
   datos.append("idFactura", idFactura);
-  //datos.append("numFactura", numFactura);
+  datos.append("subtotalFactura", subtotalFactura);
   datos.append("idEstado", idEstado);
     
-    if(idEstatus==="1"){
+    if(idEstado===1){
       swal({
         title: "No se puede borrar factura ya pagada!",
         icon: "warning",
@@ -409,6 +411,7 @@ function mostrardatos(datos){
   $( "input[name='editaFechaEntregado']" ).val(datos.fechaentregado);
   $( "textarea[name='editaTipoTrabajo']" ).text(datos.tipotrabajo);		//campo textarea
   $( "input[name='editaSubtotal']" ).val(datos.subtotal);
+  $( "input[name='subtotalanterior']" ).val(datos.subtotal);
   $( "input[name='editaRetencion']" ).val(datos.imp_retenido);
   $( "input[name='editaIva']" ).val(datos.iva);
   $( "input[name='editaImporteFactura']" ).val(datos.importe);
@@ -470,6 +473,7 @@ $('#factpagadas').on('ifUnchecked', function (event) {
 
  //console.log(valoryear, valorradio, valormonth);
   if(valorradio!==undefined){
+    var saldo;
     tabla=$('#TablaFacturas').DataTable(
     {
       "aProcessing": true,//Activamos el procesamiento del datatables
@@ -563,7 +567,6 @@ $('#factpagadas').on('ifUnchecked', function (event) {
         ],
       "footerCallback": function ( row, data, start, end, display ) {
         var api = this.api();
-      //console.log(api,data);
 
       // Total over this page subtotal
       var pageSubTot = api.column(5, {page:'current'}).data().sum();
@@ -586,8 +589,11 @@ $('#factpagadas').on('ifUnchecked', function (event) {
       var total = api.column(8).data().sum();
       total=new Intl.NumberFormat('en', {style: 'currency',currency: 'USD',currencySign: 'accounting',}).format(total);
       //console.log(total);
+      saldo=new Intl.NumberFormat('en', {style: 'currency',currency: 'USD',currencySign: 'accounting',}).format(saldo);
 
-      $(api.column(4).footer()).html('Totales:');
+      $(api.column(1).footer()).html(`<label class='float-right'>Saldo Disponible:</label>`);
+      $(api.column(2).footer()).html(saldo);
+      $(api.column(4).footer()).html(`<label class='float-right'>Totales:</label>`);
       $(api.column(5).footer()).html(pageSubTot);
       $(api.column(6).footer()).html(pageTotiva);
       $(api.column(7).footer()).html(pageTotRet);
@@ -597,6 +603,9 @@ $('#factpagadas').on('ifUnchecked', function (event) {
     "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {		//cambiar el tamaño de la fuente
       if ( true ){ // your logic here
         $(nRow).addClass( 'customFont' );
+        //console.log(aData[14]);
+        saldo=aData[14];
+        
       }
       if(valorradio=="cancelado" || aData[3] == "CANCELADO" || aData[3] == "cancelado"){
         $('td', nRow).css('color', 'Red');
@@ -606,7 +615,10 @@ $('#factpagadas').on('ifUnchecked', function (event) {
             url: 'ajax/control-facturas.ajax.php?op=listar',
             data:{tiporeporte: valorradio, filteryear: valoryear, filtermonthstart: valormonthstart, filtermonthend: valormonthend, factpagadas: valorcheck},
             type : "get",
-            dataType : "json",						
+            dataType : "json",
+            // success : function(data) {
+            //   console.log(data.aaData[0][14]);
+            // },				
             error: function(e){
               console.log(e.responseText);
             }
@@ -642,15 +654,26 @@ $('#TablaFacturas tfoot th').each( function () {
   var title=$(this).text();
   //console.log(title);
     if(title=="No."){
-      $(this).html('<input type="text" id="myInput" style="width:40px; height:20px;" placeholder="'+title+'"/>');
-  }
+      $(this).html('<input type="text" id="myInputF" style="width:40px; height:20px;" placeholder="'+title+'"/>');
+    }
+    if(title=="Orden"){
+      $(this).html('<input type="text" id="myInputO" style="width:55%; height:20px;" placeholder="'+title+'"/>');
+    }
 });
 
 //Hacer busqueda por la columna de No. de Fact. segun el dato del INPUT
-$('#myInput').on( 'keyup change clear', function () {
+$('#myInputF').on( 'keyup change clear', function () {
   if(tabla.column(0)){
      //console.log(tableron.column())
      tabla.column(0).search(this.value).draw();
+  };
+} );
+
+//Hacer busqueda por la columna de No. de ODC. segun el dato del INPUT
+$('#myInputO').on( 'keyup change clear', function () {
+  if(tabla.column(3)){
+     //console.log(tableron.column())
+     tabla.column(3).search(this.value).draw();
   };
 } );
 

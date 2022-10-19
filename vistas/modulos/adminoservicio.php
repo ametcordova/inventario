@@ -11,12 +11,11 @@
 <script>
   //evitar que se desconecte.
   document.addEventListener("DOMContentLoaded", () => {
-    // Invocamos cada 5 minutos ;
-    const milisegundos = 500 * 1000;
+    // Invocamos cada 10 minutos ;
+    const milisegundos = 1000 * 1000;
     setInterval(() => {
-      //console.log("500 segundos.. refrescado")
-      fetch("vistas/modulos/refrescar.php");
-      // No esperamos la respuesta de la petición porque no nos importa
+      //console.log("1000 segundos.. refrescado")
+      fetch("vistas/modulos/refrescar.php");      // No esperamos la respuesta de la petición porque no nos importa
     }, milisegundos);
   });
 </script>
@@ -110,6 +109,7 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                   <th>Teléfono</th>
                   <th>Almacen</th>
                   <th>Fecha</th>
+                  <th>Us</th>
                   <th>Status</th>
                   <th>Fact</th>
                   <th class="text-center" style="width:11em;">Accion</th>
@@ -120,13 +120,14 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
               </tbody>
               <tfoot>
                 <tr class="thead-dark" style="height:10px !important; font-size:0.80em !important;">
-                  <th style="width:1em;">#</th>
+                  <th style="width:1em;">ID</th>
                   <th style="width:3em;">Emp.</th>
                   <th>Tecnico</th>
                   <th>OS</th>
                   <th>Teléfono</th>
                   <th>Almacen</th>
                   <th>Fecha</th>
+                  <th>Us</th>
                   <th>Status</th>
                   <th>Fact</th>
                   <th>Accion</th>
@@ -179,7 +180,7 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
 
               <div class="form-group col-md-4">
                   <label for=""><i class="fa fa-male"></i> Técnico <span class="text-danger">*</span> </label>
-                  <select id="nvotecnico" class="form-control form-control-sm" name="nvotecnico" tabindex="2" required>
+                  <select id="nvotecnico" class="form-control form-control-sm" name="nvotecnico" tabindex="1" required>
                     <option value="">Selecione Técnico</option>
                     <?php
                     $item = 'status';
@@ -195,7 +196,7 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                   <!-- data-date-end-date=no puede seleccionar una fecha posterior a la actual -->
                 <div class="form-group col-md-3">
                   <label for=""><i class="fa fa-hospital-o"></i> Almacen <span class="text-danger">*</span> </label>
-                  <select id="nuevoAlmacenOS" class="form-control form-control-sm" name="nuevoAlmacenOS" tabindex="1" required>
+                  <select id="nuevoAlmacenOS" class="form-control form-control-sm" name="nuevoAlmacenOS" tabindex="2" required>
                     <option value="">Seleccione Almacen</option>
                     <?php
                     $item = null;
@@ -420,8 +421,8 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
   </div> <!-- fin del modal-lg -->
 </div> <!-- fin del modal  <div class="form-row"></div>   -->
 
-<script defer src="vistas/js/funciones.js?v=01072022"></script>
+<script defer src="vistas/js/funciones.js?v=13102022"></script>
 <script defer src="extensiones/plugins/jsignature/jSignature.js?v=01072022"></script>
 <script defer src="extensiones/plugins/jsignature/jSignature.CompressorSVG.js"></script>
-<script defer src="vistas/js/adminoservicio.js?v=0509202201"></script>
+<script defer src="vistas/js/adminoservicio.js?v=13102022"></script>
 

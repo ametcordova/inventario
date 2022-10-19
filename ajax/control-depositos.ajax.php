@@ -82,8 +82,9 @@ switch ($_GET["op"]){
         $valor = trim(strip_tags($_POST['searchTerm']));
         $tabla = "cuentahabientes";
         $campo = "nombrecuentahab";
+        $estatus=1;
 
-        $respuesta = ControladorCtrolDepositos::ctrAjaxBeneficiario($tabla, $campo, $valor);
+        $respuesta = ControladorCtrolDepositos::ctrAjaxBeneficiario($tabla, $campo, $valor, $estatus);
 
         echo json_encode($respuesta);
     

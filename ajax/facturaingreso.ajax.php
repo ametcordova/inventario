@@ -48,20 +48,21 @@ switch ($_GET["op"]){
             $trf='</tr';
             $status="Timbrado";
 
-            $boton1 =getAccess($acceso, ACCESS_PRINTER)?"<td><button class='btn btn-success btn-sm px-1 py-1 btnPrintEntradaAlmacen' idPrintEntrada='".$value['id']."' title='Generar PDF '><i class='fa fa-file-pdf-o'></i></button></td> ":"";
+            $boton1 =getAccess($acceso, ACCESS_PRINTER)?"<td><button class='btn btn-success btn-sm px-1 py-1 btnPrintPdf' data-id='".$value['id']."' title='Generar PDF '><i class='fa fa-file-pdf-o'></i></button></td> ":"";
             $boton2 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-primary btn-sm px-1 py-1 btnEditEntradaAlmacen' idEditarEntrada='".$value['id']."' title='Editar Entrada' data-toggle='modal' data-target='#modalEditarEntradasAlmacen'><i class='fa fa-edit'></i></button></td> ":"";
             $boton3 =getAccess($acceso, ACCESS_DELETE)?"<td><button class='btn btn-danger btn-sm px-1 py-1 btnDelEntradasAlmacen' idDeleteEntradaAlm='".$value['id']."' title='Eliminar Entrada '><i class='fa fa-trash'></i></button></td> ":"";
             if($value["uuid"]!=""){
-                $boton4 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-dark btn-sm px-1 py-1 btnUpEntradasAlmacen' idUploadEntradaAlm='".$value['id']."' title='Archivos subidos' data-idupentrada='".$value['id']."' ><i class='fa fa-bell'></i> Timbrado</button></td> ":"";
+                $boton4 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-dark px-1 py-1' title='Factura timbrada'><i class='fa fa-bell fa-fw'></i> </button></td> ":"";
             }else{
-                $boton4 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-danger btn-sm px-1 py-1 btnUpEntradasAlmacen' idUploadEntradaAlm='".$value['id']."' title='Archivos subidos' data-idupentrada='".$value['id']."' ><i class='fa fa-bell-slash'></i> Sin Timbrar</button></td> ":"";
+                $boton4 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-danger px-1 py-1' onclick='getIdFactura(this)' title='Factura sin timbrar' data-idfactura='".$value['id']."' data-fechaelabora='".$value['fechaelaboracion']."' ><i class='fa fa-bell-slash fa-fw'></i> </button></td> ":"";
             };
             $botones=$boton1.$boton2.$boton3;
 
             $data[]=array(
                 $value['id'],
                 $value["folio"],
-                $fechaelaboracion,
+                $value["fechaelaboracion"],
+                $value["fechatimbrado"],
                 $value["nombrereceptor"],
                 $value["idtipocomprobante"],
                 $importeFact,
@@ -130,13 +131,41 @@ switch ($_GET["op"]){
                     preg_match('/^[#\.\,\-\/a-zA-Z0-9ñÑ ]+$/', $_POST["nvoClienteReceptor"]) &&
                     !empty($_POST["nvoregimenfiscalreceptor"])
                   ){
-
+                    //Tabla a guardar datos de la factura
                     $tabla = "facturaingreso";
+
+                    //calculo para sacar el total a facturar
                     $tasaimpuesto=16.00;
-                    $totalPU=array_sum($_POST["preciounitario"]);
+                    $totalPU=(float) array_sum($_POST["importe"]);
                     $totalimpuesto=($totalPU*$tasaimpuesto)/100;
                     $sumatotal=$totalPU+$totalimpuesto;
 
+                    //creamos un array para los conceptos
+                    $datosjson = array(); 
+
+					foreach ($_POST["idproducto"] as $clave=>$valor){
+						//echo "El valor de $clave es: $valor";
+						//$array = explode(", ", $string, 3);
+                        list($claveunidad, $nombreunidad) = explode('-', $_POST["claveunidad"][$clave]);
+						$datosjson[]=array(
+                                    "ClaveProdServ" => trim($_POST["idproducto"][$clave]),
+									"Cantidad"      => $_POST["cantidad"][$clave],
+									"ClaveUnidad"   => trim($claveunidad),
+									"Unidad"        => trim($nombreunidad),
+									"Descripcion"   => trim($_POST["descripcion"][$clave]),
+									"ValorUnitario" => $_POST["preciounitario"][$clave],
+									"Importe"       => $_POST["importe"][$clave],
+									"ObjetoImp"     => $_POST["objetodeimpuesto"][$clave]
+									);
+					};	
+
+                    //Creamos el JSON del Array
+                    $datos_json=json_encode($datosjson);
+
+                    if ($datos_json === FALSE) {
+                        throw new Exception("JSON mal formado");
+                    }             
+                    
                     /* `inventario`.`facturaingreso` */
                     $facturaingreso = array(
                         'serie' => 'A',
@@ -158,7 +187,7 @@ switch ($_GET["op"]){
                         'numctapago' => '',
                         'cfdirelacionados' => NULL,
                         //'conceptos' => '[{"id_producto":"1","cantidad":"1", "pu":"1105","impuesto":"176.80","retencion":"0.00","preciototal":"1281.80"},{"id_producto":"2","cantidad":"4","pu":"1105","impuesto":"707.20","retencion":"0.00","preciototal":"5127.20"}]',
-                        'conceptos' => '[{"id_producto":"1","cantidad":"1", "pu":"1105","impuesto":"176.80","retencion":"0.00","preciototal":"1281.80"},{"id_producto":"2","cantidad":"4","pu":"1105","impuesto":"707.20","retencion":"0.00","preciototal":"5127.20"}]',
+                        'conceptos' => $datos_json,
                         'observaciones' => $_POST["nvaObserva"],        //validar
                         'subtotal' => $totalPU,
                         'tasaimpuesto' =>$tasaimpuesto,
@@ -182,8 +211,46 @@ switch ($_GET["op"]){
         } catch (Exception $e) {
             json_output(json_build(403, null, $e->getMessage()));
         }    
-    
         break;
+
+        case 'TimbrarFact':
+            $fechaactual=new DateTime("now");
+            $fecha = new DateTime($_GET['datafecha']);
+            $diff = $fecha->diff($fechaactual);
+            //var_dump($diff);
+            //echo ( ($diff->days * 24 ) * 60 ) + ( $diff->i * 60 ) + $diff->s . ' seconds';
+            // passed means if its negative and to go means if its positive
+            //echo ($diff->invert == 1 ) ? ' passed ' : ' to go ';
+            // echo $diff->d.' dias ';
+            // echo $diff->h.' horas ';
+            // echo $diff->i.' min ';
+            // echo $diff->s.' seg ';
+            
+            // if($diff->d>0){
+            //      json_output(json_build(403, null, 'Mas de 1 dia.'));
+            //      exit;
+            // }
+            // if($diff->h>23 && $diff->i>50 ){
+            //     json_output(json_build(403, null, 'Tiene mas de 23 horas y 50 min.'));
+            // }
+            
+            $tabla = "facturaingreso";
+            $campo = "id";
+            $valor = $_GET['dataid'];
+            
+            $respuesta = ControladorFacturaIngreso::ctrTimbrarFactura($tabla, $campo, $valor);
+    
+            echo json_encode($respuesta);
+        
+        break;
+
+
+		default:
+            json_output(json_build(403, null, 'No existe opciòn'));
+			return false;
+		break;
+
+
 
 } // fin del switch
 

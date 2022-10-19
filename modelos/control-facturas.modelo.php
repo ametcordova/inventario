@@ -34,7 +34,7 @@ static public function mdlCrearFactura($tabla, $datos){
 		   $stmt->bindParam(":rutaexpediente", $datos["rutaexpediente"], PDO::PARAM_STR);
 		   $stmt->bindParam(":idusuario", $datos["idusuario"], PDO::PARAM_INT);
 		   if($stmt->execute()){
-			   
+
 				return "ok";
 			   
 		   }else{
@@ -174,7 +174,7 @@ static public function mdlGuardarFechaPagoFactura($tabla, $datos){
 ===============================================================================*/
 static public function mdlBorrarFactura($tabla, $item, $valor, $estado){
 try{     
-	//$stmt = Conexion::conectar()->prepare("DELETE FROM $tabla WHERE id = :id");
+	
 	$numorden="CANCELADO";
 	$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET numorden=:numorden, borrado=:borrado WHERE $item = :$item");
 	
@@ -286,7 +286,73 @@ try{
 		$stmt = null;
 }
 
+/*=============================================
+	MOSTRAR SALDO DISPONIBLE
+=============================================*/
+static public function mdlMostrarSaldoDisponible($tabla, $item, $valor){
+	try{
+			if($item != null){
+				$valor=intval($valor);
 
+				$stmt = Conexion::conectar()->prepare("SELECT saldodisponible FROM $tabla WHERE $item =:$item"); 
+								
+				$stmt -> bindParam(":".$item, $valor, PDO::PARAM_STR);
 	
+				$stmt -> execute();
+	
+				return $stmt -> fetch();
+	
+				//echo sprintf('Consulta es: %s %s', $where, $solopagadas);
+				//die();
+	
+			}
+	
+	} catch (Exception $e) {
+		echo "Failed: " . $e->getMessage();
+	}        
+		
+			$stmt = null;
+	}
+
+/*=============================================
+	MO SALDO DISPONIBLE
+=============================================*/
+static public function mdlModificarSaldoDisp($tabla, $item, $valor, $datos, $operacion){
+	try{
+
+		if($operacion=="resta"){
+
+			$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET saldodisponible=saldodisponible-(:saldodisponible) WHERE $item =:$item"); 
+
+			$stmt->bindParam(":".$item, $valor, PDO::PARAM_STR);
+
+			$stmt->bindParam(":saldodisponible", $datos["subtotal"], PDO::PARAM_STR);
+
+			$stmt -> execute();
+
+			return 'ok';
+
+		}else{
+
+			$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET saldodisponible=:saldodisponible+saldodisponible WHERE $item =:$item"); 
+
+			$stmt->bindParam(":".$item, $valor, PDO::PARAM_STR);
+
+			$stmt->bindParam(":saldodisponible", $datos["subtotanterior"], PDO::PARAM_STR);
+
+			$stmt -> execute();
+
+			return 'ok';
+
+		}
+	
+	} catch (Exception $e) {
+		echo "Failed: " . $e->getMessage();
+	}        
+		
+			$stmt = null;
+	}
+
+		
 } //fin de la clase
 

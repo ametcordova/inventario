@@ -115,11 +115,12 @@ try{
 	}
 	
 
-    $stmt = Conexion::conectar()->prepare("SELECT os.`id`,os.`id_empresa`, os.id_tecnico, os.`ordenservicio`,os.`telefono`,user.nombre AS tecnico, alm.nombre AS almacen, os.`fecha_instalacion`, os.`estatus`, os.factura
+    $stmt = Conexion::conectar()->prepare("SELECT os.`id`,os.`id_empresa`, os.id_tecnico, os.`ordenservicio`,os.`telefono`,user.nombre AS tecnico, alm.nombre AS almacen, os.`fecha_instalacion`, os.`estatus`, os.factura, os.ultusuario, usu.nombre AS capturo
     FROM $tabla os
     INNER JOIN almacenes alm ON alm.id=os.id_almacen
     INNER JOIN usuarios user ON user.user=os.id_tecnico
     INNER JOIN tecnicos tec ON tec.id=os.id_tecnico
+    INNER JOIN usuarios usu ON usu.id=os.ultusuario
     WHERE ".$where); 
 
     $stmt -> execute();

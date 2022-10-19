@@ -47,6 +47,7 @@ switch ($_GET["op"]){
             $fecha = date('d-m-Y', strtotime($value["fecha_instalacion"]));
             $nombre = substr($value["tecnico"],0,30);    //extrae el primer nombre del tecnico
 			$fact=$value["factura"];
+			$capturo='<h6><span class="badge badge-info" title="'.$value["capturo"].'">'.$value["ultusuario"].'</span></h6>';
 			
 			//$tri = '<tr class="table-success"><td>'.($value["id"]).'</td>';
             $botonestado=$value["estatus"]==0?"<button class='btn btn-dark btn-sm px-1 py-1 btnEstado' data-id='".$value['id']."' data-estado=".$value['estatus']." title='Fact. $fact'> <i class='fa fa-folder-o'></i> Facturado</button>":
@@ -72,6 +73,7 @@ switch ($_GET["op"]){
 			      $value["telefono"],
 			      $value["almacen"],
 			      $fecha,
+				  $capturo,
 			      $botonestado,
 				  $value["factura"],
                   $botones,
