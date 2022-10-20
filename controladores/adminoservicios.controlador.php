@@ -77,5 +77,15 @@ static public function ctrGetDataOServicios($tabla, $campo, $valor, $status=null
 
 }  
 
+/*=============================================
+
+============================================*/
+static public function ctrGetDataNumOS($tabla, $campo, $numos){
+
+	$respuesta = ModeloOServicios::mdlGetDataNumOS($tabla, $campo, $numos);
+
+	return $respuesta;
+
+}  
 
 }	//fin de la clase	

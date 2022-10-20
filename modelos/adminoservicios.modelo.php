@@ -163,7 +163,7 @@ static Public function MdlReporteExistenciaPorTecnico($tabla, $valor, $idalmacen
 	}		
 /*==========================================================================================*/
 /*=============================================
-	REPORTE NOTA DE SALIDAS
+	
 =============================================*/	
 static Public function mdlObtenerOS($tabla, $campo, $valor){
 	try{     
@@ -233,9 +233,9 @@ static Public function mdlCambiarEstadoOS($tabla, $campo, $valor, $estado, $fact
 	try{     
 		if($campo !=null){    
 	
-			$sql="UPDATE $tabla SET estatus=:estatus, factura=:factura WHERE $campo=:$campo";
+		$sql="UPDATE $tabla SET estatus=:estatus, factura=:factura WHERE $campo=:$campo";
 	
-		   $stmt=Conexion::conectar()->prepare($sql);
+		$stmt=Conexion::conectar()->prepare($sql);
 		   
 		   $stmt->bindParam(":".$campo, $valor, PDO::PARAM_INT);
 		   $stmt->bindParam(":estatus", $estado, PDO::PARAM_INT);
@@ -306,6 +306,26 @@ static Public function mdlGetDataOServicios($tabla, $campo, $valor, $status){
 }    
 /************************************************************************************* */
 
+	static Public function mdlGetDataNumOS($tabla, $campo, $numos){
+
+		try{     
+			$sql="SELECT ordenservicio FROM $tabla WHERE $campo=:$campo";
+		
+			$stmt=Conexion::conectar()->prepare($sql);
+			
+			$stmt->bindParam(":".$campo, $numos, PDO::PARAM_STR);
+			
+			$stmt->execute();
+			
+			return $stmt->fetch();
+			
+		} catch (Exception $e) {
+				echo "Failed: " . $e->getMessage();
+		}
+			
+	}
+/************************************************************************************* */
+
 }       //fin de la clase
 
 /********************************************************************************* */
@@ -347,11 +367,9 @@ function actualizaDataOS($tabla, $id_producto, $cant, $id_tecnico, $id_almacen, 
 		//throw $th;
 		return $th;
 	}
-
-
-
-
 }
+
+
 
 /************************************************************************************* */
 /*SELECT hist.`id_salida`,hist.`id_tecnico`,hist.`id_producto`, prod.codigointerno, prod.sku, prod.descripcion, prod.id_medida, med.medida, hist.`estatus`, SUM(hist.cantidad) as Total, SUM(hist.disponible) AS existe, hist.id_tipomov

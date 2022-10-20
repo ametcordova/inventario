@@ -424,5 +424,5 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
 <script defer src="vistas/js/funciones.js?v=13102022"></script>
 <script defer src="extensiones/plugins/jsignature/jSignature.js?v=01072022"></script>
 <script defer src="extensiones/plugins/jsignature/jSignature.CompressorSVG.js"></script>
-<script defer src="vistas/js/adminoservicio.js?v=13102022"></script>
+<script defer src="vistas/js/adminoservicio.js?v=15102022"></script>
 

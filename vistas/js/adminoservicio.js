@@ -32,6 +32,43 @@ function init(){
 
 }
 
+/*================================================================================== */
+$('#numeroos').on('blur', ()=> {
+  $("#numeroos").css({"background-color": "white", "color":"black"});
+  let numos=$('#numeroos').val();
+  //console.log("si entra aqui..",numos)
+  if(numos<1 || length.numos<1){
+    $('#numeroos').focus();
+    return
+  }
+  (async () => { 
+    resp=await getUser(numos)
+    //console.log(resp)
+    if(resp!=undefined){
+      $("#numeroos").css({"background-color": "red", "color":"yellow"});
+      $('#numeroos').focus();
+      return
+    }
+  })();  //fin del async	 	
+
+});
+
+async function getUser(numeroos) {
+  try {
+    const response = await axios.get('ajax/adminoservicio.ajax.php?op=getDataNumOS', {
+      params: {
+        numeroos: numeroos
+      }
+    })
+    //console.log(response.data.ordenservicio);
+    return response.data.ordenservicio;
+
+  } catch (error) {
+    console.error(error);
+  }
+}
+/*================================================================================== */
+
 // ========= LISTAR EN EL DATATABLE REGISTROS DE LA TABLA TABLAOS ================
 function listarOServicios(){
   let rangodeFecha = $("#daterange-btnOS span").html();
@@ -533,6 +570,9 @@ function addProductosSalida(...argsProductos){
 $("body").on("submit", "#formularioAgregaOS", function( event ) {	
   event.preventDefault();
   event.stopPropagation();	
+  var mensajeaxios='Registro Guardado';
+  var tipoerror=1;
+  var tiempo=2;
   
     swal({
         title: "¿Está seguro de Guardar OS?",
@@ -568,32 +608,33 @@ $("body").on("submit", "#formularioAgregaOS", function( event ) {
              data : formData, 
              //headers: {'Content-Type': 'image/svg+xml'},
            }) 
-          // fetch('ajax/adminoservicio.ajax.php?op=guardarOS', {
-          //   method: 'POST',
-          //   data : formData
-          // })
         
-          .then((res)=>{  
-            if(res.status==200) {
-              console.log(res.status)
-              console.log(res.data['status'])
-              console.log(res.data)
+          .then((response)=>{  
+            // console.log(response);
+            //console.log(response.status);
+            //console.log(response.statusText);
+            // console.log(response.headers);
+            // console.log(response.config);
 
+            if(response.status==200) {
+              if(response.data!=200){
+                mensajeaxios=response.data
+                tipoerror=3;
+                tiempo=4;
+              }
+              
               $('#DatatableOS').DataTable().ajax.reload(null, false);
 
-              //$('body#msgsaveok').fadeIn(1000);
-              //$("#msgsaveok").removeClass("d-none");
-              //$("body#msgsaveok" ).fadeOut( 4500, "linear", complete );
-              //$(".alert").addClass("d-none");
-              //setTimeout(function(){$(".alert").addClass("d-none")}, 4600);
               $('#modalAgregarOS').modal('hide')
-              mensajenotie('success', 'guardado OS!', 'top', 1);
+              mensajenotie(tipoerror, `${mensajeaxios}`, 'top', tiempo);
+
             }else{
-              mensajenotie('Error', 'Hubo problemas al guardar OS!', 'bottom');
+              mensajenotie('Error', 'Hubo problemas al guardar OS!', 'bottom', 2);
             }          
             //console.log(res); 
           }) 
-          .catch((err) => {throw err}); 
+          .catch((err) => {throw err});   //          .catch(function (error) {console.log(error.toJSON())})
+
       
       }else{
          return false;

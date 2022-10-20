@@ -207,13 +207,27 @@ switch ($_GET["op"]){
 			// $error = array("error" =>$_GET['dataids']);
 			// echo json_encode($error);    
             
-            
-
         }else{
             
             $array = array("error" =>$_GET['idos']);
             echo json_encode($array);
         }
+		
+        
+     break;
+
+	 case 'getDataNumOS':
+		$numos=trim($_GET["numeroos"]);
+        if(!isset($numos)){
+			json_output(json_build(400, '', 'No trae numero de OS'));
+        }
+
+		$campo="ordenservicio";
+		$tabla='tabla_os';
+
+		$respuesta = ControladorOServicios::ctrGetDataNumOS($tabla, $campo, $numos);
+
+		echo json_encode($respuesta);
 
         
      break;

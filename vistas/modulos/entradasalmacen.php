@@ -610,6 +610,6 @@ $fechaHoy = date("Y-m-d");
                 FIN MODAL PARA SUBIR ARCHIVOS DE ENTRADA CARSO AL ALMACEN 
 ==================================================================================== -->
 
-<script defer src="vistas/js/entradasalmacen.js?v=01092022"></script>
-<script defer src="vistas/js/entradasalmacenedit.js?v=01092022"></script>
+<script defer src="vistas/js/entradasalmacen.js?v=01102022"></script>
+<script defer src="vistas/js/entradasalmacenedit.js?v=01102022"></script>
 <script defer src="extensiones/upload.js?v=05102020"></script>

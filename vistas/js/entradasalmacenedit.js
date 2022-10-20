@@ -228,7 +228,8 @@ $("#EditarEntradaProd").click(function(event){
   //SEPARA EL CODIGO DEL PROD. SELECCIONADO
   codigosku= producto.substr(0, producto.indexOf('-'));
   codigosku=codigosku.trim();
-  codigointerno=codigointerno.trim();
+  //codigointerno=codigointerno.trim();
+  codigointerno=codigointerno
 
     
   //SEPARA LA DESCRIPCION DEL PROD. SELECCIONADO        
