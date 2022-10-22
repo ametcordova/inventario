@@ -22,7 +22,6 @@ function init(){
   }else{
     //$("#daterange-btnOS span").html('<i class="fa fa-calendar"></i> Rango de fecha')
     iniciarangodefecha()
-    console.log("si entra")
   }
 
     listarOServicios();   //LISTAR OS EN EL DATATABLE
@@ -76,13 +75,12 @@ function listarOServicios(){
   if(rangodeFecha==undefined || rangodeFecha==null){
     var FechDev1=moment().format('YYYY-MM-DD');
     var FechDev2=moment().format('YYYY-MM-DD');
-    console.log('fecha hoy:',FechDev1,FechDev2);
+    //console.log('fecha hoy:',FechDev1,FechDev2);
   }else{
     let arrayFecha = rangodeFecha.split(" - ", 2);
     //console.log('fechas Mex:',rangodeFecha);
     var FechDev1=moment(arrayFecha[0],'DD-MM-YYYY').format('YYYY-MM-DD');
     var FechDev2=moment(arrayFecha[1],'DD-MM-YYYY').format('YYYY-MM-DD');
-    //console.log('fechas US:',FechDev1, FechDev2);
   }	   
 
   tblOrdendeServicios=$('#DatatableOS').dataTable(
@@ -150,7 +148,6 @@ function listarOServicios(){
           },  
           "columnDefs": [
             {"className": "dt-center", "targets": [1,3,4,6,7,8,9,10]},
-          
             //{"className": "dt-right", "targets": [3,4]}				//"_all" para todas las columnas
             ],    
             select: false,     //se puso a false para poder seleccionar varios filas. true=1 fila
@@ -167,7 +164,7 @@ function listarOServicios(){
             },
       "bDestroy": true,
       "iDisplayLength": 10,//Paginación
-      "order": [[ 6, 'desc' ], [ 0, 'desc' ]] //Ordenar (columna,orden)
+      "order": [[ 0, 'desc' ]] //Ordenar (columna,orden)
     }).DataTable();    
       
 

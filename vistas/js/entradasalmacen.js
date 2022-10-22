@@ -80,7 +80,11 @@ function dt_ListarEntradasAlmacen(){
           var btns = $('.dt-button');
           btns.removeClass('dt-button');
           btns.addClass('btn btn-success btn-sm');
-        },
+        },  
+        "columnDefs": [
+          {"className": "dt-center", "targets": [1,6]},
+          //{"className": "dt-right", "targets": [3,4]}				//"_all" para todas las columnas
+          ],
 		"ajax":
 				{
           url: 'ajax/entradasalmacen.ajax.php?op=listar',
@@ -98,6 +102,8 @@ function dt_ListarEntradasAlmacen(){
     
 } 
 
+
+/****************************************************************************************** */
  $('#daterange-btn-EntAlmacen').daterangepicker({
   ranges   : {
     'Hoy'       : [moment(), moment()],

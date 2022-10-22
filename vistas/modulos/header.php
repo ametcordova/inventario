@@ -29,8 +29,8 @@
 
       <?php if (isset($_SESSION['perfil']) && $_SESSION['perfil']=="Administrador" || trim($_SESSION["usuario"])=="super"){ ?>
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="adminquejas" class="nav-link font-weight-bold ml-0 pl-0">
-          <button type="button" class="btn btn-sm" style="background-color:darkblue; color:white;">Quejas</button>
+        <a href="adminoservicio" class="nav-link font-weight-bold ml-0 pl-0">
+          <button type="button" class="btn btn-sm" style="background-color:darkblue; color:white;">O S</button>
         </a>
       </li>
       <?php } ?>
@@ -72,7 +72,7 @@
               <li class="dropdown user user-menu">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                   <img src="<?php echo $_SESSION['foto']?>" class="user-image" alt="Image" width="25px">
-                  <span class="hidden-xs" id="usuar"><?php echo $_SESSION['usuario'],$_SESSION['id'] ;?></span>
+                  <span class="hidden-xs" id="usuar"><?php echo $_SESSION['usuario'];?></span>
                 </a>
                 
                 <ul class="dropdown-menu"  style="background-color:orange;">

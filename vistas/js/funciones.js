@@ -278,7 +278,7 @@ $('#daterange-btnOS, #daterange-btnQuejas').daterangepicker({
           "Junio",
           "Julio",
           "Agosto",
-          "Setiembre",
+          "Septiembre",
           "Octubre",
           "Noviembre",
           "Diciembre"

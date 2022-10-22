@@ -98,6 +98,8 @@ $fechaHoy = date("Y-m-d");
         </div>
 
         <div class="card-tools">
+        <button type="button" class="btn btn-tool" title="Refresh" onclick="location.reload()">
+            <i class="fa fa-refresh"></i></button>
           <button type="button" class="btn btn-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse">
             <i class="fa fa-minus"></i></button>
           <button type="button" class="btn btn-tool" data-widget="remove" data-toggle="tooltip" title="Remove">
@@ -364,7 +366,6 @@ $fechaHoy = date("Y-m-d");
   </div>
 </div>  <!-- fin del modal -->
 <!-- ==================================================================================== -->
+<script defer src="vistas/js/control-depositos.js?v=03102022"></script>
 
-
-<script defer src="vistas/js/control-depositos.js?v=02082022"></script>
 

@@ -1,15 +1,33 @@
 $("#modalAgregarcuentahabiente,#modalAgregarDeposito").draggable();
 var tablaControlDepositos='';
 var modalEvento='';
+var fechaInicial;
+var fechaFinal;
+var FechDev1;
+var FechDev2;
+/**************************************************************/
+// VARIABLES PARA OBTENER LA SEMANA ANTERIOR DE MEXPEI
+/**************************************************************/
+var startFecha;
+var endFecha;
+const HOY=parseInt(moment().format('d')); //Numero del dia de la semana
+                          //V,S,D,L,M,M,J
+const NUM_SEMANA= new Array(5,6,0,1,2,3,4)   //array con dias de la semana mexpei
+                        //1,2,3,4,5,6,7
+const NUM_DIAS= new Array(1,2,3,4,5,6,7)   //array de dias de la semana
+const EXTRAE=parseInt(NUM_SEMANA.indexOf(HOY));  
+startFecha=NUM_SEMANA[EXTRAE]+NUM_DIAS[EXTRAE];
+endFecha=NUM_DIAS[EXTRAE];
+/**************************************************************/
+
 $('#edit-benef').hide();
-//Función que se ejecuta al inicio
+
+/********  Función que se ejecuta al inicio **************/
 function init(){
-
   semanamexpei();
-
   dt_crtl_depositos();
-
 }
+/********  Fin Función que se ejecuta al inicio ***********/
 
 /*=============================================
 Editar Registro de Deposito.
@@ -64,29 +82,25 @@ function mostrardatosdeposito(datos){
 }
 /*==============================================================================*/
 
+
 /*=============================================
 ASIGNA FECHAS EN DATERANGEPICKER 
 =============================================*/
-function semanamexpei(){ //v s d l m m j
-  let numSemana= new Array(5,6,0,1,2,3,4)   //array con dias de la semana
-  hoy=parseInt(moment().format('d'));
+function semanamexpei(){ 
 
-  if(hoy==5){
+  if(HOY==5){
 
-    var fechaInicial=moment().format('DD-MM-YYYY');
-    
-    var fechaFinal=moment().format('DD-MM-YYYY');
+    fechaInicial=moment().format('DD-MM-YYYY');
+    fechaFinal=moment().format('DD-MM-YYYY');
+
   }else{
-    let extrae=parseInt(numSemana.indexOf(hoy));
 
-    var fechaInicial=moment().subtract(extrae, 'days').format('DD-MM-YYYY');
-    
-    var fechaFinal=moment().format('DD-MM-YYYY');
+    fechaInicial=moment().subtract(EXTRAE, 'days').format('DD-MM-YYYY');
+    fechaFinal=moment().format('DD-MM-YYYY');
   }
 
   $("#daterange-btn-ctrldepositos span").html(fechaInicial+' - '+fechaFinal);
 
-  //console.log(fechaInicial+' - '+fechaFinal);
   
 }    
 /************************* TERMINA FUNCION *************************** */
@@ -98,14 +112,14 @@ function dt_crtl_depositos(){
   //console.log("Rango de Fecha:",rangodeFecha);
 
   if(rangodeFecha==undefined || rangodeFecha==null){
-      var FechDev1=moment().format('YYYY-MM-DD');
-      var FechDev2=moment().format('YYYY-MM-DD');
+      FechDev1=moment().format('YYYY-MM-DD');
+      FechDev2=moment().format('YYYY-MM-DD');
       //console.log('fecha hoy:',FechDev1,FechDev2);
   }else{
 	  let arrayFecha = rangodeFecha.split(" - ", 2);
     //console.log('fechas:',arrayFecha, arrayFecha[0], arrayFecha[1]);
-	  var FechDev1=moment(arrayFecha[0],'DD-MM-YYYY').format('YYYY-MM-DD');
-	  var FechDev2=moment(arrayFecha[1],'DD-MM-YYYY').format('YYYY-MM-DD');
+	  FechDev1=moment(arrayFecha[0],'DD-MM-YYYY').format('YYYY-MM-DD');
+	  FechDev2=moment(arrayFecha[1],'DD-MM-YYYY').format('YYYY-MM-DD');
 
     //console.log('fechas:',FechDev1, FechDev2);
   }	   
@@ -179,7 +193,7 @@ function dt_crtl_depositos(){
           {"className": "dt-right", "targets": [3,4]}				//"_all" para todas las columnas
           ],
           "footerCallback": function ( row, data, start, end, display ) {
-          //var api = this.api();
+          var api = this.api();
 
           // Total over this page subtotal
           var pageSubTot = api.column(3, {page:'current'}).data().sum();
@@ -262,15 +276,19 @@ $("#dt-crtl-depositos tbody").on("dblclick", "tr",  function(){
     $(this).toggleClass('selected');
 });
 /*==================================================================*/
-
+//hoy=parseInt(moment().format('d'));
+//let EXTRAE=parseInt(NUM_SEMANA.indexOf(hoy));
+//fechaInicial=moment().subtract(EXTRAE, 'days').format('DD-MM-YYYY');
+//fechaFinal=moment().format('DD-MM-YYYY');
+//'Ult. Sem. MexPei' : [moment().subtract(7, 'days'), moment().subtract(1, 'days')],
 /*==================================================================*/
-$('#daterange-btn-ctrldepositos').daterangepicker({
 
+$('#daterange-btn-ctrldepositos').daterangepicker({
   ranges   : {
     'Hoy'       : [moment(), moment()],
     'Ayer'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
     'Últimos 7 Días' : [moment().subtract(6, 'days'), moment()],
-    'Ult. Sem. MexPei' : [moment().subtract(7, 'days'), moment().subtract(1, 'days')],
+    'Ult. Sem. MexPei' : [moment().subtract(startFecha, 'days'), moment().subtract(endFecha, 'days')],
     'Últimos 30 Días': [moment().subtract(29, 'days'), moment()],
     'Este Mes'  : [moment().startOf('month'), moment().endOf('month')],
     'Último Mes'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
@@ -297,7 +315,7 @@ $('#daterange-btn-ctrldepositos').daterangepicker({
           "Junio",
           "Julio",
           "Agosto",
-          "Setiembre",
+          "Septiembre",
           "Octubre",
           "Noviembre",
           "Diciembre"
