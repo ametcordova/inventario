@@ -128,7 +128,7 @@ static public function mdlgetClavesfact($tabla, $campo, $valor){
 }
 
 /*=============================================
-	REGISTRO DE PRODUCTO
+	GUARDAR FACTURA DE INGRESO
 =============================================*/
 static public function mdlCrearFacturaIngreso($tabla, $facturaingreso){
 	try {      
@@ -203,9 +203,36 @@ static public function mdlTimbrarFactura($tabla, $campo, $valor){
     } catch (Exception $e) {
         echo "Failed: " . $e->getMessage();
     }
-
 }
 
+/*=============================================
+	BUSCAR 
+=============================================*/
+static public function mdlObtenerDatosFactura($tabla, $campo, $valor){
+    try {    
+        //tabla=facturaingreso
+        $stmt = Conexion::conectar()->prepare("SELECT tb1.*, emp.razonsocial AS nombreemisor, CONCAT(emp.direccion,' ',emp.colonia,' ',emp.num_ext) AS direccionemisor, emp.mailempresa, emp.telempresa, rf.descripcion AS regimenfiscalemisor, emp.codpostal, clie.nombre AS nombrereceptor, clie.rfc AS rfcreceptor, CONCAT(clie.direccion,' ',clie.num_int_ext,' ',clie.colonia,', ',clie.ciudad,', ',edo.nombreestado) AS direccionreceptor, clie.email, clie.telefono, clie.regimenfiscal, rfr.descripcion AS regimenfiscalreceptor, clie.codpostal AS codpostalreceptor, cfdi.id_cfdi, cfdi.descripcion AS usocfdi
+        FROM $tabla tb1
+        INNER JOIN empresa emp ON emp.id=tb1.id_empresa
+        INNER JOIN c_regimenfiscal rf ON rf.id=tb1.idregimenfiscalemisor
+        INNER JOIN clientes clie ON clie.id=tb1.idreceptor
+        INNER JOIN c_regimenfiscal rfr ON rfr.id=clie.regimenfiscal
+        INNER JOIN c_usocfdi cfdi ON cfdi.id=tb1.idusocfdi
+        INNER JOIN catestado edo ON edo.idestado=clie.estado
+        WHERE tb1.$campo= :$campo");
+        
+        $stmt->bindParam(":".$campo, $valor, PDO::PARAM_INT);
+
+        $stmt -> execute();
+
+        return $stmt -> fetch();
+
+        $stmt = null;
+
+    } catch (Exception $e) {
+        echo "Failed: " . $e->getMessage();
+    }
+}
 
 } //fin de la clase
 

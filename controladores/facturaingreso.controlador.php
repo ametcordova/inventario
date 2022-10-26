@@ -64,6 +64,15 @@ static public function ctrTimbrarFactura($tabla, $campo, $valor){
 	
 }  
 
+/*=================GUARDAR DATOS DE FACTURA ================================ */
+static public function ctrObtenerDatosFactura($tabla, $campo, $valor){
+
+	$respuesta = ModeloFacturaIngreso::mdlObtenerDatosFactura($tabla, $campo, $valor);
+	
+	return $respuesta;
+	
+}  
+
 
 
 

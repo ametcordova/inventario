@@ -4,18 +4,18 @@ if(isset($_SESSION["iniciarSesion"]) && $_SESSION["iniciarSesion"]=="ok"){
 setlocale(LC_ALL,"es_ES");
 ob_start();
 
-require_once "../../../controladores/adminoservicios.controlador.php";
-require_once "../../../modelos/adminoservicios.modelo.php";
-require_once "../../../controladores/ajusteinventario.controlador.php";
-require_once "../../../modelos/ajusteinventario.modelo.php";
-require_once '../../../config/parametros.php';
-require_once('../fpdf.php');
+    require_once "../../../controladores/facturaingreso.controlador.php";
+    require_once "../../../modelos/facturaingreso.modelo.php";
+    require_once '../../../config/parametros.php';
+    require_once('../fpdf.php');
 
     class PDF extends FPDF{
 
+        
         // Cabecera de página
         function Header()
         {
+
             $img="images/logo_nuno.png";
             // Logo
             $this->Image($img,10,8,80,32);          //10, 10, 80, 55 //izq, top, ancho
@@ -57,6 +57,8 @@ require_once('../fpdf.php');
             $this->SetDrawColor(0,0,0);
             $this->Cell(0,1,' ',1,0,'C',true);
             $this->Ln(4);
+
+    
         }
 
         // Pie de página
@@ -68,23 +70,28 @@ require_once('../fpdf.php');
             // Número de página
             $this->Cell(0,10,'Page '.$this->PageNo().'/{nb}',0,0,'C');
         }
+
+
+
     }       //fin de la clase Header y Footer
 
 
     class reportedeOrdendeServicio{
 
+
     public function reporteOS(){
         
         //TRAEMOS LA INFORMACIÓN 
-        $tabla="tabla_os";
+        $tabla="facturaingreso";
         $campo = "id";
         $valor = $_GET["codigo"];
+        //$valor = 370;
         
         //TRAER LOS DATOS DEL ALMACEN SELECCIONADO
-        $respuesta = ControladorOServicios::ctrObtenerMaterialOS($tabla, $campo, $valor);
+        $resp = ControladorFacturaIngreso::ctrObtenerDatosFactura($tabla, $campo, $valor);
         
-        if($respuesta){
-            
+        if($resp){
+
             // Creación del objeto de la clase heredada
             //$pdf = new PDF();
             $pdf = new PDF('P', 'mm', 'Letter', true, 'UTF-8', false);
@@ -105,31 +112,34 @@ require_once('../fpdf.php');
             $pdf->SetFont('Arial','B',9);
             $pdf->Cell(26,4,'Nombre: ',1,0,'L',true);
             $pdf->SetFont('Arial','',9);
-            $pdf->Cell(126,4,'BRUNO DIAZ GORDILLO Y/O NUNOSCO',1,0,'L',true);
+            $pdf->Cell(126,4,$resp['nombreemisor'],1,0,'L',true);
             $pdf->SetFont('Arial','B',9);
             $pdf->Cell(10,4,'RFC: ',1,0,'R',true);
             $pdf->SetFont('Arial','',9);
-            $pdf->Cell(34,4,'DIGB980626MX3',1,0,'L',true);
+            $pdf->Cell(34,4,utf8_decode($resp['rfcemisor']),1,0,'L',true);
             $pdf->Ln();
             $pdf->SetFont('Arial','B',9);
             $pdf->Cell(26,4,utf8_decode('Dirección: '),1,0,'L',true);
-            $pdf->Cell(170,4,'',1,0,'L',true);
+            $pdf->SetFont('Arial','',9);
+            $pdf->Cell(170,4,utf8_decode($resp['direccionemisor']),1,0,'L',true);
             $pdf->Ln();
+            $pdf->SetFont('Arial','B',9);
             $pdf->Cell(26,4,'e-mail: ',1,0,'L',true);
             $pdf->SetFont('Arial','',9);
-            $pdf->Cell(126,4,'brunonunosco1998@gmail.com',1,0,'L',true);
+            $pdf->Cell(126,4,$resp['mailempresa'],1,0,'L',true);
             $pdf->SetFont('Arial','B',9);
             $pdf->Cell(10,4,'Tel: ',1,0,'R',true);
             $pdf->SetFont('Arial','',9);
-            $pdf->Cell(34,4,'9611407119',1,0,'L',true);
+            $pdf->Cell(34,4,$resp['telempresa'],1,0,'L',true);
             $pdf->Ln();
             $pdf->SetFont('Arial','B',9);
             $pdf->Cell(26,4,utf8_decode('Régimen Fiscal: '),1,0,'L',true);
-            $pdf->Cell(126,4,'',1,0,'L',true);
+            $pdf->SetFont('Arial','',9);
+            $pdf->Cell(126,4,$resp['idregimenfiscalemisor'].'-'.utf8_decode($resp['regimenfiscalemisor']),1,0,'L',true);
             $pdf->SetFont('Arial','B',9);
             $pdf->Cell(10,4,'C.P.: ',1,0,'L',true);
             $pdf->SetFont('Arial','',9);
-            $pdf->Cell(34,4,'29047',1,0,'L',true);
+            $pdf->Cell(34,4,$resp['codpostal'],1,0,'L',true);
             $pdf->Ln(2);
 
              $datos_material=array();
@@ -148,39 +158,40 @@ require_once('../fpdf.php');
             $pdf->SetFont('Arial','B',9);
             $pdf->Cell(26,4,'Nombre: ',0,0,'L',true);
             $pdf->SetFont('Arial','',9);
-            $pdf->Cell(126,4,'CARSO INFRAESTRUCTURA Y CONSTRUCCION',0,0,'L',true);
+            $pdf->Cell(126,4,$resp['nombrereceptor'],0,0,'L',true);
             $pdf->SetFont('Arial','B',9);
             $pdf->Cell(10,4,'RFC: ',0,0,'R',true);
             $pdf->SetFont('Arial','',9);
-            $pdf->Cell(34,4,'CIC991214L94',0,0,'L',true);
+            $pdf->Cell(34,4,$resp['rfcreceptor'],0,0,'L',true);
             $pdf->Ln();
             $pdf->SetFont('Arial','B',9);
             $pdf->Cell(26,4,utf8_decode('Dirección: '),0,0,'L',true);
-            $pdf->SetFont('Arial','',9);
-            $pdf->Cell(170,4,'CALLE LAGO ZURICH No 245 EDIFICIO FRISCO PISO 2 AMPLIACION GRANADA C.P 11529 CIUDAD DE MEXICO,CIUDAD DE MEXICO',0,0,'L',true);
-            $pdf->Ln();
+            $pdf->SetFont('Arial','',8.5);
+            //$pdf->MultiCell(14, 5, '02', 'LTBR', 'C', 1);
+            $pdf->MultiCell(170,4,utf8_decode($resp['direccionreceptor']),0,'L',1);
+            $pdf->Ln(.2);
             $pdf->SetFont('Arial','B',9);
             $pdf->Cell(26,4,'e-mail: ',0,0,'L',true);
             $pdf->SetFont('Arial','',9);
-            $pdf->Cell(126,4,'brunonunosco1998@gmail.com',0,0,'L',true);
+            $pdf->Cell(126,4,$resp['email'],0,0,'L',true);
             $pdf->SetFont('Arial','B',9);
             $pdf->Cell(10,4,'Tel: ',0,0,'R',true);
             $pdf->SetFont('Arial','',9);
-            $pdf->Cell(34,4,'9611407119',0,0,'L',true);
+            $pdf->Cell(34,4,$resp['telefono'],0,0,'L',true);
             $pdf->Ln();
             $pdf->SetFont('Arial','B',9);
             $pdf->Cell(26,4,utf8_decode('Régimen Fiscal: '),0,0,'L',true);
             $pdf->SetFont('Arial','',9);
-            $pdf->Cell(170,4,'623 - Opcional para Grupos de Sociedades',0,0,'L',true);
+            $pdf->Cell(170,4,$resp['regimenfiscal'].' - '.utf8_decode($resp['regimenfiscalreceptor']),0,0,'L',true);
             $pdf->Ln();
             $pdf->SetFont('Arial','B',9);
             $pdf->Cell(26,4,'Uso CFDI: ',0,0,'L',true);
             $pdf->SetFont('Arial','',9);
-            $pdf->Cell(126,4,'I01 - Construcciones.',0,0,'L',true);
+            $pdf->Cell(126,4,   $resp['id_cfdi'].' - '.$resp['usocfdi'],0,0,'L',true);
             $pdf->SetFont('Arial','B',9);
             $pdf->Cell(10,4,'C.P.: ',0,0,'L',true);
             $pdf->SetFont('Arial','',9);
-            $pdf->Cell(34,4,'11529',0,0,'L',true);
+            $pdf->Cell(34,4,$resp['codpostalreceptor'],0,0,'L',true);
             $pdf->Ln(5);
 
             //$pdf->Ln(7.5);
@@ -241,75 +252,96 @@ require_once('../fpdf.php');
             $pdf->SetFont('', '',7.5);
             $pdf->Ln(7.5);
         
-// -----------------------------------------------------------------------------------------
-$descripcion="BAJANTE AEREO DE 50 M. MIGRACIONES 07102022/40 SUR1.PROY: CAR051456. ODC: 00065850. No. REPSE: 09679. CONTRATO: BAJSUR063 .";
-$cadena=strlen($descripcion);
-
+// -------------------------IMPRIMIR LOS CONCEPTOS -----------------------------------------------
+$conceptos_json=json_decode($resp['conceptos'],TRUE);		//decodifica los datos JSON
+$sumasubtotal = $sumaimpuesto = $sumatotal = 0;
+foreach ($conceptos_json as $row):
+$sumasubtotal+=$row["Importe"];
+// if ($row === reset($conceptos_json)) {
+//     echo "PRIMER ELEMENTO";
+// }
 //Save the current position '72151602'.
 $x=$pdf->GetX();
 $y=$pdf->GetY();
-$pdf->MultiCell(15, 4, $y, 'LTBR', 'C');
+$pdf->MultiCell(15, 4, $row["ClaveProdServ"], 'LTBR', 'C');
 
 $pdf->SetXY($x+15,$y);
-$pdf->MultiCell(32, 4, 'E48 - Unidad de Servicio', 'LTBR', 'C', 1);
+$pdf->MultiCell(32, 4, $row["ClaveUnidad"].'-'.$row["Unidad"], 'LTBR', 'C', 1);
 
 $pdf->SetXY($x+47,$y);
-$pdf->MultiCell(87,3.5,utf8_decode($descripcion).$y,'LTBR','FJ',1);
-$y1=$pdf->GetY();
+$pdf->MultiCell(87,3.5,utf8_decode($row["Descripcion"]),'LTBR','FJ',1);
 
 $pdf->SetXY($x+134,$y);
-$pdf->MultiCell(14, 5, '02', 'LTBR', 'C', 1);
+$pdf->MultiCell(14, 5, $row["ObjetoImp"], 'LTBR', 'C', 1);
 
 $pdf->SetXY($x+148,$y);
-$pdf->MultiCell(7, 5, '4', 'LTBR', 'C', 1);
+$pdf->MultiCell(7, 5, $row["Cantidad"], 'LTBR', 'C', 1);
 
 $pdf->SetXY($x+155,$y);
-$pdf->MultiCell(20,5, '$999,999.0000', 'LTBR', 0, 'R', 1);
+$pdf->MultiCell(20,5, '$'.number_format($row["ValorUnitario"],4, '.',','), 'LTBR', 0, 'R', 1);
 
 $pdf->SetXY($x+175,$y);
-$pdf->MultiCell(21,5, '$999,999.99', 'LTBR', 0, 'R', 1);
-$pdf->Ln(6.5);
+$pdf->MultiCell(21,5, '$'.number_format($row["Importe"],2, '.',','), 'LTBR', 0, 'R', 1);
 
-$x=$pdf->GetX();
-$y=$pdf->GetY();
-$pdf->MultiCell(15, 4, $y, 'LTBR', 'C');
+if ($row != end($conceptos_json)) {     //si no es el Ùltimo elemento del array, interlineado de 6.5
+    $pdf->Ln(6.5);    
+}
+//break;
+endforeach;
+// ----------------------------------------FIN DE CONCEPTOS ---------------------------------------
 
-$pdf->SetXY($x+15,$y);
-$pdf->MultiCell(32, 4, 'E48 - Unidad de Servicio', 'LTBR', 'C', 1);
-
-$pdf->SetXY($x+47,$y);
-$pdf->MultiCell(87,3.5,utf8_decode($descripcion).$y,'LTBR','FJ',1);
+// --------------------------- LINEA DE SEPARACION ----------------------------------------------
+$pdf->Ln(4);
 $y1=$pdf->GetY();
+$pdf->SetLineWidth(0.5);
+$pdf->SetDrawColor(0,0,0);
+$pdf->Line(10,$y1,206,$y1);
+$pdf->Ln(1);
+// --------------------------- IMPORTES TOTALES ------------------------------------------------------
+$sumaimpuesto=($sumasubtotal*16)/100;
+$sumatotal = $sumasubtotal+$sumaimpuesto;
+$pdf->SetFont('Arial','B',10);
+$pdf->Cell(17,5,'Subtotal: ',0,0,'L',true);
+$pdf->Cell(24,5,'$'.number_format($sumasubtotal,2, '.',','),0,0,'L',true);
+$pdf->Cell(21,5,'Descuento: ',0,0,'L',true);
+$pdf->Cell(22,5,'$0.00',0,0,'L',true);
+$pdf->Cell(51,5,'Total Impuestos Trasladados: ',0,0,'L',true);
+$pdf->Cell(20,5,'$'.number_format($sumaimpuesto,2, '.',','),0,0,'L',true);
+$pdf->Cell(15,5,'Total: ',0,0,'R',true);
+$pdf->Cell(26,5,'$'.number_format($sumatotal,2, '.',','),0,0,'L',true);
+// --------------------------- LINEA DE SEPARACION ----------------------------------------------
+$pdf->Ln(5.5);
+$y1=$pdf->GetY();
+$pdf->Line(10,$y1,206,$y1);
+// ------------------------------ ** SELLOS ** -----------------------------------------------------------
 
-$pdf->SetXY($x+134,$y);
-$pdf->MultiCell(14, 5, '02', 'LTBR', 'C', 1);
 
-$pdf->SetXY($x+148,$y);
-$pdf->MultiCell(7, 5, '4', 'LTBR', 'C', 1);
-
-$pdf->SetXY($x+155,$y);
-$pdf->MultiCell(20,5, '$999,999.0000', 'LTBR', 0, 'R', 1);
-
-$pdf->SetXY($x+175,$y);
-$pdf->MultiCell(21,5, '$999,999.99', 'LTBR', 0, 'R', 1);
-
-$pdf->Ln(27.2);
-
-// -----------------------------------------------------------------------------------------
-            
-            $pdf->Output('I','facturatimbrada.pdf');
+// -----------------------------------------------------------------------------------------            
+        $pdf->Output('I','facturatimbrada.pdf');
         }else{
-            //include '../../../vistas/plantilla.php'; <td style="width:65px"><img src="../../../config/logotipo.png"></td>
-            echo "no tienes acceso a este reporte.";
+        //include '../../../vistas/plantilla.php'; <td style="width:65px"><img src="../../../config/logotipo.png"></td>
+        echo "No hay datos para imprimir.";
         }
-    }
-    }   //fin de la clase
+        }
 
+    }   //fin de la clase
+}else{
+    //include '../../../vistas/plantilla.php'; <td style="width:65px"><img src="../../../config/logotipo.png"></td>
+    echo "no tienes acceso a este reporte.";
 
 }
+
 $reporteOS = new reportedeOrdendeServicio();
 //$reporteOS -> codigo=$_GET["codigo"];
 $reporteOS -> reporteOS();
 
 
+
+/*
+cruzar la hoja con una linea
+$width=$pdf->GetPageWidth(); // Width of Current Page
+$height=$pdf->GetPageHeight(); // Height of Current Page
+$pdf->Line(0, 0,$width,$height); // Line one Cross
+$pdf->Line($width, 0,0,$height); // Line two Cross
+*/
 ?>
