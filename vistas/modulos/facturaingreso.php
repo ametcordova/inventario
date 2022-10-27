@@ -102,19 +102,19 @@ $fechaHoy = date("Y-m-d");
             <table class="table table-bordered table-hover compact table-sm table-striped dt-responsive" id="dt-FacturaIngreso" cellspacing="0" width="100%">
               <thead class="thead-dark" style="font-size:.8rem; height:1px">
                 <tr style="font-size:0.95em">
-                  <th class="text-center" style="width:1em;">#</th>
-                  <th class="text-center" style="width:1em;">Folio</th>
-                  <th class="text-center" style="width:1em;">F. Elab.</th>
-                  <th class="text-center" style="width:1em;">F. Timb.</th>
-                  <th style="width:14em;">Receptor</th>
-                  <th class="text-center" style="width:4em;">Tipo Comp.</th>
-                  <th class="text-center" style="width:4em;">Total</th>
-                  <th style="width:1em;">Status</th>
-                  <th style="width:1em;">Acción</th>
+                  <th class="text-center">#</th>
+                  <th class="text-center">Folio</th>
+                  <th class="text-center">F. Elab.</th>
+                  <th class="text-center">F. Timb.</th>
+                  <th>Receptor</th>
+                  <th class="text-center">Tipo Comp.</th>
+                  <th class="text-center">Total</th>
+                  <th>Status</th>
+                  <th>Acción</th>
                 </tr>
               </thead>
 
-              <tbody style="font-size:0.90em">
+              <tbody style="font-size:0.85em">
               </tbody>
 
             </table>
@@ -248,7 +248,7 @@ $fechaHoy = date("Y-m-d");
 
                 <div class="form-group col-md-3">
                   <label class="control-label" for="nvoemail"><i class="fa fa-envelope"></i> email</label>
-                  <input type="text" class="form-control form-control-sm" name="nvoemail" id="nvoemail" value="" placeholder="email" tabindex="8" title="Correo electrónico">
+                  <input type="text" class="form-control form-control-sm uni-code" name="nvoemail" id="nvoemail" value="" placeholder="&#xf0e0; Email" tabindex="8" title="Correo electrónico">
                 </div>              
 
 
@@ -258,7 +258,7 @@ $fechaHoy = date("Y-m-d");
 
             <div class="form-row">
               <div class="form-group col-md-12">
-                <input type="text" class="form-control form-control-sm" name="nvaObserva" id="nvaObserva" value="" placeholder="Observación" title="Observación:" tabindex="9">
+                <input type="text" class="form-control form-control-sm" name="nvaObserva" id="nvaObserva" value="" placeholder="Condiciones de Pago" title="Observación:" tabindex="9">
               </div>
             </div>
 

@@ -56,7 +56,7 @@ ob_start();
 
             $this->SetDrawColor(0,0,0);
             $this->Cell(0,1,' ',1,0,'C',true);
-            $this->Ln(4);
+            $this->Ln(3);
 
     
         }
@@ -70,7 +70,6 @@ ob_start();
             // Número de página
             $this->Cell(0,10,'Page '.$this->PageNo().'/{nb}',0,0,'C');
         }
-
 
 
     }       //fin de la clase Header y Footer
@@ -100,9 +99,9 @@ ob_start();
             $pdf->SetFont('Arial','',12);
             $pdf->AddPage();
 // -----------------------------------------------------------------------------------------        
-            $pdf->SetDrawColor(51,116,255);
-            $pdf->SetFillColor(51,116,255);
-            $pdf->SetTextColor(255,255,255);
+            $pdf->SetDrawColor(51,116,255);     // color de la linea
+            $pdf->SetFillColor(51,116,255);     // color del relleno
+            $pdf->SetTextColor(255,255,255);    // color del texto
             $pdf->SetFont('Arial','B',8);
             $pdf->Cell(0,4,'DATOS DEL EMISOR',1,0,'C',true);
             $pdf->SetDrawColor(0,0,0);
@@ -213,16 +212,16 @@ ob_start();
             $pdf->SetFont('Arial','B',9);
             $pdf->Cell(28,4,'Forma Pago: ',1,0,'L',true);
             $pdf->SetFont('Arial','',9);
-            $pdf->Cell(76,4,utf8_decode('99 - Transferencia eléctronica de fondos'),1,0,'L',true);
+            $pdf->Cell(76,4,utf8_decode($resp['idformapago'].' - '.$resp['descripcionformapago']),1,0,'L',true);
             $pdf->SetFont('Arial','B',9);
             $pdf->Cell(28,4,'Metodo Pago: ',1,0,'L',true);
             $pdf->SetFont('Arial','',9);
-            $pdf->Cell(64,4,'PPD - Pago en parcialidades o diferido',1,0,'L',true);
+            $pdf->Cell(64,4,utf8_decode($resp['idmetodopago'].' - '.$resp['descripcionmp']),1,0,'L',true);
             $pdf->Ln();
             $pdf->SetFont('Arial','B',9);
             $pdf->Cell(28,4,'Moneda: ',1,0,'L',true);
             $pdf->SetFont('Arial','',9);
-            $pdf->Cell(76,4,'MXN - Peso Mexicano',1,0,'L',true);
+            $pdf->Cell(76,4,$resp['idmoneda'].' - '.$resp['id_moneda'].' - '.utf8_decode($resp['moneda']),1,0,'L',true);
             $pdf->SetFont('Arial','B',9);
             $pdf->Cell(28,4,'Tipo de cambio: ',1,0,'L',true);
             $pdf->SetFont('Arial','',9);
@@ -232,9 +231,10 @@ ob_start();
             $pdf->Cell(28,4,'Condiciones Pago',1,0,'L',true);
             $pdf->SetFont('Arial','',9);
             $pdf->Cell(168,4,'',1,0,'L',true);
-            $pdf->Ln(7.5);            
+            $pdf->Ln(6);            
 // -----------------------------------------------------------------------------------------
             // Colors, line width and bold font
+            $pdf->SetDrawColor(255, 255, 255);
             $pdf->SetFillColor(0, 95, 100, 0);
             $pdf->SetTextColor(255, 255, 255);
             $pdf->SetFont('', 'B',8);
@@ -283,15 +283,14 @@ $pdf->MultiCell(20,5, '$'.number_format($row["ValorUnitario"],4, '.',','), 'LTBR
 $pdf->SetXY($x+175,$y);
 $pdf->MultiCell(21,5, '$'.number_format($row["Importe"],2, '.',','), 'LTBR', 0, 'R', 1);
 
-if ($row != end($conceptos_json)) {     //si no es el Ùltimo elemento del array, interlineado de 6.5
-    $pdf->Ln(6.5);    
-}
+if ($row != end($conceptos_json)) $pdf->Ln(6.5);    //si no es el Ùltimo elemento del array, interlineado de 6.5
+
 //break;
 endforeach;
 // ----------------------------------------FIN DE CONCEPTOS ---------------------------------------
 
 // --------------------------- LINEA DE SEPARACION ----------------------------------------------
-$pdf->Ln(4);
+$pdf->Ln(7);
 $y1=$pdf->GetY();
 $pdf->SetLineWidth(0.5);
 $pdf->SetDrawColor(0,0,0);
@@ -309,11 +308,75 @@ $pdf->Cell(51,5,'Total Impuestos Trasladados: ',0,0,'L',true);
 $pdf->Cell(20,5,'$'.number_format($sumaimpuesto,2, '.',','),0,0,'L',true);
 $pdf->Cell(15,5,'Total: ',0,0,'R',true);
 $pdf->Cell(26,5,'$'.number_format($sumatotal,2, '.',','),0,0,'L',true);
+
 // --------------------------- LINEA DE SEPARACION ----------------------------------------------
 $pdf->Ln(5.5);
 $y1=$pdf->GetY();
 $pdf->Line(10,$y1,206,$y1);
+$pdf->Ln(4);
+
+// --------------------- TRAEMOS DATOS DE FACTURA TIMBRADA ---------------------------------------
+$tabla="datosfacturatimbre";
+$campo = "folio";
+$valor = $_GET["codigo"];
+//$valor = 370;
+    
+//TRAER LOS DATOS DEL ALMACEN SELECCIONADO
+$response = ControladorFacturaIngreso::ctrObtenerDatosTimbre($tabla, $campo, $valor);
+    
+if($response){
+
+        
+}
+
 // ------------------------------ ** SELLOS ** -----------------------------------------------------------
+$qr=$response['codigoqr'];
+// $imgsrc="data:image/png;base64,'.$qr.'";
+// $pic = 'data:image/png;base64,'.$qr;
+//$info = getimagesize($pic);
+// Example of Image from data stream ('PHP rules')
+//$imgdata = base64_decode($qr);
+$pic = 'data:image/png;base64,'.$qr;
+//$info = getimagesize($pic);
+// The '@' character is used to indicate that follows an image data stream and not an image file name
+$pdf->Image('@'.$pic);
+
+$pdf->SetLineWidth(0.2);
+$x = $pdf->GetX();
+$y = $pdf->GetY();
+//$pdf->Cell(11,11, $pdf->Image('images/prueba.jpg', $pdf->GetX(), $pdf->GetY(),11),1);
+//$pdf->MultiCell(45, 20, $pdf->Image('@'.$pic, 'png'), 'LRTB', 'L', 1);
+$pdf->SetFont('Arial', '', 6.5);
+$pdf->SetFillColor(255,255,255);
+$pdf->SetFont('Arial', 'B', 7);
+$x = $pdf->GetX();
+$y = $pdf->GetY();
+$pdf->SetXY($x-170,$y-20);
+$x = $pdf->GetX();
+$pdf->MultiCell(0, 3.8, utf8_decode('Sello Digítal del CFDI: '),'LRTB','FJ',1);
+$pdf->SetFont('Arial', '', 6.5);
+$pdf->SetX($x);
+$pdf->MultiCell(0, 3.7, utf8_decode($response['sellodigitalcfdi'].$x.'-'.$y),'LRTB','FJ',1);
+$pdf->Ln(1.7);
+
+$x = $pdf->GetX();
+$pdf->SetX($x+45.8);
+$pdf->SetFont('Arial', 'B', 7);
+$pdf->MultiCell(0, 3.8, utf8_decode('Sello Digítal del SAT: '),'LRTB','FJ',1);
+$pdf->SetX($x+45.7);
+$pdf->SetFont('Arial', '', 6.5);
+$pdf->MultiCell(0, 3.7, utf8_decode($response['sellodigitalsat'].$x.'-'.$y),'LRTB','FJ',1);
+$pdf->Ln(2);
+
+$pdf->SetFont('Arial', 'B', 7);
+$pdf->MultiCell(0, 3.5, utf8_decode('Cadena Original: '),'','FJ',1);
+$pdf->SetX($x);
+$pdf->SetFont('Arial', '', 6.5);
+$pdf->MultiCell(0, 3.5, utf8_decode($response['cadenaoriginal'].$x.'-'.$y),'','FJ',1);
+$pdf->SetFont('Arial', '', 6.5);
+$pdf->Ln(6.5);
+
+
 
 
 // -----------------------------------------------------------------------------------------            
