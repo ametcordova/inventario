@@ -211,7 +211,7 @@ static public function mdlTimbrarFactura($tabla, $campo, $valor){
 static public function mdlObtenerDatosFactura($tabla, $campo, $valor){
     try {    
         //tabla=facturaingreso
-        $stmt = Conexion::conectar()->prepare("SELECT tb1.*, emp.razonsocial AS nombreemisor, CONCAT(emp.direccion,' ',emp.colonia,' ',emp.num_ext) AS direccionemisor, emp.mailempresa, emp.telempresa, rf.descripcion AS regimenfiscalemisor, emp.codpostal, clie.nombre AS nombrereceptor, clie.rfc AS rfcreceptor, CONCAT(clie.direccion,' ',clie.num_int_ext,' ',clie.colonia,', ',clie.ciudad,', ',edo.nombreestado) AS direccionreceptor, clie.email, clie.telefono, clie.regimenfiscal, rfr.descripcion AS regimenfiscalreceptor, clie.codpostal AS codpostalreceptor, cfdi.id_cfdi, cfdi.descripcion AS usocfdi, fp.descripcionformapago, mp.descripcionmp, mn.id_moneda, mn.descripcion AS moneda
+        $stmt = Conexion::conectar()->prepare("SELECT tb1.*, emp.razonsocial AS nombreemisor, CONCAT(emp.direccion,' ',emp.colonia,' ',emp.num_ext) AS direccionemisor, emp.mailempresa, emp.telempresa, rf.descripcion AS regimenfiscalemisor, emp.numerocertificado, emp.codpostal, clie.nombre AS nombrereceptor, clie.rfc AS rfcreceptor, CONCAT(clie.direccion,' ',clie.num_int_ext,' ',clie.colonia,', ',clie.ciudad,', ',edo.nombreestado) AS direccionreceptor, clie.email, clie.telefono, clie.regimenfiscal, rfr.descripcion AS regimenfiscalreceptor, clie.codpostal AS codpostalreceptor, cfdi.id_cfdi, cfdi.descripcion AS usocfdi, fp.descripcionformapago, mp.descripcionmp, mn.id_moneda, mn.descripcion AS moneda, tc.descripcion AS descriptipocomprobante, ex.descripcion AS descripciontipoexporta
         FROM $tabla tb1
         INNER JOIN empresa emp ON emp.id=tb1.id_empresa
         INNER JOIN c_regimenfiscal rf ON rf.id=tb1.idregimenfiscalemisor
@@ -222,6 +222,8 @@ static public function mdlObtenerDatosFactura($tabla, $campo, $valor){
         INNER JOIN c_formapago fp ON fp.id=tb1.idformapago
         INNER JOIN c_metodopago mp ON mp.id_metodopago=tb1.idmetodopago
         INNER JOIN c_moneda mn ON mn.id=tb1.idmoneda
+        INNER JOIN c_tiposdecomprobantes tc ON tc.idtipodecomprobante=tb1.idtipocomprobante
+        INNER JOIN c_exportacion ex ON ex.id=tb1.idexportacion
         WHERE tb1.$campo= :$campo");
         
         $stmt->bindParam(":".$campo, $valor, PDO::PARAM_INT);
