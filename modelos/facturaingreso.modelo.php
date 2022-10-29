@@ -144,8 +144,9 @@ static public function mdlCrearFacturaIngreso($tabla, $facturaingreso){
                 }
         
         //GUARDAMOS EN TABLA FACTURAINGRESO
-        $stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(serie, folio, fechaelaboracion, rfcemisor, idregimenfiscalemisor, idtipocomprobante, idmoneda, idlugarexpedicion, idexportacion, idreceptor, idusocfdi, idformapago, idmetodopago, conceptos, observaciones, subtotal, tasaimpuesto, impuestos, totalfactura, ultusuario) VALUES (:serie, :folio, :fechaelaboracion, :rfcemisor, :idregimenfiscalemisor, :idtipocomprobante, :idmoneda, :idlugarexpedicion, :idexportacion, :idreceptor, :idusocfdi, :idformapago, :idmetodopago, :conceptos, :observaciones, :subtotal,:tasaimpuesto, :impuestos, :totalfactura, :ultusuario)");
+        $stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(id_empresa, serie, folio, fechaelaboracion, rfcemisor, idregimenfiscalemisor, idtipocomprobante, idmoneda, idlugarexpedicion, idexportacion, idreceptor, idusocfdi, idformapago, idmetodopago, conceptos, observaciones, subtotal, tasaimpuesto, impuestos, totalfactura, ultusuario) VALUES (:id_empresa, :serie, :folio, :fechaelaboracion, :rfcemisor, :idregimenfiscalemisor, :idtipocomprobante, :idmoneda, :idlugarexpedicion, :idexportacion, :idreceptor, :idusocfdi, :idformapago, :idmetodopago, :conceptos, :observaciones, :subtotal,:tasaimpuesto, :impuestos, :totalfactura, :ultusuario)");
 
+        $stmt->bindParam(":id_empresa", 	        $facturaingreso["id_empresa"], PDO::PARAM_INT);
         $stmt->bindParam(":serie", 	                $facturaingreso["serie"], PDO::PARAM_STR);
         $stmt->bindParam(":folio", 	                $folio, PDO::PARAM_INT);
         $stmt->bindParam(":fechaelaboracion",       $facturaingreso["fechaelaboracion"], PDO::PARAM_STR);

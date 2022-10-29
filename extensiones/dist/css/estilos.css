@@ -147,6 +147,13 @@ Full screen Modal
   .margen-custom {margin-top:20px;;}
 }
 
+.uni-code { 
+	font-family: FontAwesome, "Open Sans", Verdana, sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+}
+
 #uploadedFile{
   border: 1px #A9A9A9 solid;
   background-color: #00BFFF;

@@ -84,14 +84,15 @@ function dt_ListarFacturasIngreso(){
         }, 
         "columnDefs": [
           {"width:":"10px", "className": "dt-center", "targets": [0]},
-          {"width:":"12px", "className": "dt-center", "targets": [1]},
-          {"width:":"25px", "className": "dt-center", "targets": [2]},
-          {"width:":"25px", "className": "dt-center", "targets": [3]},
-          {"width:":"100px", "className": "dt-left", "targets": [4]},
-          {"width:":"15px", "className": "dt-center", "targets": [5]},
-          {"width:":"15px", "className": "dt-right", "targets": [6]},
+          {"width:":"10px", "className": "dt-center", "targets": [1]},
+          {"width:":"12px", "className": "dt-center", "targets": [2]},
+          {"width:":"20px", "className": "dt-center", "targets": [3]},
+          {"width:":"20px", "className": "dt-center", "targets": [4]},
+          {"width:":"100px", "className": "dt-left", "targets": [5]},
+          {"width:":"10px", "className": "dt-center", "targets": [6]},
           {"className": "dt-center", "targets": [7]},
-          {"className": "dt-center", "targets": [8]}				//"_all" para todas las columnas
+          {"className": "dt-center", "targets": [8]},				//"_all" para todas las columnas
+          {"className": "dt-center", "targets": [9]}				//"_all" para todas las columnas
           ],
 		"ajax":
 				{

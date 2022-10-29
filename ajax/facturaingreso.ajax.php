@@ -43,6 +43,7 @@ switch ($_GET["op"]){
         foreach($listar as $key => $value){
             $fechaelaboracion = date('d-m-Y', strtotime($value["fechaelaboracion"]));
             $importeFact=number_format($value['totalfactura'], 2, '.',',');
+            $serie=is_null($value["serie"])?'':trim($value["serie"]);
 
             $tri = '<tr><td>'.($value["id"]).'</td>';
             $trf='</tr';
@@ -60,6 +61,7 @@ switch ($_GET["op"]){
 
             $data[]=array(
                 $value['id'],
+                $serie,
                 $value["folio"],
                 $value["fechaelaboracion"],
                 $value["fechatimbrado"],
@@ -168,6 +170,7 @@ switch ($_GET["op"]){
                     
                     /* `inventario`.`facturaingreso` */
                     $facturaingreso = array(
+                        'id_empresa' => 2,
                         'serie' => 'A',
                         'folio' => $_POST["nvofolio"],
                         'uuid' => '',

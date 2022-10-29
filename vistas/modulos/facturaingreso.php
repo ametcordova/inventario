@@ -103,6 +103,7 @@ $fechaHoy = date("Y-m-d");
               <thead class="thead-dark" style="font-size:.8rem; height:1px">
                 <tr style="font-size:0.95em">
                   <th class="text-center">#</th>
+                  <th class="text-center">Serie</th>
                   <th class="text-center">Folio</th>
                   <th class="text-center">F. Elab.</th>
                   <th class="text-center">F. Timb.</th>
@@ -231,7 +232,7 @@ $fechaHoy = date("Y-m-d");
                     $valor = null;
                     $usocfdi = ControladorFacturaIngreso::ctrMostrarUsoCFDI($item, $valor);
                     foreach ($usocfdi as $key => $value) {
-                      echo '<option value="' . $value["id"] . '-' . $value["id_cfdi"] . '">' . $value["descripcion"] . '</option>';
+                      echo '<option value="'.$value["id"].'">'.$value["id_cfdi"].'-'.$value["descripcion"]. '</option>';
                     }
                     ?>
                   </select>

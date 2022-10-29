@@ -1,0 +1,2 @@
+openssl x509 -inform der -in cacx7605101p8.cer -out certificado.pem
+openssl pkcs8 -inform DET -in Claveprivada_FIEL_CACX7605101P8_20190528_152826.key -passin pass:12345678a -out llaveprivada.pem
