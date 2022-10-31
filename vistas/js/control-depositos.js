@@ -178,7 +178,7 @@ function dt_crtl_depositos(){
           text: 'Recargar',
           className: 'orange',
           action: function ( e, dt, node, config ) {
-            dt_crtl_depositos();
+            location.reload();
           }
         }        
         ],

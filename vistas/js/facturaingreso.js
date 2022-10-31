@@ -552,7 +552,7 @@ function mostrarRespuesta(mensaje, ok){
 }
 /*======================================================================*/
 /*=============================================
-
+Script para timbrar factura
 =============================================*/
 function getIdFactura(elem){
   let dataid = elem.dataset.idfactura;
@@ -569,7 +569,9 @@ function getIdFactura(elem){
     .then((res)=>{ 
       if(res.status==200) {
         console.log(res.data)
-
+        console.log(res.status)
+        console.log(res.data['status'])
+        console.log(res.data['msg'])
 
         if(res.data==false){
           console.log(res.data)

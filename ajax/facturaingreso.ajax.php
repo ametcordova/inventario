@@ -1,6 +1,7 @@
 <?php
-//if(strlen(session_id())>1)
-session_start();
+session_start();    
+// if(!strlen(session_id())>1){
+// }
 date_default_timezone_set("America/Mexico_City");
 $fechaHoy=date("Y-m-d");
 
@@ -8,7 +9,7 @@ require_once "../controladores/facturaingreso.controlador.php";
 require_once "../modelos/facturaingreso.modelo.php";
 require_once "../controladores/permisos.controlador.php";
 require_once "../modelos/permisos.modelo.php";
-
+require_once "../funciones/timbrarfactura.php";
 require_once '../funciones/funciones.php';
 
 switch ($_GET["op"]){
@@ -50,8 +51,8 @@ switch ($_GET["op"]){
             $status="Timbrado";
 
             $boton1 =getAccess($acceso, ACCESS_PRINTER)?"<td><button class='btn btn-success btn-sm px-1 py-1 btnPrintPdf' data-id='".$value['id']."' title='Generar PDF '><i class='fa fa-file-pdf-o'></i></button></td> ":"";
-            $boton2 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-primary btn-sm px-1 py-1 btnEditEntradaAlmacen' idEditarEntrada='".$value['id']."' title='Editar Entrada' data-toggle='modal' data-target='#modalEditarEntradasAlmacen'><i class='fa fa-edit'></i></button></td> ":"";
-            $boton3 =getAccess($acceso, ACCESS_DELETE)?"<td><button class='btn btn-danger btn-sm px-1 py-1 btnDelEntradasAlmacen' idDeleteEntradaAlm='".$value['id']."' title='Eliminar Entrada '><i class='fa fa-trash'></i></button></td> ":"";
+            $boton2 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-primary btn-sm px-1 py-1 btnEditEntradaAlmacen' idEditarEntrada='".$value['id']."' title='Editar Factura' data-toggle='modal' data-target='#modalEditarEntradasAlmacen'><i class='fa fa-edit'></i></button></td> ":"";
+            $boton3 =getAccess($acceso, ACCESS_DELETE)?"<td><button class='btn btn-danger btn-sm px-1 py-1 btnDelEntradasAlmacen' idDeleteEntradaAlm='".$value['id']."' title='Eliminar Factura '><i class='fa fa-trash'></i></button></td> ":"";
             if($value["uuid"]!=""){
                 $boton4 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-dark px-1 py-1' title='Factura timbrada'><i class='fa fa-bell fa-fw'></i> </button></td> ":"";
             }else{
@@ -222,28 +223,39 @@ switch ($_GET["op"]){
             $diff = $fecha->diff($fechaactual);
             //var_dump($diff);
             //echo ( ($diff->days * 24 ) * 60 ) + ( $diff->i * 60 ) + $diff->s . ' seconds';
-            // passed means if its negative and to go means if its positive
-            //echo ($diff->invert == 1 ) ? ' passed ' : ' to go ';
+            //passed means if its negative and to go means if its positive
+            // echo ($diff->invert == 1 ) ? ' passed ' : ' to go ';
             // echo $diff->d.' dias ';
             // echo $diff->h.' horas ';
             // echo $diff->i.' min ';
             // echo $diff->s.' seg ';
             
-            // if($diff->d>0){
-            //      json_output(json_build(403, null, 'Mas de 1 dia.'));
-            //      exit;
-            // }
-            // if($diff->h>23 && $diff->i>50 ){
-            //     json_output(json_build(403, null, 'Tiene mas de 23 horas y 50 min.'));
+            if($diff->d>0){
+                 json_output(json_build(403, null, 'Mas de 1 dia.'));
+                 exit;
+            }
+
+            // if($diff->h<23 && $diff->i<50 ){
+            //     json_output(json_build(403, $diff->h, 'Tiene menos de 23 horas y 50 min.'));
             // }
             
             $tabla = "facturaingreso";
             $campo = "id";
             $valor = $_GET['dataid'];
             
-            $respuesta = ControladorFacturaIngreso::ctrTimbrarFactura($tabla, $campo, $valor);
+            $respuesta = ClaseFacturar::GenerarJsonFactura($tabla, $campo, $valor);
+
+            if(intval($respuesta)===0){
+                json_output(json_build(401, intval($respuesta), 'No se creo el archivo JSON'));
+            }
     
-            echo json_encode($respuesta);
+            $resp = ClaseFacturar::EnviarJsonFacturaWS();
+            
+            if($resp){
+                json_output(json_build(201, $resp, 'Respuesta de la funcion WS'));    
+            }
+                json_output(json_build(401, $resp, 'Respuesta del WS'));
+
         
         break;
 
