@@ -279,8 +279,8 @@ class ClaseFacturar{
 
             $uuid .= PHP_EOL . PHP_EOL;
             file_put_contents('./salida/'.$file, $uuid, FILE_APPEND | LOCK_EX);
-            $nocertificado .= PHP_EOL . PHP_EOL;
-            file_put_contents('./salida/'.$file, $nocertificado, FILE_APPEND | LOCK_EX);
+            $noCertificado .= PHP_EOL . PHP_EOL;
+            file_put_contents('./salida/'.$file, $noCertificado, FILE_APPEND | LOCK_EX);
             $noCertificadoSAT .= PHP_EOL . PHP_EOL;
             file_put_contents('./salida/'.$file, $noCertificadoSAT, FILE_APPEND | LOCK_EX);
             $CodigoQR .= PHP_EOL . PHP_EOL;

@@ -179,7 +179,7 @@ switch ($_GET["op"]){
                         'fechaelaboracion' => date("Y-m-d H:i:s"),
                         'fechatimbrado' => '',
                         'fechacancelado' => '',
-                        'rfcemisor' => 'DIGB980626MX3',
+                        'rfcemisor' => $_POST['rfcemisor'],
                         'idregimenfiscalemisor' => '621',
                         'idtipocomprobante' => $_POST["idtipocomprobante"],
                         'idmoneda' => '100',
@@ -191,7 +191,6 @@ switch ($_GET["op"]){
                         'idmetodopago' => $_POST["nvoMetodoPago"],
                         'numctapago' => '',
                         'cfdirelacionados' => NULL,
-                        //'conceptos' => '[{"id_producto":"1","cantidad":"1", "pu":"1105","impuesto":"176.80","retencion":"0.00","preciototal":"1281.80"},{"id_producto":"2","cantidad":"4","pu":"1105","impuesto":"707.20","retencion":"0.00","preciototal":"5127.20"}]',
                         'conceptos' => $datos_json,
                         'observaciones' => $_POST["nvaObserva"],        //validar
                         'subtotal' => $totalPU,
@@ -200,12 +199,12 @@ switch ($_GET["op"]){
                         'retenciones' => '0.00',
                         'totalfactura' => $sumatotal,
                         'rutaguardararchivos' => NULL,
-                        'ultusuario' => '5');
+                        'ultusuario' => $_POST['idDeUsuario']
+                    );
                         
                         $rspta = ControladorFacturaIngreso::ctrCrearFacturaIngreso($tabla, $facturaingreso);    //$_POST[""]
                         if($rspta=='ok')
                             json_output(json_build(201, 'ok', 'Movimiento agregado con éxito'));
-                        //echo $rspta;
                 }else{
                     throw new Exception("Expresion no aceptada");
                     return false;  

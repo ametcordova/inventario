@@ -170,14 +170,15 @@ $fechaHoy = date("Y-m-d");
                     $valor=1;
                     $empresas=ControladorFacturaIngreso::ctrGetDatosEmpresa($item, $valor);
                     foreach($empresas as $key=>$value){
-                          if($value["id"]=="1"){
-                            echo '<option selected value="'.$value["id"].'">'.$value["rfc"].'-'.$value["razonsocial"].'</option>';
-                          }else{
+                          // if($value["id"]=="1"){
+                          //   echo '<option selected value="'.$value["id"].'">'.$value["rfc"].'-'.$value["razonsocial"].'</option>';
+                          // }else{
                             echo '<option value="'.$value["id"].'">'.$value["rfc"].'-'.$value["razonsocial"].'</option>';
-                        }
+                        //}
                     }
                   ?>				  
                   </select>
+                  <input type="hidden" name="rfcemisor" value=''>
               </div>              
 
               <div class="form-group col-md-1">

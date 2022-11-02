@@ -159,7 +159,7 @@ ob_start(); // it starts buffering
             $pdf->SetFont('Arial','B',9);
             $pdf->Cell(26,4,'Nombre: ',0,0,'L',true);
             $pdf->SetFont('Arial','',9);
-            $pdf->Cell(126,4,$resp['nombreemisor'],0,0,'L',true);
+            $pdf->Cell(126,4,utf8_decode($resp['nombreemisor']),0,0,'L',true);
             $pdf->SetFont('Arial','B',9);
             $pdf->Cell(10,4,'RFC: ',0,0,'R',true);
             $pdf->SetFont('Arial','',9);

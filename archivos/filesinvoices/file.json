@@ -2,21 +2,21 @@
     "Comprobante": {
         "Version": "4.0",
         "Serie": "A",
-        "Folio": "47",
-        "Fecha": "2022-11-01T21:21:10",
+        "Folio": "49",
+        "Fecha": "2022-11-02T00:47:50",
         "FormaPago": "03",
         "NoCertificado": "30001000000400002434",
         "CondicionesDePago": "NA",
-        "SubTotal": "8667.00",
+        "SubTotal": "7562.00",
         "Moneda": "MXN",
         "TipoCambio": "1",
-        "Total": "10053.72",
+        "Total": "8771.92",
         "TipoDeComprobante": "I",
         "Exportacion": "01",
         "MetodoPago": "PUE",
         "LugarExpedicion": "29047",
         "Emisor": {
-            "Rfc": "DIGB980626MX3",
+            "Rfc": "EKU9003173C9",
             "Nombre": "ESCUELA KEMPER URGATE",
             "RegimenFiscal": "601"
         },
@@ -31,21 +31,21 @@
             {
                 "ClaveProdServ": "72151602",
                 "NoIdentificacion": "1",
-                "Cantidad": "3",
+                "Cantidad": "2",
                 "ClaveUnidad": "E48",
                 "Unidad": "Unidad de servicio",
                 "Descripcion": "BAJANTE SUBTERRANEO DE 50 M. MIGRACIONES 14102022/41 SUR1. PROY: CARO53323. ODC: 00068338. No. REPSE: 09679. CONTRATO: BAJSUR063-01.",
                 "ValorUnitario": "1105.000000",
-                "Importe": "3315",
+                "Importe": "2210",
                 "ObjetoImp": "02",
                 "Impuestos": {
                     "Traslados": [
                         {
-                            "Base": "3315",
+                            "Base": "2210",
                             "Impuesto": "002",
                             "TipoFactor": "Tasa",
                             "TasaOCuota": "0.160000",
-                            "Importe": "530.4"
+                            "Importe": "353.6"
                         }
                     ]
                 }
@@ -56,7 +56,7 @@
                 "Cantidad": "4",
                 "ClaveUnidad": "E48",
                 "Unidad": "Unidad de servicio",
-                "Descripcion": "BAJANTE AEREO DE 250M. MIGRACIONES 14102022/41 SUR1. PROY: CARO53323. ODC: 00068338. No. REPSE: 09679. CONTRATO: BAJSUR063-01.",
+                "Descripcion": "BAJANTE SUBTERRANEO DE 7 5 M . MIGRACIONES 14102022/41 SUR1. PROY: CARO53323. ODC: 00068338. No. REPSE: 09679. CONTRATO: BAJSUR063-01.",
                 "ValorUnitario": "1338",
                 "Importe": "5352",
                 "ObjetoImp": "02",
@@ -74,14 +74,14 @@
             }
         ],
         "Impuestos": {
-            "TotalImpuestosTrasladados": "1386.72",
+            "TotalImpuestosTrasladados": "1209.92",
             "Traslados": [
                 {
-                    "Base": "8667",
+                    "Base": "7562",
                     "Impuesto": "002",
                     "TipoFactor": "Tasa",
                     "TasaOCuota": "0.160000",
-                    "Importe": "1386.72"
+                    "Importe": "1209.92"
                 }
             ]
         }

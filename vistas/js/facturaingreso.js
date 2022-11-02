@@ -209,8 +209,24 @@ async function UltimoNumIdFactura(){
     respFolio=parseInt(result.folio)+1;
     $("#nvofolio").val(respFolio);
   }
-
 }
+
+/**************************************************************** */
+$('#idEmpresa').on('change, blur', ()=> {
+  $("#idEmpresa").css({"background-color": "white", "color":"black"});
+  let rfcemisor=$("#idEmpresa option:selected" ).text();       //obtener el texto del valor seleccionado
+  rfcemisor= rfcemisor.substr(0, rfcemisor.indexOf('-'));
+  rfcemisor=rfcemisor.trim();
+  //console.log(rfcemisor)
+  if(rfcemisor==''){
+    $("#idEmpresa").css({"background-color": "red", "color":"yellow"});
+    $("select#idEmpresa").focus();
+    return false;
+  }
+  $('input[name=rfcemisor]').val(rfcemisor);   
+
+});
+/**************************************************************** */
 
 // DESELECCIONA ALMACEN PARA EVITAR CAMBIARLO
 $("#nvoClienteReceptor").change(function(){
@@ -485,7 +501,7 @@ $("body").on("submit", "#formularioFactura", function( event ) {
   event.stopPropagation();
   let formData = new FormData($("#formularioFactura")[0]);   
   for (var pair of formData.entries()){
-    console.table(pair[0]+ ', ' + pair[1]);
+    //console.table(pair[0]+ ', ' + pair[1]);
       if($("#nvoregimenfiscalreceptor").val().length < 1){
         return true;
       } 
@@ -578,6 +594,7 @@ function getIdFactura(elem){
         console.log(res.status)
         console.log(res.data['status'])
         console.log(res.data['msg'])
+        console.log(res.data['data'])
 
         if(res.data==false){
           console.log(res.data)
