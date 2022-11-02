@@ -43,7 +43,7 @@ function dt_ListarFacturasIngreso(){
      
    }	   
  
-  console.log(FechDev1, FechDev2);
+  //console.log(FechDev1, FechDev2);
 
   tblFacturaIngreso=$('#dt-FacturaIngreso').dataTable(
 	{
@@ -557,17 +557,23 @@ Script para timbrar factura
 function getIdFactura(elem){
   let dataid = elem.dataset.idfactura;
   let datafecha = elem.dataset.fechaelabora;
-  //console.log('id:',dataid, datafecha);
+  let dataidempresa = elem.dataset.idempresa;
+  let dataserie = elem.dataset.serie;
+  //console.log('id:',dataid, datafecha, dataidempresa);
+  //return
   (async () => {
     await axios.get('ajax/facturaingreso.ajax.php?op=TimbrarFact', {
       params: {
         dataid: dataid,
-        datafecha: datafecha
+        datafecha: datafecha,
+        dataidempresa: dataidempresa,
+        dataserie: dataserie
       }
     })
 
     .then((res)=>{ 
       if(res.status==200) {
+        $('#dt-FacturaIngreso').DataTable().ajax.reload(null, false);
         console.log(res.data)
         console.log(res.status)
         console.log(res.data['status'])

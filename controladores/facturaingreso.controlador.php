@@ -82,6 +82,21 @@ static public function ctrObtenerDatosTimbre($tabla, $campo, $valor){
 	
 }  
 
+/*=============================================
+MOSTRAR DATOS EMPRESA
+============================================*/
+
+static public function ctrGetDatosEmpresa($item, $valor){
+
+	$tabla = "empresa";
+
+	$respuesta = ModeloFacturaIngreso::mdlGetDatosEmpresa($tabla, $item, $valor);
+
+	return $respuesta;
+
+}  
+
+
 
 
 

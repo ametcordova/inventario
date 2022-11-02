@@ -1,6 +1,6 @@
 <?php
 date_default_timezone_set('America/Mexico_City');
-require_once dirname( __DIR__ ).'/config/conexion.php';
+//require_once dirname( __DIR__ ).'/config/conexion.php';
 class ModeloEmpresa{
 
 /*=============================================
@@ -45,7 +45,6 @@ static public function mdlIngresarEmpresa($tabla, $datos){
 		
 		}
 
-		$stmt->close();
 		$stmt = null;
 
  } catch (Exception $e) {
@@ -105,14 +104,20 @@ static public function mdlUpdateEmpresa($tabla, $datos){
 /*=============================================
 MOSTRAR EMPRESA
 =============================================*/
-static public function mdlTraerDatosEmpresa($tabla){
+static public function mdlTraerDatosEmpresa($tabla, $item=NULL, $valor=NULL){
 	try{
-	
-		$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla");
-	
-		$stmt -> execute();
 
-		return $stmt -> fetch();
+		if(isset($item) && isset($valor)){
+			$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla");
+			$stmt -> execute();
+			return $stmt -> fetch();
+		}else{
+			$stmt = Conexion::conectar()->prepare("SELECT id, rfc, razonsocial FROM $tabla WHERE $item=:$item");
+			$stmt->bindParam(":".$item, $valor, PDO::PARAM_INT);
+			$stmt -> execute();
+			return $stmt -> fetchAll();
+		}
+	
 	
 	}catch(Exception $e) {
 		return $e->getMessage() ;

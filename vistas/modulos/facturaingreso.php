@@ -27,7 +27,6 @@ $campo = "administracion";
 $acceso = accesomodulo($tabla, $usuario, $module, $campo);
 $fechaHoy = date("Y-m-d");
 ?>
-
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper" style="background-color:darkslategrey">
   <!-- Content Header (Page header) -->
@@ -76,6 +75,9 @@ $fechaHoy = date("Y-m-d");
         <?php } ?>
 
         <div class="card-tools">
+        <button type="button" class="btn btn-tool" title="Refresh" onclick="location.reload()">
+            <i class="fa fa-refresh"></i>
+          </button>
           <button type="button" class="btn btn-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse">
             <i class="fa fa-minus"></i></button>
           <button type="button" class="btn btn-tool" data-widget="remove" data-toggle="tooltip" title="Remove">
@@ -137,7 +139,8 @@ $fechaHoy = date("Y-m-d");
       <form role="form" id="formularioFactura">
         <!-- Modal Header -->
         <div class="modal-header m-2 p-1" style="background-color:darkslategrey; color:floralwhite;">
-          <h5 class="modal-title"><i class="fa fa-plus-circle"></i> Factura Ingreso</h5>
+          <h5 class="modal-title"><i class="fa fa-plus-circle"></i> Factura Ingreso. &nbsp&nbsp  Usuario: <?php echo $_SESSION['nombre']; ?>
+          </h5>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
 
@@ -151,40 +154,55 @@ $fechaHoy = date("Y-m-d");
               <!-- data-date-end-date=no puede seleccionar una fecha posterior a la actual -->
               <div class="form-group col-md-1 pt-0 my-0 text-center">
                 <label class="control-label p-0"><i class="fa fa-file-o"></i> No.</label>
-                <input type="text" class="form-control form-control-sm text-center" name="numidfactura" id="numidfactura" value="0" readonly title="Número de ID Factura">
+                <input type="text" class="form-control form-control-sm text-center p-0" name="numidfactura" id="numidfactura" value="0" readonly title="Número de ID Factura">
                 <input type="hidden" name="idDeUsuario" value="<?php echo $_SESSION['id']; ?>">
                 <input type="hidden" name="idtipocomprobante" value='I'>
                 <input type="hidden" name="idexportacion" value='01'>
                 <input type="hidden" name="tasaimpuesto" value='16.00'>
               </div>
 
+              <div class="form-group col-md-2">
+                <label class="control-label" for=""><i class="fa fa-building"></i> Empresa:</label>
+                <select class="form-control form-control-sm" name="idEmpresa" id="idEmpresa" style="width: 100%;" tabindex="1" required>
+                  <option value="">Selecione Empresa</option>
+                  <?php
+                    $item='status';
+                    $valor=1;
+                    $empresas=ControladorFacturaIngreso::ctrGetDatosEmpresa($item, $valor);
+                    foreach($empresas as $key=>$value){
+                          if($value["id"]=="1"){
+                            echo '<option selected value="'.$value["id"].'">'.$value["rfc"].'-'.$value["razonsocial"].'</option>';
+                          }else{
+                            echo '<option value="'.$value["id"].'">'.$value["rfc"].'-'.$value["razonsocial"].'</option>';
+                        }
+                    }
+                  ?>				  
+                  </select>
+              </div>              
+
               <div class="form-group col-md-1">
                 <label class="control-label" for="nvofolio"><i class="fa fa-sort-numeric-asc"></i> Folio</label>
-                <input type="number" class="form-control form-control-sm" name="nvofolio" id="nvofolio" tabindex="1" required title="Folio">
+                <input type="number" class="form-control form-control-sm " name="nvofolio" id="nvofolio" tabindex="2" required title="Folio">
               </div>
 
               <?php
               if (getAccess($acceso, ACCESS_EDIT)) { ?>
                 <div class="form-group col-md-2">
                   <label class="control-label" for="nvaFechaAjuste"><i class="fa fa-calendar"></i> Fecha</label>
-                  <input type="date" class="form-control form-control-sm" name="nvaFechaElaboracion" value="<?= $fechaHoy ?>" tabindex="2" readonly required title="Fecha elaboración">
+                  <input type="date" class="form-control form-control-sm" name="nvaFechaElaboracion" value="<?= $fechaHoy ?>" tabindex="3" readonly required title="Fecha elaboración">
                 </div>
               <?php
               } else { ?>
                 <div class="form-group col-md-2">
                   <label class="control-label" for="nvaFechaAjuste"><i class="fa fa-calendar"></i> Fecha</label>
-                  <input type="date" class="form-control form-control-sm" name="nvaFechaElaboracion" value="<?= $fechaHoy ?>" tabindex="2" readonly title="Fecha elaboración">
+                  <input type="date" class="form-control form-control-sm" name="nvaFechaElaboracion" value="<?= $fechaHoy ?>" tabindex="3" readonly title="Fecha elaboración">
                 </div>
               <?php } ?>
 
-              <div class="form-group col-md-2">
-                <label class="control-label" for="nvoNombreAjuste"><i class="fa fa-check"></i> Captura</label>
-                <input type="text" class="form-control form-control-sm" name="idCaptura" id="idCaptura" value="<?php echo $_SESSION['nombre']; ?>" placeholder="" readonly title="Nombre Usuario ">
-              </div>              
 
               <div class="form-group col-md-4">
               <label><i class="fa fa-male"></i> Cliente:</label>
-                  <select class="form-control form-control-sm" name="nvoClienteReceptor" id="nvoClienteReceptor" style="width: 100%;" tabindex="3" required>
+                  <select class="form-control form-control-sm" name="nvoClienteReceptor" id="nvoClienteReceptor" style="width: 100%;" tabindex="4" required>
                   <option value="">Selecione Cliente</option>
                   <?php
                     $item=null;
@@ -209,7 +227,7 @@ $fechaHoy = date("Y-m-d");
             </div>
 
 
-              <div class="form-row col-md-12 p-1">
+              <div class="form-row col-md-12 py-0">
 
               <div class="form-group col-md-3">
                 <label class="control-label" for="nvoregimenfiscalreceptor"><i class="fa fa-check"></i> Régimen Fiscal</label>

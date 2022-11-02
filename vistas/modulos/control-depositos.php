@@ -90,7 +90,7 @@ $fechaHoy = date("Y-m-d");
               </span>
               <i class="fa fa-caret-down"></i>
             </button>
-
+            <!--<label for="" id="fechasiniciales"></label>-->
             <!-- <button class="btn btn-success btn-sm " onclick="dt_crtl_depositos()">
               <i class="fa fa-list"></i> Listar
             </button> -->
@@ -98,8 +98,9 @@ $fechaHoy = date("Y-m-d");
         </div>
 
         <div class="card-tools">
-        <button type="button" class="btn btn-tool" title="Refresh" onclick="location.reload()">
-            <i class="fa fa-refresh"></i></button>
+          <button type="button" class="btn btn-tool" title="Refresh" onclick="location.reload()">
+            <i class="fa fa-refresh"></i>
+          </button>
           <button type="button" class="btn btn-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse">
             <i class="fa fa-minus"></i></button>
           <button type="button" class="btn btn-tool" data-widget="remove" data-toggle="tooltip" title="Remove">
@@ -366,6 +367,6 @@ $fechaHoy = date("Y-m-d");
   </div>
 </div>  <!-- fin del modal -->
 <!-- ==================================================================================== -->
-<script defer src="vistas/js/control-depositos.js?v=03102022"></script>
+<script defer src="vistas/js/control-depositos.js?v=04102022"></script>
 
 

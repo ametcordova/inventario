@@ -27,11 +27,11 @@ static public function ctrUpdateEmpresa($tabla, $datos){
 MOSTRAR DATOS EMPRESA
 ============================================*/
 
-static public function ctrTraerDatosEmpresa(){
+static public function ctrTraerDatosEmpresa($item=NULL, $valor=NULL){
 
 	$tabla = "empresa";
 
-	$respuesta = ModeloEmpresa::mdlTraerDatosEmpresa($tabla);
+	$respuesta = ModeloEmpresa::mdlTraerDatosEmpresa($tabla, $item=NULL, $valor=NULL);
 
 	return $respuesta;
 

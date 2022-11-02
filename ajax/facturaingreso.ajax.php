@@ -11,6 +11,7 @@ require_once "../controladores/permisos.controlador.php";
 require_once "../modelos/permisos.modelo.php";
 require_once "../funciones/timbrarfactura.php";
 require_once '../funciones/funciones.php';
+require_once 'readerxml.php';
 
 switch ($_GET["op"]){
 
@@ -56,7 +57,7 @@ switch ($_GET["op"]){
             if($value["uuid"]!=""){
                 $boton4 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-dark px-1 py-1' title='Factura timbrada'><i class='fa fa-bell fa-fw'></i> </button></td> ":"";
             }else{
-                $boton4 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-danger px-1 py-1' onclick='getIdFactura(this)' title='Factura sin timbrar' data-idfactura='".$value['id']."' data-fechaelabora='".$value['fechaelaboracion']."' ><i class='fa fa-bell-slash fa-fw'></i> </button></td> ":"";
+                $boton4 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-danger px-1 py-1' onclick='getIdFactura(this)' title='Factura sin timbrar' data-idfactura='".$value['id']."' data-fechaelabora='".$value['fechaelaboracion']."' data-idempresa='".$value['id_empresa']."' data-serie='".$value['serie']."'><i class='fa fa-bell-slash fa-fw'></i> </button></td> ":"";
             };
             $botones=$boton1.$boton2.$boton3;
 
@@ -171,7 +172,7 @@ switch ($_GET["op"]){
                     
                     /* `inventario`.`facturaingreso` */
                     $facturaingreso = array(
-                        'id_empresa' => 2,
+                        'id_empresa' => $_POST["idEmpresa"],
                         'serie' => 'A',
                         'folio' => $_POST["nvofolio"],
                         'uuid' => '',
@@ -216,7 +217,7 @@ switch ($_GET["op"]){
             json_output(json_build(403, null, $e->getMessage()));
         }    
         break;
-
+/************************************************************************************************** */
         case 'TimbrarFact':
             $fechaactual=new DateTime("now");
             $fecha = new DateTime($_GET['datafecha']);
@@ -239,24 +240,31 @@ switch ($_GET["op"]){
             //     json_output(json_build(403, $diff->h, 'Tiene menos de 23 horas y 50 min.'));
             // }
             
-            $tabla = "facturaingreso";
-            $campo = "id";
-            $valor = $_GET['dataid'];
+            $tabla          = "facturaingreso";
+            $campo          = "id";
+            $valor          = $_GET['dataid'];
+            $dataidempresa  = $_GET['dataidempresa'];
+            $dataserie      = $_GET['dataserie'];
+
+            
             
             $respuesta = ClaseFacturar::GenerarJsonFactura($tabla, $campo, $valor);
 
             if(intval($respuesta)===0){
                 json_output(json_build(401, intval($respuesta), 'No se creo el archivo JSON'));
             }
-    
-            $resp = ClaseFacturar::EnviarJsonFacturaWS();
+            
+            $tablatimbrada='datosfacturatimbre';
+            $resp = ClaseFacturar::EnviarJsonFacturaWS($tabla, $tablatimbrada, $campo, $valor, $dataidempresa, $dataserie);
             
             if($resp){
                 json_output(json_build(201, $resp, 'Respuesta de la funcion WS'));    
             }
                 json_output(json_build(401, $resp, 'Respuesta del WS'));
 
-        
+            //$response=leerxml($tablatimbrada, $campo, $valor, $dataidempresa);
+            //return $response;
+
         break;
 
 

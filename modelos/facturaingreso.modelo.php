@@ -262,6 +262,26 @@ static public function mdlObtenerDatosTimbre($tabla, $campo, $valor){
     }
 }
 
+/*=============================================
+MOSTRAR EMPRESA
+=============================================*/
+static public function mdlGetDatosEmpresa($tabla, $item, $valor){
+	try{
+
+			$stmt = Conexion::conectar()->prepare("SELECT id, rfc, razonsocial FROM $tabla WHERE $item=:$item");
+			$stmt->bindParam(":".$item, $valor, PDO::PARAM_INT);
+			$stmt -> execute();
+			return $stmt -> fetchAll();
+
+	
+	}catch(Exception $e) {
+		return $e->getMessage() ;
+	}
+
+	$stmt = null;
+	
+}
+
 
 } //fin de la clase
 

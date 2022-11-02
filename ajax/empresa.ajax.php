@@ -41,7 +41,7 @@ switch ($_GET["op"]){
     break;
 
     case 'traerDatosEmpresa':
-        $respuesta = ControladorEmpresa::ctrTraerDatosEmpresa();
+        $respuesta = ControladorEmpresa::ctrTraerDatosEmpresa($campo=NULL, $valor=NULL);
         echo json_encode($respuesta);        
 	  break;
         
