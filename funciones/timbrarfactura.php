@@ -5,8 +5,6 @@
 // }
 // Se especifica la zona horaria
 date_default_timezone_set("America/Mexico_City");
-// Varible con la fecha actual
-$fechaHoy=date("Y-m-d");
 
 // Se desactivan los mensajes de debug
 //error_reporting(~(E_WARNING|E_NOTICE));
@@ -16,13 +14,11 @@ require_once dirname( __DIR__ ).'/modelos/conexion.php';
 
 $exist=file_exists(__DIR__ . '/class.conexion.php');
 
-        if($exist){
-            // echo 'si existe';
-            require_once __DIR__ . '/class.conexion.php';
-        }else{
-            exit;
-            //echo 'No Existe archivo class.conexion';
-        };
+    if($exist){
+        require_once __DIR__ . '/class.conexion.php';
+    }else{
+        exit;
+     };
 
 use TIMBRADORXPRESS\API\ConexionWS;
 /*********************************************/
@@ -30,11 +26,6 @@ class ClaseFacturar{
 
     static public function GenerarJsonFactura($tabla, $campo, $valor){
     $bytes=0;
-    //TRAEMOS LA INFORMACIÓN 
-    // $tabla="facturaingreso";
-    // $campo = "id";
-    // $valor = $_GET["id"];       //12
-    $salto="</br>";
 
     $sql="SELECT tb1.*, emp.razonsocial AS nombreemisor, emp.numerocertificado, emp.regimenfiscalemisor, clie.rfc AS rfcreceptor, clie.nombre AS nombrereceptor, clie.codpostal AS cpreceptor, clie.regimenfiscal AS regfiscalreceptor, mon.id_moneda, cfdi.id_cfdi
     FROM $tabla tb1
@@ -52,15 +43,9 @@ class ClaseFacturar{
 
     $datosdefactura = $stmt->fetch();
     /*********************************************/
-    //echo $datosdefactura['conceptos'];
     $conceptos=json_decode($datosdefactura['conceptos'],true);
-    $cuantos=count($conceptos);
-    // foreach ($conceptos as $key => $value) {
-    //         $cadena = "la Clave Prod es: ". $value['ClaveProdServ'] ." Cantidad es: ". $value['Cantidad']." Cve Unidad: ".$value['ClaveUnidad']." Unidad:".$value['Unidad']." Descripcion: ".$value['Descripcion']." Valor Unitario: ".$value['ValorUnitario']." Importe: ".$value['Importe']." Objeto Imp: ".$value['ObjetoImp'];
-    //print($cadena);
-    //     }
 
-        // Datos de la Factura
+    // Datos de la Factura
     $datos['Comprobante']['Version'] = '4.0';
     $datos['Comprobante']['Serie'] = 'A';
     $datos['Comprobante']['Folio'] = $datosdefactura['folio'];
@@ -133,7 +118,7 @@ class ClaseFacturar{
 /*========================================================= */
 // SE ENVIA ARCHIVO JSON PARA SELLAR Y TIMBRAR AL WS
 /*========================================================= */
-    static public function EnviarJsonFacturaWS($tabla, $tablatimbrada, $campo, $valor, $dataidempresa, $dataserie){
+    static public function EnviarJsonFacturaWS($tabla, $tablatimbrada, $campo, $valor, $folio,  $dataidempresa, $dataserie){
         $filename=dirname( __DIR__ ).'/archivos/filesinvoices/file.json';
         if (!file_exists($filename) || !is_readable($filename)) {
             echo ("File $filename does not exists or is not readable");
@@ -150,13 +135,16 @@ class ClaseFacturar{
         header('Content-Type: application/json');
     
         # OBJETO DEL API DE CONEXION
-        $url = 'https://dev.facturaloplus.com/ws/servicio.do?wsdl';
+        $url = 'https://app.facturaloplus.com/ws/servicio.do?wsdl';    //endpoint productivo
+        //$url = 'https://dev.facturaloplus.com/ws/servicio.do?wsdl';
+
         $objConexion = new ConexionWS($url);
-        $folio=$valor;
+        //$folio=$valor;
         $ultusuario=$_SESSION['id'];
 
         # CREDENCIAL
-        $apikey = '28bcba372e324116ac4332175ef8d441';
+        $apikey = 'd2d1f88d95db4eb6b7a8c7105b1eb264';   //api key productivo
+        //$apikey = '28bcba372e324116ac4332175ef8d441'; //api key dev
         //$apikey = '4518afef427f487ba7b8942a29c8ea90';
 
         //OBTENER EL DIRECTORIO PRINCIPAL
@@ -170,27 +158,34 @@ class ClaseFacturar{
             exit;
         };
 
-        if(!file_exists($dirpadre.'\config\Certificados\Pruebas\CSD_EKU9003173C9.key.pem')){
+        //if(!file_exists($dirpadre.'\config\Certificados\Pruebas\CSD_EKU9003173C9.key.pem')){
+        if(!file_exists($dirpadre.'\config\Certificados\CSD_MATRIZ_DIGB980626MX3_20220913_165347.key.pem')){
             echo "sale0";
             exit;
         };
 
-        if(!file_exists($dirpadre.'\config\Certificados\Pruebas\CSD_EKU9003173C9.cer.pem')){
+        //if(!file_exists($dirpadre.'\config\Certificados\Pruebas\CSD_EKU9003173C9.cer.pem')){
+        if(!file_exists($dirpadre.'\config\Certificados\00001000000515088380.cer.pem')){
             echo "sale1";
             exit;
         };
 
 
-        if(!file_exists($dirpadre.'\config/logotipo.png')){
+        if(!file_exists($dirpadre.'\config\logotipo.png')){
             echo "sale2";
             exit;
         };
 
 
+        // $jsonB64    = base64_encode(file_get_contents($dirpadre.'\archivos\filesinvoices\file.json') );
+        // $keyPEM     = file_get_contents($dirpadre.'\config\Certificados\Pruebas\CSD_EKU9003173C9.key.pem');
+        // $cerPEM     = file_get_contents($dirpadre.'\config\Certificados\Pruebas\CSD_EKU9003173C9.cer.pem');
+        // $logoB64    = base64_encode( file_get_contents($dirpadre.'\config/logotipo.png') );
+
         $jsonB64    = base64_encode(file_get_contents($dirpadre.'\archivos\filesinvoices\file.json') );
-        $keyPEM     = file_get_contents($dirpadre.'\config\Certificados\Pruebas\CSD_EKU9003173C9.key.pem');
-        $cerPEM     = file_get_contents($dirpadre.'\config\Certificados\Pruebas\CSD_EKU9003173C9.cer.pem');
-        $logoB64    = base64_encode( file_get_contents($dirpadre.'\config/logotipo.png') );
+        $keyPEM     = file_get_contents($dirpadre.'\config\Certificados\CSD_MATRIZ_DIGB980626MX3_20220913_165347.key.pem');
+        $cerPEM     = file_get_contents($dirpadre.'\config\Certificados\00001000000515088380.cer.pem');
+        $logoB64    = base64_encode( file_get_contents($dirpadre.'\config\logotipo.png') );
 
         $response   = $objConexion->operacion_timbrarJSON3($apikey, $jsonB64, $keyPEM, $cerPEM, $logoB64);
 
@@ -219,7 +214,8 @@ class ClaseFacturar{
             file_put_contents('./salida/archivo_recibido.xml', $res['datos']);
             file_put_contents('./salida/archivo.xml', $resp);
         }else{
-            echo $resp;
+            echo $response;
+            return;
         }
         //Falta validad si existe archivo, para borrarlo.
         $file = 'datos'.$folio.'.txt';

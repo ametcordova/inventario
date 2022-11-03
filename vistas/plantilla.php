@@ -75,6 +75,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <!-- ALERTAS ohSnap -->
 <link rel="stylesheet" type="text/css" href="extensiones/plugins/ohSnap/ohsnap.css">
 
+<!-- ALERTAS ohSnap -->
+<link rel="stylesheet" type="text/css" href="extensiones/plugins/waitme/waitMe.min.css">
+
 <!-- https://getdatepicker.com/5-4/Usage/ -->
 <link rel="stylesheet" href="extensiones/plugins/tempusdominus-bootstrap4/tempusdominus-bootstrap-4.min.css" />
 

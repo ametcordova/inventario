@@ -457,7 +457,7 @@ if($response){
  
 
 // ------------------------------------------------------------------------------------------------      
-    $nombrearchivo=$resp['rfcemisor'].$GLOBALS['serie'].'-'.$GLOBALS['folio'];
+    $nombrearchivo=$resp['rfcemisor'].'-'.$GLOBALS['serie'].$GLOBALS['folio'];
     $pdf->Output('I',$nombrearchivo.'.pdf');
     ob_end_flush(); // It's printed here, because ob_end_flush "prints" what's in the buffer, rather than returning it (unlike the ob_get_* functions)        
     }else{

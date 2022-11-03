@@ -57,7 +57,7 @@ switch ($_GET["op"]){
             if($value["uuid"]!=""){
                 $boton4 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-dark px-1 py-1' title='Factura timbrada'><i class='fa fa-bell fa-fw'></i> </button></td> ":"";
             }else{
-                $boton4 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-danger px-1 py-1' onclick='getIdFactura(this)' title='Factura sin timbrar' data-idfactura='".$value['id']."' data-fechaelabora='".$value['fechaelaboracion']."' data-idempresa='".$value['id_empresa']."' data-serie='".$value['serie']."'><i class='fa fa-bell-slash fa-fw'></i> </button></td> ":"";
+                $boton4 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-danger px-1 py-1' onclick='getIdFactura(this)' title='Factura sin timbrar' data-idfactura='".$value['id']."' data-folio='".$value['folio']."' data-fechaelabora='".$value['fechaelaboracion']."' data-idempresa='".$value['id_empresa']."' data-serie='".$value['serie']."'><i class='fa fa-bell-slash fa-fw'></i> </button></td> ":"";
             };
             $botones=$boton1.$boton2.$boton3;
 
@@ -127,7 +127,17 @@ switch ($_GET["op"]){
     
     break;
 
-	case 'guardar':
+    case 'getDatosEmpresa':
+        $item = "id";
+        $valor = $_GET['idempresa'];
+
+        $respuesta = ControladorFacturaIngreso::ctrGetDatosEmpresa($item, $valor);
+
+        echo json_encode($respuesta);
+    
+    break;
+
+    case 'guardar':
         try{
             if(isset($_POST["nvofolio"])){  
                 
@@ -173,18 +183,18 @@ switch ($_GET["op"]){
                     /* `inventario`.`facturaingreso` */
                     $facturaingreso = array(
                         'id_empresa' => $_POST["idEmpresa"],
-                        'serie' => 'A',
+                        'serie' => $_POST['serie'],
                         'folio' => $_POST["nvofolio"],
                         'uuid' => '',
                         'fechaelaboracion' => date("Y-m-d H:i:s"),
                         'fechatimbrado' => '',
                         'fechacancelado' => '',
                         'rfcemisor' => $_POST['rfcemisor'],
-                        'idregimenfiscalemisor' => '621',
+                        'idregimenfiscalemisor' => $_POST['idregimenfiscalemisor'],
                         'idtipocomprobante' => $_POST["idtipocomprobante"],
                         'idmoneda' => '100',
-                        'idlugarexpedicion' => '29047',
-                        'idexportacion' => '01',
+                        'idlugarexpedicion' => $_POST['codpostal'],
+                        'idexportacion' => $_POST['idexportacion'],
                         'idreceptor' => $_POST["nvoClienteReceptor"],
                         'idusocfdi' => $_POST["nvoUsocfdi"],
                         'idformapago' => $_POST["nvoFormaPago"],
@@ -242,6 +252,7 @@ switch ($_GET["op"]){
             $tabla          = "facturaingreso";
             $campo          = "id";
             $valor          = $_GET['dataid'];
+            $folio          = $_GET['folio'];
             $dataidempresa  = $_GET['dataidempresa'];
             $dataserie      = $_GET['dataserie'];
 
@@ -254,7 +265,7 @@ switch ($_GET["op"]){
             }
             
             $tablatimbrada='datosfacturatimbre';
-            $resp = ClaseFacturar::EnviarJsonFacturaWS($tabla, $tablatimbrada, $campo, $valor, $dataidempresa, $dataserie);
+            $resp = ClaseFacturar::EnviarJsonFacturaWS($tabla, $tablatimbrada, $campo, $valor, $folio, $dataidempresa, $dataserie);
             
             if($resp){
                 json_output(json_build(201, $resp, 'Respuesta de la funcion WS'));    

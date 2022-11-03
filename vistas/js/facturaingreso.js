@@ -8,7 +8,8 @@ $("#modalCrearFactura").draggable({
 
 //Función que se ejecuta al inicio
 function init(){
-  
+  document.querySelector('#nvoFormaPago').click();   //simula un click para funcionar bien RXJS
+  $("#count-row").hide();
 /*=============================================
   VARIABLE LOCAL STORAGE
   =============================================*/
@@ -108,9 +109,8 @@ function dt_ListarFacturasIngreso(){
 		"iDisplayLength": 10,//Paginación
 	    "order": [[ 0, "desc" ]]//Ordenar (columna,orden)
 	}).DataTable();    
-    
 } 
-
+/****************************************************************************** */
  $('#daterange-btn-factingreso').daterangepicker({
   ranges   : {
     'Hoy'       : [moment(), moment()],
@@ -161,10 +161,11 @@ function dt_ListarFacturasIngreso(){
     localStorage.setItem("daterange-btn-factingreso", Rangofechafactingreso);
   }
 )
+/*********************************************************************** */
 
-/*=============================================
+/*====================================================================
 ASIGNA FECHA ACTUAL EN DATERANGEPICKER 
-=============================================*/    
+====================================================================*/    
 function fechaactual(){
     let fechaInicial=moment().add(-30, 'day').format('DD-MM-YYYY');
     let fechaFinal=moment().format('DD-MM-YYYY');
@@ -181,16 +182,7 @@ $('#daterange-btn-factingreso').on('cancel.daterangepicker', function(ev, picker
   $("#daterange-btn-factingreso span").html('<i class="fa fa-calendar"></i> Rango de fecha')
 });
 
-
 /**************************************************************** */
-//AL ABRIR EL MODAL TRAER EL ULTIMO NUMERO
-$('#modalCrearFactura').on('show.bs.modal', function (event) {
-  UltimoNumIdFactura();		//TRAE EL SIGUIENTE NUMERO 
-  renglonesfacturar=cantidadfacturar=0;
-	$("#renglonentradas").html("");
-	$("#totalentradasalmacen").html("");
-})
-
 //TRAER EL ULTIMO ID GUARDADO
 async function UltimoNumIdFactura(){
   let respId=respFolio=0;
@@ -212,25 +204,61 @@ async function UltimoNumIdFactura(){
 }
 
 /**************************************************************** */
-$('#idEmpresa').on('change, blur', ()=> {
+$('#idEmpresa').on('change', ()=> {
   $("#idEmpresa").css({"background-color": "white", "color":"black"});
+  let idempresa=$("#idEmpresa").val();       //obtener el texto del valor seleccionado
   let rfcemisor=$("#idEmpresa option:selected" ).text();       //obtener el texto del valor seleccionado
   rfcemisor= rfcemisor.substr(0, rfcemisor.indexOf('-'));
   rfcemisor=rfcemisor.trim();
   //console.log(rfcemisor)
-  if(rfcemisor==''){
+  if(rfcemisor=='' || ($('#idEmpresa').val()=='')){
     $("#idEmpresa").css({"background-color": "red", "color":"yellow"});
     $("select#idEmpresa").focus();
     return false;
   }
-  $('input[name=rfcemisor]').val(rfcemisor);   
 
+  (async () => {   
+    await axios.get('ajax/facturaingreso.ajax.php?op=getDatosEmpresa', {
+      params: {
+        idempresa: idempresa,
+      }
+    })
+    .then((res)=>{ 
+      if(res.status==200) {
+        //console.log(res.data)
+        if(res.data==false){
+          $("#tasaimpuesto").val('');
+          $("#idregimenfiscalemisor").val('');
+          $("#codpostal").val('');
+          $("#idexportacion").val('');
+          $("#btnGuardarFacturar").hide();
+        }else{
+          $('input[name=rfcemisor]').val(res.data.rfc);
+          $('input[name=tasaimpuesto').val(res.data.iva);
+          $('input[name=idregimenfiscalemisor').val(res.data.regimenfiscalemisor);
+          $('input[name=codpostal').val(res.data.codpostal);
+          $('input[name=idexportacion').val(res.data.id_exportacion);
+          $('input[name=serie').val(res.data.seriefacturacion);
+        }
+      }          
+    }) 
+
+    .catch((err) => {throw err}); 
+  
+  })();  //fin del async  
+  
 });
 /**************************************************************** */
-
 // DESELECCIONA ALMACEN PARA EVITAR CAMBIARLO
 $("#nvoClienteReceptor").change(function(){
-  //$('#nvoClienteReceptor option:not(:selected)').attr('disabled',true);
+
+  if($('#idEmpresa').val()==''){
+    $("#idEmpresa").css({"background-color": "red", "color":"yellow"});
+    $("select#idEmpresa").focus();
+    return false;
+  }
+
+  //$('#nvoClienteReceptor option:not(:selected)').attr('disabled',true);  //habilitarlo en PROD
   let id=$("#nvoClienteReceptor").val();
  
   idcliente=parseInt(id); 
@@ -269,11 +297,20 @@ $("#nvoClienteReceptor").change(function(){
   
   })();  //fin del async
 
-  $("#agregarProdFactura").removeClass("d-none");
-  $("#btnGuardarFactura").show();
+})
+/*******************************************************************/
+$('#idEmpresa, #nvoClienteReceptor').on('change, blur', ()=> {
+  if($("#idEmpresa").val()!='' && $("#nvoClienteReceptor").val()!=''){
+    $("#agregarProdFactura").removeClass("d-none");
+    $("#btnGuardarFactura").show();
+  }else{
+    $("#agregarProdFactura").addClass("d-none");
+    $("#btnGuardarFactura").hide();
+  }
 });
+/**************************************************************** */
 
-/*********************CON RxJS************************************ */
+/*********************** CON RxJS y JSON ************************************ */
 const catFormaPago = `config/catalogosat/c_FormaPago.json`;
 const users = ajax(catFormaPago);
 const searchBtnElement = document.getElementById('nvoFormaPago');  
@@ -284,7 +321,8 @@ click$.subscribe({
 });
 
 function formasdepago(){
-  const subscribe = users.subscribe(
+  //const subscribe = users.subscribe( funciona igual ya que no hace uso de la CONST
+  users.subscribe(
     //res => console.log(res.response),
     res => recorrerjson(res.response),
     err => console.error(err),
@@ -391,7 +429,7 @@ $("#agregaProdFactura").click(function(event){
     cantidad=parseFloat(cantidad);
     preciototal=cantidad*valorunitario;
        
-    //Si no selecciona producto retorna o cantidad
+    //Si no selecciona producto o cantidad, retorna
       if(isNaN(idProducto) || isNaN(cantidad) || cantidad<1 ){
         return true;
       }  
@@ -437,7 +475,7 @@ function addProductofactura(...argsProductos){
     $('#cveprodfactura').val(null).trigger('change');
     $("#cveprodfactura").val("0");	
 }
-
+/*==================================================================*/
 function duplicarconcepto(cve, canti, descripcion){
   $("#cveprodfactura").select2().val(cve).trigger('change');
   setTimeout(function() { 
@@ -445,7 +483,7 @@ function duplicarconcepto(cve, canti, descripcion){
     $("#nvoconcepto").val(descripcion);
   }, 1000);
 }
-
+/*==================================================================*/
 //QUITA ELEMENTO 
 function eliminarProducto(indice, restarcantidad, restarimporte){
   //console.log("entra a eliminar",indice)
@@ -492,21 +530,20 @@ function evaluarElementos(){
   }
 }
 
-
 /*======================================================================*/
 //ENVIAR FORMULARIO PARA GUARDAR DATOS DE ENTRADA
 /*======================================================================*/
 $("body").on("submit", "#formularioFactura", function( event ) {	
   event.preventDefault();
   event.stopPropagation();
+  let factura='Factura'
   let formData = new FormData($("#formularioFactura")[0]);   
-  for (var pair of formData.entries()){
-    //console.table(pair[0]+ ', ' + pair[1]);
-      if($("#nvoregimenfiscalreceptor").val().length < 1){
-        return true;
-      } 
+  // for (var pair of formData.entries()){
+  //   console.table(pair[0]+ ', ' + pair[1]);
+  // } 
+  if($("#nvoregimenfiscalreceptor").val().length < 1){
+    return true;
   } 
-  
   swal({
     title: "¿Está seguro de guardar Entrada?",
     text: "¡Si no lo está pulse Cancelar",
@@ -524,13 +561,28 @@ $("body").on("submit", "#formularioFactura", function( event ) {
           .then((res)=>{ 
             if(res.status===200) {
               console.log(res.data['status'])
-              //console.log(res.data.status, res.data.data, res.data.msg)
-
+              console.log(res.data.status, res.data.data, res.data.msg)
               $('#dt-FacturaIngreso').DataTable().ajax.reload(null, false);
               $('#modalCrearFactura').modal('hide')
 
+              swal({
+                title: "¡Hecho!!",
+                text: `${res.data.msg}`,
+                icon: "success",
+                button: "Cerrar",
+                timer:2000
+              })  //fin swal
+        
             }else{
               console.log(res.data, res.status)
+              swal({
+                title: "¡Lo siento mucho!!",
+                text: `No fue posible Guardar. ${res.data}!!`,
+                icon: "error",
+                buttons: false,
+                timer: 2000
+              })  //fin swal
+        
             }          
 
           }) 
@@ -542,45 +594,32 @@ $("body").on("submit", "#formularioFactura", function( event ) {
   }); 
 
 });  
-
-function completa() {
-  $("#alert1").addClass("d-none")
-}
-
 /*======================================================================*/
-function mostrarRespuesta(mensaje, ok){
 
-  //$("#respuesta, #response").removeClass('alert-success').removeClass('alert-danger').removeClass('d-none').html(mensaje);
-  if(ok){
-      $("#respuesta, #response").removeClass('d-none').html(mensaje);
-      $("#respuesta, #response").addClass('alert-success');
-      setTimeout(() => {
-        $("#respuesta, #response").addClass('d-none').removeClass('alert-success');
-      }, 3000);
-  }else{
-      $("#respuesta, #response").removeClass('d-none').html(mensaje);
-      $("#respuesta, #response").addClass('alert-danger').addClass('d-block');
-      setTimeout(() => {
-        $("#respuesta, #response").addClass('d-none').removeClass('alert-danger');
-      }, 3000);
-
-  }
-}
-/*======================================================================*/
 /*=============================================
 Script para timbrar factura
 =============================================*/
 function getIdFactura(elem){
   let dataid = elem.dataset.idfactura;
+  let datafolio = elem.dataset.folio;
   let datafecha = elem.dataset.fechaelabora;
   let dataidempresa = elem.dataset.idempresa;
   let dataserie = elem.dataset.serie;
   //console.log('id:',dataid, datafecha, dataidempresa);
   //return
+  $('#container').waitMe({
+    effect : 'timer',
+    text : '',
+    bg : 'rgba(255,255,255,0.7)',
+    color : '#000',
+    maxSize : '',
+    textPos : 'vertical'
+   });  
   (async () => {
     await axios.get('ajax/facturaingreso.ajax.php?op=TimbrarFact', {
       params: {
         dataid: dataid,
+        datafolio: datafolio,
         datafecha: datafecha,
         dataidempresa: dataidempresa,
         dataserie: dataserie
@@ -590,14 +629,29 @@ function getIdFactura(elem){
     .then((res)=>{ 
       if(res.status==200) {
         $('#dt-FacturaIngreso').DataTable().ajax.reload(null, false);
-        console.log(res.data)
-        console.log(res.status)
-        console.log(res.data['status'])
-        console.log(res.data['msg'])
-        console.log(res.data['data'])
-
+        $('#container').waitMe("hide");
+        // console.log(res.data)
+        // console.log(res.status)
+        // console.log(res.data['status'])
+        // console.log(res.data['msg'])
+        //console.log(res.data['data']['code'])
+        swal({
+          title: "¡Timbrado!",
+          text: `Mensaje .${res.data['msg']}!!`,
+          icon: "success",
+          buttons: false,
+          timer: 3000
+        })  //fin swal
+        
         if(res.data==false){
           console.log(res.data)
+          swal({
+            title: "¡Lo siento mucho!!",
+            text: `Mensaje .${res.data}!!`,
+            icon: "error",
+            buttons: false,
+            timer: 2000
+          })  //fin swal
         }
       }          
     }) 
@@ -619,15 +673,25 @@ $("#dt-FacturaIngreso tbody").on("click", "button.btnPrintPdf", function(){
      window.open("extensiones/fpdf/reportes/facturatimbrada.php?codigo="+idPrintPdf, "_blank");
     }
 })
-/*===================================================
+/*===================================================*/
 
+/**************************************************************** */
+//AL ABRIR EL MODAL TRAER EL ULTIMO NUMERO
+$('#modalCrearFactura').on('show.bs.modal', function (event) {
+  UltimoNumIdFactura();		//TRAE EL SIGUIENTE NUMERO 
+  renglonesfacturar=cantidadfacturar=0;
+	$("#renglonentradas").html("");
+	$("#totalentradasalmacen").html("");
+})
+/**************************************************************** */
 /*================ AL SALIR DEL MODAL RESETEAR FORMULARIO ==================*/
 $("#modalCrearFactura").on('hidden.bs.modal', ()=> {
   //$("#agregaProdFactura").addClass("d-none");
   $('#formularioFactura')[0].reset();                //resetea el formulario
   $("#nvacantidad").val(0);                   //inicializa campo existencia
-  $("#nvopreciounitario").val(0);                     //inicializa campo salida
-  $("#nvoconcepto").val("");                     //inicializa campo salida
+  $("#nvoFormaPago").val(0);                   //inicializa campo
+  $("#nvopreciounitario").val(0);                     //inicializa campo 
+  $("#nvoconcepto").val("");                     //inicializa campo 
   $("#tabladedetalles").empty();                   //vacia tbody
   $('#cveprodfactura').val(null).trigger('change');      //inicializa el select de productos
   arrayProductos["length"]=0;                      //inicializa array

@@ -28,7 +28,7 @@ $acceso = accesomodulo($tabla, $usuario, $module, $campo);
 $fechaHoy = date("Y-m-d");
 ?>
 <!-- Content Wrapper. Contains page content -->
-<div class="content-wrapper" style="background-color:darkslategrey">
+<div class="content-wrapper" id="container" style="background-color:darkslategrey">
   <!-- Content Header (Page header) -->
   <section class="content-header m-0 ml-2 p-0">
     <div class="container-fluid">
@@ -157,8 +157,6 @@ $fechaHoy = date("Y-m-d");
                 <input type="text" class="form-control form-control-sm text-center p-0" name="numidfactura" id="numidfactura" value="0" readonly title="Número de ID Factura">
                 <input type="hidden" name="idDeUsuario" value="<?php echo $_SESSION['id']; ?>">
                 <input type="hidden" name="idtipocomprobante" value='I'>
-                <input type="hidden" name="idexportacion" value='01'>
-                <input type="hidden" name="tasaimpuesto" value='16.00'>
               </div>
 
               <div class="form-group col-md-2">
@@ -178,12 +176,18 @@ $fechaHoy = date("Y-m-d");
                     }
                   ?>				  
                   </select>
-                  <input type="hidden" name="rfcemisor" value=''>
+                  
               </div>              
 
               <div class="form-group col-md-1">
                 <label class="control-label" for="nvofolio"><i class="fa fa-sort-numeric-asc"></i> Folio</label>
                 <input type="number" class="form-control form-control-sm " name="nvofolio" id="nvofolio" tabindex="2" required title="Folio">
+                <input type="hidden" name="rfcemisor" value=''>
+                <input type="hidden" name="tasaimpuesto" value=''>
+                <input type="hidden" name="idregimenfiscalemisor" value=''>
+                <input type="hidden" name="codpostal" value=''>
+                <input type="hidden" name="idexportacion" value=''>
+                <input type="hidden" name="serie" value=''>
               </div>
 
               <?php
@@ -238,7 +242,7 @@ $fechaHoy = date("Y-m-d");
                 <div class="form-group col-md-2">
                 <label for="nvoFormaPago"><i class="fa fa-bookmark-o"></i> Forma de pago</label>
                     <select class="form-control form-control-sm" name="nvoFormaPago" id="nvoFormaPago" title="Forma de Pago" tabindex="5" required>
-                      <option value="" selected>Seleccione Tipo</option>
+                      <option value="">Seleccione Tipo</option>
                     </select>			  
                 </div>
 

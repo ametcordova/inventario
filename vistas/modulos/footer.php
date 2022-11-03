@@ -104,6 +104,8 @@
 <!-- Alertas ohSnap -->
 <script src="extensiones/plugins/ohSnap/ohsnap.js"></script>
 
+<script src="extensiones/plugins//waitme/waitMe.min.js"></script>
+
 <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/4.1.0/rx.all.js"></script> -->
 
 

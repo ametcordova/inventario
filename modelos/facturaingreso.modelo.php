@@ -138,7 +138,7 @@ static public function mdlCrearFacturaIngreso($tabla, $facturaingreso){
         $query=self::mdlObtenerUltimoNumero($tabla, $campo);
             $folio=$query[0];
                 if(is_null($folio)){
-                  $folio=1;
+                  $folio=378;
                 }else{
                     $folio++;
                 }
@@ -268,11 +268,17 @@ MOSTRAR EMPRESA
 static public function mdlGetDatosEmpresa($tabla, $item, $valor){
 	try{
 
-			$stmt = Conexion::conectar()->prepare("SELECT id, rfc, razonsocial FROM $tabla WHERE $item=:$item");
-			$stmt->bindParam(":".$item, $valor, PDO::PARAM_INT);
-			$stmt -> execute();
-			return $stmt -> fetchAll();
-
+        if($item=='status'){
+            $stmt = Conexion::conectar()->prepare("SELECT id, rfc, razonsocial FROM $tabla WHERE $item=:$item");
+            $stmt->bindParam(":".$item, $valor, PDO::PARAM_INT);
+            $stmt -> execute();
+            return $stmt -> fetchAll();
+        }else{
+            $stmt = Conexion::conectar()->prepare("SELECT id, rfc, razonsocial, iva, regimenfiscalemisor, codpostal, id_exportacion, seriefacturacion FROM $tabla WHERE $item=:$item");
+            $stmt->bindParam(":".$item, $valor, PDO::PARAM_INT);
+            $stmt -> execute();
+            return $stmt -> fetch();
+        }
 	
 	}catch(Exception $e) {
 		return $e->getMessage() ;
