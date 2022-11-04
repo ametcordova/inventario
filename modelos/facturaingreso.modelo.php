@@ -9,7 +9,7 @@ class ModeloFacturaIngreso{
 static public function mdlListarFacturas($tabla, $fechadev1, $fechadev2, $usuario, $todes){
 try {
  	//$where='1=1';
-     
+    //tabla=facturaingreso 
 	$where='tb1.fechaelaboracion>="'.$fechadev1.'" AND tb1.fechaelaboracion<="'.$fechadev2.'" ';
     if($todes>0){
         $where.=' AND tb1.ultusuario="'.$usuario.'" ';
@@ -60,12 +60,16 @@ static public function mdlObtenerUltimoNumero($tabla, $campo){
 }  
 
 /*=============================================
-	MOSTRAR CLIENTES
+	MOSTRAR DATOS DE RECEPTOR
 =============================================*/
 static public function mdlDatosReceptor($tabla, $campo, $valor){
 	try{
 
-			$stmt = Conexion::conectar()->prepare("SELECT curp, email, regimenfiscal, formadepago FROM $tabla WHERE $campo = :$campo");
+            //$tabla='clientes';
+    		$stmt = Conexion::conectar()->prepare("SELECT clie.curp, clie.email, clie.regimenfiscal, clie.formadepago, rf.descripcion AS nombreregfiscal 
+            FROM $tabla clie
+            INNER JOIN c_regimenfiscal rf ON clie.regimenfiscal=rf.id
+            WHERE clie.$campo = :$campo");
 
 			$stmt -> bindParam(":".$campo, $valor, PDO::PARAM_STR);
 
@@ -83,7 +87,7 @@ static public function mdlDatosReceptor($tabla, $campo, $valor){
 
 
 /*=============================================
-	MOSTRAR TIPO DE MOV DE SALIDA
+	MOSTRAR USO DE CFDI
 =============================================*/
 static public function mdlMostrarUsoCFDI($tabla, $item, $valor, $aplica){
     try {
@@ -138,7 +142,7 @@ static public function mdlCrearFacturaIngreso($tabla, $facturaingreso){
         $query=self::mdlObtenerUltimoNumero($tabla, $campo);
             $folio=$query[0];
                 if(is_null($folio)){
-                  $folio=378;
+                  $folio=1;
                 }else{
                     $folio++;
                 }

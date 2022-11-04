@@ -286,7 +286,9 @@ $("#nvoClienteReceptor").change(function(){
           $("#nvoemail").val('');
           $("#btnGuardarFacturar").hide();
         }else{
-          $("#nvoregimenfiscalreceptor").val(res.data.regimenfiscal);
+          let idnomregimenfiscal=res.data.regimenfiscal+'-'+res.data.nombreregfiscal;
+          $("#nvoregimenfiscalreceptor").val(idnomregimenfiscal);
+          //$("#nvoregimenfiscalreceptor").val(res.data.nombreregfiscal);
           $("#nvoFormaPago").val(res.data.formadepago);
           $("#nvoemail").val(res.data.email);
         }
@@ -536,7 +538,6 @@ function evaluarElementos(){
 $("body").on("submit", "#formularioFactura", function( event ) {	
   event.preventDefault();
   event.stopPropagation();
-  let factura='Factura'
   let formData = new FormData($("#formularioFactura")[0]);   
   // for (var pair of formData.entries()){
   //   console.table(pair[0]+ ', ' + pair[1]);
@@ -560,8 +561,8 @@ $("body").on("submit", "#formularioFactura", function( event ) {
           }) 
           .then((res)=>{ 
             if(res.status===200) {
-              console.log(res.data['status'])
-              console.log(res.data.status, res.data.data, res.data.msg)
+              //console.log(res.data['status'])
+              //console.log(res.data.status, res.data.data, res.data.msg)
               $('#dt-FacturaIngreso').DataTable().ajax.reload(null, false);
               $('#modalCrearFactura').modal('hide')
 
@@ -570,7 +571,7 @@ $("body").on("submit", "#formularioFactura", function( event ) {
                 text: `${res.data.msg}`,
                 icon: "success",
                 button: "Cerrar",
-                timer:2000
+                timer:3000
               })  //fin swal
         
             }else{
@@ -580,7 +581,7 @@ $("body").on("submit", "#formularioFactura", function( event ) {
                 text: `No fue posible Guardar. ${res.data}!!`,
                 icon: "error",
                 buttons: false,
-                timer: 2000
+                timer: 3000
               })  //fin swal
         
             }          
@@ -605,6 +606,7 @@ function getIdFactura(elem){
   let datafecha = elem.dataset.fechaelabora;
   let dataidempresa = elem.dataset.idempresa;
   let dataserie = elem.dataset.serie;
+  let datarfcemisor = elem.dataset.rfcemisor;
   //console.log('id:',dataid, datafecha, dataidempresa);
   //return
   $('#container').waitMe({
@@ -622,7 +624,8 @@ function getIdFactura(elem){
         datafolio: datafolio,
         datafecha: datafecha,
         dataidempresa: dataidempresa,
-        dataserie: dataserie
+        dataserie: dataserie,
+        datarfcemisor: datarfcemisor
       }
     })
 
@@ -630,14 +633,14 @@ function getIdFactura(elem){
       if(res.status==200) {
         $('#dt-FacturaIngreso').DataTable().ajax.reload(null, false);
         $('#container').waitMe("hide");
-        // console.log(res.data)
+        console.log(res.data)
         // console.log(res.status)
         // console.log(res.data['status'])
-        // console.log(res.data['msg'])
+        //console.log(res.data['msg'])
         //console.log(res.data['data']['code'])
         swal({
           title: "¡Timbrado!",
-          text: `Mensaje .${res.data['msg']}!!`,
+          text: `Mensaje .${res.data['data']}!!`,
           icon: "success",
           buttons: false,
           timer: 3000
@@ -668,6 +671,7 @@ ENVIA REPORTE DE ENTRADA AL ALMACEN DESDE EL DATATABLE
 ===================================================*/
 $("#dt-FacturaIngreso tbody").on("click", "button.btnPrintPdf", function(){
   let idPrintPdf = $(this).attr("data-id");
+  //let idPrintPdf = $(this).attr("data-folio");
   console.log(idPrintPdf); 
     if(idPrintPdf.length > 0){
      window.open("extensiones/fpdf/reportes/facturatimbrada.php?codigo="+idPrintPdf, "_blank");

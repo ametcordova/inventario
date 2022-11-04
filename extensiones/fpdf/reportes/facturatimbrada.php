@@ -380,7 +380,8 @@ $pdf->Line(10,$y1,206,$y1);
 $pdf->Ln(4);
 // --------------------- TRAEMOS DATOS DE FACTURA TIMBRADA ---------------------------------------
 $tabla="datosfacturatimbre";
-$campo = "folio";
+//$campo = "folio";
+$campo = "id";
 $valor = $_GET["codigo"];
 //$valor = 370;
     

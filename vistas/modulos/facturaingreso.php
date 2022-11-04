@@ -352,31 +352,31 @@ $fechaHoy = date("Y-m-d");
                    </div>   <!-- /.col -->
                 </div>  <!-- /.row -->
 
-                  <div class="row" id="count-row">
+                  <div class="row" id="count-row" style="background-color:bisque;">
                     <div class="col-lg-4 col-md-4 col-sm-10 text-left">
-                      <button type="button" class="btn badge-warning btn-sm mb-1 ml-1 mr-1 p-0">Fila(s): &nbsp 
-                        <span class="badge badge-warning" id="renglonentradas" style="font-size:1rem;"></span>
+                      <button type="button" class="btn btn-sm mb-1 ml-1 mr-1 p-0">Fila(s): &nbsp 
+                        <span class="badge" id="renglonentradas" style="font-size:1rem;"></span>
                       </button>
                     </div>   <!-- /.col -->
-                    <button type="button" class="btn badge-warning btn-sm mb-1 mr-1 p-0">Cant: &nbsp 
-                      <span class="badge badge-warning" id="totalentradasalmacen" style="font-size:1rem;"></span>
+                    <button type="button" class="btn btn-sm mb-1 mr-1 p-0">Cant: &nbsp 
+                      <span class="badge" id="totalentradasalmacen" style="font-size:1rem;"></span>
                     </button>
 
                     <div class="col-lg-2 col-md-2 col-sm-10 text-right">
-                        <button type="button" class="btn badge-warning btn-sm mb-1 mr-1 p-0">Subtotal: &nbsp 
-                          <span class="badge badge-warning" id="subtotal" style="font-size:1rem;"></span>
+                        <button type="button" class="btn btn-sm mb-1 mr-1 p-0">Subtotal: &nbsp 
+                          <span class="badge" id="subtotal" style="font-size:1rem;"></span>
                         </button>
                     </div>
 
                     <div class="col-lg-2 col-md-2 col-sm-10 text-right">
-                        <button type="button" class="btn badge-warning btn-sm mb-1 mr-1 p-0">Impuesto: &nbsp 
-                          <span class="badge badge-warning" id="impuesto" style="font-size:1rem;"></span>
+                        <button type="button" class="btn btn-sm mb-1 mr-1 p-0">Impuesto: &nbsp 
+                          <span class="badge" id="impuesto" style="font-size:1rem;"></span>
                         </button>
                     </div>
 
                     <div class="col-lg-2 col-md-2 col-sm-10 text-right">
-                        <button type="button" class="btn badge-warning btn-sm mb-1 mr-1 p-0">Total: &nbsp 
-                          <span class="badge badge-warning" id="total" style="font-size:1rem;"></span>
+                        <button type="button" class="btn btn-sm mb-1 mr-1 p-0">Total: &nbsp 
+                          <span class="badge " id="total" style="font-size:1rem;"></span>
                         </button>
                     </div>
 
