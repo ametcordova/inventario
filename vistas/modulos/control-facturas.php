@@ -140,6 +140,7 @@
                 <tr style="font-size:0.80em"> 
 					<!-- <th style="width:2%;"><input name="select_all" value="1" id="example-select-all" type="checkbox" /></th>-->
                     <th translate="no" style="width:3%;">#Fact</th>
+                    <th translate="no" style="width:3%;">Ser</th>
                     <th translate="no" style="width:15%;">Nombre</th>
                     <th translate="no" style="width:14%;">Tipo de Trab.</th>
                     <th translate="no" style="width:6%;">#Orden</th>
@@ -151,7 +152,7 @@
                     <th translate="no" style="width:7%;">F. Entregado</th>
                     <th translate="no" style="width:7%;">F.Pag/Can</th>
                     <th translate="no" style="width:3%;">#RP</th>
-                    <th translate="no" style="width:5%;" class="text-center"  >Stat</th>
+                    <th translate="no" style="width:4%;" class="text-center"  >Stat</th>
                     <th translate="no" style="width:7%;" class="text-center">Acción</th>
                 </tr>
                 </thead>
@@ -161,7 +162,7 @@
                 <tfoot class="thead-dark">
                 <tr style="font-size:0.80em">
                     <th>No.</th>
-                    <th></th>
+                    <th colspan="2"></th>
                     <th></th>
                     <th>Orden</th>
                     <th></th>
@@ -228,20 +229,30 @@
             </div>
 
             <div class="form-row">
-              <div class="input-group mb-3 col-md-6">
+
+              <div class="input-group mb-3 col-md-3">
                 <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="fa fa-hashtag"></i></span>
+                    <span class="input-group-text"><i class="fa fa-hashtag"></i></span>
                 </div>
-                <input type="number" class="form-control form-control-sm" placeholder="Número de Factura" name="nuevaFactura" id="nuevaFactura" value="" data-toggle="tooltip" title="Número de Factura" required tabindex="2" >
+                <input type="text" class="form-control form-control-sm text-center" placeholder="Serie" name="nuevaSerie" id="nuevaSerie" value="A" title=" Serie Fact." tabindex="">
+              </div>
+
+              <div class="input-group mb-3 col-md-4">
+                <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fa fa-sort-numeric-asc"></i></span>
+                </div>
+                <input type="number" class="form-control form-control-sm" placeholder="No. Factura" name="nuevaFactura" id="nuevaFactura" value="" data-toggle="tooltip" title="Número de Factura" required tabindex="2" >
                 <input type="hidden"  name="idDeUsuario" value="<?php echo $_SESSION['id'];?>">
               </div>
 
-              <div class="input-group mb-3 col-md-6">
+
+              <div class="input-group mb-3 col-md-5">
                 <div class="input-group-prepend">
                         <span class="input-group-text"><i class="fa fa-sticky-note"></i></span>
                 </div>
                 <input type="text" class="form-control form-control-sm" placeholder="No. de orden" name="nuevaOrden" id="nuevaOrden" value="" title="No. de orden" tabindex="3">
               </div>
+
             </div>
 
 
@@ -391,16 +402,24 @@
             </div>
 
             <div class="form-row">            
-              <div class="input-group mb-3 col-md-6">
+
+            <div class="input-group mb-3 col-md-3">
                 <div class="input-group-prepend">
-                  <span class="input-group-text"><i class="fa fa-hashtag"></i></span>
+                    <span class="input-group-text"><i class="fa fa-hashtag"></i></span>
+                </div>
+                <input type="text" class="form-control form-control-sm text-center" placeholder="Serie" name="editaSerie" id="editaSerie" value="A" title=" Serie Fact." tabindex="">
+              </div>
+
+              <div class="input-group mb-3 col-md-4">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fa fa-sort-numeric-asc"></i></span>
                 </div>
                 <input type="number" class="form-control form-control-sm" placeholder="Número de Factura" name="editaFactura" id="editaFactura" value="" required tabindex="1" data-toggle="tooltip" title="Número de Factura" readonly>
                 <input type="hidden"  name="idDeUsuario" value="<?php echo $_SESSION['id'];?>">
                 <input type="hidden"  name="idregistro" value="">
               </div>
 
-              <div class="input-group mb-3 col-md-6">
+              <div class="input-group mb-3 col-md-5">
                 <div class="input-group-prepend">
                         <span class="input-group-text"><i class="fa fa-sticky-note"></i></span>
                 </div>
@@ -681,7 +700,7 @@
     </div>
   </div>
 </div>
-<script defer src="vistas/js/control-facturas.js?v=01102022"></script>
+<script defer src="vistas/js/control-facturas.js?v=011120221343"></script>
 <!--===========================================================================================-->
 
 <!--================================= MODAL VER EXPEDIENTE DE FACTURA =======================================-->

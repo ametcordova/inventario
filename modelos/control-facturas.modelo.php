@@ -17,22 +17,23 @@ static public function mdlCrearFactura($tabla, $datos){
 		$newFechaFact=date("Y-m-d",strtotime($datos["fechafactura"])); 
 		$newFechaEntrega=$datos["fechaentregado"]==""?null:$datos["fechaentregado"]; 
 
-		   $stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(numfact, fechafactura, cliente, numorden, subtotal, iva, imp_retenido, importe, tipotrabajo, fechaentregado, status, observaciones, rutaexpediente, idusuario) VALUES (:numfact, :fechafactura, :cliente, :numorden, :subtotal, :iva, :imp_retenido, :importe, :tipotrabajo, :fechaentregado, :status, :observaciones, :rutaexpediente, :idusuario)");
+		   $stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(numfact, serie, fechafactura, cliente, numorden, subtotal, iva, imp_retenido, importe, tipotrabajo, fechaentregado, status, observaciones, rutaexpediente, idusuario) VALUES (:numfact, :serie, :fechafactura, :cliente, :numorden, :subtotal, :iva, :imp_retenido, :importe, :tipotrabajo, :fechaentregado, :status, :observaciones, :rutaexpediente, :idusuario)");
    
-		   $stmt->bindParam(":numfact", $datos["numfact"], PDO::PARAM_STR);
-		   $stmt->bindParam(":fechafactura", $newFechaFact, PDO::PARAM_STR);
-		   $stmt->bindParam(":cliente", $datos["cliente"], PDO::PARAM_STR);
-		   $stmt->bindParam(":numorden", $datos["numorden"], PDO::PARAM_STR);
-		   $stmt->bindParam(":subtotal", $datos["subtotal"], PDO::PARAM_STR);
-		   $stmt->bindParam(":iva", $datos["iva"], PDO::PARAM_STR);
-		   $stmt->bindParam(":imp_retenido", $datos["imp_retenido"], PDO::PARAM_STR);
-		   $stmt->bindParam(":importe", $datos["importe"], PDO::PARAM_STR);
-		   $stmt->bindParam(":tipotrabajo", $datos["tipotrabajo"], PDO::PARAM_STR);
-		   $stmt->bindParam(":fechaentregado", $newFechaEntrega, PDO::PARAM_STR);
-		   $stmt->bindParam(":status", $datos["status"], PDO::PARAM_INT);
-		   $stmt->bindParam(":observaciones", $datos["observaciones"], PDO::PARAM_STR);
-		   $stmt->bindParam(":rutaexpediente", $datos["rutaexpediente"], PDO::PARAM_STR);
-		   $stmt->bindParam(":idusuario", $datos["idusuario"], PDO::PARAM_INT);
+			$stmt->bindParam(":numfact", $datos["numfact"], PDO::PARAM_INT);
+			$stmt->bindParam(":serie", $datos["serie"], PDO::PARAM_STR);
+			$stmt->bindParam(":fechafactura", $newFechaFact, PDO::PARAM_STR);
+			$stmt->bindParam(":cliente", $datos["cliente"], PDO::PARAM_STR);
+			$stmt->bindParam(":numorden", $datos["numorden"], PDO::PARAM_STR);
+			$stmt->bindParam(":subtotal", $datos["subtotal"], PDO::PARAM_STR);
+			$stmt->bindParam(":iva", $datos["iva"], PDO::PARAM_STR);
+			$stmt->bindParam(":imp_retenido", $datos["imp_retenido"], PDO::PARAM_STR);
+			$stmt->bindParam(":importe", $datos["importe"], PDO::PARAM_STR);
+			$stmt->bindParam(":tipotrabajo", $datos["tipotrabajo"], PDO::PARAM_STR);
+			$stmt->bindParam(":fechaentregado", $newFechaEntrega, PDO::PARAM_STR);
+			$stmt->bindParam(":status", $datos["status"], PDO::PARAM_INT);
+			$stmt->bindParam(":observaciones", $datos["observaciones"], PDO::PARAM_STR);
+			$stmt->bindParam(":rutaexpediente", $datos["rutaexpediente"], PDO::PARAM_STR);
+			$stmt->bindParam(":idusuario", $datos["idusuario"], PDO::PARAM_INT);
 		   if($stmt->execute()){
 
 				return "ok";
@@ -65,9 +66,10 @@ static public function mdlGuardarEditarFactura($tabla, $datos){
 		$nuevaFechaEntrega=$datos["fechaentregado"]==""?null:$datos["fechaentregado"]; 
 		$nuevaFechaPagado=$datos["fechapagado"]==""?null:$datos["fechapagado"];
 
-		   $stmt = Conexion::conectar()->prepare("UPDATE $tabla SET fechafactura=:fechafactura, cliente=:cliente, numorden=:numorden, subtotal=:subtotal, iva=:iva, imp_retenido=:imp_retenido, importe=:importe, tipotrabajo=:tipotrabajo, fechaentregado=:fechaentregado, fechapagado=:fechapagado, status=:status, observaciones=:observaciones, rutaexpediente=:rutaexpediente, idusuario=:idusuario WHERE id=:id");
+		   $stmt = Conexion::conectar()->prepare("UPDATE $tabla SET fechafactura=:fechafactura, serie=:serie, cliente=:cliente, numorden=:numorden, subtotal=:subtotal, iva=:iva, imp_retenido=:imp_retenido, importe=:importe, tipotrabajo=:tipotrabajo, fechaentregado=:fechaentregado, fechapagado=:fechapagado, status=:status, observaciones=:observaciones, rutaexpediente=:rutaexpediente, idusuario=:idusuario WHERE id=:id");
 
 		   $stmt->bindParam(":id", $datos["idregistro"], PDO::PARAM_INT);
+		   $stmt->bindParam(":serie", $datos["serie"], PDO::PARAM_STR);
 		   $stmt->bindParam(":fechafactura", $nuevaFechaFact, PDO::PARAM_STR);
 		   $stmt->bindParam(":cliente", $datos["cliente"], PDO::PARAM_STR);
 		   $stmt->bindParam(":numorden", $datos["numorden"], PDO::PARAM_STR);

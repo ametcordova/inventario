@@ -89,11 +89,12 @@ function dt_ListarFacturasIngreso(){
           {"width:":"12px", "className": "dt-center", "targets": [2]},
           {"width:":"20px", "className": "dt-center", "targets": [3]},
           {"width:":"20px", "className": "dt-center", "targets": [4]},
-          {"width:":"100px", "className": "dt-left", "targets": [5]},
-          {"width:":"10px", "className": "dt-center", "targets": [6]},
-          {"className": "dt-center", "targets": [7]},
-          {"className": "dt-center", "targets": [8]},				//"_all" para todas las columnas
-          {"className": "dt-center", "targets": [9]}				//"_all" para todas las columnas
+          {"width:":"20px", "className": "dt-center", "targets": [5]},
+          {"width:":"100px", "className": "dt-left", "targets": [6]},
+          {"width:":"10px", "className": "dt-center", "targets": [7]},
+          {"className": "dt-right", "targets": [8]},
+          {"className": "dt-center", "targets": [9]},				//"_all" para todas las columnas
+          {"className": "dt-center", "targets": [10]}				//"_all" para todas las columnas
           ],
 		"ajax":
 				{
@@ -676,6 +677,50 @@ $("#dt-FacturaIngreso tbody").on("click", "button.btnPrintPdf", function(){
     if(idPrintPdf.length > 0){
      window.open("extensiones/fpdf/reportes/facturatimbrada.php?codigo="+idPrintPdf, "_blank");
     }
+})
+/*===================================================*/
+
+/*===================================================
+DESCARGAR XML DESDE EL DATATABLE
+===================================================*/
+$("#dt-FacturaIngreso tbody").on("click", "button.downloadXML", ()=>{
+  let userdata=$(".downloadXML").data();
+  let dataid = userdata.id;
+  let datafolio = userdata.folio;
+  let dataserie = userdata.serie;
+  let datarfcemisor = userdata.rfcemisor;
+
+  (async () => {
+    await axios.get('ajax/facturaingreso.ajax.php?op=downloadXML', {
+      params: {
+        dataid: dataid,
+        datafolio: datafolio,
+        dataserie: dataserie,
+        datarfcemisor: datarfcemisor
+      }
+    })
+
+    .then((res)=>{ 
+      if(res.status==200) {
+        console.log(res.data)
+        
+        if(res.data==false){
+          swal({
+            title: "No se pudo descargar XML",
+            text: `Mensaje .${res.data}!!`,
+            icon: "error",
+            buttons: false,
+            timer: 2000
+          })  //fin swal
+          
+        }
+      }          
+    }) 
+
+    .catch((err) => {throw err}); 
+  
+  })();  //fin del async
+  
 })
 /*===================================================*/
 

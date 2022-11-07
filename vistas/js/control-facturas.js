@@ -223,7 +223,7 @@ function agregarFactura(e){
   $(".spin").show();                 //mostrar spinner
 
 	var formData = new FormData($("#formularioAgregarFactura")[0]);
-     for (var pair of formData.entries()){console.log(pair[0]+ ', ' + pair[1]);}
+     //for (var pair of formData.entries()){console.log(pair[0]+ ', ' + pair[1]);}
 
      fetch('ajax/control-facturas.ajax.php?op=guardar', {
       method: 'POST',
@@ -554,7 +554,8 @@ $('#factpagadas').on('ifUnchecked', function (event) {
             {"data": 8},
             {"data": 9},
             {"data": 10},
-            {"data": 11}
+            {"data": 11},
+            {"data": 12}
           ],
           initComplete: function () {			//botones pequeños y color verde
             var btns = $('.dt-button');
@@ -562,52 +563,52 @@ $('#factpagadas').on('ifUnchecked', function (event) {
             btns.addClass('btn btn-success btn-sm');
           },  
       "columnDefs": [
-        {"className": "dt-center", "targets": [4,9,10,11,12,13]},
+        {"className": "dt-center", "targets": [4,9,10,11,12,13,14]},
         {"className": "dt-right", "targets": [5,6,7,8]}				//"_all" para todas las columnas
         ],
       "footerCallback": function ( row, data, start, end, display ) {
         var api = this.api();
 
       // Total over this page subtotal
-      var pageSubTot = api.column(5, {page:'current'}).data().sum();
+      var pageSubTot = api.column(6, {page:'current'}).data().sum();
       pageSubTot=new Intl.NumberFormat('en', {style: 'currency',currency: 'USD',currencySign: 'accounting',}).format(pageSubTot);
 
       // Total over this page iva
-      var pageTotiva = api.column(6, {page:'current'}).data().sum();
+      var pageTotiva = api.column(7, {page:'current'}).data().sum();
       pageTotiva=new Intl.NumberFormat('en', {style: 'currency',currency: 'USD',currencySign: 'accounting',}).format(pageTotiva);
       
       // Total ret over this page total
-      var pageTotRet = api.column(7, {page:'current'}).data().sum();
+      var pageTotRet = api.column(8, {page:'current'}).data().sum();
       pageTotRet=new Intl.NumberFormat('en', {style: 'currency',currency: 'USD',currencySign: 'accounting',}).format(pageTotRet);
       
       // Total over this page total
-      var pageTotal = api.column(8, {page:'current'}).data().sum();
+      var pageTotal = api.column(9, {page:'current'}).data().sum();
       pageTotal=new Intl.NumberFormat('en', {style: 'currency',currency: 'USD',currencySign: 'accounting',}).format(pageTotal);
       //console.log(pageTotal);
 
       // Total over all pages
-      var total = api.column(8).data().sum();
+      var total = api.column(9).data().sum();
       total=new Intl.NumberFormat('en', {style: 'currency',currency: 'USD',currencySign: 'accounting',}).format(total);
       //console.log(total);
       saldo=new Intl.NumberFormat('en', {style: 'currency',currency: 'USD',currencySign: 'accounting',}).format(saldo);
 
       $(api.column(1).footer()).html(`<label class='float-right'>Saldo Disponible:</label>`);
-      $(api.column(2).footer()).html(saldo);
-      $(api.column(4).footer()).html(`<label class='float-right'>Totales:</label>`);
-      $(api.column(5).footer()).html(pageSubTot);
-      $(api.column(6).footer()).html(pageTotiva);
-      $(api.column(7).footer()).html(pageTotRet);
-      $(api.column(8).footer()).html(pageTotal);
-      $(api.column(9).footer()).html(total);
+      $(api.column(3).footer()).html(saldo);
+      $(api.column(5).footer()).html(`<label class='float-right'>Totales:</label>`);
+      $(api.column(6).footer()).html(pageSubTot);
+      $(api.column(7).footer()).html(pageTotiva);
+      $(api.column(8).footer()).html(pageTotRet);
+      $(api.column(9).footer()).html(pageTotal);
+      $(api.column(10).footer()).html(total);
     },
     "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {		//cambiar el tamaño de la fuente
       if ( true ){ // your logic here
         $(nRow).addClass( 'customFont' );
         //console.log(aData[14]);
-        saldo=aData[14];
+        saldo=aData[15];
         
       }
-      if(valorradio=="cancelado" || aData[3] == "CANCELADO" || aData[3] == "cancelado"){
+      if(valorradio=="cancelado" || aData[4] == "CANCELADO" || aData[4] == "cancelado"){
         $('td', nRow).css('color', 'Red');
       }
   },
@@ -684,7 +685,7 @@ $(function() {
 
 //
 $('#TablaFacturas tbody').on( 'dblclick', 'td', function () {
-  if(tabla.cell( this ).index().columnVisible==10){
+  if(tabla.cell( this ).index().columnVisible==11){
     //console.log(tabla.row( this ).data()[0]);
     //console.log(tabla.row(this).data());
     let numerodefactura=tabla.row( this ).data()[0];
@@ -708,8 +709,8 @@ $('#TablaFacturas tbody').on( 'click', 'tr', function () {
     idfactura.push(tabla.rows('.selected').data()[i][0]);
 
     //console.log( tabla.rows('.selected').data()[i][5]);
-    price1=tabla.rows('.selected').data()[i][5];
-    price2=tabla.rows('.selected').data()[i][8];
+    price1=tabla.rows('.selected').data()[i][6];
+    price2=tabla.rows('.selected').data()[i][9];
     strEx1 = price1.replace(",","");		//quitar la coma de los miles
     strEx2 = price2.replace(",","");		//quitar la coma de los miles
     price1 = parseFloat(strEx1)		//convierte en numero

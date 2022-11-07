@@ -35,7 +35,7 @@ Editar Registro de Deposito.
 $("#dt-crtl-depositos tbody").on("click", ".btnEditDeposito", function(){
 
   let iddep=$(this).parents("tr").find("td").eq(0).html();
-  console.log(iddep);
+  //console.log(iddep);
   let datos = new FormData();
   datos.append("iddep", iddep);
 

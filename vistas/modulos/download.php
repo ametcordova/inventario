@@ -9,6 +9,7 @@ if(!is_readable($file)) die('File not found!');
         "pdf" => "application/pdf",
         "txt" => "text/plain",
         "html" => "text/html",
+        "xml" => "text/xml",
         "htm" => "text/html",
         "exe" => "application/octet-stream",
         "zip" => "application/zip",
@@ -87,11 +88,16 @@ if ($file = fopen($file, 'r')){
 }
 
 set_time_limit(0);
-if($_REQUEST['ruta']){
-    $file_path=$_REQUEST['ruta'].$_REQUEST['filename'];
+if(isset($_REQUEST['ruta'])){
+    $file_path='../../ajax/salida/'.$_REQUEST['filename'];
 }else{
     $file_path='../entradascarso/'.$_REQUEST['filename'];
 }
 
-output_file($file_path, ''.$_REQUEST['filename'].'', 'text/plain');
+if(isset($_REQUEST['mime'])){
+    $mime=$_REQUEST['mime'];
+}else{
+    $mime='text/plain';
+}
+output_file($file_path, ''.$_REQUEST['filename'].'', $mime);
 ?>

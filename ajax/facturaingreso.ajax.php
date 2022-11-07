@@ -11,7 +11,7 @@ require_once "../controladores/permisos.controlador.php";
 require_once "../modelos/permisos.modelo.php";
 require_once "../funciones/timbrarfactura.php";
 require_once '../funciones/funciones.php';
-require_once 'readerxml.php';
+include_once 'downloadxml.php';
 
 switch ($_GET["op"]){
 
@@ -41,36 +41,49 @@ switch ($_GET["op"]){
   			echo '{"data": []}';           //arreglar, checar como va
 		  	return;
   		}    
-
+        $ruta='"/salida/"';
         foreach($listar as $key => $value){
             $fechaelaboracion = date('d-m-Y', strtotime($value["fechaelaboracion"]));
             $importeFact=number_format($value['totalfactura'], 2, '.',',');
             $serie=is_null($value["serie"])?'':trim($value["serie"]);
+            $folio=$value["folio"];
+            $rfcemisor=$value["rfcemisor"];
+            $file=$rfcemisor.'-'.$serie.$folio.'.xml';
 
             $tri = '<tr><td>'.($value["id"]).'</td>';
             $trf='</tr';
             $status="Timbrado";
 
-            $boton1 =getAccess($acceso, ACCESS_PRINTER)?"<td><button class='btn btn-success btn-sm px-1 py-1 btnPrintPdf' data-id='".$value['id']."' data-folio='".$value['folio']."' title='Generar PDF '><i class='fa fa-file-pdf-o'></i></button></td> ":"";
-            $boton2 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-primary btn-sm px-1 py-1 btnEditEntradaAlmacen' idEditarEntrada='".$value['id']."' title='Editar Factura' data-toggle='modal' data-target='#modalEditarEntradasAlmacen'><i class='fa fa-edit'></i></button></td> ":"";
-            $boton3 =getAccess($acceso, ACCESS_DELETE)?"<td><button class='btn btn-danger btn-sm px-1 py-1 btnDelEntradasAlmacen' idDeleteEntradaAlm='".$value['id']."' title='Eliminar Factura '><i class='fa fa-trash'></i></button></td> ":"";
             if($value["uuid"]!=""){
-                $boton4 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-dark px-1 py-1' title='Factura timbrada'><i class='fa fa-bell fa-fw'></i> </button></td> ":"";
+                $boton1 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-dark px-1 py-1' title='Factura timbrada'><i class='fa fa-bell fa-fw'></i> </button></td> ":"";
+
+                $boton3 =getAccess($acceso, ACCESS_PRINTER)?"<a href='vistas/modulos/download.php?filename=$file&ruta=1&mime=xml' title='Descargar XML' class='btn btn-sm btn-info px-1 py-1'><i class='fa fa-file-code-o'></i></a> ":"";
+                $boton4 ='';
+                $boton5 =getAccess($acceso, ACCESS_DELETE)?"<td><button class='btn btn-danger btn-sm px-1 py-1' data-cancelafact='".$value['id']."' title='Cancelar Factura'><i class='fa fa-window-close'></i></button></td> ":"";
+
             }else{
-                $boton4 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-danger px-1 py-1' onclick='getIdFactura(this)' title='Factura sin timbrar' data-idfactura='".$value['id']."' data-folio='".$value['folio']."' data-fechaelabora='".$value['fechaelaboracion']."' data-idempresa='".$value['id_empresa']."' data-serie='".$value['serie']."' data-rfcemisor='".$value['rfcemisor']."' ><i class='fa fa-bell-slash fa-fw'></i> </button></td> ":"";
+                $boton1 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-danger px-1 py-1' onclick='getIdFactura(this)' title='Factura sin timbrar' data-idfactura='".$value['id']."' data-folio='".$value['folio']."' data-fechaelabora='".$value['fechaelaboracion']."' data-idempresa='".$value['id_empresa']."' data-serie='".$value['serie']."' data-rfcemisor='".$value['rfcemisor']."' ><i class='fa fa-bell-slash fa-fw'></i> </button></td> ":"";
+                $boton3 ='';
+                $boton4 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-primary btn-sm px-1 py-1' data-editfact='".$value['id']."' title='Editar Factura' data-toggle='modal' data-target='#modalEditarEntradasAlmacen'><i class='fa fa-edit'></i></button></td> ":"";
+                $boton5 =getAccess($acceso, ACCESS_DELETE)?"<td><button class='btn btn-warning btn-sm px-1 py-1' data-delfact='".$value['id']."' title='Eliminar Factura '><i class='fa fa-trash'></i></button></td> ":"";
+
             };
-            $botones=$boton1.$boton2.$boton3;
+
+            $boton2 =getAccess($acceso, ACCESS_PRINTER)?"<td><button class='btn btn-success btn-sm px-1 py-1 btnPrintPdf' data-id='".$value['id']."' data-folio='".$value['folio']."' title='Generar y descargar PDF '><i class='fa fa-file-pdf-o'></i></button></td> ":"";
+           
+            $botones=$boton2.$boton3.$boton4.$boton5;
 
             $data[]=array(
                 $value['id'],
                 $serie,
                 $value["folio"],
+                $value["rfcemisor"],
                 $value["fechaelaboracion"],
                 $value["fechatimbrado"],
                 $value["nombrereceptor"],
                 $value["idtipocomprobante"],
                 $importeFact,
-                $boton4,
+                $boton1,
                 $botones,
             );
         }
@@ -273,6 +286,28 @@ switch ($_GET["op"]){
 
         break;
 
+
+        case 'downloadXML':
+            $folio          = $_GET['datafolio'];
+            $serie      = $_GET['dataserie'];
+            $rfcemisor  = $_GET['datarfcemisor'];
+    
+            if(empty($folio)){
+                echo json_encode(401);  
+            }
+
+            $file=$rfcemisor.'-'.$serie.$folio;
+            $ruta="'../../ajax/salida/'";
+
+            //echo '<a href="descarga.php?file=archivoEjemplo.abc">Descargar</a>';
+            echo "<a href='../vistas/modulos/download.php?filename=$file&ruta=$ruta&mime=xml'class'btn btn-sm btn-info' </a>";
+            //<a href="#" class="btn btn-success">¿Soy un botón o un enlace?</a>
+
+            //descargar($folio, $serie, $rfcemisor);
+            
+            //echo json_encode();
+
+        break;
 
 		default:
             json_output(json_build(403, null, 'No existe opciòn'));

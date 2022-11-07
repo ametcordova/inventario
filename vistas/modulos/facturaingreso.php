@@ -103,12 +103,13 @@ $fechaHoy = date("Y-m-d");
           <div class="card-body">
             <table class="table table-bordered table-hover compact table-sm table-striped dt-responsive" id="dt-FacturaIngreso" cellspacing="0" width="100%">
               <thead class="thead-dark" style="font-size:.8rem; height:1px">
-                <tr style="font-size:0.95em">
+                <tr style="font-size:0.90em">
                   <th class="text-center">#</th>
                   <th class="text-center">Serie</th>
                   <th class="text-center">Folio</th>
-                  <th class="text-center">F. Elab.</th>
-                  <th class="text-center">F. Timb.</th>
+                  <th>Emisor</th>
+                  <th class="text-center">Fech. Elab.</th>
+                  <th class="text-center">Fech. Timb.</th>
                   <th>Receptor</th>
                   <th class="text-center">Tipo Comp.</th>
                   <th class="text-center">Total</th>
@@ -405,4 +406,4 @@ $fechaHoy = date("Y-m-d");
 ==================================================================================== -->
 
 
-<script defer src="vistas/js/facturaingreso.js?v=01092022"></script>
+<script defer src="vistas/js/facturaingreso.js?v=011120221401"></script>
