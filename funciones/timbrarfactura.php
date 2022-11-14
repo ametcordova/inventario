@@ -26,8 +26,8 @@ class ClaseFacturar{
 
     static public function GenerarJsonFactura($tabla, $campo, $valor){
     $bytes=0;
-
-    $sql="SELECT tb1.*, emp.razonsocial AS nombreemisor, emp.numerocertificado, emp.regimenfiscalemisor, clie.rfc AS rfcreceptor, clie.nombre AS nombrereceptor, clie.codpostal AS cpreceptor, clie.regimenfiscal AS regfiscalreceptor, mon.id_moneda, cfdi.id_cfdi
+    // $tabla=facturaingreso
+    $sql="SELECT tb1.*, emp.razonsocial AS nombreemisor, emp.numerocertificado, emp.regimenfiscalemisor, emp.seriefacturacion, clie.rfc AS rfcreceptor, clie.nombre AS nombrereceptor, clie.codpostal AS cpreceptor, clie.regimenfiscal AS regfiscalreceptor, mon.id_moneda, cfdi.id_cfdi
     FROM $tabla tb1
     INNER JOIN empresa emp ON emp.id=tb1.id_empresa
     INNER JOIN clientes clie ON clie.id=tb1.idreceptor
@@ -44,10 +44,10 @@ class ClaseFacturar{
     $datosdefactura = $stmt->fetch();
     /*********************************************/
     $conceptos=json_decode($datosdefactura['conceptos'],true);
-
+    $numerofactura=$datosdefactura['seriefacturacion'].$datosdefactura['folio'];
     // Datos de la Factura
     $datos['Comprobante']['Version'] = '4.0';
-    $datos['Comprobante']['Serie'] = 'A';
+    $datos['Comprobante']['Serie'] = $datosdefactura['seriefacturacion'];
     $datos['Comprobante']['Folio'] = $datosdefactura['folio'];
     $datos['Comprobante']['Fecha'] = date('Y-m-d\TH:i:s', time() - 120);
     $datos['Comprobante']['FormaPago'] = $datosdefactura['idformapago'];
@@ -109,7 +109,7 @@ class ClaseFacturar{
     $datos['Comprobante']['Impuestos']['Traslados'][0]['Importe'] = $datosdefactura['impuestos'];
 
     $invoice_json = json_encode($datos, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
-    $bytes = file_put_contents("../archivos/filesinvoices/file.json", $invoice_json); 
+    $bytes = file_put_contents("../archivos/filesinvoices/file-".$numerofactura.".json", $invoice_json); 
 
     return intval($bytes);
 
@@ -118,10 +118,13 @@ class ClaseFacturar{
 /*========================================================= */
 // SE ENVIA ARCHIVO JSON PARA SELLAR Y TIMBRAR AL WS
 /*========================================================= */
-    static public function EnviarJsonFacturaWS($tabla, $tablatimbrada, $campo, $valor, $folio,  $dataidempresa, $dataserie){
-        $filename=dirname( __DIR__ ).'/archivos/filesinvoices/file.json';
+    static public function EnviarJsonFacturaWS($tabla, $tablatimbrada, $campo, $valor, $folio,  $dataidempresa, $dataserie, $datarfcemisor){
+        $filename=dirname( __DIR__ ).'/archivos/filesinvoices/file-'.$dataserie.$folio.'.json';
         if (!file_exists($filename) || !is_readable($filename)) {
-            echo ("File $filename does not exists or is not readable");
+            //echo ("File $filename does not exists or is not readable");
+            $resp=array('code'=>401,'message'=>"File:".$filename." does not exists or is not readable");
+            return $resp;
+            exit;
         }
 
         define("DEBUG", TRUE);
@@ -149,30 +152,32 @@ class ClaseFacturar{
 
         //OBTENER EL DIRECTORIO PRINCIPAL
         $dirpadre = dirname(__DIR__);
-        $exist=file_exists($dirpadre.'\archivos\filesinvoices\file.json');
+        $exist=file_exists($filename);
 
-        if($exist){
-            //echo 'si existe';
-        }else{
-            echo 'No Existe archivo file.json';
+        if(!$exist){
+            $resp=array('code'=>401,'message'=>"File JSON:".$filename." does not exists");
+            return $resp;
             exit;
         };
 
         //if(!file_exists($dirpadre.'\config\Certificados\Pruebas\CSD_EKU9003173C9.key.pem')){
-        if(!file_exists($dirpadre.'\config\Certificados\CSD_MATRIZ_DIGB980626MX3_20220913_165347.key.pem')){
-            echo "sale0";
+        if(!file_exists($dirpadre.'/config/Certificados/CSD_MATRIZ_DIGB980626MX3_20220913_165347.key.pem')){
+            $resp=array('code'=>401,'message'=>"File KEY does not exists");
+            return $resp;
             exit;
         };
 
         //if(!file_exists($dirpadre.'\config\Certificados\Pruebas\CSD_EKU9003173C9.cer.pem')){
-        if(!file_exists($dirpadre.'\config\Certificados\00001000000515088380.cer.pem')){
-            echo "sale1";
+        if(!file_exists($dirpadre.'/config/Certificados/00001000000515088380.cer.pem')){
+            $resp=array('code'=>401,'message'=>"File CER does not exists");
+            return $resp;
             exit;
         };
 
 
-        if(!file_exists($dirpadre.'\config\logotipo.png')){
-            echo "sale2";
+        if(!file_exists($dirpadre.'/config/logotipo.png')){
+            $resp=array('code'=>401,'message'=>"Logotipo does not exists");
+            return $resp;
             exit;
         };
 
@@ -182,10 +187,10 @@ class ClaseFacturar{
         // $cerPEM     = file_get_contents($dirpadre.'\config\Certificados\Pruebas\CSD_EKU9003173C9.cer.pem');
         // $logoB64    = base64_encode( file_get_contents($dirpadre.'\config/logotipo.png') );
 
-        $jsonB64    = base64_encode(file_get_contents($dirpadre.'\archivos\filesinvoices\file.json') );
-        $keyPEM     = file_get_contents($dirpadre.'\config\Certificados\CSD_MATRIZ_DIGB980626MX3_20220913_165347.key.pem');
-        $cerPEM     = file_get_contents($dirpadre.'\config\Certificados\00001000000515088380.cer.pem');
-        $logoB64    = base64_encode( file_get_contents($dirpadre.'\config\logotipo.png') );
+        $jsonB64    = base64_encode(file_get_contents($filename) );
+        $keyPEM     = file_get_contents($dirpadre.'/config/Certificados/CSD_MATRIZ_DIGB980626MX3_20220913_165347.key.pem');
+        $cerPEM     = file_get_contents($dirpadre.'/config/Certificados/00001000000515088380.cer.pem');
+        $logoB64    = base64_encode( file_get_contents($dirpadre.'/config/logotipo.png') );
 
         $response   = $objConexion->operacion_timbrarJSON3($apikey, $jsonB64, $keyPEM, $cerPEM, $logoB64);
 
@@ -207,16 +212,26 @@ class ClaseFacturar{
         if ($res['codigo'] == '200' || $res['codigo'] == '307') {
             // Se crea el objeto de la respuesta del Servicio.
             $dataOBJ = json_decode($res['datos'], false);
+
             //Creamos los archivos con la extencion .xml y .pdf de la respuesta obtenida del parametro "data"
+            $bytes=file_put_contents('./salida/'.$datarfcemisor."-".$dataserie.$folio.'.xml', $dataOBJ->XML);
+
             file_put_contents('./salida/archivo_xml.xml', $dataOBJ->XML);   //de esta forma extraemos la información del atributo XML o alguno de los atributos UUID, FechaTimbrado, NoCertificado, NoCertificadoSAT, CadenaOriginal, CadenaOriginalSAT, Sello, SelloSAT y CodigoQR.
-            file_put_contents('./salida/archivo_codigoqr.xml', $dataOBJ->CodigoQR);
+            //file_put_contents('./salida/archivo_codigoqr.xml', $dataOBJ->CodigoQR);
             file_put_contents('./salida/archivo_cadenaoriginal.xml', $dataOBJ->CadenaOriginal);
-            file_put_contents('./salida/archivo_recibido.xml', $res['datos']);
-            file_put_contents('./salida/archivo.xml', $resp);
+            file_put_contents('./salida/archivo_cadenaoriginalSAT.xml', $dataOBJ->CadenaOriginalSAT);
+            //file_put_contents('./salida/archivo_recibido.xml', $res['datos']);
+            //file_put_contents('./salida/archivo.xml', $dataOBJ);
         }else{
-            echo $response;
-            return;
+            return $resp;
         }
+
+        if($bytes===false){
+            //echo "Error al escribir archivo XML.".PHP_EOL;
+            $resp = array('411' => 'Error al escribir archivo XML.');	
+            return $resp;
+       }
+
         //Falta validad si existe archivo, para borrarlo.
         $file = 'datos'.$folio.'.txt';
 
@@ -225,20 +240,13 @@ class ClaseFacturar{
         $noCertificadoSAT=  $dataOBJ->NoCertificadoSAT;
         $CodigoQR=          $dataOBJ->CodigoQR;
         $CadenaOriginal=    $dataOBJ->CadenaOriginal;
+        $CadenaOriginalSAT= $dataOBJ->CadenaOriginalSAT;
         $SelloSAT=          $dataOBJ->SelloSAT;
         $Sello=             $dataOBJ->Sello;
         $FechaTimbrado=     $dataOBJ->FechaTimbrado;
 
-        $archivoxml='filexml'.$folio.'.xml';
-
-        $bytes = file_put_contents('./salida/'.$archivoxml, $response, LOCK_EX);
-
-        if($bytes===false){
-             echo "Error al escribir archivo.".PHP_EOL;
-        }
-
         try {    
-            $query = "INSERT INTO $tablatimbrada (id_empresa, serie, folio, fechahoratimbre, numcertificado, numcertificadosat, sellodigitalcfdi, sellodigitalsat, cadenaoriginal, codigoqr, ultusuario) VALUES (:id_empresa, :serie, :folio, :fechahoratimbre, :numcertificado, :numcertificadosat, :sellodigitalcfdi, :sellodigitalsat, :cadenaoriginal, :codigoqr, :ultusuario)";
+            $query = "INSERT INTO $tablatimbrada (id_empresa, serie, folio, fechahoratimbre, numcertificado, numcertificadosat, sellodigitalcfdi, sellodigitalsat, cadenaoriginal, cadenaoriginalsat, codigoqr, ultusuario) VALUES (:id_empresa, :serie, :folio, :fechahoratimbre, :numcertificado, :numcertificadosat, :sellodigitalcfdi, :sellodigitalsat, :cadenaoriginal, :cadenaoriginalsat, :codigoqr, :ultusuario)";
 
             $stmt = Conexion::conectar()->prepare($query);
 
@@ -251,6 +259,7 @@ class ClaseFacturar{
             $stmt->bindParam(":sellodigitalcfdi",   $Sello, PDO::PARAM_STR);
             $stmt->bindParam(":sellodigitalsat",    $SelloSAT, PDO::PARAM_STR);
             $stmt->bindParam(":cadenaoriginal",     $CadenaOriginal, PDO::PARAM_STR);
+            $stmt->bindParam(":cadenaoriginalsat",  $CadenaOriginalSAT, PDO::PARAM_STR);
             $stmt->bindParam(":codigoqr",           $CodigoQR, PDO::PARAM_STR);
             $stmt->bindParam(":ultusuario",         $ultusuario, PDO::PARAM_INT);
             
@@ -268,10 +277,11 @@ class ClaseFacturar{
             }
 
             if(!$stmt1){
-                $resp = array('403' => 'Hubo un error');	
+                $resp = array('403' => 'Hubo un error al guardar');	
                 return $resp;
             }
-            array_push($resp, array('bytes'=>$bytes));
+
+            //array_push($resp, array('bytes'=>$bytes));
 
             $uuid .= PHP_EOL . PHP_EOL;
             file_put_contents('./salida/'.$file, $uuid, FILE_APPEND | LOCK_EX);
@@ -293,7 +303,7 @@ class ClaseFacturar{
             return $resp;
 
         } catch (Exception $e) {
-            echo "Failed: " . $e->getMessage();
+            $resp=array('403' => "Failed: " . $e->getMessage());	
         }
     }
     

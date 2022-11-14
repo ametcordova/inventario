@@ -8,12 +8,12 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header p-1 m-0">
-      <div class="container-fluid">
+      <div class="container-fluid px-2 py-0">
         <div class="row">
           <div class="col-sm-6">
-            <h3>Administrar Usuario:&nbsp; 
+            <h4 class="text-bold">Administrar Usuarios:&nbsp; 
                 <small><i class="fa fa-user"></i></small>
-            </h3>
+            </h4>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -38,20 +38,34 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
 
         <button class="btn btn-danger btn-sm" id="btnregresar" onclick="regresar()" type="button"><i class="fa fa-arrow-circle-left"></i> Regresar</button>          
 
-          <!--<h2 class="card-title">Control de Usuarios</h2> -->
+          <!--<h2 class="card-title">Control de Usuarios</h2> <button type="button" class="btn btn-tool" id="dropdownMenuButton" title="Refresh"> -->
           <div class="card-tools">
-            <button type="button" class="btn btn-tool" data-widget="collapse" data-toggle="tooltip" title="Ocultar">
-              <i class="fa fa-minus"></i></button>
-			<button type="button" class="btn btn-tool" onclick="regresar()" title="a Inicio">
-              <i class="fa fa-times"></i></button>
+              
+              <button class="btn btn-tool " type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-gear"></i>
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="#" id="userActive">Solo activos</a>
+                <a class="dropdown-item" href="#">action2</a>
+                <a class="dropdown-item" href="#">Action3</a>
+              </div>          
+
+            <button type="button" class="btn btn-tool" title="Refresh" onclick="location.reload()">
+              <i class="fa fa-refresh"></i>
+            </button>
+              <button type="button" class="btn btn-tool" data-widget="collapse" data-toggle="tooltip" title="Ocultar">
+                <i class="fa fa-minus"></i></button>
+            <button type="button" class="btn btn-tool" onclick="regresar()" title="a Inicio">
+                <i class="fa fa-times"></i>
+            </button>
 			  
           </div>
          </div>
         
         <div class="card-body">
         <div class="card">
-            <div class="card-header p-0 m-0 text-center" style="background-color: lavenderblush; color:#08C49F; font-size:2rem;">
-               <label class="text-center p-0 m-0">Modulo Catalogo de Usuarios</label>
+            <div class="card-header p-0 m-0 text-center" style="background-color: lavenderblush; color:#08C49F; font-size:1.4rem;">
+               <label class="text-center p-0 m-0">Modulo Catálogo de Usuarios</label>
             </div>  <!-- /.card-header -->
             <div class="card-body">
               <table class="table table-bordered table-hover table-striped dt-responsive compact usuariosDatatable" width="100%">
@@ -82,7 +96,7 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                       $fechalogin = date('d-m-Y H:i:s', strtotime($value["ultimo_login"]));
                     }
                       echo '
-                <tr>
+                 <tr>
                   <td>'.$value["id"].'</td>
                   <td>'.$value["nombre"].'</td>
                   <td>'.$value["usuario"].'</td>';
@@ -118,7 +132,7 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                           '.$boton1.' '.$boton2.'
                       </div>
                   </td>
-                </tr>';
+                 </tr>';
                   }
                     
                 ?>
@@ -214,6 +228,8 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                     </select>
               </div>
             </div>
+
+            
 
 		<div class="form-group">
             <label for="exampleInputFile">Subir Imagen</label>

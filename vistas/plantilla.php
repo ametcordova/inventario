@@ -160,7 +160,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <!-- AQUI SE VINCULAN LOS ARCHIVOS JS -->
 <script src="vistas/js/funciones.js?v=04092020"></script>                  
 <script src="vistas/js/plantilla.js?v=10052022"></script>
-<script src="vistas/js/usuario.js?v=03032022"></script>
+<script src="vistas/js/usuario.js?v=091120221643"></script>
 <script src="vistas/js/categorias.js?v=02092020"></script>
 <script src="vistas/js/medidas.js?v=02092020"></script>
 <script src="vistas/js/proveedores.js?v=02092020"></script>

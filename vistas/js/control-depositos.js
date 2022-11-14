@@ -16,8 +16,9 @@ const NUM_SEMANA= new Array(5,6,0,1,2,3,4)   //array con dias de la semana mexpe
                         //1,2,3,4,5,6,7
 const NUM_DIAS= new Array(1,2,3,4,5,6,7)   //array de dias de la semana
 const EXTRAE=parseInt(NUM_SEMANA.indexOf(HOY));  
-startFecha=NUM_SEMANA[EXTRAE]+NUM_DIAS[EXTRAE];
 endFecha=NUM_DIAS[EXTRAE];
+startFecha=NUM_SEMANA[EXTRAE]+NUM_DIAS[EXTRAE]+1;
+
 /**************************************************************/
 
 $('#edit-benef').hide();
@@ -258,24 +259,6 @@ function dt_crtl_depositos(){
 } 
 
 /*==================================================================*/
-//DOBLE click para seleccionar REFERENCIA Y COPIAR AL PORTAPAPELES
-/*==================================================================*/
-$("#dt-crtl-depositos tbody").on("dblclick", "tr",  function(){
-
-  $(this).toggleClass('selected');
-    //console.log(tablaControlDepositos.row( this ).data()[6]);
-    content=(tablaControlDepositos.row( this ).data()[6]);
-    navigator.clipboard.writeText(content)
-        .then(() => {
-        //console.log("Text copied to clipboard...")
-        ohSnap('Referencia ha sido copiado al portapapeles...!', {duration: '2000', color: 'info', icon: 'icon-alert'});
-    })
-        .catch(err => {
-        console.log('Something went wrong', err);
-    })
-    $(this).toggleClass('selected');
-});
-/*==================================================================*/
 //hoy=parseInt(moment().format('d'));
 //let EXTRAE=parseInt(NUM_SEMANA.indexOf(hoy));
 //fechaInicial=moment().subtract(EXTRAE, 'days').format('DD-MM-YYYY');
@@ -354,7 +337,7 @@ $('#nvoBeneficiario').select2({
     delay: 250,   //Puede decirle a Select2 q espere hasta q el usuario haya terminado de escribir su término de búsqueda antes de activar la solicitud AJAX. Simplemente use la opción de configuración ajax.delay para decirle a Select2 cuánto tiempo debe esperar después de que un usuario haya dejado de escribir antes de enviar la solicitud:
     type: "POST",
     data: function (params) {
-      console.log(params);
+      //console.log(params);
       if ($.trim(params.term) === '') {
         console.log("data:",data, "item;", item, "params:", params.term );
         return data;
@@ -613,6 +596,24 @@ $('#modalAgregarDeposito').on('shown.bs.modal', function () {
 })
 /*==============================================================================*/
 
+/*==================================================================*/
+//DOBLE click para seleccionar REFERENCIA Y COPIAR AL PORTAPAPELES
+/*==================================================================*/
+$("#dt-crtl-depositos tbody").on("dblclick", "tr",  function(){
+
+  $(this).toggleClass('selected');
+    //console.log(tablaControlDepositos.row( this ).data()[6]);
+    content=(tablaControlDepositos.row( this ).data()[6]);
+    navigator.clipboard.writeText(content)
+        .then(() => {
+        //console.log("Text copied to clipboard...")
+        ohSnap('Referencia ha sido copiado al portapapeles...!', {duration: '2000', color: 'info', icon: 'icon-alert'});
+    })
+        .catch(err => {
+        console.log('Something went wrong', err);
+    })
+    $(this).toggleClass('selected');
+});
 
 
 

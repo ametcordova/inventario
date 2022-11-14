@@ -238,7 +238,17 @@ class ControladorUsuarios{
 		return $respuesta;
 	}
     
+/*=============================================
+	LISTAR USUARIO ACTIVOS
+	=============================================*/
 
+	static public function ctrListarUsuariosActivos($tabla, $item, $valor){
+
+		$respuesta = ModeloUsuarios::MdlListarUsuariosActivos($tabla, $item, $valor);
+
+		return $respuesta;
+	}
+    
 /*=============================================
 	EDITAR USUARIO
 	=============================================*/

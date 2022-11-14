@@ -336,7 +336,7 @@ $fechaHoy = date("Y-m-d");
 
                       <thead class="thead-dark" style="font-size:.8rem; height:1px">
                         <tr translate="no" class="text-center">
-                          <th translate="no" class="text-center" style="width:4.4rem">Acción</th>
+                          <th translate="no" class="text-center" style="width:5.2rem">Acción</th>
                           <th translate="no" style="width:2.5rem">#</th>
                           <th translate="no" style="width:6rem">Clave</th>
                           <th translate="no">Descripción Producto</th>
@@ -406,4 +406,4 @@ $fechaHoy = date("Y-m-d");
 ==================================================================================== -->
 
 
-<script defer src="vistas/js/facturaingreso.js?v=011120221401"></script>
+<script defer src="vistas/js/facturaingreso.js?v=021120221401"></script>

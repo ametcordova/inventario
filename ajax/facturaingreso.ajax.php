@@ -227,7 +227,7 @@ switch ($_GET["op"]){
                         
                         $rspta = ControladorFacturaIngreso::ctrCrearFacturaIngreso($tabla, $facturaingreso);    //$_POST[""]
                         if($rspta=='ok')
-                            json_output(json_build(201, 'ok', 'Movimiento agregado con éxito'));
+                            json_output(json_build(201, 'ok', 'Factura guardado con éxito'));
                 }else{
                     throw new Exception("Expresion no aceptada");
                     return false;  

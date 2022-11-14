@@ -1,7 +1,9 @@
-var arrayProductos=new Array();
+var arrayProductos=[];
 var renglonesfacturar=cantidadfacturar=cantidadimporte=sumasubtotal=sumatotal=0;
 const { ajax } = rxjs.ajax;
 const { fromEvent } = rxjs;
+var FechDev;
+var FechDev2;
 $("#modalCrearFactura").draggable({
     handle: ".modal-header"
 });
@@ -29,18 +31,18 @@ function dt_ListarFacturasIngreso(){
   let rangodeFecha = (localStorage.getItem("daterange-btn-factingreso"));
   $('#daterange-btn-factingreso span').html(rangodeFecha);
 
-   if(rangodeFecha==undefined || rangodeFecha==null){
+   if(rangodeFecha===undefined || rangodeFecha===null){
       //  var FechDev1=moment().format('YYYY-MM-DD');
       //  var FechDev2=moment().format('YYYY-MM-DD');
-       var FechDev1=moment().format('YYYY-MM-DD HH:mm:ss');
-       var FechDev2=moment().format('YYYY-MM-DD HH:mm:ss');
+       FechDev1=moment().format('YYYY-MM-DD HH:mm:ss');
+       FechDev2=moment().format('YYYY-MM-DD HH:mm:ss');
    }else{
 	   let arrayFecha = rangodeFecha.split(" ", 3);
 	   let f1=arrayFecha[0].split("-");
 	   let f2=arrayFecha[2].split("-");
 
-	   var FechDev1=f1[2].concat("-").concat(f1[1]).concat("-").concat(f1[0].concat(" 00:00:00")); //armar la fecha año-mes-dia
-	   var FechDev2=f2[2].concat("-").concat(f2[1]).concat("-").concat(f2[0].concat(" 23:59:59"));
+	   FechDev1=f1[2].concat("-").concat(f1[1]).concat("-").concat(f1[0].concat(" 00:00:00")); //armar la fecha año-mes-dia
+	   FechDev2=f2[2].concat("-").concat(f2[1]).concat("-").concat(f2[0].concat(" 23:59:59"));
      
    }	   
  
@@ -186,7 +188,8 @@ $('#daterange-btn-factingreso').on('cancel.daterangepicker', function(ev, picker
 /**************************************************************** */
 //TRAER EL ULTIMO ID GUARDADO
 async function UltimoNumIdFactura(){
-  let respId=respFolio=0;
+  let respId=0;
+  let respFolio=0;
   let response = await fetch("ajax/facturaingreso.ajax.php?op=obtenerUltimoNumero");
   let result = await response.json();
   //console.log(result.id);
@@ -212,7 +215,7 @@ $('#idEmpresa').on('change', ()=> {
   rfcemisor= rfcemisor.substr(0, rfcemisor.indexOf('-'));
   rfcemisor=rfcemisor.trim();
   //console.log(rfcemisor)
-  if(rfcemisor=='' || ($('#idEmpresa').val()=='')){
+  if(rfcemisor==='' || ($('#idEmpresa').val()==='')){
     $("#idEmpresa").css({"background-color": "red", "color":"yellow"});
     $("select#idEmpresa").focus();
     return false;
@@ -227,7 +230,7 @@ $('#idEmpresa').on('change', ()=> {
     .then((res)=>{ 
       if(res.status==200) {
         //console.log(res.data)
-        if(res.data==false){
+        if(res.data===false){
           $("#tasaimpuesto").val('');
           $("#idregimenfiscalemisor").val('');
           $("#codpostal").val('');
@@ -455,10 +458,13 @@ function addProductofactura(...argsProductos){
   renglonesfacturar++;
   contenido.innerHTML+=`
   <tr class="filas" id="fila${renglonesfacturar}">
-    <td><button type="button" class="btn btn-sm text-danger px-0 py-1 m-0" onclick="eliminarProducto(${renglonesfacturar}, ${argsProductos[1]}, ${argsProductos[6]})" title="Quitar concepto"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-    <button type="button" class="btn btn-sm text-info px-0 py-1 m-0" onclick="duplicarconcepto(${argsProductos[0]}, ${argsProductos[1]}, '${argsProductos[4]}', )" title="Duplicar concepto"><i class="fa fa-clone" aria-hidden="true"></i></button>
+
+    <td><button type="button" class="btn btn-sm text-danger px-0 py-0 m-0" onclick="eliminarProducto(${renglonesfacturar}, ${argsProductos[1]}, ${argsProductos[6]})" title="Quitar concepto"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+    <button type="button" class="btn btn-sm text-info px-0 py-1 m-0" onclick="duplicarconcepto(${argsProductos[0]}, ${argsProductos[1]}, '${argsProductos[4]}', )" title="Editar concepto"><i class="fa fa-clone" aria-hidden="true"></i></button>
+    <button type="button" class="btn btn-sm text-warning px-0 py-1 m-0" onclick="editarConcepto(${renglonesfacturar}, ${argsProductos[1]}, ${argsProductos[6]})" title="Editar concepto"><i class="fa fa-pencil" aria-hidden="true"></i></button>
     <input type="hidden" name="claveunidad[]" value="${argsProductos[2]}-${argsProductos[3]}"
     </td>
+
     <td class='text-center'>${renglonesfacturar} <input type="hidden" name="objetodeimpuesto[]" value="${argsProductos[7]}" </td>
     <td class='text-center'>${argsProductos[0]} <input type="hidden" name="idproducto[]" value="${argsProductos[0]}" </td>
     <td class='text-left'><input class="form-control form-control-sm" type="text" name="descripcion[]" value="${argsProductos[4]}"</td>  
@@ -482,9 +488,9 @@ function addProductofactura(...argsProductos){
 function duplicarconcepto(cve, canti, descripcion){
   $("#cveprodfactura").select2().val(cve).trigger('change');
   setTimeout(function() { 
-    $("#nvacantidad").val(canti);
+    $("#nvacantidad").val(0);
     $("#nvoconcepto").val(descripcion);
-  }, 1000);
+  }, 900);
 }
 /*==================================================================*/
 //QUITA ELEMENTO 
@@ -531,7 +537,7 @@ function evaluarElementos(){
     $("#btnGuardarFactura, #btnEditEntradasAlmacen").hide();
     $("#count-row, #Editcount-row").hide();
   }
-}
+};
 
 /*======================================================================*/
 //ENVIAR FORMULARIO PARA GUARDAR DATOS DE ENTRADA
@@ -545,9 +551,9 @@ $("body").on("submit", "#formularioFactura", function( event ) {
   // } 
   if($("#nvoregimenfiscalreceptor").val().length < 1){
     return true;
-  } 
+  }
   swal({
-    title: "¿Está seguro de guardar Entrada?",
+    title: "¿Está seguro de guardar Factura?",
     text: "¡Si no lo está pulse Cancelar",
     icon: "warning",
     buttons: ["Cancelar", "Sí, Guardar"],
@@ -579,7 +585,7 @@ $("body").on("submit", "#formularioFactura", function( event ) {
               console.log(res.data, res.status)
               swal({
                 title: "¡Lo siento mucho!!",
-                text: `No fue posible Guardar. ${res.data}!!`,
+                text: `No fue posible Guardar. ${res.data.msg}!!`,
                 icon: "error",
                 buttons: false,
                 timer: 3000
@@ -631,32 +637,28 @@ function getIdFactura(elem){
     })
 
     .then((res)=>{ 
-      if(res.status==200) {
+      if(res.data.data.code==200) {
         $('#dt-FacturaIngreso').DataTable().ajax.reload(null, false);
         $('#container').waitMe("hide");
-        console.log(res.data)
-        // console.log(res.status)
-        // console.log(res.data['status'])
-        //console.log(res.data['msg'])
-        //console.log(res.data['data']['code'])
+        //console.log(res.data.data.code)
         swal({
           title: "¡Timbrado!",
-          text: `Mensaje .${res.data['data']}!!`,
+          text: `Mensaje .${res.data.data.message}!!`,
           icon: "success",
           buttons: false,
           timer: 3000
         })  //fin swal
         
-        if(res.data==false){
-          console.log(res.data)
+      }else{
+          //console.log(res.data)
+          $('#container').waitMe("hide");
           swal({
             title: "¡Lo siento mucho!!",
-            text: `Mensaje .${res.data}!!`,
+            text: `Mensaje .${res.data.data.message}!!`,
             icon: "error",
             buttons: false,
-            timer: 2000
+            timer: 3000
           })  //fin swal
-        }
       }          
     }) 
 
@@ -673,7 +675,7 @@ ENVIA REPORTE DE ENTRADA AL ALMACEN DESDE EL DATATABLE
 $("#dt-FacturaIngreso tbody").on("click", "button.btnPrintPdf", function(){
   let idPrintPdf = $(this).attr("data-id");
   //let idPrintPdf = $(this).attr("data-folio");
-  console.log(idPrintPdf); 
+  //console.log(idPrintPdf); 
     if(idPrintPdf.length > 0){
      window.open("extensiones/fpdf/reportes/facturatimbrada.php?codigo="+idPrintPdf, "_blank");
     }

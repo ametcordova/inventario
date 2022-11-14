@@ -17,7 +17,7 @@ ob_start(); // it starts buffering
         function Header()
         {
             $uuid=$GLOBALS['uuid'];
-            $seriefactura=$GLOBALS['serie'].'-'.$GLOBALS['folio'];
+            $serfolfactura=$GLOBALS['serie'].'-'.$GLOBALS['folio'];
             $idexportacion=$GLOBALS['idexportacion'];
             $fechaelaboracion=$GLOBALS['fechaelaboracion'];
             $fechatimbrado=$GLOBALS['fechatimbrado'];
@@ -34,7 +34,7 @@ ob_start(); // it starts buffering
             // Movernos a la derecha
             //Cell(float w [, float h [, string txt [, mixed border [, int ln [, string align [, boolean fill [, mixed link]]]]]]])
             $this->Cell(122);    // w-ancho h-alto txt-texto 0,1 ó LTRB-border 0,1,2-Posicion actual L,C,R-Alineacion true,false-fondo
-            $this->Cell(30,4,utf8_decode('FACTURA No. '.$seriefactura),0,0,'C');
+            $this->Cell(30,4,utf8_decode('FACTURA No. '.$serfolfactura),0,0,'C');
             $this->Ln(4.5);
             $this->SetFont('Arial','B',10);
             $this->SetTextColor(0,0,0);
@@ -82,12 +82,15 @@ ob_start(); // it starts buffering
             $this->Cell(22,6,utf8_decode('Exportación: '),0,0,1,false);
             $this->SetFont('Arial','',10);
             $this->Cell(0,6, $idexportacion.' - '.$descripciontipoexporta,0,0,1,false);
-            $this->Ln(7);
+            $this->Ln(6);
 
             $this->SetDrawColor(0,0,0);
             $this->SetFillColor(0,0,0);     // color del relleno
             $this->Cell(0,1,' ',1,0,'C',true);
-            $this->Ln(2);
+            if($this->PageNo()>1){
+                $this->Ln(2.5);
+            }
+            $this->Ln(1.5);
 
         }
 
@@ -135,8 +138,10 @@ ob_start(); // it starts buffering
             $GLOBALS["descriptipocomprobante"] = $resp['descriptipocomprobante'];
             $GLOBALS["descripciontipoexporta"] = $resp['descripciontipoexporta'];
             // Creación del objeto de la clase heredada
+// --------------------- CONFIGURAR DATOS DEL REPORTE ------------------------------------------------------  
             //$pdf = new PDF();
             $pdf = new PDF('P', 'mm', 'Letter', true, 'UTF-8', false);
+            $pdf->SetAutoPageBreak(true, 12);
             $pdf->SetDisplayMode(150);
             $pdf->SetTitle('Factura V. 4.0 - Nunosco');
             $pdf->SetAuthor('@Kordova');
@@ -151,7 +156,7 @@ ob_start(); // it starts buffering
             $pdf->SetFillColor(51,116,255);     // color del relleno
             $pdf->SetTextColor(255,255,255);    // color del texto
             $pdf->SetFont('Arial','B',8);
-            $pdf->Cell(0,3.5,'DATOS DEL EMISOR',1,0,'C',true);
+            $pdf->Cell(0,3.4,'DATOS DEL EMISOR',1,0,'C',true);
             $pdf->SetDrawColor(0,0,0);
             $pdf->SetFillColor(255,255,255);
             $pdf->SetTextColor(0,0,0);
@@ -187,9 +192,8 @@ ob_start(); // it starts buffering
             $pdf->Cell(10,4,'C.P.: ',0,0,'L',true);
             $pdf->SetFont('Arial','',9);
             $pdf->Cell(34,4,$resp['codpostal'],0,0,'L',true);
-            $pdf->Ln(1);
+            $pdf->Ln(4);
 // -----------------------------------------------------------------------------------------        
-            $pdf->Ln();
             $pdf->SetDrawColor(51,134,255);
             $pdf->SetFillColor(51,116,255);
             $pdf->SetTextColor(255,255,255);
@@ -236,13 +240,11 @@ ob_start(); // it starts buffering
             $pdf->Cell(10,4,'C.P.: ',0,0,'L',true);
             $pdf->SetFont('Arial','',9);
             $pdf->Cell(34,4,$resp['codpostalreceptor'],0,0,'L',true);
-            $pdf->Ln(5);
 
-            //$pdf->Ln(7.5);
             $pdf->SetDrawColor(0,0,0);
             $pdf->SetFillColor(255,255,255);
             $pdf->SetTextColor(0,0,0);
-            $pdf->Ln(0);
+            $pdf->Ln(4);
 // -----------------------------------------------------------------------------------------        
             $pdf->SetDrawColor(51,116,255);
             $pdf->SetFillColor(51,116,255);
@@ -299,13 +301,13 @@ ob_start(); // it starts buffering
             $w = array(15, 32, 87, 14, 7, 20, 21);
             $num_headers = count($header);
             for($i = 0; $i < $num_headers; ++$i) {
-                $pdf->Cell($w[$i], 6.5, utf8_decode($header[$i]), 1, 0, 'C', 1);
+                $pdf->Cell($w[$i], 6, utf8_decode($header[$i]), 1, 0, 'C', 1);
             };
             $pdf->SetDrawColor(0,0,0);
             $pdf->SetFillColor(255,255,255);
             $pdf->SetTextColor(0,0,0);
             $pdf->SetFont('', '',7.5);
-            $pdf->Ln(7.2);
+            $pdf->Ln(6.3);
         
 // -------------------------IMPRIMIR LOS CONCEPTOS -----------------------------------------------
 $conceptos_json=json_decode($resp['conceptos'],TRUE);		//decodifica los conceptos que vienen en datos JSON
@@ -347,7 +349,7 @@ $pdf->MultiCell(20,5, '$'.number_format($row["ValorUnitario"],4, '.',','),  $sin
 $pdf->SetXY($x+175,$y);
 $pdf->MultiCell(21,5, '$'.number_format($row["Importe"],2, '.',','),  $sinlinea, 0, 'R', 1);
 
-if ($row != end($conceptos_json)) $pdf->Ln(5.5);    //si no es el Ùltimo elemento del array, interlineado de 6.5
+if ($row != end($conceptos_json)) $pdf->Ln(5.5);    //si no es el Ùltimo elemento del array, interlineado de 5.5
 
 //break;
 endforeach;
@@ -377,7 +379,14 @@ $pdf->Cell(26,5,'$'.number_format($sumatotal,2, '.',','),0,0,'L',true);
 $pdf->Ln(5.5);
 $y1=$pdf->GetY();
 $pdf->Line(10,$y1,206,$y1);
-$pdf->Ln(4);
+$pdf->Ln(3.5);
+$x3=$pdf->GetX();
+$y3=$pdf->GetY();
+if($y3>240){
+    $pdf->AddPage();
+}
+//$pdf->Cell(0,0,$x3.'-'.$y3,0,0,'R',true);
+//$pdf->Ln(3.5);
 // --------------------- TRAEMOS DATOS DE FACTURA TIMBRADA ---------------------------------------
 $tabla="datosfacturatimbre";
 //$campo = "folio";
@@ -430,15 +439,23 @@ if($response){
     $pdf->SetFont('Arial', '', 6);
     $pdf->MultiCell(0, 3.5, utf8_decode($response['sellodigitalsat']),'LRB','FJ',1);
     $pdf->Ln(2);
-
-    $pdf->SetFont('Arial', 'B', 6.5);
-    $pdf->MultiCell(0, 3.5, utf8_decode('Cadena Original: '),'LRT','FJ',1);
-    $pdf->SetX($x);
-    $pdf->SetFont('Arial', '', 6);
-    $pdf->MultiCell(0, 3.5, utf8_decode(trim($response['cadenaoriginal'])),'LRB','FJ',1);
-    $pdf->SetFont('Arial', '', 6.5);
-    $pdf->Ln(1);
-
+    if(IS_NULL($response['cadenaoriginalsat'])){
+        $pdf->SetFont('Arial', 'B', 6.5);
+        $pdf->MultiCell(0, 3.5, utf8_decode('Cadena Original: '),'LRT','FJ',1);
+        $pdf->SetX($x);
+        $pdf->SetFont('Arial', '', 6);
+        $pdf->MultiCell(0, 3.5, trim($response['cadenaoriginal']),'LRB','FJ',1);
+        $pdf->SetFont('Arial', '', 6.5);
+        $pdf->Ln(1);
+    }else{
+        $pdf->SetFont('Arial', 'B', 6.5);
+        $pdf->MultiCell(0, 3.5, utf8_decode('Cadena Original SAT: '),'LRT','FJ',1);
+        $pdf->SetX($x);
+        $pdf->SetFont('Arial', '', 6);
+        $pdf->MultiCell(0, 3.5, trim($response['cadenaoriginalsat']),'LRB','FJ',1);
+        $pdf->SetFont('Arial', '', 6.5);
+        $pdf->Ln(1);
+    }
     // --------------------------- LINEA DE SEPARACION ----------------------------------------------
     $y1=$pdf->GetY();
     $pdf->SetLineWidth(0.5);

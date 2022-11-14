@@ -63,6 +63,18 @@ ACTIVAR USUARIO
 
 	}
     
+
+	function listarSoloActivos(){
+		$tabla='usuarios';
+		$item = "estado";
+		$valor=1;
+
+		$respuesta = ControladorUsuarios::ctrListarUsuariosActivos($tabla, $item, $valor);
+
+		echo json_encode($respuesta);
+
+	}
+
     
 }  //fin de la clase
 

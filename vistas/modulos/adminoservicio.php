@@ -34,11 +34,11 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
   <!-- Content Header (Page header) -->
   <section class="content-header p-1">
     <div class="container-fluid">
-      <div class="row">
+      <div class="row py-0">
         <div class="col-sm-6">
-          <h4>Capturar OS:&nbsp;
+          <h5>Capturar OS:&nbsp;
             <small><i class="fa fa-address-book"></i></small>
-          </h4>
+          </h5>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
@@ -76,6 +76,7 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
         <?php } ?>
         <!--<h2 class="card-title">Control de Usuarios</h2> -->
         <div class="card-tools">
+          <button class="btn btn-tool" onclick="location.reload()" title="Reset filtros"><i class="fa fa-refresh"></i></button>
           <button type="button" class="btn btn-tool" data-widget="collapse" data-toggle="tooltip" title="Ocultar">
             <i class="fa fa-minus"></i></button>
           <button type="button" class="btn btn-tool" onclick="regresar()" title="a Inicio">

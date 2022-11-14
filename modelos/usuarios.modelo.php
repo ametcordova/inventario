@@ -34,6 +34,24 @@ try {
 	
 }
     
+static Public function MdlListarUsuariosActivos($tabla, $item, $valor){
+	try {     
+
+			$stmt=Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item=:$item");
+			
+			$stmt->bindParam(":".$item, $valor, PDO::PARAM_INT);
+			
+			$stmt->execute();
+			
+			return $stmt->fetchAll();
+			
+			$stmt=null;
+			
+	} catch (Exception $e) {
+		echo "Failed: " . $e->getMessage();
+	}
+		
+}
     
 /*=============================================
 	REGISTRO DE USUARIO

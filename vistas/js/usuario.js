@@ -5,6 +5,32 @@ $('#modalAgregarusuario').on('show.bs.modal', function (e) {
   $(':input:text:visible:first').focus();
 })
 
+/*******************************************************************/
+$("#userActive").on("click",function(e){
+	listarSoloActivos(e);	
+})
+  
+function listarSoloActivos(){
+	console.log('Aun sin desarrollars');
+	// (async () => {   
+	// 	await axios.get('ajax/usuarios.ajax.php?op=listarSoloActivos', {
+	// 	})
+	// 	.then((res)=>{ 
+	// 	  if(res.status==200) {
+	// 		console.log(res.data)
+	// 		if(res.data==false){
+	// 		}else{
+
+	// 		}
+	// 	  }          
+	// 	}) 
+	
+	// 	.catch((err) => {throw err}); 
+	  
+	//   })();  //fin del async  	
+}
+/*******************************************************************/
+
 /*=============================================
 SUBIENDO LA FOTO DEL USUARIO
 =============================================*/
@@ -253,7 +279,7 @@ swal({
 /*===================================================================*/
 $('.usuariosDatatable').dataTable({
 	"lengthMenu": [ [10, 25, 50,100, -1], [10, 25, 50, 100, "Todos"] ],
-"language": {
+	"language": {
 	"sProcessing":     "Procesando...",
 	"sLengthMenu":     "Mostrar _MENU_ registros &nbsp",
 	"sZeroRecords":    "No se encontraron resultados",

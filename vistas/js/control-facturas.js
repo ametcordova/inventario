@@ -6,6 +6,11 @@ $("#modalAgregarFactura, #modalEditarFactura, #modalPagarFactura, #modalVerFactu
 	  handle: ".modal-header"
 });
 
+//$(document).ready(function (){
+  $(function() {  
+    $(".spin").hide();
+  } );
+  
 
 //Función que se ejecuta al inicio
 function init(){
@@ -678,10 +683,6 @@ $('#myInputO').on( 'keyup change clear', function () {
   };
 } );
 
-//$(document).ready(function (){
-$(function() {  
-  $(".spin").hide();
-} );
 
 //
 $('#TablaFacturas tbody').on( 'dblclick', 'td', function () {

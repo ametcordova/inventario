@@ -294,7 +294,7 @@ $jsonpermisos4=($jsonpermisos4==NULL)?$jsonpermisos4=["SINDATO"=>0]:$jsonpermiso
               <li class="nav-item">
                 <a href="facturaingreso" class="nav-link">
                   <i class="fa fa-tag nav-icon"></i>
-                  <p>Factura</p>
+                  <p>Factura V.4.0</p>
                 </a>
               </li>
             <?php } ?>
@@ -303,7 +303,7 @@ $jsonpermisos4=($jsonpermisos4==NULL)?$jsonpermisos4=["SINDATO"=>0]:$jsonpermiso
               <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="fa fa-male nav-icon"></i>
-                  <p>Recibo de Pago</p>
+                  <p>Recibo de Pago V.2.0</p>
                 </a>
               </li>
             <?php } ?>
@@ -312,7 +312,7 @@ $jsonpermisos4=($jsonpermisos4==NULL)?$jsonpermisos4=["SINDATO"=>0]:$jsonpermiso
               <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="fa fa-male nav-icon"></i>
-                  <p>Catalogos SAT</p>
+                  <p>Catalogos SAT V.4.0</p>
                 </a>
               </li>
             <?php } ?>
