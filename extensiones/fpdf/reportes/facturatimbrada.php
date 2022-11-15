@@ -380,13 +380,10 @@ $pdf->Ln(5.5);
 $y1=$pdf->GetY();
 $pdf->Line(10,$y1,206,$y1);
 $pdf->Ln(3.5);
-$x3=$pdf->GetX();
 $y3=$pdf->GetY();
 if($y3>240){
     $pdf->AddPage();
 }
-//$pdf->Cell(0,0,$x3.'-'.$y3,0,0,'R',true);
-//$pdf->Ln(3.5);
 // --------------------- TRAEMOS DATOS DE FACTURA TIMBRADA ---------------------------------------
 $tabla="datosfacturatimbre";
 //$campo = "folio";

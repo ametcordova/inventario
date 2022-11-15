@@ -316,6 +316,7 @@ $fechaHoy = date("Y-m-d");
 
               <div class="col-md-2">
                 <input type="number" class="form-control form-control-sm mb-1 text-right" name="nvovalorunitario" id="nvovalorunitario" value="0" step="any" min="0" tabindex="13" title="Precio Unitario">
+                <input type="hidden" name="ismodifik" id="ismodifik" value=0>
               </div>
 
               <div class="col-md-1">
@@ -332,7 +333,7 @@ $fechaHoy = date("Y-m-d");
               <section class="invoice">
                 <div class="row">
                   <div class="col-12 col-sm-12 table-hover table-compact table-responsive-sm">
-                    <table class="table table-sm compact table-bordered table-striped" id="detalleEntradasAlmacen" width="100%">
+                    <table class="table table-sm compact table-bordered table-striped" width="100%">
 
                       <thead class="thead-dark" style="font-size:.8rem; height:1px">
                         <tr translate="no" class="text-center">
