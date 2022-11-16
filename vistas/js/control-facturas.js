@@ -568,7 +568,7 @@ $('#factpagadas').on('ifUnchecked', function (event) {
             btns.addClass('btn btn-success btn-sm');
           },  
       "columnDefs": [
-        {"className": "dt-center", "targets": [4,9,10,11,12,13,14]},
+        {"className": "dt-center", "targets": [0,1,4,9,10,11,12,13,14]},
         {"className": "dt-right", "targets": [5,6,7,8]}				//"_all" para todas las columnas
         ],
       "footerCallback": function ( row, data, start, end, display ) {
@@ -662,8 +662,8 @@ $('#TablaFacturas tfoot th').each( function () {
     if(title=="No."){
       $(this).html('<input type="text" id="myInputF" style="width:40px; height:20px;" placeholder="'+title+'"/>');
     }
-    if(title=="Orden"){
-      $(this).html('<input type="text" id="myInputO" style="width:55%; height:20px;" placeholder="'+title+'"/>');
+    if(title=="ODC"){
+      $(this).html('<input type="text" id="myInputO" style="width:55%; height:22px;" placeholder="'+title+'"/>');
     }
 });
 
@@ -677,9 +677,9 @@ $('#myInputF').on( 'keyup change clear', function () {
 
 //Hacer busqueda por la columna de No. de ODC. segun el dato del INPUT
 $('#myInputO').on( 'keyup change clear', function () {
-  if(tabla.column(3)){
+  if(tabla.column(4)){
      //console.log(tableron.column())
-     tabla.column(3).search(this.value).draw();
+     tabla.column(4).search(this.value).draw();
   };
 } );
 

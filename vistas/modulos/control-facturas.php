@@ -143,7 +143,7 @@
                     <th translate="no" style="width:3%;">Ser</th>
                     <th translate="no" style="width:15%;">Nombre</th>
                     <th translate="no" style="width:14%;">Tipo de Trab.</th>
-                    <th translate="no" style="width:6%;">#Orden</th>
+                    <th translate="no" style="width:6%;">#ODC</th>
                     <th translate="no" style="width:7%;">F. Fact.</th>
                     <th translate="no" style="width:7%;">Subtotal</th>
                     <th translate="no" style="width:6%;">iva</th>
@@ -164,7 +164,7 @@
                     <th>No.</th>
                     <th colspan="2"></th>
                     <th></th>
-                    <th>Orden</th>
+                    <th>ODC</th>
                     <th></th>
                     <th></th>
                     <th></th>
@@ -700,7 +700,7 @@
     </div>
   </div>
 </div>
-<script defer src="vistas/js/control-facturas.js?v=011120221343"></script>
+<script defer src="vistas/js/control-facturas.js?v=101120221343"></script>
 <!--===========================================================================================-->
 
 <!--================================= MODAL VER EXPEDIENTE DE FACTURA =======================================-->

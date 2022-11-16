@@ -483,14 +483,30 @@ function addProductofactura(...argsProductos){
     inicializapropiedades();
 }
 /*==================================================================*/
+/*==================================================================*/
+function editarConcepto(renglon, cve, canti, producto, preciounit){
+  $("#cveprodfactura").select2().val(cve).trigger('change');
+  setTimeout(function() { 
+    $("#nvacantidad").val(canti);
+    $("#nvoconcepto").val(producto);
+    $("#nvovalorunitario").val(preciounit);
+  }, 850);
+  $("#ismodifik").val(renglon);
+  sessionStorage.setItem("count", canti);
+  sessionStorage.setItem("priceunit", preciounit);  
+}
+
 /*==================================================================
 ADICIONA PRODUCTOS AL TBODY
 ==================================================================*/
 function updProductofactura(...argsProductos){
   contenido=document.querySelector('#tabladedetalles');
-
-  cantidadfacturar=eliminarProducto(argsProductos[8], argsProductos[1], argsProductos[6]);   //
-  console.log(cantidadfacturar);
+  let count = sessionStorage.getItem("count");
+  let priceunit = sessionStorage.getItem("priceunit");
+  let preciotot=priceunit*count;
+  cantidadfacturar=eliminarProducto(argsProductos[8], count, preciotot);   //Elimina el registro a modificar
+  //console.log(cantidadfacturar);
+  renglonesfacturar++;
   updatecontenido=`
   <tr class="filas" id="fila${argsProductos[8]}">
 
@@ -508,33 +524,34 @@ function updProductofactura(...argsProductos){
     </tr>
   `;
     renglonupdate=argsProductos[8]-1;
-    filaanterior='fila'+renglonupdate;
+    if(renglonupdate==0){   //Es el primer elemento
+      if(renglonesfacturar==1){   // si es el unico elemento
+        contenido.innerHTML+=updatecontenido;
+      }else{
+        renglonupdate=2;
+        filaanterior='fila'+renglonupdate;
+        document.getElementById(filaanterior).insertAdjacentHTML('beforebegin',updatecontenido);    //antes del ultimo elemento
+      }
+    }else{
+      filaanterior='fila'+renglonupdate;
+      document.getElementById(filaanterior).insertAdjacentHTML('afterend',updatecontenido);     //despues del anterior elemento
+    }
     
-    document.getElementById(filaanterior).insertAdjacentHTML('afterend',updatecontenido);
     cantidadfacturar+=argsProductos[1];
-    evaluaFilas(1, cantidadfacturar, argsProductos[6],0);
+    evaluaFilas(renglonesfacturar, cantidadfacturar, argsProductos[6],0);
     inicializapropiedades();
 
-    console.log(argsProductos[8], renglonupdate, filaanterior, cantidadfacturar, argsProductos[6])
+    //console.log(argsProductos[8], renglonupdate, cantidadfacturar, argsProductos[6], count, priceunit)
+    
+    sessionStorage.clear();   // Eliminar todas las claves de sesiones
 }
-/*==================================================================*/
-function editarConcepto(renglon, cve, canti, producto, preciounit){
-  $("#cveprodfactura").select2().val(cve).trigger('change');
-  setTimeout(function() { 
-    $("#nvacantidad").val(canti);
-    $("#nvoconcepto").val(producto);
-    $("#nvovalorunitario").val(preciounit);
-  }, 900);
-  $("#ismodifik").val(renglon);
-}
-
 /*==================================================================*/
 function duplicarconcepto(cve, canti, descripcion){
   $("#cveprodfactura").select2().val(cve).trigger('change');
   setTimeout(function() { 
     $("#nvacantidad").val(1);
     $("#nvoconcepto").val(descripcion);
-  }, 900);
+  }, 850);
 }
 /*==================================================================*/
 function inicializapropiedades(){
