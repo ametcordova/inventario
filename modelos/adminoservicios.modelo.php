@@ -277,7 +277,7 @@ static Public function mdlGetDataOServicios($tabla, $campo, $valor, $status){
 		   
 		   $stmt->execute();
 		   
-		   return $stmt->fetch();
+		   return $stmt->fetch(PDO::FETCH_ASSOC);
 
 		   $stmt=null;
 		   

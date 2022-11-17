@@ -490,7 +490,7 @@ function editarConcepto(renglon, cve, canti, producto, preciounit){
     $("#nvacantidad").val(canti);
     $("#nvoconcepto").val(producto);
     $("#nvovalorunitario").val(preciounit);
-  }, 850);
+  }, 800);
   $("#ismodifik").val(renglon);
   sessionStorage.setItem("count", canti);
   sessionStorage.setItem("priceunit", preciounit);  
@@ -510,8 +510,8 @@ function updProductofactura(...argsProductos){
   updatecontenido=`
   <tr class="filas" id="fila${argsProductos[8]}">
 
-    <td><button type="button" class="btn btn-sm text-danger px-0 py-0 m-0" onclick="eliminarProducto(${argsProductos[8]}, ${argsProductos[1]}, ${argsProductos[6]})" title="Quitar concepto"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-    <button type="button" class="btn btn-sm text-info px-0 py-1 m-0" onclick="duplicarconcepto(${argsProductos[0]}, ${argsProductos[1]}, '${argsProductos[4]}')" title="Duplicar concepto"><i class="fa fa-clone" aria-hidden="true"></i></button>
+    <td><button type="button" class="btn btn-sm text-danger px-0 py-0 m-0" onclick="eliminarProducto(${argsProductos[8]}, ${argsProductos[1]}, ${argsProductos[6]})" title="Quitar concepto"><i class="fa fa-trash-o" aria-hidden="true"></i> </button>
+    <button type="button" class="btn btn-sm text-info px-0 py-1 m-0" onclick="duplicarconcepto(${argsProductos[0]}, ${argsProductos[1]}, '${argsProductos[4]}')" title="Duplicar concepto"><i class="fa fa-clone" aria-hidden="true"></i> </button>
     <button type="button" class="btn btn-sm text-warning px-0 py-1 m-0" onclick="editarConcepto(${argsProductos[8]}, ${argsProductos[0]}, ${argsProductos[1]}, '${argsProductos[4]}', ${argsProductos[5]})" title="Editar concepto"><i class="fa fa-pencil" aria-hidden="true"></i></button>
     <input type="hidden" name="claveunidad[]" value="${argsProductos[2]}-${argsProductos[3]}"
     </td>
@@ -523,12 +523,12 @@ function updProductofactura(...argsProductos){
     <td class='text-right'>${argsProductos[6]} <input type="hidden" name="importe[]" value="${argsProductos[6]}"</td>
     </tr>
   `;
-    renglonupdate=argsProductos[8]-1;
+    renglonupdate=argsProductos[8]-1;   //Disminuir uno para posicionarse en el primer elemento
     if(renglonupdate==0){   //Es el primer elemento
-      if(renglonesfacturar==1){   // si es el unico elemento
+      if(renglonesfacturar==1){   // si es el unico elemento, agrega
         contenido.innerHTML+=updatecontenido;
       }else{
-        renglonupdate=2;
+        renglonupdate=2;    //si es el primer elemento, se posiciona en el sig. elemento
         filaanterior='fila'+renglonupdate;
         document.getElementById(filaanterior).insertAdjacentHTML('beforebegin',updatecontenido);    //antes del ultimo elemento
       }
@@ -551,7 +551,7 @@ function duplicarconcepto(cve, canti, descripcion){
   setTimeout(function() { 
     $("#nvacantidad").val(1);
     $("#nvoconcepto").val(descripcion);
-  }, 850);
+  }, 800);
 }
 /*==================================================================*/
 function inicializapropiedades(){
@@ -804,7 +804,7 @@ $("#dt-FacturaIngreso tbody").on("click", "button.downloadXML", ()=>{
 $('#modalCrearFactura').on('show.bs.modal', function (event) {
   UltimoNumIdFactura();		//TRAE EL SIGUIENTE NUMERO 
   renglonesfacturar=cantidadfacturar=0;
-	$("#renglonentradas").html("");
+	$("#renglonentradas, #subtotal, #impuesto, #total").html("");
 	$("#totalentradasalmacen").html("");
 })
 /**************************************************************** */

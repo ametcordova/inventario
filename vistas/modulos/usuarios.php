@@ -226,6 +226,8 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                       <option value="Visitante">Visitante</option>
                       <option value="Tecnico">Técnico</option>
                     </select>
+                    <span class="input-group-text"><i class="fa fa-hashtag"></i></span>
+                    <input type="number" class="form-control" value="" id="nvoNumTecnico" name="nvoNumTecnico">
               </div>
             </div>
 
@@ -323,7 +325,7 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
             </div>
 
             <div class="form-group mb-3">
-              <div class="input-group-prepend">
+              <div class="input-group-prepend col-md-12">
                     <span class="input-group-text"><i class="fa fa-users"></i></span>
                     <select class="form-control" name="editarPerfil">
                       <option value="" id="editarPerfil"></option>
@@ -333,7 +335,11 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                       <option value="Visitante">Visitante</option>
                       <option value="Tecnico">Técnico</option>
                     </select>
+                    <span class="input-group-text"><i class="fa fa-hashtag"></i></span>
+                    <input type="number" class="form-control" value="" id="editarNumTecnico" name="editarNumTecnico">
               </div>
+              
+
             </div>
                                 
             <div class="input-group mb-3">

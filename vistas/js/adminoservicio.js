@@ -6,6 +6,8 @@ var renglonesOS=cantSalidaOS=0;
 var numserie=alfanumerico='';
 var captRangoFecha;
 var idsfacturas=new Array();
+var FechDev1;
+var FechDev2;
 const { fromEvent } = rxjs;
 //$("#msgsaveok").addClass("d-none");
 
@@ -73,14 +75,14 @@ function listarOServicios(){
   let rangodeFecha = $("#daterange-btnOS span").html();
 
   if(rangodeFecha==undefined || rangodeFecha==null){
-    var FechDev1=moment().format('YYYY-MM-DD');
-    var FechDev2=moment().format('YYYY-MM-DD');
+    FechDev1=moment().format('YYYY-MM-DD');
+    FechDev2=moment().format('YYYY-MM-DD');
     //console.log('fecha hoy:',FechDev1,FechDev2);
   }else{
     let arrayFecha = rangodeFecha.split(" - ", 2);
     //console.log('fechas Mex:',rangodeFecha);
-    var FechDev1=moment(arrayFecha[0],'DD-MM-YYYY').format('YYYY-MM-DD');
-    var FechDev2=moment(arrayFecha[1],'DD-MM-YYYY').format('YYYY-MM-DD');
+    FechDev1=moment(arrayFecha[0],'DD-MM-YYYY').format('YYYY-MM-DD');
+    FechDev2=moment(arrayFecha[1],'DD-MM-YYYY').format('YYYY-MM-DD');
   }	   
 
   tblOrdendeServicios=$('#DatatableOS').dataTable(
@@ -502,7 +504,6 @@ $("#agregarProductoOS").click(function(event){
   
   }); 
 
-
 /*==================================================================
 ADICIONA PRODUCTOS AL TBODY
 ==================================================================*/
@@ -527,7 +528,6 @@ function addProductosSalida(...argsProductos){
     cantSalidaOS+=argsProductos[2];
     evaluaFilaOS(renglonesOS, cantSalidaOS);
     inicializa(argsProductos[3]);
-  
   }
 
  /*==================================================================*/
@@ -558,7 +558,6 @@ function addProductosSalida(...argsProductos){
           $("#datosmodem").addClass("d-none");
         }
     }
-    
   }
 
 /*======================================================================*/
@@ -745,7 +744,7 @@ function printselec(){
 /**********************************************
  *  FIRMA DEL CONTRATANTE
  **********************************************/
- $("#signatureparent").jSignature({
+ $("#signatureparent, #editsignatureparent").jSignature({
    // line color
    color:"black",
 
@@ -764,22 +763,20 @@ function printselec(){
  *  REPETIR FIRMA DEL CONTRATANTE
  **********************************************/
 $(".repetirfirma").click(()=>{
-  $("#signatureparent").jSignature('reset')
+  $("#signatureparent, #editsignatureparent").jSignature('reset')
 });
 
 
 /* ====================EDITAR OS ====================*/
-$('#DatatableOS tbody').on( 'click', 'a.btnEditarOS', function (event) {
+$('#DatatableOS tbody').on( 'click', '.btnEditarOS', function (event) {
   let elemento = this;
   let id = elemento.getAttribute('data-id');
-  //console.log(id,  event.target.attributes[1].value);
+  console.log(id);
   obtenerDatosOS(id)
 
 });
 /* ================================================*/
 function obtenerDatosOS(id){
-  let dataids=dataid=datacant=[];
-  let json_datos_mat=[];
   (async () => {   
     await axios.get('ajax/adminoservicio.ajax.php?op=getDataOS', {
       params: {
@@ -789,41 +786,30 @@ function obtenerDatosOS(id){
 
     .then(res => {
       if(res.status==200 ) {
-        let datos_generales=res.data;
-        let json_datos_inst = JSON.parse(res.data['datos_instalacion']);
-        json_datos_mat = JSON.parse(res.data['datos_material']);
-        let i=0;
-        dataid=[];
-        datacant=[];
 
-         json_datos_mat.forEach((value, index, arreglo) => {
-          //console.log(index, value.id_producto);
-          dataid.push(value.id_producto);
-        });        
+        html=`OS Facturado, ya no
+        es posible modificarlo.
+        Consulte a Soporte Técnico.`;
+          if (res.data.factura != null){
+            swal({
+              title: 'Please atention.',
+              text: html,
+              icon: "error",
+              button: "Entendido",
+              timer: 5000
+            })  //fin .then
+            return;
+          }
+          //console.log(res.data);
+          //console.log('factura es null')
+          fillform(res.data);
 
-        json_datos_mat.forEach((value, index, arreglo) => {
-          //console.log(index, value.cantidad);
-          datacant.push(value.cantidad);
-        });        
-
-        // Object.values(json_datos_mat).forEach((value) => {
-        //   console.log(value.id_producto,'**',value.cantidad);
-        //   dataid.push(value.id_producto);
-        //   datacant.push(value.cantidad);
-        //   i++;
-        // });
-        //convertir array a string
-        dataids=dataid.toString();
-        
-        datosinstalacion(datos_generales, json_datos_inst)
-
-        //var firma=res.data['firma'];
+        //var firma=res.data['firma']; 
         //$( "#firma1" ).jSignature("getData", "image");
         //$("#signatureparent").jSignature("setData", firma, 'image/svg+xml');
         //$("#signatureparent").jSignature("importData", firma, 'image/svg+xml');
         //let firma = $("#signatureparent").jSignature("getData", "image/svg+xml");
-        $("#nuevoAlmacenOS, #nvotecnico").prop('disabled',true);
-        //$("#nvotecnico").prop('disabled',true);
+
       }else{
         console.log(res);
       }
@@ -832,55 +818,72 @@ function obtenerDatosOS(id){
     .catch((err) => {
       console.log(err)
     }); 
-      console.log('Todos:',json_datos_mat);
-      console.log('id:-',dataid)
-      console.log('ids:',dataids)
-      console.log('cant:-',datacant)
-
-      dataid.sort(comparar);
-      datacant.sort(comparar);
-      console.log('ordenado con función: ',dataid, '*',datacant)
-
-      await axios.get('ajax/adminoservicio.ajax.php?op=getDataOS', {
-        params: {
-          dataids: dataids
-        }
-      })
-      .then(res => {
-        if(res.status==200 ) {
-          console.log(res.data)
-          console.log(res.data[0]['descripcion'])
-
-        }
-      })
-      .catch((err) => {
-        console.log(err)
-      }); 
       
   })();  //fin del async
 
 }
 
-function datosinstalacion(datos_generales, json_datos_inst){
-  let idalmacen=datos_generales['id_almacen']+'-'+datos_generales['nombrealmacen'];
-  $("#nuevoAlmacenOS").val(idalmacen);
-  $("#nvotecnico").val(datos_generales['id_tecnico']);
-  $("#numtelefono").val(datos_generales['telefono']);
-  $("#fechainst").val(datos_generales['fecha_instalacion']);
-  $("#numeroos").val(datos_generales['ordenservicio']);
-  $("#nombrecontrato").val(datos_generales['nombrecontrato']);
-  $("#numpisaplex").val(json_datos_inst[0].numpisaplex);
-  $("#numtipo").val(json_datos_inst[0].tipo);
-  $("#direccionos").val(json_datos_inst[0].direccionos);
-  $("#coloniaos").val(json_datos_inst[0].coloniaos);
-  $("#distritoos").val(json_datos_inst[0].distritoos);
-  $("#terminalos").val(json_datos_inst[0].terminalos);
-  $("#puertoos").val(json_datos_inst[0].puertoos);
-  $("#nombrefirma").val(json_datos_inst[0].nombrefirma);
-  $("#modemretirado").val(json_datos_inst[0].modemretirado);
-  $("#modemnumserie").val(json_datos_inst[0].modemnumserie);
-  $("#observacionesos").val(datos_generales['observaciones']);  
+function fillform(datosOS){
+  let json_datos_inst = JSON.parse(datosOS.datos_instalacion);
+  $("#editid").val(datosOS.id);
+  $("input[name=editAlmacenOS]").val(datosOS.id_almacen);
+  $("select[name='edittecnico']").val(datosOS.id_tecnico);
+  $("select[name='editAlmacenOS']").val(datosOS.id_almacen);
+  $("input[name=editnumtelefono]").val(datosOS.telefono);
+  $("input[name=editfechainst]").val(datosOS.fecha_instalacion);
+  $("input[name=editnumeroos]").val(datosOS.ordenservicio);
+  $("input[name=editnombrecontrato]").val(datosOS.nombrecontrato);
+  $("#editobserva").val(datosOS.observaciones);  
+  $("#editAlmacenOS, #edittecnico").prop('disabled',true);
+  datosinstalacion(json_datos_inst);
+  //let json_datos_mat = JSON.parse(res.data['datos_material']);  
+  modalEvento=new bootstrap.Modal(document.getElementById('modalEditarOS'),{ keyboard:false });
+  modalEvento.show();
 }
+
+function datosinstalacion(json_datos_inst){
+  $("#editnumpisaplex").val(json_datos_inst[0].numpisaplex);
+  $("#editnumtipo").val(json_datos_inst[0].tipo);
+  $("#editdireccionos").val(json_datos_inst[0].direccionos);
+  $("#editcoloniaos").val(json_datos_inst[0].coloniaos);
+  $("#editdistritoos").val(json_datos_inst[0].distritoos);
+  $("#editterminalos").val(json_datos_inst[0].terminalos);
+  $("#editpuertoos").val(json_datos_inst[0].puertoos);
+  $("#editnombrefirma").val(json_datos_inst[0].nombrefirma);
+  $("#editnumeroSerie").val(json_datos_inst[0].numeroserie);
+  $("#editalfanumerico").val(json_datos_inst[0].alfanumerico);
+}
+
+/*======================================================================*/
+//ENVIAR FORMULARIO PARA GUARDAR DATOS DE ORDEN DE SERVICIO
+/*======================================================================*/
+$("body").on("submit", "#formularioEditarOS", function( event ) {	
+  event.preventDefault();
+  event.stopPropagation();	
+  let mensajeaxios='Registro Guardado';
+  let tipoerror=1;
+  let tiempo=2;
+  
+    swal({
+        title: "¿Está seguro de Actualizar OS?",
+        text: "¡Si no lo está puede cancelar la acción!",
+        icon: "warning",
+        buttons: ["Cancelar", "Sí, Guardar"],
+        dangerMode: true,
+      })
+      .then((aceptado) => {
+      if (aceptado) {
+          let formData = new FormData($("#formularioEditarOS")[0]);
+          for (var pair of formData.entries()){console.log(pair[0]+ ', ' + pair[1]);}
+          return;
+      }else{
+         return false;
+      }
+       }); 
+  
+   });
+
+/*======================================================================*/
 
 /* *****************AL ABRIR EL MODAL ************************************** */
 $('#modalAgregarOS').on('shown.bs.modal', function () {

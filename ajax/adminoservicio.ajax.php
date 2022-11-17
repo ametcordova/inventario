@@ -56,7 +56,7 @@ switch ($_GET["op"]){
 			if(getAccess($acceso, ACCESS_ACTIVAR)){
 			$botones='<td>
                     <button class="btn btn-sm btn-info" href="#" title="Ver"><i class="fa fa-eye"></i></button>
-                    <button class="btn btn-sm btn-warning btnEditarOS" data-id="'.$value['id'].'" editarDev="'.$value['id'].'" data-toggle="modal" href="#modalAgregarOS" title="Editar"><i class="fa fa-pencil"></i></button>
+                    <button class="btn btn-sm btn-warning btnEditarOS" data-id="'.$value['id'].'" editarDev="'.$value['id'].'" title="Editar"><i class="fa fa-pencil"></i></button>
                     <button class="btn btn-sm btn-primary  btnPrintOS" idos="'.$value['id'].'" href="#" title="Generar PDF "><i class="fa fa-file-pdf-o"></i></button>
                     <button class="btn btn-sm btn-danger  btnBorrarDev" href="#" idDev="'.$value['id'].'"  title="Eliminar"><i class="fa fa-eraser"></i></button>
                  </td>

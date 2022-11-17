@@ -153,11 +153,12 @@ class ControladorUsuarios{
                 
                 /*$encriptar = crypt($_POST["nuevoPassword"], '$2a$07$asxx54ahjppf45sd87a5a4dDDGsystemdev$');*/
                 
-                $datos = array("nombre" => $_POST["nuevoNombre"],
-					           "usuario" => $_POST["nuevoUsuario"],
-					           "password" => $_POST["nuevoPassword"],  /* $encriptar */
-					           "perfil" => $_POST["nuevoPerfil"],
-					           "foto"=>$ruta);
+                $datos = array("nombre" 	=> $_POST["nuevoNombre"],
+					           "usuario" 	=> $_POST["nuevoUsuario"],
+					           "password" 	=> $_POST["nuevoPassword"],  /* $encriptar */
+					           "perfil" 	=> $_POST["nuevoPerfil"],
+					           "user" 		=> $_POST["nvoNumTecnico"],
+					           "foto"		=> $ruta);
                 
                 $respuesta = ModeloUsuarios::mdlIngresarUsuario($tabla, $datos);
 
@@ -382,11 +383,12 @@ class ControladorUsuarios{
 					/*$encriptar = $_POST["passwordActual"];*/
 				}
 
-				$datos = array("nombre" => $_POST["editarNombre"],
-							   "usuario" => $_POST["editarUsuario"],
-							   "password" => $password,     /*$encriptar,*/
-							   "perfil" => $_POST["editarPerfil"],
-							   "foto" => $ruta);
+				$datos = array("nombre" 	=> $_POST["editarNombre"],
+							   "usuario" 	=> $_POST["editarUsuario"],
+							   "password" 	=> $password,     /*$encriptar,*/
+							   "perfil" 	=> $_POST["editarPerfil"],
+							   "user" 		=> $_POST["editarNumTecnico"],
+							   "foto" 		=> $ruta);
 
 				$respuesta = ModeloUsuarios::mdlEditarUsuario($tabla, $datos);
 

@@ -422,6 +422,192 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
   </div> <!-- fin del modal-lg -->
 </div> <!-- fin del modal  <div class="form-row"></div>   -->
 
+<!-- ========================================================================================-->
+<!-- ========================== MODAL AGREGAR OS ====================================-->
+<!-- ========================================================================================-->
+<div class="modal fade" id="modalEditarOS" data-backdrop="static" data-keyboard="false">
+
+  <div class="modal-dialog modal-lg">
+
+    <div class="modal-content ui-widget-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header colorbackModal px-2 py-1">
+        <h5 class="modal-title ">Editar O.S.</h5>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <form role="form" method="POST" id="formularioEditarOS" >
+
+        <!-- Modal body -->
+        <div class="modal-body pb-1">
+
+          <div class="card card-info">
+
+            <div class="card-body">
+
+              <div class="form-row pt-0 pb-0">
+
+              <div class="form-group col-md-4">
+                  <label for="edittecnico"><i class="fa fa-male"></i> Técnico <span class="text-danger">*</span> </label>
+                  <select class="form-control form-control-sm" name="edittecnico" id="edittecnico" tabindex="1" required>
+                  <option value="">Selecione Técnico....</option>
+                    <?php
+                    $item = 'status';
+                    $valor = 1;
+                    $tecnicos = ControladorTecnicos::ctrMostrarTecnicos($item, $valor);
+                    foreach ($tecnicos as $key => $value) {
+                      echo '<option value="' . $value["id"] . '">' . $value["nombre"] . '</option>';
+                    }
+                    ?>
+                  </select>
+                </div>
+
+                  <!-- data-date-end-date=no puede seleccionar una fecha posterior a la actual -->
+                <div class="form-group col-md-3">
+                  <label for=""><i class="fa fa-hospital-o"></i> Almacen <span class="text-danger">*</span> </label>
+                  <select class="form-control form-control-sm" name="editAlmacenOS" id="editAlmacenOS" tabindex="2" required>
+                  <option value="">Selecione Almacen....</option>
+                    <?php
+                    $item = null;
+                    $valor = null;
+                    $almacenes = ControladorAlmacenes::ctrMostrarAlmacenes($item, $valor);
+                    foreach ($almacenes as $key => $value) {
+                      echo '<option value="' . $value["id"].'">' . $value["nombre"] . '</option>';
+                    }
+                    ?>
+                  </select>
+                  <input type="hidden" name="idDeUsuario" value="<?php echo $_SESSION['id']; ?>">
+                  <input type="hidden" name="iduser" id="editiduser" value="<?php echo $_SESSION['user']; ?>">
+                  <input type="hidden" name="id" id="editid" value="">
+                </div>
+
+                <div class="form-group col-md-2">
+                  <label class="control-label"><i class="fa fa-phone-square"></i> Teléfono <span class="text-danger">*</span></label>
+                  <input type="number" class="form-control form-control-sm" name="editnumtelefono" id="editnumtelefono" value="" step="any" placeholder="" tabindex="3" min="0000000001" max="9999999999" title="Numero de Teléfono 10 dig." required>
+                </div>
+
+                <div class="form-group col-md-3">
+                  <label class="control-label"><i class="fa fa-calendar"></i> Fecha Inst: <span class="text-danger">*</span></label>
+                  <input type="date" class="form-control form-control-sm" name="editfechainst" id="editfechainst" value="<?= $fechaHoy ?>" placeholder="" tabindex="4" title="Fecha Instalación" required>
+                </div>
+
+              </div> <!-- FIN DEL FORM-ROW -->
+
+              <div class="form-row pt-0 pb-0">
+
+                <div class="form-group col-md-3">
+                  <label class="control-label"><i class="fa fa-sort-numeric-asc"></i> No. OS: <span class="text-danger">*</span></label>
+                  <input type="number" class="form-control form-control-sm" name="editnumeroos" id="editnumeroos" value="" tabindex="5" title="Numero de Orden de Servicio" required>
+                </div>
+
+                <div class="form-group col-md-2">
+                  <label class="control-label"><i class="fa fa-check"></i>Pisaplex</label>
+                  <input type="number" class="form-control form-control-sm" name="editnumpisaplex" id="editnumpisaplex" value="" step="any" placeholder="" tabindex="6" title="Numero Pisaplex">
+                </div>
+
+                <div class="form-group col-md-2">
+                  <label class="control-label"><i class="fa fa-asterisk"></i> Tipo:</label>
+                  <input type="text" class="form-control form-control-sm" name="editnumtipo" id="editnumtipo" value="" step="any" placeholder="" tabindex="7" title="Numero Tipo">
+                </div>
+
+                <div class="form-group col-md-5">
+                  <label class="control-label"><i class="fa fa-check-square-o"></i> Nombre cliente: <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control form-control-sm" name="editnombrecontrato" id="editnombrecontrato" value="" tabindex="8" accesskey="8" title="Nombre cliente" placeholder="Alt-8" pattern="^[A-Za-zÑñÁáÉéÍíÓóÚúÜü\s]+$" required>
+                </div>
+              </div> <!-- FIN DEL FORM-ROW -->
+
+              <div class="form-row pt-0 pb-0">
+                <div class="form-group col-md-8">
+                  <label class="control-label"><i class="fa fa-home"></i> Dirección: <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control form-control-sm" name="editdireccionos" id="editdireccionos" value="" step="any" placeholder="" tabindex="9" title="Dirección de la Instalación" required>
+                </div>
+                <div class="form-group col-md-4">
+                  <label class="control-label"><i class="fa fa-road"></i> Colonia: <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control form-control-sm" name="editcoloniaos" id="editcoloniaos" value="" placeholder="" tabindex="10" title="Colonia" required>
+                </div>
+              </div>
+
+              <div class="form-row pt-0 pb-0">
+                <div class="form-group col-md-2">
+                  <label class="control-label"><i class="fa fa-map-marker"></i> Distrito:</label>
+                  <input type="text" class="form-control form-control-sm" name="editdistritoos" id="editdistritoos" value="" placeholder="" tabindex="11" title="Distrito">
+                </div>
+
+                <div class="form-group col-md-2">
+                  <label class="control-label"><i class="fa fa-flag-checkered"></i> Terminal:</label>
+                  <input type="text" class="form-control form-control-sm" name="editterminalos" id="editterminalos" value="" placeholder="" tabindex="12" title="Numero Tipo">
+                </div>
+                <div class="form-group col-md-2">
+                  <label class="control-label"><i class="fa fa-ship"></i> Puerto:</label>
+                  <input type="text" class="form-control form-control-sm" name="editpuertoos" id="editpuertoos" value="" placeholder="" tabindex="13" title="Numero Tipo">
+                </div>
+                <div class="form-group col-md-6">
+                  <label class="control-label"><i class="fa fa-openid"></i> Nombre quien recibe: <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control form-control-sm" name="editnombrefirma" id="editnombrefirma" value="" placeholder="" tabindex="14" title="Numero Tipo" required>
+                </div>
+              </div>
+              
+              <div class="form-row pt-0 mb-4 text-center">
+                <div class="col-md-1">
+                  <label class="control-label mr-0">Firma:</label>
+                </div>
+                <div class="d-block col-xs-12 col-md-11 mb-lg-0" id="editsignatureparent">
+                  
+                </div>
+                <button type="button" class="btn btn-secondary btn-sm btn-block repetirfirma"> Repetir firma</button>
+              </div>
+              
+              <div class="form-row pt-0 mb-2">
+                <div class="col-md-1">
+                  <label class="control-label mr-0">Obs:</label>
+                </div>
+                <div class="d-block col-xs-12 col-md-11 mb-lg-0">
+                  <input type="text" class="form-control form-control-sm" name="editobserva" id="editobserva" placeholder="Observaciones OS" tabindex="15" title="">
+                </div>
+              </div>
+
+              <div class="form-row pt-0 pb-0" id="editdatosmodem">
+                <!--tmb invisible -->
+
+                <div class="col-md-6">
+                  <input type="text" class="form-control form-control-sm" name="editnumeroSerie" id="editnumeroSerie" value="" placeholder="Serie No." title="No. de Serie">
+                </div>
+
+                <div class="col-md-6">
+                  <input type="text" class="form-control form-control-sm" name="editalfanumerico" id="editalfanumerico" value="" placeholder="alfanumerico" title="">
+                </div>
+
+              </div> <!-- FIN DEL FORM-ROW -->
+
+              <div class="form-row pt-0 pb-0">
+                <div class="col-md-12 alert-danger d-none" style="height:25px;" id="mensajerror"></div>
+              </div> <!-- FIN DEL FORM-ROW -->
+
+              <div class="dropdown-divider"></div>
+
+              <div class="respuesta"></div>
+
+
+            </div>
+            <!--Fin del card-body -->
+          </div>
+          <!--Fin del card card-info -->
+
+        </div>
+        <!--fin del modal-body -->
+
+        <!-- Modal footer -->
+        <div class="modal-footer p-1 colorbackModal">
+          <button type="button" class="btn btn-sm btn-primary float-left" data-dismiss="modal"><i class="fa fa-reply"></i> Salir</button>
+          <button type="submit" class="btn btn-sm btn-success" id="btnEditarOS" tabindex="25"><i class="fa fa-save"></i> Actualizar</button>
+        </div> <!-- fin Modal footer -->
+
+      </form> <!-- fin del form -->
+    </div> <!-- fin del modal-content -->
+  </div> <!-- fin del modal-lg -->
+</div> <!-- fin del modal  <div class="form-row"></div>   -->
+
 <script defer src="vistas/js/funciones.js?v=13102022"></script>
 <script defer src="extensiones/plugins/jsignature/jSignature.js?v=01072022"></script>
 <script defer src="extensiones/plugins/jsignature/jSignature.CompressorSVG.js"></script>
