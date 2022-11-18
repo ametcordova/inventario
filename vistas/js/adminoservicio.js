@@ -1,6 +1,7 @@
 //$( "#modalAgregarOS" ).draggable();
 var item;
 var data;
+var modalEvento='';
 var arrayProductosOS=new Array();
 var renglonesOS=cantSalidaOS=0;
 var numserie=alfanumerico='';
@@ -13,6 +14,27 @@ const { fromEvent } = rxjs;
 
 
 //Rx.Observable.fromEvent(document.getElementById("DatatableOS"), 'click').subscribe(() => console.log('Haz hecho click!'));
+
+$(function(){
+/**********************************************
+ *  FIRMA DEL CONTRATANTE
+ **********************************************/
+ $("#signatureparent, #editsignatureparent").jSignature({
+  // line color
+  color:"black",
+
+  // line width
+  lineWidth:3,
+
+ // width/height of signature pad
+  width:480,
+  height:130,
+
+  // Format bootstrap 4
+  cssclass: "bg-light border",
+ 
+});
+});
 
 function init(){
 
@@ -245,7 +267,7 @@ $('#DatatableOS tbody').on( 'click', 'button.btnEstado', function (event) {
 
   if(st==0){    //si OS esta facturado
       swal({
-      title: "¿Cambiar estatus de Facturado a OS?",
+      title: "¿Cambiar estatus de Facturado de una OS?",
       text: "¡Si no está seguro, puede Cancelar la acción!",
       icon: "warning",
       buttons: ["Cancelar", "Sí, Cambiar"],
@@ -740,38 +762,11 @@ function printselec(){
   }
 }
 
-
-/**********************************************
- *  FIRMA DEL CONTRATANTE
- **********************************************/
- $("#signatureparent, #editsignatureparent").jSignature({
-   // line color
-   color:"black",
-
-   // line width
-   lineWidth:3,
-
-  // width/height of signature pad
-   width:380,
-   height:120,
-
-   // Format bootstrap 4
-   cssclass: "bg-light border",
-  
- });
-/**********************************************
- *  REPETIR FIRMA DEL CONTRATANTE
- **********************************************/
-$(".repetirfirma").click(()=>{
-  $("#signatureparent, #editsignatureparent").jSignature('reset')
-});
-
-
 /* ====================EDITAR OS ====================*/
 $('#DatatableOS tbody').on( 'click', '.btnEditarOS', function (event) {
   let elemento = this;
   let id = elemento.getAttribute('data-id');
-  console.log(id);
+  //console.log(id);
   obtenerDatosOS(id)
 
 });
@@ -787,7 +782,7 @@ function obtenerDatosOS(id){
     .then(res => {
       if(res.status==200 ) {
 
-        html=`OS Facturado, ya no
+        html=`OS ya esta Facturado, no
         es posible modificarlo.
         Consulte a Soporte Técnico.`;
           if (res.data.factura != null){
@@ -800,8 +795,7 @@ function obtenerDatosOS(id){
             })  //fin .then
             return;
           }
-          //console.log(res.data);
-          //console.log('factura es null')
+          //Llenar formulario con los datos para modificarlo
           fillform(res.data);
 
         //var firma=res.data['firma']; 
@@ -833,7 +827,14 @@ function fillform(datosOS){
   $("input[name=editfechainst]").val(datosOS.fecha_instalacion);
   $("input[name=editnumeroos]").val(datosOS.ordenservicio);
   $("input[name=editnombrecontrato]").val(datosOS.nombrecontrato);
-  $("#editobserva").val(datosOS.observaciones);  
+  $("input[name=editobservaos]").val(datosOS.observaciones);
+
+  // Sets data
+  if(datosOS.firma!='Sin Firma'){
+    $("#editsignatureparent").jSignature('setData', datosOS.firma);
+  }
+  
+
   $("#editAlmacenOS, #edittecnico").prop('disabled',true);
   datosinstalacion(json_datos_inst);
   //let json_datos_mat = JSON.parse(res.data['datos_material']);  
@@ -843,7 +844,7 @@ function fillform(datosOS){
 
 function datosinstalacion(json_datos_inst){
   $("#editnumpisaplex").val(json_datos_inst[0].numpisaplex);
-  $("#editnumtipo").val(json_datos_inst[0].tipo);
+  $("#editnumtipo").val(json_datos_inst[0].numtipo);
   $("#editdireccionos").val(json_datos_inst[0].direccionos);
   $("#editcoloniaos").val(json_datos_inst[0].coloniaos);
   $("#editdistritoos").val(json_datos_inst[0].distritoos);
@@ -860,8 +861,8 @@ function datosinstalacion(json_datos_inst){
 $("body").on("submit", "#formularioEditarOS", function( event ) {	
   event.preventDefault();
   event.stopPropagation();	
-  let mensajeaxios='Registro Guardado';
-  let tipoerror=1;
+  let mensajeaxios='Registro Actualizado';
+  let tipomsg=1;
   let tiempo=2;
   
     swal({
@@ -871,11 +872,71 @@ $("body").on("submit", "#formularioEditarOS", function( event ) {
         buttons: ["Cancelar", "Sí, Guardar"],
         dangerMode: true,
       })
+
       .then((aceptado) => {
       if (aceptado) {
           let formData = new FormData($("#formularioEditarOS")[0]);
-          for (var pair of formData.entries()){console.log(pair[0]+ ', ' + pair[1]);}
-          return;
+          id=$("#editid").val();
+          saveform(formData);
+          saveimage(id);
+
+
+          // if($("#editsignatureparent").jSignature("isModified")){
+          //   //let firma = $("#signatureparent").jSignature("getData", "image/svg+xml");
+          //   let datapair = $("#editsignatureparent").jSignature("getData", "image");
+          //   let firma='data:'+ datapair[0]+","+datapair[1];
+          //   //console.log(firma);
+          //   formData.append("data1", datapair[0]);
+          //   formData.append("data2", datapair[1]);
+          //   //console.log('si está modificado')
+          // }else{
+          //   let datapair = $("#editsignatureparent").jSignature("getData", "image");
+          //   let firma='data:'+ datapair[0]+","+datapair[1];
+          //   //console.log(firma);
+          //   formData.append("data1", datapair[0]);
+          //   formData.append("data2", datapair[1]);
+          // }
+
+          // //for (var pair of formData.entries()){console.log(pair[0]+ ', ' + pair[1]);}
+
+          //  axios({ 
+          //    method  : 'post', 
+          //    url : 'ajax/adminoservicio.ajax.php?op=ActualizarOS', 
+          //    data : formData,
+          //    headers: {
+          //      'Content-Type': 'multipart/form-data'
+          //    }
+          //  }) 
+
+          // // fetch('ajax/adminoservicio.ajax.php?op=ActualizarOS', {
+          // //   method: "POST",
+          // //   body: JSON.stringify(),
+          // //   headers: {
+          // //     'Content-Type': 'multipart/form-data'
+          // //   }data:image/png;base64,
+          // // })
+          
+          // .then((response)=>{  
+          //   console.log(response); 
+          //   if(response.status==200) {
+          //   //if(response.data.status==200) {
+          //       mensajeaxios=response.data.msg
+          //       tipomsg=3;
+          //       tiempo=4;
+              
+          //     $('#DatatableOS').DataTable().ajax.reload(null, false);
+          //     modalEvento.hide();
+          //     $('#modalEditarOS').modal('hide')
+          //     mensajenotie(tipomsg, `${mensajeaxios}`, 'top', tiempo);
+
+          //   }else{
+          //     mensajenotie('Error', 'Hubo problemas al guardar OS!', 'bottom', 3);
+          //   }          
+          //   //console.log(res); 
+          // })
+
+          // .catch((err) => {throw err});   //          .catch(function (error) {console.log(error.toJSON())})
+
       }else{
          return false;
       }
@@ -884,6 +945,104 @@ $("body").on("submit", "#formularioEditarOS", function( event ) {
    });
 
 /*======================================================================*/
+function saveform(formData){
+  axios({ 
+    method  : 'post', 
+    url : 'ajax/adminoservicio.ajax.php?op=ActualizarOS', 
+    data : formData,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  }) 
+
+  .then((response)=>{  
+   console.log(response); 
+   if(response.status==200) {
+   //if(response.data.status==200) {
+       mensajeaxios=response.data.msg
+       tipomsg=3;
+       tiempo=4;
+     
+     $('#DatatableOS').DataTable().ajax.reload(null, false);
+     modalEvento.hide();
+     $('#modalEditarOS').modal('hide')
+     mensajenotie(tipomsg, `${mensajeaxios}`, 'top', tiempo);
+
+   }else{
+     mensajenotie('Error', 'Hubo problemas al guardar OS!', 'bottom', 3);
+   }          
+   //console.log(res); 
+ })
+
+ .catch((err) => {throw err});   //          .catch(function (error) {console.log(error.toJSON())})
+
+};
+
+function saveimage(id){
+  let formData = new FormData();
+
+  if($("#editsignatureparent").jSignature("isModified")){
+    //let firma = $("#signatureparent").jSignature("getData", "image/svg+xml");
+    let datapair = $("#editsignatureparent").jSignature("getData", "image");
+    //let firma='data:'+ datapair[0]+","+datapair[1];
+    //console.log(firma);
+    formData.append("data1", datapair[0]);
+    formData.append("data2", datapair[1]);
+    //console.log('si está modificado')
+  }else{
+    let datapair = $("#editsignatureparent").jSignature("getData", "image");
+    let firma='data:'+ datapair[0]+","+datapair[1];
+    //console.log(firma);
+    formData.append("data1", datapair[0]);
+    formData.append("data2", datapair[1]);
+  }
+  formData.append("id", id);
+
+  //for (var pair of formData.entries()){console.log(pair[0]+ ', ' + pair[1]);}
+
+  $.ajax({
+    contenType: false,
+    processData: false,
+    type: "POST",
+    data: formData,
+    url: 'ajax/adminoservicio.ajax.php?op=ActualizaImagen',
+    async: false,
+    error: function(request){
+      console.log(request);
+    },
+    success: function(data){
+      console.log(data)
+    }
+  })
+
+  //  axios({ 
+  //    method  : 'post', 
+  //    url : 'ajax/adminoservicio.ajax.php?op=ActualizaImagen', 
+  //    data : formData,
+  //  }) 
+
+  // .then((response)=>{  
+  //   console.log(response); 
+  //   if(response.status==200) {
+  //   //if(response.data.status==200) {
+  //       mensajeaxios=response.data.msg
+  //       tipomsg=3;
+  //       tiempo=4;
+      
+  //     $('#DatatableOS').DataTable().ajax.reload(null, false);
+  //     modalEvento.hide();
+  //     $('#modalEditarOS').modal('hide')
+  //     mensajenotie(tipomsg, `${mensajeaxios}`, 'top', tiempo);
+
+  //   }else{
+  //     mensajenotie('Error', 'Hubo problemas al guardar OS!', 'bottom', 3);
+  //   }          
+  //   //console.log(res); 
+  // })
+
+  // .catch((err) => {throw err});   
+
+}
 
 /* *****************AL ABRIR EL MODAL ************************************** */
 $('#modalAgregarOS').on('shown.bs.modal', function () {
@@ -891,7 +1050,19 @@ $('#modalAgregarOS').on('shown.bs.modal', function () {
   $("#nvotecnico").val(iduser);
 })
 /*==============================================================================*/
+/*================ AL SALIR DEL MODAL RESETEAR FORMULARIO ==================*/
+$("#modalEditarOS").on('hidden.bs.modal', ()=> {
+  // Destroy the signature pad
+  $("#editsignatureparent").jSignature('reset');
+});
 
+
+/**********************************************
+*  REPETIR FIRMA DEL CONTRATANTE
+**********************************************/
+$(".repetirfirma").click(()=>{
+ $("#signatureparent, #editsignatureparent").jSignature('reset')
+});
 /********************************************************** */
 // function interval para recargar el datatable cada 60 seg.
 // ver: https://datatables.net/reference/api/ajax.reload()
@@ -912,3 +1083,14 @@ setInterval( ()=> {
 
 
 init();
+
+
+// <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+// <html><head>
+// <title>403 Forbidden</title>
+// </head><body>
+// <h1>Forbidden</h1>
+// <p>You don't have permission to access this resource.</p>
+// <p>Additionally, a 403 Forbidden
+// error was encountered while trying to use an ErrorDocument to handle the request.</p>
+// </body></html>

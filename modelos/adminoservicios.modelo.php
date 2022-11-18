@@ -37,6 +37,56 @@ static public function mdlGuardarOS($tabla, $datos, $productos, $cantidades){
   }
 }
 
+/*=============================================
+	REGISTRO ORDEN DE SERVICIO
+=============================================*/
+static public function mdlActualizarOS($tabla, $datos){
+	
+	try {      
+			$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET ordenservicio=:ordenservicio, telefono=:telefono, fecha_instalacion=:fecha_instalacion, nombrecontrato=:nombrecontrato, datos_instalacion=:datos_instalacion, firma=:firma, observaciones=:observaciones, ultusuario=:ultusuario WHERE id=:id");
+			  
+			  $stmt->bindParam(":id", 				$datos["id"], PDO::PARAM_INT);
+			  $stmt->bindParam(":ordenservicio", 	$datos["ordenservicio"], PDO::PARAM_STR);
+			  $stmt->bindParam(":telefono", 		$datos["telefono"], PDO::PARAM_STR);
+			  $stmt->bindParam(":fecha_instalacion",$datos["fecha_instalacion"], PDO::PARAM_STR);
+			  $stmt->bindParam(":nombrecontrato", 	$datos["nombrecontrato"], PDO::PARAM_STR);
+			  $stmt->bindParam(":datos_instalacion",$datos["datos_instalacion"], PDO::PARAM_STR);
+			  //$stmt->bindParam(":firma", 			$datos["firma"], PDO::PARAM_STR);
+			  $stmt->bindParam(":observaciones", 	$datos["observaciones"], PDO::PARAM_STR);
+			  $stmt->bindParam(":ultusuario",       $datos["ultusuario"], PDO::PARAM_INT);
+			  $stmt->execute();
+
+        if($stmt){
+          return "ok";
+        }else{
+          return "error";
+        }
+  } catch (Exception $e) {
+    echo "Failed: " . $e->getMessage();
+  }
+}
+
+/*=============================================
+	REGISTRO ORDEN DE SERVICIO
+=============================================*/
+static public function mdlActualizarImagen($tabla, $firma, $id){
+	
+	try {      
+			$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET firma=:firma WHERE id=:id");
+			  
+			  $stmt->bindParam(":id", 				$id, PDO::PARAM_INT);
+			  $stmt->bindParam(":firma", 			$firma, PDO::PARAM_STR);
+			  $stmt->execute();
+
+        if($stmt){
+          return "ok";
+        }else{
+          return "error";
+        }
+  } catch (Exception $e) {
+    echo "Failed: " . $e->getMessage();
+  }
+}
 
 /*=============================================
  UPDATE HIST_SALIDAS SEGUN ORDEN DE SERVICIO

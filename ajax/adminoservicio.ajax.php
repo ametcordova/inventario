@@ -102,7 +102,6 @@ switch ($_GET["op"]){
     
     break;
 
-
     case 'guardarOS':
 
         if(isset($_POST["idproducto"])){
@@ -171,6 +170,73 @@ switch ($_GET["op"]){
             echo json_encode($respuesta);
        }
     break;    
+
+
+    case 'ActualizarOS':
+
+        if(isset($_POST["id"])){
+
+            //$id_almacen=strstr($_POST['nuevoAlmacenOS'],'-',true);
+
+            $tabla="tabla_os";
+
+			$datos_inst_array = array(); //creamos un array para guardar los datos de la Inst. en el campo JSON
+			$datos_inst_array[]=array(
+				"numpisaplex"	=> $_POST["editnumpisaplex"],
+				"numtipo"		=> strtoupper($_POST["editnumtipo"]),
+				"direccionos"	=> strtoupper($_POST["editdireccionos"]),
+				"coloniaos"		=> strtoupper($_POST["editcoloniaos"]),
+				"distritoos"	=> strtoupper($_POST["editdistritoos"]),
+				"terminalos"	=> strtoupper($_POST["editterminalos"]),
+				"puertoos"		=> $_POST["editpuertoos"],
+				"nombrefirma"	=> strtoupper($_POST["editnombrefirma"]),
+				//"modemretirado"	=> $_POST["modemretirado"],
+				//"modemnumserie"	=> strtoupper($_POST["modemnumserie"]),
+				"numeroserie"	=> $_POST["editnumeroSerie"],
+				"alfanumerico"	=> strtoupper($_POST["editalfanumerico"])
+			);
+
+			//Creamos el JSON
+			$datos_instalacion=json_encode($datos_inst_array);
+			//$firma=empty($_POST["firma"])?'':$_POST["firma"];
+			$firma1=$_POST["data1"];
+			$firma2=$_POST["data2"];
+			$firma='data:'.$firma1.",".$firma2;
+			//echo $firma;
+			//exit;
+			$datos = array(
+				"id"				=>$_POST["id"],
+				"ordenservicio"		=>$_POST["editnumeroos"],
+				"telefono" 			=>$_POST["editnumtelefono"],
+				"fecha_instalacion"	=>$_POST["editfechainst"],
+				"nombrecontrato"	=>$_POST["editnombrecontrato"],
+				"datos_instalacion"	=>$datos_instalacion,
+				//"datos_material"	=>$datos_material,
+				//"firma"				=>$firma,
+				"observaciones"		=>$_POST["editobservaos"],
+				"ultusuario"		=>$_POST["idDeUsuario"]
+			);
+
+			$rspta = ControladorOServicios::ctrActualizarOS($tabla, $datos);
+			return $rspta;
+
+		}else{
+            $respuesta = array('idproducto' => $idproducto, 'error' => 'sindatos', 'status'=>http_response_code(400));		           
+            echo json_encode($respuesta);
+       }
+    break;    
+
+	case 'ActualizaImagen':
+		$tabla="tabla_os";
+		$firma1=$_POST["data1"];
+		$firma2=$_POST["data2"];
+		$id=$_POST["id"];
+		$firma='data:'.$firma1.",".$firma2;
+		$rspta = ControladorOServicios::ctrActualizarImagen($tabla, $firma, $id);
+		return $rspta;
+
+	break;
+
 
     case 'cambiarEstadoOS':
 		$POST = json_decode(file_get_contents('php://input'), true);

@@ -437,7 +437,7 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
 
-      <form role="form" method="POST" id="formularioEditarOS" >
+      <form role="form" method="POST" id="formularioEditarOS" enctype="multipart/form-data">
 
         <!-- Modal body -->
         <div class="modal-body pb-1">
@@ -548,22 +548,22 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                 </div>
               </div>
               
-              <div class="form-row pt-0 mb-4 text-center">
-                <div class="col-md-1">
-                  <label class="control-label mr-0">Firma:</label>
+              <!-- ********************** FIRMA ****************************** -->
+              <div class="form-row pt-2 mb-4 text-center" style="background-color:blanchedalmond;">
+                
+                <div class="col-md-12" id="editsignatureparent">
                 </div>
-                <div class="d-block col-xs-12 col-md-11 mb-lg-0" id="editsignatureparent">
-                  
-                </div>
+
                 <button type="button" class="btn btn-secondary btn-sm btn-block repetirfirma"> Repetir firma</button>
               </div>
-              
+              <!-- ********************** FIN FIRMA *************************** -->
+
               <div class="form-row pt-0 mb-2">
                 <div class="col-md-1">
                   <label class="control-label mr-0">Obs:</label>
                 </div>
                 <div class="d-block col-xs-12 col-md-11 mb-lg-0">
-                  <input type="text" class="form-control form-control-sm" name="editobserva" id="editobserva" placeholder="Observaciones OS" tabindex="15" title="">
+                  <input type="text" class="form-control form-control-sm" name="editobservaos" id="editobservaos" placeholder="Observaciones OS" tabindex="15" title="">
                 </div>
               </div>
 
@@ -606,10 +606,15 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
       </form> <!-- fin del form -->
     </div> <!-- fin del modal-content -->
   </div> <!-- fin del modal-lg -->
-</div> <!-- fin del modal  <div class="form-row"></div>   -->
+</div> <!-- fin del modal  <div class="form-row"></div>   <script defer src="extensiones/plugins/jsignature/jSignature.CompressorSVG.js"></script>-->
 
 <script defer src="vistas/js/funciones.js?v=13102022"></script>
-<script defer src="extensiones/plugins/jsignature/jSignature.js?v=01072022"></script>
-<script defer src="extensiones/plugins/jsignature/jSignature.CompressorSVG.js"></script>
-<script defer src="vistas/js/adminoservicio.js?v=15102022"></script>
+
+<script defer src="extensiones/plugins/jsignature/jSignature.js"></script>
+<script defer src="extensiones/plugins/jsignature/plugins/jSignature.CompressorBase30.js"></script>
+<script defer src="extensiones/plugins/jsignature/plugins/jSignature.CompressorSVG.js"></script>
+<script defer src="extensiones/plugins/jsignature/plugins/jSignature.UndoButton.js"></script> 
+<script defer src="extensiones/plugins/jsignature/plugins/signhere/jSignature.SignHere.js"></script> 
+
+<script defer src="vistas/js/adminoservicio.js?v=16102022"></script>
 

@@ -87,7 +87,7 @@ if ($file = fopen($file, 'r')){
     die();
 }
 
-set_time_limit(0);
+//set_time_limit(0);
 if(isset($_REQUEST['ruta'])){
     $file_path='../../ajax/salida/'.$_REQUEST['filename'];
 }else{

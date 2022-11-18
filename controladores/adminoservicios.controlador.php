@@ -18,6 +18,35 @@ static public function ctrGuardarOS($tabla, $datos, $productos, $cantidades){
 
 }
 
+/*=============================================
+ACTUALIZAR REGISTROS DE ORDENES DE SERVICIO
+=============================================*/
+static public function ctrActualizarOS($tabla, $datos){
+
+	$respuesta = ModeloOServicios::mdlActualizarOS($tabla, $datos);
+
+	if($respuesta=='ok'){
+		json_output(json_build(200, 'ok', 'OS Actualizado con éxito'));
+	}else{
+		json_output(json_build(400, null, 'Registro NO guardado'));
+	}
+
+}
+
+/*=============================================
+ACTUALIZAR REGISTROS DE ORDENES DE SERVICIO
+=============================================*/
+static public function ctrActualizarImagen($tabla, $firma, $id){
+
+	$respuesta = ModeloOServicios::mdlActualizarImagen($tabla, $firma, $id);
+
+	if($respuesta=='ok'){
+		json_output(json_build(200, 'ok', 'Imagen Actualizado con éxito'));
+	}else{
+		json_output(json_build(400, null, 'Registro NO guardado'));
+	}
+
+}
 
 /*=============================================
     LISTAR SERIES
