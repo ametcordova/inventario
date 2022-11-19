@@ -6,7 +6,8 @@
   .modal-body {
     max-height: calc(100vh - 212px);
     overflow-y: auto;
-  }
+   }
+   .kbw-signature { width: 500px; height: 200px; }
 </style>
 <script>
   //evitar que se desconecte.
@@ -437,7 +438,7 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
 
-      <form role="form" method="POST" id="formularioEditarOS" enctype="multipart/form-data">
+      <form role="form" method="POST" id="formularioEditarOS" >
 
         <!-- Modal body -->
         <div class="modal-body pb-1">
@@ -551,11 +552,11 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
               <!-- ********************** FIRMA ****************************** -->
               <div class="form-row pt-2 mb-4 text-center" style="background-color:blanchedalmond;">
                 
-                <div class="col-md-12" id="editsignatureparent">
-                </div>
+                <div id="signatureContainer"></div>
 
-                <button type="button" class="btn btn-secondary btn-sm btn-block repetirfirma"> Repetir firma</button>
+                <button type="button" class="btn btn-secondary btn-sm btn-block repetirfirma mt-2"> Repetir firma</button>
               </div>
+
               <!-- ********************** FIN FIRMA *************************** -->
 
               <div class="form-row pt-0 mb-2">
@@ -608,13 +609,12 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
   </div> <!-- fin del modal-lg -->
 </div> <!-- fin del modal  <div class="form-row"></div>   <script defer src="extensiones/plugins/jsignature/jSignature.CompressorSVG.js"></script>-->
 
-<script defer src="vistas/js/funciones.js?v=13102022"></script>
-
-<script defer src="extensiones/plugins/jsignature/jSignature.js"></script>
+<!-- 
+<script defer src="extensiones/plugins/jsignature/jSignature.js?v=01072022"></script>
 <script defer src="extensiones/plugins/jsignature/plugins/jSignature.CompressorBase30.js"></script>
 <script defer src="extensiones/plugins/jsignature/plugins/jSignature.CompressorSVG.js"></script>
 <script defer src="extensiones/plugins/jsignature/plugins/jSignature.UndoButton.js"></script> 
 <script defer src="extensiones/plugins/jsignature/plugins/signhere/jSignature.SignHere.js"></script> 
+ -->
 
-<script defer src="vistas/js/adminoservicio.js?v=16102022"></script>
 

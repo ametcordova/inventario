@@ -30,12 +30,12 @@
 
 <!-- REQUIRED SCRIPTS -->
 
-<!-- jQuery -->
-<script src="extensiones/plugins/jquery/jquery.min.js"></script>
+<!-- jQuery 
+<script src="extensiones/plugins/jquery/jquery.min.js"></script>-->
 
 <!-- Bootstrap 4 SE QUITO POR QUE NO SERVIA-->
 
-<script src="extensiones/plugins/jquery-ui-1.12.1/jquery-ui.js"></script>
+<!-- <script src="extensiones/plugins/jquery-ui-1.12.1/jquery-ui.js"></script>-->
 
 <!-- AdminLTE App -->
 <script src="extensiones/dist/js/adminlte.js"></script>
@@ -104,7 +104,11 @@
 <!-- Alertas ohSnap -->
 <script src="extensiones/plugins/ohSnap/ohsnap.js"></script>
 
-<script src="extensiones/plugins//waitme/waitMe.min.js"></script>
+<script src="extensiones/plugins/waitme/waitMe.min.js"></script>
+
+<script src="extensiones/plugins/Signature/js/jquery.signature.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
 
 <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/4.1.0/rx.all.js"></script> -->
 

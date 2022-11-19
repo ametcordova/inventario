@@ -51,7 +51,7 @@ static public function mdlActualizarOS($tabla, $datos){
 			  $stmt->bindParam(":fecha_instalacion",$datos["fecha_instalacion"], PDO::PARAM_STR);
 			  $stmt->bindParam(":nombrecontrato", 	$datos["nombrecontrato"], PDO::PARAM_STR);
 			  $stmt->bindParam(":datos_instalacion",$datos["datos_instalacion"], PDO::PARAM_STR);
-			  //$stmt->bindParam(":firma", 			$datos["firma"], PDO::PARAM_STR);
+			  $stmt->bindParam(":firma", 			$datos["firma"], PDO::PARAM_STR);
 			  $stmt->bindParam(":observaciones", 	$datos["observaciones"], PDO::PARAM_STR);
 			  $stmt->bindParam(":ultusuario",       $datos["ultusuario"], PDO::PARAM_INT);
 			  $stmt->execute();

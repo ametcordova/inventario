@@ -199,9 +199,7 @@ switch ($_GET["op"]){
 			//Creamos el JSON
 			$datos_instalacion=json_encode($datos_inst_array);
 			//$firma=empty($_POST["firma"])?'':$_POST["firma"];
-			$firma1=$_POST["data1"];
-			$firma2=$_POST["data2"];
-			$firma='data:'.$firma1.",".$firma2;
+			$firma=$_POST["firma"];
 			//echo $firma;
 			//exit;
 			$datos = array(
@@ -212,7 +210,7 @@ switch ($_GET["op"]){
 				"nombrecontrato"	=>$_POST["editnombrecontrato"],
 				"datos_instalacion"	=>$datos_instalacion,
 				//"datos_material"	=>$datos_material,
-				//"firma"				=>$firma,
+				"firma"				=>$firma,
 				"observaciones"		=>$_POST["editobservaos"],
 				"ultusuario"		=>$_POST["idDeUsuario"]
 			);
