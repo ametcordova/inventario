@@ -7,7 +7,7 @@
     max-height: calc(100vh - 212px);
     overflow-y: auto;
    }
-   .kbw-signature { width: 500px; height: 200px; }
+   .kbw-signature { width: 33rem; height: 180px; }
 </style>
 <script>
   //evitar que se desconecte.
@@ -278,17 +278,19 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                   <input type="text" class="form-control form-control-sm" name="nombrefirma" id="nombrefirma" value="" placeholder="" tabindex="14" title="Numero Tipo" required>
                 </div>
               </div>
-              <!--
-              <div class="form-row pt-0 mb-4 text-center">
-                <div class="col-md-1">
-                  <label class="control-label mr-0">Firma:</label>
+              
+              <!-- ********************** FIRMA ****************************** -->
+              <div class="form-row pt-1 text-center justify-content-center align-items-center" style="background-color:blanchedalmond; color:blue;">
+                <div class="col-md-12">
+                  <label class="control-label mr-0">Firma de conformidad:</label>
                 </div>
-                <div class="d-block col-xs-12 col-md-11 mb-lg-0" id="signatureparent">
-                  
-                </div>
-                <button type="button" class="btn btn-secondary btn-sm btn-block repetirfirma"> Repetir firma</button>
+
+                <div id="signature"></div>
+
+                <button type="button" class="btn btn-secondary btn-sm btn-block repetirfirma mt-2"> Repetir firma</button>
               </div>
-              -->
+              <!-- ********************** FIN FIRMA ****************************** -->
+
               <div class="form-row pt-0 mb-2">
                 <div class="col-md-1">
                   <label class="control-label mr-0">Obs:</label>
@@ -550,13 +552,12 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
               </div>
               
               <!-- ********************** FIRMA ****************************** -->
-              <div class="form-row pt-2 mb-4 text-center" style="background-color:blanchedalmond;">
-                
+              <div class="form-row pt-2 mb-4 text-center justify-content-center align-items-center" style="background-color:blanchedalmond;">
+
                 <div id="signatureContainer"></div>
 
-                <button type="button" class="btn btn-secondary btn-sm btn-block repetirfirma mt-2"> Repetir firma</button>
+                <button type="button" class="btn btn-info btn-sm btn-block text-bold repetirfirma mt-2"> Repetir / Borrar firma</button>
               </div>
-
               <!-- ********************** FIN FIRMA *************************** -->
 
               <div class="form-row pt-0 mb-2">
@@ -608,13 +609,3 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
     </div> <!-- fin del modal-content -->
   </div> <!-- fin del modal-lg -->
 </div> <!-- fin del modal  <div class="form-row"></div>   <script defer src="extensiones/plugins/jsignature/jSignature.CompressorSVG.js"></script>-->
-
-<!-- 
-<script defer src="extensiones/plugins/jsignature/jSignature.js?v=01072022"></script>
-<script defer src="extensiones/plugins/jsignature/plugins/jSignature.CompressorBase30.js"></script>
-<script defer src="extensiones/plugins/jsignature/plugins/jSignature.CompressorSVG.js"></script>
-<script defer src="extensiones/plugins/jsignature/plugins/jSignature.UndoButton.js"></script> 
-<script defer src="extensiones/plugins/jsignature/plugins/signhere/jSignature.SignHere.js"></script> 
- -->
-
-

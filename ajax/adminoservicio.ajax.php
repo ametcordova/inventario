@@ -155,7 +155,6 @@ switch ($_GET["op"]){
 				"datos_instalacion"	=>$datos_instalacion,
 				"datos_material"	=>$datos_material,
 				"firma"				=>$firma,
-				//"firma"				=>$archivo,
 				"observaciones"		=>$_POST["observacionesos"],
 				"ultusuario"		=>$_POST["idDeUsuario"]
 			);

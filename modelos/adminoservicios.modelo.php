@@ -93,13 +93,13 @@ static public function mdlActualizarImagen($tabla, $firma, $id){
 =============================================*/
 static public function mdlActualizarTransito($tabla, $datos, $productos, $cantidades){
 	$cant=0;
-	$entra=0;
+	//$entra=0;
 	try {      
 
 		$contador = count($productos);    //CUANTOS PRODUCTOS VIENEN PARA EL FOR 
 		//ACTUALIZA HIST_SALIDAS
 		for($i=0;$i<$contador;$i++) {
-				
+			//MUESTRA TODOS LOS REGISTROS CON EL PROD. A ACTUALIZAR EXISTENCIAS
 			$sql=Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE id_producto = :id_producto AND id_tecnico=:id_tecnico AND id_almacen=:id_almacen AND id_tipomov>0 AND disponible>0 ORDER BY fecha_salida ASC");
 			$sql->bindParam(":id_producto",$productos[$i], PDO::PARAM_INT);
 			$sql->bindParam(":id_tecnico", $datos["id_tecnico"], PDO::PARAM_INT);
@@ -115,19 +115,19 @@ static public function mdlActualizarTransito($tabla, $datos, $productos, $cantid
 					$id=$value['id']; $disponible=(float)$value['disponible'];
 
 					if($disponible===$cant){        //Disponible es igual que la cant que sale
-						$rsp=actualizaDataOS($tabla, $productos[$i], $cant, $datos["id_tecnico"],$datos["id_almacen"], $datos["ultusuario"], $id, $disponible);
-						$entra+=1;
+						$rsp=actualizaDataOS($tabla, $cant, $datos["ultusuario"], $id, $disponible);
+						//$entra+=1;
 						break 1;	//SALE DEL FOREACH
 					}elseif($disponible>$cant){        //Disponible es Mayor que la cant que sale
-						$rsp=actualizaDataOS($tabla, $productos[$i], $cant, $datos["id_tecnico"],$datos["id_almacen"], $datos["ultusuario"], $id, $disponible);
-						$entra+=2;
+						$rsp=actualizaDataOS($tabla, $cant, $datos["ultusuario"], $id, $disponible);
+						//$entra+=2;
 						break 1;	//SALE DEL FOREACH
 					}elseif($disponible<$cant){        //Disponible es Menor que la cant que sale
-						$rsp=actualizaDataOS($tabla, $productos[$i], $cant, $datos["id_tecnico"], $datos["id_almacen"],$datos["ultusuario"], $id, $disponible);
+						$rsp=actualizaDataOS($tabla, $cant, $datos["ultusuario"], $id, $disponible);
 						$cant=$rsp;
-						$entra+=3;
+						//$entra+=3;
 					}else{
-						$entra+=4;
+						//$entra+=4;
 					}
 
 				}	//FIN DEL FOREACH
@@ -381,7 +381,7 @@ static Public function mdlGetDataOServicios($tabla, $campo, $valor, $status){
 /********************************************************************************* */
 // FUNCION QUE REALIZA LA ACTUALIZACION DE LA CANT DISPONIBLE EN EL HIST_SALIDAS
 /********************************************************************************* */
-function actualizaDataOS($tabla, $id_producto, $cant, $id_tecnico, $id_almacen, $ultusuario, $id, $disponible){
+function actualizaDataOS($tabla, $cant, $ultusuario, $id, $disponible){
 	$restadisp=0;
 	try {
 		$query=Conexion::conectar()->prepare("UPDATE $tabla SET disponible=disponible-(:disponible), ultusuario=:ultusuario 
@@ -404,9 +404,6 @@ function actualizaDataOS($tabla, $id_producto, $cant, $id_tecnico, $id_almacen, 
 		};
 
 		$query->bindParam(":id"		   ,$id, PDO::PARAM_INT);
-		// $stmt->bindParam(":id_producto",$id_producto, PDO::PARAM_INT);
-		// $stmt->bindParam(":id_tecnico", $id_tecnico, PDO::PARAM_INT);
-		// $stmt->bindParam(":id_almacen", $id_almacen, PDO::PARAM_INT);
 		$query->bindParam(":disponible", $restadisp, PDO::PARAM_STR);
 		$query->bindParam(":ultusuario", $ultusuario, PDO::PARAM_INT);
 

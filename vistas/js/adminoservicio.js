@@ -10,16 +10,15 @@ var idsfacturas=new Array();
 var FechDev1;
 var FechDev2;
 //var sig=$('#signatureContainer').signature();
-var sig=$('#signatureContainer').signature({ 
+var sig=$('#signature, #signatureContainer').signature({ 
   background: '#ffffff', // Colour of the background 
   color: 'blue', // Colour of the signature 
   thickness: 2, // Thickness of the lines 
-  guideline: false, // Add a guide line or not? 
-  guidelineColor: '#a0a0a0', // Guide line colour 
+  guideline: true, // Add a guide line or not? 
+  guidelineColor: 'black', // Guide line colour 
   guidelineOffset: 25, // Guide line offset from the bottom 
   guidelineIndent: 10, // Guide line indent from the edges 
-  // Error message when no canvas 
-  notAvailable: 'Su browser doesn\'t support signing', 
+  notAvailable: 'Su browser doesn\'t support signing', // Error message when no canvas 
   scale: 1, // A scaling factor for rendering the signature (only applies to redraws). 
   syncField: null, // Selector for synchronised text field 
   syncFormat: 'JSON', // The output respresentation: 'JSON' (default), 'SVG', 'PNG', 'JPEG' 
@@ -30,9 +29,9 @@ const { fromEvent } = rxjs;
 //$("#msgsaveok").addClass("d-none");
 
 //Rx.Observable.fromEvent(document.getElementById("DatatableOS"), 'click').subscribe(() => console.log('Haz hecho click!'));
-$(function(){
-  $.extend($.kbw.signature.options, {guideline: true}); 
-});
+// $(function(){
+//   $.extend($.kbw.signature.options, {guideline: true}); 
+// });
 
 function init(){
 
@@ -344,7 +343,6 @@ $('#DatatableOS tbody').on( 'click', 'button.btnEstado', function (event) {
   }
 });
 
-
 /****************************************************************** */
 // DESELECCIONA ALMACEN PARA EVITAR CAMBIARLO
 $("#nuevoAlmacenOS").change(function(){
@@ -436,7 +434,6 @@ $("#selecProductoOS").change(function(event){
     idproducto=idproducto.trim();
     let largo=idproducto.length;
     //console.log('Largo idproducto',largo, idproducto);
-    
 
     //SEPARA EL IDENT PARA SABER SI ES MODEM
     let conserie= cadena.substr(largo+1, cadena.indexOf('-')-1);
@@ -517,8 +514,6 @@ $("#agregarProductoOS").click(function(event){
       arrayProductosOS.push(id_producto);
       addProductosSalida(id_producto, descripcion, cantidad, conserie, numserie, alfanumerico);
     }else{
-      //mensajedeerror();
-      console.log('si encontrado')
       inicializa(1);
     }
   
@@ -589,6 +584,12 @@ $("body").on("submit", "#formularioAgregaOS", function( event ) {
   var mensajeaxios='Registro Guardado';
   var tipoerror=1;
   var tiempo=2;
+  if($('#signature').signature('isEmpty')){
+    var firma='Sin Firma';
+  }else{
+    var firma=$('#signature').signature('toJSON');
+    //var firma=sig.signature('toJSON');
+  } 
   
     swal({
         title: "¿Está seguro de Guardar OS?",
@@ -600,14 +601,13 @@ $("body").on("submit", "#formularioAgregaOS", function( event ) {
       .then((aceptado) => {
       if (aceptado) {
           let formData = new FormData($("#formularioAgregaOS")[0]);
-  
-          //for (var pair of formData.entries()){console.log(pair[0]+ ', ' + pair[1]);}          
+          formData.append("firma", firma);
+          //for (var pair of formData.entries()){console.log(pair[0]+ ', ' + pair[1]);}     
 
            axios({ 
              method  : 'post', 
              url : 'ajax/adminoservicio.ajax.php?op=guardarOS', 
              data : formData, 
-             //headers: {'Content-Type': 'image/svg+xml'},
            }) 
         
           .then((response)=>{  
@@ -621,15 +621,14 @@ $("body").on("submit", "#formularioAgregaOS", function( event ) {
               if(response.data!=200){
                 mensajeaxios=response.data
                 tipoerror=3;
-                tiempo=4;
+                tiempo=3;
               }
-              
               $('#DatatableOS').DataTable().ajax.reload(null, false);
-
               $('#modalAgregarOS').modal('hide')
               mensajenotie(tipoerror, `${mensajeaxios}`, 'top', tiempo);
 
             }else{
+              $('#modalAgregarOS').modal('hide')
               mensajenotie('Error', 'Hubo problemas al guardar OS!', 'bottom', 2);
             }          
             //console.log(res); 
@@ -656,68 +655,6 @@ function eliminarProductoOS(indice, restarcantidad){
   //evaluarElementos();
 }
 /*======================================================================*/
-
-/*================ AL SALIR DEL MODAL DE AGREGAR OS, RESETEAR FORMULARIO==================*/
-$("#modalAgregarOS").on('hidden.bs.modal', ()=> {
-  $("#formularioAgregaOS")[0].reset();
-  $("#tbodyOS").empty();
-  renglonesOS=cantSalidaOS=0;
-  $("#renglones").html('');
-  $("#totalsalidaOS").html('');
-  arrayProductosOS=[];
-  $("#nuevoAlmacenOS, #nvotecnico").prop('disabled',false);
-});
-
-/*==================================================================*/
-$('#daterange-btnOS').daterangepicker({
-  ranges   : {
-    'Hoy'       : [moment(), moment()],
-    'Ayer'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-    'Últimos 7 Días' : [moment().subtract(6, 'days'), moment()],
-    'Últimos 30 Días': [moment().subtract(29, 'days'), moment()],
-    'Este Mes'  : [moment().startOf('month'), moment().endOf('month')],
-    'Último Mes'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-  },
-
-  "locale": {
-      "format": "YYYY-MM-DD",
-      "separator": " - ",
-      "daysOfWeek": [
-          "Do",
-          "Lu",
-          "Ma",
-          "Mi",
-          "Ju",
-          "Vi",
-          "Sa"
-      ],
-      "monthNames": [
-          "Enero",
-          "Febrero",
-          "Marzo",
-          "Abril",
-          "Mayo",
-          "Junio",
-          "Julio",
-          "Agosto",
-          "Septiembre",
-          "Octubre",
-          "Noviembre",
-          "Diciembre"
-      ],
-      "firstDay": 1
-  },          
-  startDate: moment(),
-  endDate  : moment(),
-  start: moment(),
-  end  : moment()
-},
- function (start, end) {
-  $('#daterange-btnOS span').html(start.format('DD-MM-YYYY') + ' - ' + end.format('DD-MM-YYYY'));
-  captRangoFecha=start.format('DD-MM-YYYY') + ' - ' + end.format('DD-MM-YYYY');
-  localStorage.setItem("captRangoFecha", captRangoFecha);
- }
-)
 
 /*===================================================
 REPORTE DE OS DESDE EL DATATABLE
@@ -809,7 +746,7 @@ function fillform(datosOS){
 
   // Sets data
   if(datosOS.firma!='Sin Firma'){
-    if(datosOS.firma.length>20){
+    if(datosOS.firma.length>15){
       sig.signature('draw', datosOS.firma);
     }else{
       sig.signature();
@@ -846,13 +783,18 @@ $("body").on("submit", "#formularioEditarOS", function( event ) {
   let mensajeaxios='Registro Actualizado';
   let tipomsg=1;
   let tiempo=2;
-  let firma=sig.signature('toJSON');
+  
+  if($('#signatureContainer').signature('isEmpty')){
+    var firma='Sin Firma';
+  }else{
+    var firma=$('#signatureContainer').signature('toJSON');
+  } 
 
     swal({
         title: "¿Está seguro de Actualizar OS?",
         text: "¡Si no lo está puede cancelar la acción!",
         icon: "warning",
-        buttons: ["Cancelar", "Sí, Guardar"],
+        buttons: ["Cancelar", "Sí, Actualizar"],
         dangerMode: true,
       })
 
@@ -863,44 +805,44 @@ $("body").on("submit", "#formularioEditarOS", function( event ) {
           formData.append("firma", firma);
           
           //for (var pair of formData.entries()){console.log(pair[0]+ ', ' + pair[1]);}
-          
-          $.ajax({
-            url: "ajax/adminoservicio.ajax.php?op=ActualizarOS",
-            method: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            dataType: 'json',
-            success: function(data) {
-                alert(data.msg);
-                $('#DatatableOS').DataTable().ajax.reload(null, false);
-                modalEvento.hide();
-            }
-          });
-          // axios({ 
-          //   method  : 'post', 
-          //   url : 'ajax/adminoservicio.ajax.php?op=ActualizarOS', 
-          //   data : formData, 
-          // }) 
+          //TAMBIEN FUNCIONA CON AJAX
+          // $.ajax({
+          //   url: "ajax/adminoservicio.ajax.php?op=ActualizarOS",
+          //   method: 'POST',
+          //   data: formData,
+          //   processData: false,
+          //   contentType: false,
+          //   dataType: 'json',
+          //   success: function(data) {
+          //       alert(data.msg);
+          //       $('#DatatableOS').DataTable().ajax.reload(null, false);
+          //       modalEvento.hide();
+          //   }
+          // });
 
-          // .then((response)=>{  
-          //   console.log(response.data); 
-          //   if(response.data.status==200) {
-          //       mensajeaxios=response.data.msg
-          //       tipomsg=3;
-          //       tiempo=4;
+          axios({ 
+            method  : 'post', 
+            url : 'ajax/adminoservicio.ajax.php?op=ActualizarOS', 
+            data : formData, 
+          }) 
+
+          .then((response)=>{  
+            //console.log(response.data); 
+            if(response.data.status==200) {
+                mensajeaxios=response.data.msg
+                tipomsg=3;
+                tiempo=3;
               
-          //     $('#DatatableOS').DataTable().ajax.reload(null, false);
-          //     modalEvento.hide();
-          //     $('#modalEditarOS').modal('hide')
-          //     mensajenotie(tipomsg, `${mensajeaxios}`, 'top', tiempo);
-
-          //   }else{
-          //     mensajenotie('Error', 'Hubo problemas al guardar OS!', 'bottom', 3);
-          //   }          
-          //   //console.log(res); 
-          // }) 
-          // .catch((err) => {throw err});   //          .catch(function (error) {console.log(error.toJSON())})
+              $('#DatatableOS').DataTable().ajax.reload(null, false);
+              modalEvento.hide();
+              mensajenotie(tipomsg, `${mensajeaxios}`, 'top', tiempo);
+            }else{
+              modalEvento.hide();
+              mensajenotie('Error', 'Hubo problemas al guardar OS!', 'bottom', 3);
+            }          
+            //console.log(response); 
+          }) 
+          .catch((err) => {throw err});   //          .catch(function (error) {console.log(error.toJSON())})
 
       }else{
          return false;
@@ -911,20 +853,29 @@ $("body").on("submit", "#formularioEditarOS", function( event ) {
 
 /*======================================================================*/
 
-/* *****************AL ABRIR EL MODAL ************************************** */
+/* *****************AL ABRIR EL MODAL DE AGREGAR************************************** */
 $('#modalAgregarOS').on('shown.bs.modal', function () {
   let iduser=$('#iduser').val();
   $("#nvotecnico").val(iduser);
 })
-/*==============================================================================*/
-/*================ AL SALIR DEL MODAL RESETEAR FORMULARIO ==================*/
-$("#modalEditarOS").on('hidden.bs.modal', ()=> {
+/*================ AL SALIR DEL MODAL DE AGREGAR OS, RESETEAR FORMULARIO==================*/
+$("#modalAgregarOS").on('hidden.bs.modal', ()=> {
+  $("#formularioAgregaOS")[0].reset();
+  $("#tbodyOS").empty();
+  renglonesOS=cantSalidaOS=0;
+  $("#renglones").html('');
+  $("#totalsalidaOS").html('');
+  arrayProductosOS=[];
+  $("#nuevoAlmacenOS, #nvotecnico").prop('disabled',false);
   sig.signature('clear');
 });
-
-/**********************************************
- *  FIRMA DEL CONTRATANTE
- **********************************************/
+/*==============================================================================*/
+/*================ AL SALIR DEL MODAL EDITAR OS RESETEAR FORMULARIO ==================*/
+$("#modalEditarOS").on('hidden.bs.modal', ()=> {
+  $("#formularioEditarOS")[0].reset();
+  $("#editAlmacenOS, #edittecnico").prop('disabled',false);
+  sig.signature('clear');
+});
 
 /**********************************************
 *  REPETIR FIRMA DEL CONTRATANTE
@@ -933,6 +884,57 @@ $(".repetirfirma").click(()=>{
   sig.signature('clear');
 });
 /********************************************************** */
+/*==================================================================*/
+$('#daterange-btnOS').daterangepicker({
+  ranges   : {
+    'Hoy'       : [moment(), moment()],
+    'Ayer'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+    'Últimos 7 Días' : [moment().subtract(6, 'days'), moment()],
+    'Últimos 30 Días': [moment().subtract(29, 'days'), moment()],
+    'Este Mes'  : [moment().startOf('month'), moment().endOf('month')],
+    'Último Mes'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+  },
+
+  "locale": {
+      "format": "YYYY-MM-DD",
+      "separator": " - ",
+      "daysOfWeek": [
+          "Do",
+          "Lu",
+          "Ma",
+          "Mi",
+          "Ju",
+          "Vi",
+          "Sa"
+      ],
+      "monthNames": [
+          "Enero",
+          "Febrero",
+          "Marzo",
+          "Abril",
+          "Mayo",
+          "Junio",
+          "Julio",
+          "Agosto",
+          "Septiembre",
+          "Octubre",
+          "Noviembre",
+          "Diciembre"
+      ],
+      "firstDay": 1
+  },          
+  startDate: moment(),
+  endDate  : moment(),
+  start: moment(),
+  end  : moment()
+},
+ function (start, end) {
+  $('#daterange-btnOS span').html(start.format('DD-MM-YYYY') + ' - ' + end.format('DD-MM-YYYY'));
+  captRangoFecha=start.format('DD-MM-YYYY') + ' - ' + end.format('DD-MM-YYYY');
+  localStorage.setItem("captRangoFecha", captRangoFecha);
+ }
+)
+
 // function interval para recargar el datatable cada 60 seg.
 // ver: https://datatables.net/reference/api/ajax.reload()
 
@@ -947,8 +949,6 @@ setInterval( ()=> {
 //console.log('recargo')
 }, 180000 );			//recargar cada 60 seg.
 /*********************************************************** */
-
-
 
 
 init();

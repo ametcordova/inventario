@@ -16,8 +16,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
   
   <link rel="shortcut icon" type="image/x-icon" href="extensiones/dist/img/favicon.ico"/>
 
-  	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+  	<script src="extensiones/plugins/Signature/js/jquery.min.js"></script>
+	<script src="extensiones/plugins/Signature/js/jquery-ui.min.js"></script>
 
 
 
@@ -181,7 +181,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="vistas/js/reporteinventario.js?v=02092020"></script> 
 <script src="vistas/js/osvilla.js?v=02092020"></script> 
 <script src="vistas/js/adminseries.js?v=02092020"></script>
-<script src="vistas/js/adminoservicio.js?v=16102022"></script>
+<script src="vistas/js/adminoservicio.js?v=011120220104"></script>
 
 <!--<script defer src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
