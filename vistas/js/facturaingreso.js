@@ -1,7 +1,7 @@
 var arrayProductos=[];
 var renglonesfacturar=cantidadfacturar=cantidadimporte=sumasubtotal=sumatotal=0;
 const { ajax } = rxjs.ajax;
-const { fromEvent } = rxjs;
+//const { fromEvent } = rxjs;
 var FechDev;
 var FechDev2;
 $("#modalCrearFactura").draggable({

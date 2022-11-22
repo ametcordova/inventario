@@ -405,6 +405,4 @@ $fechaHoy = date("Y-m-d");
 <!-- ==============================================================================
                 FIN MODAL PARA CAPTURAR ENTRADAS AL ALMACEN
 ==================================================================================== -->
-
-
-<script defer src="vistas/js/facturaingreso.js?v=021120221401"></script>
+<script defer src="vistas/js/facturaingreso.js?v=031120221401"></script>

@@ -100,21 +100,21 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
           <!--<div class="card-header">
             </div>-->
           <!-- /.card-header -->
-          <div class="card-body">
+          <div class="card-body pt-0">
             <table class="table table-bordered table-hover compact table-striped table-sm " id="DatatableOS" cellspacing="0" style="width:100%;">
               <thead class="thead-dark">
                 <tr style="height:10px !important; font-size:0.80em !important;">
                   <th style="width:1em;">#</th>
                   <th style="width:3em;">Emp.</th>
-                  <th>Tecnico</th>
+                  <th class="text-center">Técnico</th>
                   <th>OS</th>
                   <th>Teléfono</th>
-                  <th>Almacen</th>
+                  <th>Almacén</th>
                   <th>Fecha</th>
                   <th>Us</th>
-                  <th>Status</th>
-                  <th>Fact</th>
-                  <th class="text-center" style="width:11em;">Accion</th>
+                  <th style="width:8em;">Status</th>
+                  <th style="width:3em;">Fact</th>
+                  <th class="text-center" style="width:11em;">Acción</th>
                 </tr>
               </thead>
               <tbody style="font-size:0.85em !important;">
@@ -124,15 +124,15 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                 <tr class="thead-dark" style="height:10px !important; font-size:0.80em !important;">
                   <th style="width:1em;">ID</th>
                   <th style="width:3em;">Emp.</th>
-                  <th>Tecnico</th>
+                  <th class="text-center">Técnico</th>
                   <th>OS</th>
                   <th>Teléfono</th>
-                  <th>Almacen</th>
+                  <th>Almacén</th>
                   <th>Fecha</th>
                   <th>Us</th>
-                  <th>Status</th>
-                  <th>Fact</th>
-                  <th>Accion</th>
+                  <th style="width:8em;">Status</th>
+                  <th style="width:3em;">Fact</th>
+                  <th>Acción</th>
                 </tr>
               </tfoot>
             </table>
@@ -180,69 +180,69 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
 
               <div class="form-row pt-0 pb-0">
 
-              <div class="form-group col-md-4">
-                  <label for=""><i class="fa fa-male"></i> Técnico <span class="text-danger">*</span> </label>
-                  <select id="nvotecnico" class="form-control form-control-sm" name="nvotecnico" tabindex="1" required>
-                    <option value="">Selecione Técnico</option>
-                    <?php
-                    $item = 'status';
-                    $valor = 1;
-                    $tecnicos = ControladorTecnicos::ctrMostrarTecnicos($item, $valor);
-                    foreach ($tecnicos as $key => $value) {
-                      echo '<option value="' . $value["id"] . '">' . $value["nombre"] . '</option>';
-                    }
-                    ?>
-                  </select>
-                </div>
+                  <div class="form-group col-md-4 pt-0 mt-0">
+                    <label for=""><i class="fa fa-male"></i> Técnico <span class="text-danger">*</span> </label>
+                    <select id="nvotecnico" class="form-control form-control-sm" name="nvotecnico" tabindex="1" required>
+                      <option value="">Selecione Técnico</option>
+                      <?php
+                      $item = 'status';
+                      $valor = 1;
+                      $tecnicos = ControladorTecnicos::ctrMostrarTecnicos($item, $valor);
+                      foreach ($tecnicos as $key => $value) {
+                        echo '<option value="' . $value["id"] . '">' . $value["nombre"] . '</option>';
+                      }
+                      ?>
+                    </select>
+                  </div>
 
-                  <!-- data-date-end-date=no puede seleccionar una fecha posterior a la actual -->
-                <div class="form-group col-md-3">
-                  <label for=""><i class="fa fa-hospital-o"></i> Almacen <span class="text-danger">*</span> </label>
-                  <select id="nuevoAlmacenOS" class="form-control form-control-sm" name="nuevoAlmacenOS" tabindex="2" required>
-                    <option value="">Seleccione Almacen</option>
-                    <?php
-                    $item = null;
-                    $valor = null;
-                    $almacenes = ControladorAlmacenes::ctrMostrarAlmacenes($item, $valor);
-                    foreach ($almacenes as $key => $value) {
-                      echo '<option value="' . $value["id"] . '-' . $value["nombre"] . '">' . $value["nombre"] . '</option>';
-                    }
-                    ?>
-                  </select>
-                  <input type="hidden" name="idDeUsuario" value="<?php echo $_SESSION['id']; ?>">
-                  <input type="hidden" name="iduser" id="iduser" value="<?php echo $_SESSION['user']; ?>">
-                </div>
+                    <!-- data-date-end-date=no puede seleccionar una fecha posterior a la actual -->
+                  <div class="form-group col-md-3 pt-0 mt-0">
+                    <label for=""><i class="fa fa-hospital-o"></i> Almacen <span class="text-danger">*</span> </label>
+                    <select id="nuevoAlmacenOS" class="form-control form-control-sm" name="nuevoAlmacenOS" tabindex="2" required>
+                      <option value="">Seleccione Almacen</option>
+                      <?php
+                      $item = null;
+                      $valor = null;
+                      $almacenes = ControladorAlmacenes::ctrMostrarAlmacenes($item, $valor);
+                      foreach ($almacenes as $key => $value) {
+                        echo '<option value="' . $value["id"] . '-' . $value["nombre"] . '">' . $value["nombre"] . '</option>';
+                      }
+                      ?>
+                    </select>
+                    <input type="hidden" name="idDeUsuario" value="<?php echo $_SESSION['id']; ?>">
+                    <input type="hidden" name="iduser" id="iduser" value="<?php echo $_SESSION['user']; ?>">
+                  </div>
 
-                <div class="form-group col-md-2">
-                  <label class="control-label"><i class="fa fa-phone-square"></i> Teléfono <span class="text-danger">*</span></label>
-                  <input type="number" class="form-control form-control-sm" name="numtelefono" id="numtelefono" value="" step="any" placeholder="" tabindex="3" min="0000000001" max="9999999999" title="Numero de Teléfono 10 dig." required>
-                </div>
+                  <div class="form-group col-md-2 pt-0 mt-0">
+                    <label class="control-label"><i class="fa fa-phone-square"></i> Teléfono <span class="text-danger">*</span></label>
+                    <input type="number" class="form-control form-control-sm" name="numtelefono" id="numtelefono" value="" step="any" placeholder="" tabindex="3" min="0000000001" max="9999999999" title="Numero de Teléfono 10 dig." required>
+                  </div>
 
-                <div class="form-group col-md-3">
-                  <label class="control-label"><i class="fa fa-calendar"></i> Fecha Inst: <span class="text-danger">*</span></label>
-                  <input type="date" class="form-control form-control-sm" name="fechainst" id="fechainst" value="<?= $fechaHoy ?>" placeholder="" tabindex="4" title="Fecha Instalación" required>
-                </div>
+                  <div class="form-group col-md-3 pt-0 mt-0">
+                    <label class="control-label"><i class="fa fa-calendar"></i> Fecha Inst: <span class="text-danger">*</span></label>
+                    <input type="date" class="form-control form-control-sm" name="fechainst" id="fechainst" value="<?= $fechaHoy ?>" placeholder="" tabindex="4" title="Fecha Instalación" required>
+                  </div>
 
               </div> <!-- FIN DEL FORM-ROW -->
 
               <div class="form-row pt-0 pb-0">
 
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-3 pt-0 mt-0">
                   <label class="control-label"><i class="fa fa-sort-numeric-asc"></i> No. OS: <span class="text-danger">*</span></label>
                   <input type="number" class="form-control form-control-sm" name="numeroos" id="numeroos" value="" tabindex="5" title="Numero de Orden de Servicio" required>
                 </div>
 
-                <div class="form-group col-md-2">
+                <div class="form-group col-md-2 pt-0 mt-0">
                   <label class="control-label"><i class="fa fa-check"></i>Pisaplex</label>
                   <input type="number" class="form-control form-control-sm" name="numpisaplex" id="numpisaplex" value="" step="any" placeholder="" tabindex="6" title="Numero Pisaplex">
                 </div>
 
-                <div class="form-group col-md-2">
+                <div class="form-group col-md-2 pt-0 mt-0">
                   <label class="control-label"><i class="fa fa-asterisk"></i> Tipo:</label>
                   <input type="text" class="form-control form-control-sm" name="numtipo" id="numtipo" value="" step="any" placeholder="" tabindex="7" title="Numero Tipo">
                 </div>
 
-                <div class="form-group col-md-5">
+                <div class="form-group col-md-5 pt-0 mt-0">
                   <label class="control-label"><i class="fa fa-check-square-o"></i> Nombre cliente: <span class="text-danger">*</span></label>
                   <input type="text" class="form-control form-control-sm" name="nombrecontrato" id="nombrecontrato" value="" tabindex="8" accesskey="8" title="Nombre cliente" placeholder="Alt-8" pattern="^[A-Za-zÑñÁáÉéÍíÓóÚúÜü\s]+$" onblur="document.getElementById('nombrefirma').value=this.value" required>
                 </div>
@@ -287,7 +287,11 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
 
                 <div id="signature"></div>
 
-                <button type="button" class="btn btn-secondary btn-sm btn-block repetirfirma mt-2"> Repetir firma</button>
+                <div class="col-md-12 d-block mt-2 mb-2">
+                  <button type="button" class="btn btn-info btn-sm text-bold repetirfirma col-md-5 mr-1"><i class="fa fa-refresh" aria-hidden="true"></i> Repetir / Borrar firma</button>
+                  <button type="button" class="btn btn-primary btn-sm text-bold deshabilitar col-md-5">Deshabilitar</button>
+                </div>
+
               </div>
               <!-- ********************** FIN FIRMA ****************************** -->
 
@@ -555,8 +559,12 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
               <div class="form-row pt-2 mb-4 text-center justify-content-center align-items-center" style="background-color:blanchedalmond;">
 
                 <div id="signatureContainer"></div>
+                
+                <div class="col-md-12 d-block mt-2 mb-2">
+                  <button type="button" class="btn btn-info btn-sm text-bold repetirfirma col-md-5"> Repetir / Borrar firma</button>
+                  <button type="button" class="btn btn-primary btn-sm text-bold habilitar col-md-5">Habilitar</button>
+                </div>
 
-                <button type="button" class="btn btn-info btn-sm btn-block text-bold repetirfirma mt-2"> Repetir / Borrar firma</button>
               </div>
               <!-- ********************** FIN FIRMA *************************** -->
 

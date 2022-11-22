@@ -108,7 +108,7 @@ function listarOServicios(){
     {
       "aProcessing": true,//Activamos el procesamiento del datatables
       "aServerSide": true,//Paginación y filtrado realizados por el servidor
-      "lengthMenu": [ [10, 25, 50,100, -1], [10, 25, 50, 100, "Todos"] ],
+      "lengthMenu": [ [15, 25, 50, 100, -1], [15, 25, 50, 100, "Todos"] ],
       "language": {
       "sProcessing":     "Procesando...",
       "sLengthMenu":     "Mostrar _MENU_ registros &nbsp",
@@ -121,10 +121,10 @@ function listarOServicios(){
       "sInfoThousands":  ",",
       "sLoadingRecords": "Cargando...",
       "oPaginate": {
-      "sFirst":    "Primero",
-      "sLast":     "Último",
-      "sNext":     "Siguiente",
-      "sPrevious": "Anterior"}
+      "sFirst":    "<<",
+      "sLast":     ">>",
+      "sNext":     ">",
+      "sPrevious": "<"}
           },
       "oAria": {
         "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
@@ -155,7 +155,7 @@ function listarOServicios(){
               autoPrint: false            //TRUE para abrir la impresora
           },
           {
-            text: 'Imp. Selección',
+            text: 'Imprimir selección',
             className: 'btn btn-dark btn-sm',
             action: function ( e, dt, node, config ) {
               printselec();
@@ -184,7 +184,7 @@ function listarOServicios(){
               }
             },
       "bDestroy": true,
-      "iDisplayLength": 10,//Paginación
+      "iDisplayLength": 15,//Paginación
       "order": [[ 0, 'desc' ]] //Ordenar (columna,orden)
     }).DataTable();    
       
@@ -745,22 +745,27 @@ function fillform(datosOS){
   $("input[name=editobservaos]").val(datosOS.observaciones);
 
   // Sets data
-  if(datosOS.firma!='Sin Firma'){
+  if(datosOS.firma==='Sin Firma' || datosOS.firma===null){
+    $('#signatureContainer').signature();
+    $('#signatureContainer').signature('disable');
+   }else{
     if(datosOS.firma.length>15){
-      sig.signature('draw', datosOS.firma);
+      $('#signatureContainer').signature('draw', datosOS.firma);
+      $('#signatureContainer').signature('disable');
     }else{
-      sig.signature();
+      $('#signatureContainer').signature();
+      $('#signatureContainer').signature('disable');
     }
   }
-  
-  
+
   $("#editAlmacenOS, #edittecnico").prop('disabled',true);
   datosinstalacion(json_datos_inst);
   //let json_datos_mat = JSON.parse(res.data['datos_material']);  
   modalEvento=new bootstrap.Modal(document.getElementById('modalEditarOS'),{ keyboard:false });
   modalEvento.show();
-}
 
+}
+  
 function datosinstalacion(json_datos_inst){
   $("#editnumpisaplex").val(json_datos_inst[0].numpisaplex);
   $("#editnumtipo").val(json_datos_inst[0].numtipo);
@@ -867,15 +872,19 @@ $("#modalAgregarOS").on('hidden.bs.modal', ()=> {
   $("#totalsalidaOS").html('');
   arrayProductosOS=[];
   $("#nuevoAlmacenOS, #nvotecnico").prop('disabled',false);
-  sig.signature('clear');
+  $('#signature').signature('enable');
+  $('#signature').signature('clear');
+  $('.deshabilitar').text('Deshabilitar');
 });
 /*==============================================================================*/
-/*================ AL SALIR DEL MODAL EDITAR OS RESETEAR FORMULARIO ==================*/
+/*================ AL SALIR DEL MODAL EDITAR OS, RESETEAR FORMULARIO ==================*/
 $("#modalEditarOS").on('hidden.bs.modal', ()=> {
   $("#formularioEditarOS")[0].reset();
   $("#editAlmacenOS, #edittecnico").prop('disabled',false);
-  sig.signature('clear');
-});
+  $('#signatureContainer').signature('enable');
+  $('#signatureContainer').signature('clear');
+  $('.habilitar').text('Habilitar');
+  });
 
 /**********************************************
 *  REPETIR FIRMA DEL CONTRATANTE
@@ -884,6 +893,28 @@ $(".repetirfirma").click(()=>{
   sig.signature('clear');
 });
 /********************************************************** */
+$(".habilitar").on('click',function() {
+  habilitar();
+});
+/********************************************************** */
+function habilitar(){
+  let enable = $('.habilitar').text() === 'Habilitar'; 
+  if(enable){
+    $('.habilitar').text('Deshabilitar');
+    $('#signatureContainer').signature('enable');
+  }else{
+    $('.habilitar').text('Habilitar');
+    $('#signatureContainer').signature('disable');
+  }
+  return
+}
+/********************************************************** */
+$('.deshabilitar').click(function() { 
+  let enable = $(this).text() === 'Deshabilitar'; 
+  $('#signature').signature(enable ? 'disable' : 'enable'); 
+  $(this).text(enable ? 'Habilitar' : 'Deshabilitar'); 
+});
+
 /*==================================================================*/
 $('#daterange-btnOS').daterangepicker({
   ranges   : {
