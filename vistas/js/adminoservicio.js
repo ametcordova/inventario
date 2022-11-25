@@ -9,7 +9,7 @@ var captRangoFecha;
 var idsfacturas=new Array();
 var FechDev1;
 var FechDev2;
-//var sig=$('#signatureContainer').signature();
+
 var sig=$('#signature, #signatureContainer').signature({ 
   background: '#ffffff', // Colour of the background 
   color: 'blue', // Colour of the signature 
@@ -25,8 +25,8 @@ var sig=$('#signature, #signatureContainer').signature({
   svgStyles: false, // True to use style attribute in SVG 
   change: null // Callback when signature changed 
 });
+
 const { fromEvent } = rxjs;
-//$("#msgsaveok").addClass("d-none");
 
 //Rx.Observable.fromEvent(document.getElementById("DatatableOS"), 'click').subscribe(() => console.log('Haz hecho click!'));
 // $(function(){
@@ -41,7 +41,6 @@ function init(){
   if(localStorage.getItem("captRangoFecha") != null){
     $("#daterange-btnOS span").html(localStorage.getItem("captRangoFecha"));
   }else{
-    //$("#daterange-btnOS span").html('<i class="fa fa-calendar"></i> Rango de fecha')
     iniciarangodefecha()
   }
 
@@ -56,14 +55,12 @@ function init(){
 $('#numeroos').on('blur', ()=> {
   $("#numeroos").css({"background-color": "white", "color":"black"});
   let numos=$('#numeroos').val();
-  //console.log("si entra aqui..",numos)
   if(numos<1 || length.numos<1){
     $('#numeroos').focus();
     return
   }
   (async () => { 
     resp=await getUser(numos)
-    //console.log(resp)
     if(resp!=undefined){
       $("#numeroos").css({"background-color": "red", "color":"yellow"});
       $('#numeroos').focus();
@@ -80,7 +77,6 @@ async function getUser(numeroos) {
         numeroos: numeroos
       }
     })
-    //console.log(response.data.ordenservicio);
     return response.data.ordenservicio;
 
   } catch (error) {
@@ -96,10 +92,8 @@ function listarOServicios(){
   if(rangodeFecha==undefined || rangodeFecha==null){
     FechDev1=moment().format('YYYY-MM-DD');
     FechDev2=moment().format('YYYY-MM-DD');
-    //console.log('fecha hoy:',FechDev1,FechDev2);
   }else{
     let arrayFecha = rangodeFecha.split(" - ", 2);
-    //console.log('fechas Mex:',rangodeFecha);
     FechDev1=moment(arrayFecha[0],'DD-MM-YYYY').format('YYYY-MM-DD');
     FechDev2=moment(arrayFecha[1],'DD-MM-YYYY').format('YYYY-MM-DD');
   }	   
@@ -187,7 +181,6 @@ function listarOServicios(){
       "iDisplayLength": 15,//Paginación
       "order": [[ 0, 'desc' ]] //Ordenar (columna,orden)
     }).DataTable();    
-      
 
 }
 // ========= FIN LISTAR EN EL DATATABLE REGISTROS DE LA TABLA TABLAOS================
@@ -479,37 +472,36 @@ $("#agregarProductoOS").click(function(event){
   let cadena=$("#selecProductoOS").val();
   if(cadena==null)
   return;
-  let idproducto= cadena.substr(0, cadena.indexOf('-'));  //extrae el Id del prod
-  let largo=idproducto.length;
-  let id_producto=parseInt(idproducto);
-  //SEPARA EL ID PARA SABER SI ES MODEM
-  let conserie= cadena.substr(largo+1, cadena.indexOf('-')-1);
-  //OBTENER LA CANT DE SALIDA
-  let sald=$('#cantout').val();   //obtener la cant de salida
-  let cantidad=parseFloat(sald);  
-  //Si no selecciona producto retorna o cantidad
-  if(isNaN(idproducto) || isNaN(cantidad) || cantidad<0.01){
-    return true;
-  }  
 
-  if(parseInt(conserie)>0){
-    numserie=document.getElementsByName('numeroSerie')[0].value;
-    numserie=numserie.trim();
-    alfanumerico=document.getElementsByName('alfanumerico')[0].value;
-    alfanumerico=alfanumerico.trim();
-    //console.log('si debe entrar',numserie)
-  }else{
-    //console.log('no debe entrar',conserie)
-  }
+    let idproducto= cadena.substr(0, cadena.indexOf('-'));  //extrae el Id del prod
+    let largo=idproducto.length;
+    let id_producto=parseInt(idproducto);
+    //SEPARA EL ID PARA SABER SI ES MODEM
+    let conserie= cadena.substr(largo+1, cadena.indexOf('-')-1);
+    //OBTENER LA CANT DE SALIDA
+    let sald=$('#cantout').val();   //obtener la cant de salida
+    let cantidad=parseFloat(sald);  
+    //Si no selecciona producto retorna o cantidad
+    if(isNaN(idproducto) || isNaN(cantidad) || cantidad<0.01){
+      return true;
+    }  
 
-  let descripcion=$("#selecProductoOS").text();   //extrae la descripcion del prod
-  descripcion=descripcion.trim();
+    if(parseInt(conserie)>0){
+      numserie=document.getElementsByName('numeroSerie')[0].value;
+      numserie=numserie.trim();
+      alfanumerico=document.getElementsByName('alfanumerico')[0].value;
+      alfanumerico=alfanumerico.trim();
+    }else{
+      //console.log('no debe entrar',conserie)
+    }
 
-  //console.log("prod:",id_producto, "cant:",cantidad, "descrip:",descripcion, 'CON SERIE',conserie, 'numserie:',numserie);
+    let descripcion=$("#selecProductoOS").text();   //extrae la descripcion del prod
+    descripcion=descripcion.trim();
+
+    //TRUE SI EL PRODUCTO YA ESTA CAPTURADO
+    let encontrado=arrayProductosOS.includes(id_producto)
   
-  let encontrado=arrayProductosOS.includes(id_producto)
-  //console.log("encontrado:", encontrado)
-
+    
     if(!encontrado){
       arrayProductosOS.push(id_producto);
       addProductosSalida(id_producto, descripcion, cantidad, conserie, numserie, alfanumerico);
@@ -525,7 +517,6 @@ ADICIONA PRODUCTOS AL TBODY
 function addProductosSalida(...argsProductos){
   //console.log("manyMoreArgs", argsProductos);
   let contenido=document.querySelector('#tbodyOS');
-  //console.log(argsProductos[4]);
   contenido.innerHTML+=`
   <tr class="filas" id="fila${argsProductos[0]}">
     <td> <button type="button" class="botonQuitar" onclick="eliminarProductoOS(${argsProductos[0]}, ${argsProductos[2]})" title="Quitar concepto">X</button> </td>
@@ -588,7 +579,6 @@ $("body").on("submit", "#formularioAgregaOS", function( event ) {
     var firma='Sin Firma';
   }else{
     var firma=$('#signature').signature('toJSON');
-    //var firma=sig.signature('toJSON');
   } 
   
     swal({
@@ -646,13 +636,11 @@ $("body").on("submit", "#formularioAgregaOS", function( event ) {
 /*======================================================================*/
 //QUITA ELEMENTO 
 function eliminarProductoOS(indice, restarcantidad){
-  console.log("entra a eliminar",indice)
   $("#fila" + indice).remove();
   cantSalidaOS-=restarcantidad;
   renglonesOS--;
   removeItemFromArr(arrayProductosOS, indice)   //funcion esta en funciones.js
   evaluaFilaOS(renglonesOS, cantSalidaOS);
-  //evaluarElementos();
 }
 /*======================================================================*/
 
@@ -661,9 +649,7 @@ REPORTE DE OS DESDE EL DATATABLE
 ===================================================*/
 $("#DatatableOS tbody").on("click", ".btnPrintOS", function(){
   let idos = $(this).attr("idos");
-  console.log(idos); 
     if(idos.length > 0){
-     //window.open("extensiones/fpdf/reportes/reporte_os.php?codigo="+idos, "_blank");
      window.open("extensiones/plugins/TCPDF/examples/reporte_os.php?codigo="+idos, "_blank");
     }
 })
@@ -673,10 +659,8 @@ $("#DatatableOS tbody").on("click", ".btnPrintOS", function(){
 /************************************************/
 function printselec(){
   if (idsfacturas.length === 0) {
-     //console.log("array Está vacío!")
      return false;
   }else{
-    //console.log(idsfacturas);
     idsfacturas=idsfacturas.reverse();
     window.open("extensiones/fpdf/reportes/reporte_material.php?idsfacturas="+idsfacturas, "_blank");
   }
@@ -688,7 +672,6 @@ $('#DatatableOS tbody').on( 'click', '.btnEditarOS', function (event) {
   let id = elemento.getAttribute('data-id');
   //console.log(id);
   obtenerDatosOS(id)
-
 });
 /* ================================================*/
 function obtenerDatosOS(id){
@@ -703,7 +686,7 @@ function obtenerDatosOS(id){
       if(res.status==200 ) {
 
         html=`OS ya esta Facturado, no
-        es posible modificarlo.
+          es posible modificarlo.
         Consulte a Soporte Técnico.`;
           if (res.data.factura != null){
             swal({
@@ -748,7 +731,7 @@ function fillform(datosOS){
   if(datosOS.firma==='Sin Firma' || datosOS.firma===null){
     $('#signatureContainer').signature();
     $('#signatureContainer').signature('disable');
-   }else{
+  }else{
     if(datosOS.firma.length>15){
       $('#signatureContainer').signature('draw', datosOS.firma);
       $('#signatureContainer').signature('disable');
@@ -861,7 +844,10 @@ $("body").on("submit", "#formularioEditarOS", function( event ) {
 /* *****************AL ABRIR EL MODAL DE AGREGAR************************************** */
 $('#modalAgregarOS').on('shown.bs.modal', function () {
   let iduser=$('#iduser').val();
+  let idalmacen=$('#id_almacen').val();
+  console.log(iduser, idalmacen)
   $("#nvotecnico").val(iduser);
+  $("#nuevoAlmacenOS").val(idalmacen);
 })
 /*================ AL SALIR DEL MODAL DE AGREGAR OS, RESETEAR FORMULARIO==================*/
 $("#modalAgregarOS").on('hidden.bs.modal', ()=> {

@@ -53,19 +53,24 @@ switch ($_GET["op"]){
             $tri = '<tr><td>'.($value["id"]).'</td>';
             $trf='</tr';
             $status="Timbrado";
+            if($folio%2==0){        //si ya tiene complemento de pago
+                $chek="<input type='checkbox' name='ids[]' value='".$value["id"]."'>";
+            }else{
+                $chek="<input type='checkbox' name='ids[]' value='".$value["id"]."' disabled>";
+            }
 
             if($value["uuid"]!=""){
                 $boton1 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-dark px-1 py-1' title='Factura timbrada'><i class='fa fa-bell fa-fw'></i> </button></td> ":"";
 
                 $boton3 =getAccess($acceso, ACCESS_PRINTER)?"<a href='vistas/modulos/download.php?filename=$file&ruta=1&mime=xml' title='Descargar XML' class='btn btn-sm btn-info px-1 py-1'><i class='fa fa-file-code-o'></i></a> ":"";
                 $boton4 ='';
-                $boton5 =getAccess($acceso, ACCESS_DELETE)?"<td><button class='btn btn-danger btn-sm px-1 py-1' data-cancelafact='".$value['id']."' title='Cancelar Factura'><i class='fa fa-window-close'></i></button></td> ":"";
+                $boton5 =getAccess($acceso, ACCESS_DELETE)?"<td><button class='btn btn-danger btn-sm px-1 py-1 checabox' data-cancelafact='".$value['id']."' title='Cancelar Factura'><i class='fa fa-window-close'></i></button></td> ":"";
 
             }else{
                 $boton1 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-danger px-1 py-1' onclick='getIdFactura(this)' title='Factura sin timbrar' data-idfactura='".$value['id']."' data-folio='".$value['folio']."' data-fechaelabora='".$value['fechaelaboracion']."' data-idempresa='".$value['id_empresa']."' data-serie='".$value['serie']."' data-rfcemisor='".$value['rfcemisor']."' ><i class='fa fa-bell-slash fa-fw'></i> </button></td> ":"";
                 $boton3 ='';
                 $boton4 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-primary btn-sm px-1 py-1' data-editfact='".$value['id']."' title='Editar Factura' data-toggle='modal' data-target='#modalEditarEntradasAlmacen'><i class='fa fa-edit'></i></button></td> ":"";
-                $boton5 =getAccess($acceso, ACCESS_DELETE)?"<td><button class='btn btn-warning btn-sm px-1 py-1' data-delfact='".$value['id']."' title='Eliminar Factura '><i class='fa fa-trash'></i></button></td> ":"";
+                $boton5 =getAccess($acceso, ACCESS_DELETE)?"<td><button class='btn btn-warning btn-sm px-1 py-1 checabox' data-delfact='".$value['id']."' title='Eliminar Factura '><i class='fa fa-trash'></i></button></td> ":"";
 
             };
 
@@ -74,6 +79,7 @@ switch ($_GET["op"]){
             $botones=$boton2.$boton3.$boton4.$boton5;
 
             $data[]=array(
+                $chek,
                 $value['id'],
                 $serie,
                 $value["folio"],

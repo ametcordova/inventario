@@ -14,7 +14,6 @@ table.dataTable.dataTable_width_auto {
       const milisegundos = 500*1000;
       setInterval(()=>{
       // No esperamos la respuesta de la petición porque no nos importa
-      //console.log("500 segundos.. refrescado")
       fetch("vistas/modulos/refrescar.php");
       },milisegundos);
     });
@@ -92,18 +91,12 @@ $fechaHoy = date("Y-m-d");
 
       <div class="card-body">
 
-          <div class="alert alert-warning alert-dismissible fade show p-2 d-none" id="alert1" role="alert">
-            <strong>Hecho!!</strong> Registro guardado correctamente.
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          
         <div class="card">
           <div class="card-body">
             <table class="table table-bordered table-hover compact table-sm table-striped dt-responsive" id="dt-FacturaIngreso" cellspacing="0" width="100%">
               <thead class="thead-dark" style="font-size:.8rem; height:1px">
                 <tr style="font-size:0.90em">
+                  <th class="text-center"> &nbsp&nbsp&nbsp<input type="checkbox" name="select_all" value="1" id="example-select-all"></th>
                   <th class="text-center">#</th>
                   <th class="text-center">Serie</th>
                   <th class="text-center">Folio</th>
@@ -120,6 +113,9 @@ $fechaHoy = date("Y-m-d");
 
               <tbody style="font-size:0.85em">
               </tbody>
+
+              <!--<p><b>Selected rows data:</b></p>
+              <pre id="example-console-rows"></pre>-->
 
             </table>
           </div>  <!-- /.card-body  -->

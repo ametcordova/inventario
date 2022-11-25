@@ -29,11 +29,20 @@
 
       <?php if (isset($_SESSION['perfil']) && $_SESSION['perfil']=="Administrador" || trim($_SESSION["usuario"])=="super"){ ?>
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="adminoservicio" class="nav-link font-weight-bold ml-0 pl-0">
+        <a href="adminoservicio" class="nav-link font-weight-bold ml-0 pl-0" title="Gestión de Orden de Servicios">
           <button type="button" class="btn btn-sm" style="background-color:darkblue; color:white;">O S</button>
         </a>
       </li>
       <?php } ?>
+
+      <?php if (isset($_SESSION['perfil']) && $_SESSION['perfil']=="Administrador" || trim($_SESSION["usuario"])=="super"){ ?>
+      <li class="nav-item d-none d-sm-inline-block">
+        <a href="facturaingreso" class="nav-link font-weight-bold ml-0 pl-0" title="Nunosco Facturación V.4.0">
+          <img src="vistas/img/nunoscofacturacion40.png" class="img-responsive rounded float-right" style="width: 3.7rem;" alt="Img Factura">
+        </a>
+      </li>
+      <?php } ?>
+      
     </ul>
 
 

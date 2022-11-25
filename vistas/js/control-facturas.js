@@ -727,30 +727,6 @@ $('#TablaFacturas tbody').on( 'click', 'tr', function () {
   };
 });
 
- // Handle click on "Select all" control
-   $('#example-select-all').on('click', function(){
-     console.log("entra");
-      // Check/uncheck all checkboxes in the table
-      var rows = table.rows({ 'search': 'applied' }).nodes();
-      $('input[type="checkbox"]', rows).prop('checked', this.checked);
-   });
-   
-// Handle click on checkbox to set state of "Select all" control
-   $('#TablaFacturas tbody').on('change', 'input[type="checkbox"]', function(){
-   console.log("entra1");
-      // If checkbox is not checked
-      if(!this.checked){
-         var el = $('#example-select-all').get(0);
-         // If "Select all" control is checked and has 'indeterminate' property
-		 console.log("get:",el);
-         if(el && el.checked && ('indeterminate' in el)){
-            // Set visual state of "Select all" control 
-            // as 'indeterminate'
-            el.indeterminate = true;
-         }
-      }
-   });   
-
 
 $('#filterYear').datepicker({
   format: " yyyy",

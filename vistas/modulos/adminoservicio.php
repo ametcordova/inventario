@@ -88,17 +88,8 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
 
       <div class="card-body">
 
-        <div class="alert alert-success alert-dismissible p-2" style="display: none" id="msgsaveok" role="alert">
-          <p class="h5"><strong>Hecho!!</strong> Registro guardado correctamente!!.</p>
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-
-
         <div class="card">
-          <!--<div class="card-header">
-            </div>-->
+          <!--<div class="card-header"></div>-->
           <!-- /.card-header -->
           <div class="card-body pt-0">
             <table class="table table-bordered table-hover compact table-striped table-sm " id="DatatableOS" cellspacing="0" style="width:100%;">
@@ -210,7 +201,8 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                       ?>
                     </select>
                     <input type="hidden" name="idDeUsuario" value="<?php echo $_SESSION['id']; ?>">
-                    <input type="hidden" name="iduser" id="iduser" value="<?php echo $_SESSION['user']; ?>">
+                    <input type="hidden" name="iduser" id="iduser" value="<?php echo $_SESSION['user']; ?>">  <!--NUMERO DE USIARIO EN TABLA TECNICOS -->
+                    <input type="hidden" name="id_almacen" id="id_almacen" value="<?php echo $_SESSION['id_almacen']; ?>">  <!--NUMERO DE USIARIO EN TABLA TECNICOS -->
                   </div>
 
                   <div class="form-group col-md-2 pt-0 mt-0">
@@ -561,7 +553,7 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                 <div id="signatureContainer"></div>
                 
                 <div class="col-md-12 d-block mt-2 mb-2">
-                  <button type="button" class="btn btn-info btn-sm text-bold repetirfirma col-md-5"> Repetir / Borrar firma</button>
+                  <button type="button" class="btn btn-info btn-sm text-bold repetirfirma col-md-5 mb-1"> Repetir / Borrar firma</button>
                   <button type="button" class="btn btn-primary btn-sm text-bold habilitar col-md-5">Habilitar</button>
                 </div>
 

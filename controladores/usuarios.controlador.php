@@ -37,6 +37,7 @@ class ControladorUsuarios{
                     $_SESSION["user"]=$respuesta["user"];
                     $_SESSION["foto"]=$respuesta["foto"];
                     $_SESSION["perfil"]=$respuesta["perfil"];
+                    $_SESSION["id_almacen"]=$respuesta["alm_asignado"];
                     
                         /*=============================================
 						REGISTRAR FECHA PARA SABER EL ÚLTIMO LOGIN

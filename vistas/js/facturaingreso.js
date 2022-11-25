@@ -46,8 +46,14 @@ function dt_ListarFacturasIngreso(){
      
    }	   
  
-  //console.log(FechDev1, FechDev2);
 
+// B: Botonera de exportaciones de datos.
+// f: Campo de búsqueda.
+// i: Información sobre los registros.
+// t: Tabla completa.
+// r: El preloader de «Cargando…».
+// l: Desplegable de mostrar x registros
+// p: Paginación de los registros.
   tblFacturaIngreso=$('#dt-FacturaIngreso').dataTable(
 	{
 		"aProcessing": true,//Activamos el procesamiento del datatables
@@ -78,26 +84,46 @@ function dt_ListarFacturasIngreso(){
             text: 'Imprimir',
             className: 'btn btn-success btn-sm',
             autoPrint: false            //TRUE para abrir la impresora
-        }
+        },
+        {
+          text: 'Comp. de pago',
+          className: 'btn btn-sm btn-dark ',
+          action: function ( e, dt, node, config ) {
+          GenCompPago20();
+          }
+        },
         ],
         initComplete: function () {
           var btns = $('.dt-button');
           btns.removeClass('dt-button');
           btns.addClass('btn btn-success btn-sm');
         }, 
+
         "columnDefs": [
-          {"width:":"10px", "className": "dt-center", "targets": [0]},
+          {
+            'targets': 0,
+            'searchable':false,
+            'orderable':false,
+            'checkboxes': {
+              'selectRow': true
+           },            
+            'className': 'dt-center',
+         },
           {"width:":"10px", "className": "dt-center", "targets": [1]},
           {"width:":"12px", "className": "dt-center", "targets": [2]},
           {"width:":"20px", "className": "dt-center", "targets": [3]},
           {"width:":"20px", "className": "dt-center", "targets": [4]},
           {"width:":"20px", "className": "dt-center", "targets": [5]},
-          {"width:":"100px", "className": "dt-left", "targets": [6]},
-          {"width:":"10px", "className": "dt-center", "targets": [7]},
-          {"className": "dt-right", "targets": [8]},
-          {"className": "dt-center", "targets": [9]},				//"_all" para todas las columnas
-          {"className": "dt-center", "targets": [10]}				//"_all" para todas las columnas
+          {"width:":"10px", "className": "dt-center", "targets": [8]},
+          {"className": "dt-left", "targets": [7]},
+          {"className": "dt-right", "targets": [9]},
+          {"className": "dt-center", "targets": [6,10]},				//"_all" para todas las columnas
+          {"className": "dt-center", "targets": [11]}				//"_all" para todas las columnas
           ],
+          select: {
+            style: 'multi', // 'single', 'multi', 'os', 'multi+shift'
+            selector: 'td:first-child',
+        },          
 		"ajax":
 				{
           url: 'ajax/facturaingreso.ajax.php?op=listar',
@@ -110,9 +136,28 @@ function dt_ListarFacturasIngreso(){
 				},
 		"bDestroy": true,
 		"iDisplayLength": 10,//Paginación
-	    "order": [[ 0, "desc" ]]//Ordenar (columna,orden)
+	    "order": [[ 1, "desc" ]]//Ordenar (columna,orden)
 	}).DataTable();    
 } 
+/****************************************************************************** */
+// Handle click on "Select all" control
+$("#dt-FacturaIngreso").on("click", "#example-select-all", function(){
+  // Get all rows with search applied
+  var rows = tblFacturaIngreso.rows({ 'search': 'applied' }).nodes();
+  // Check/uncheck checkboxes for all rows in the table
+  $('input[type="checkbox"]', rows).prop('checked', this.checked);
+});
+/****************************************************************************** */
+function GenCompPago20(){
+     
+  // Iterate over all selected checkboxes
+  $.each(tblFacturaIngreso.$('input[type="checkbox"]'), function(index, rowId){
+    if(this.checked){
+      console.log(index, rowId, parseInt(rowId.value))
+    }
+  });
+  //$('#example-console-rows').text(rows_selected.join(","));
+}
 /****************************************************************************** */
  $('#daterange-btn-factingreso').daterangepicker({
   ranges   : {
@@ -613,7 +658,7 @@ function evaluarElementos(){
 };
 
 /*======================================================================*/
-//ENVIAR FORMULARIO PARA GUARDAR DATOS DE ENTRADA
+//ENVIAR FORMULARIO PARA GUARDAR DATOS DE FACTURA
 /*======================================================================*/
 $("body").on("submit", "#formularioFactura", function( event ) {	
   event.preventDefault();
@@ -647,7 +692,7 @@ $("body").on("submit", "#formularioFactura", function( event ) {
               $('#modalCrearFactura').modal('hide')
 
               swal({
-                title: "¡Hecho!!",
+                title: "¡Pre-Factura Guardada!",
                 text: `${res.data.msg}`,
                 icon: "success",
                 button: "Cerrar",
@@ -691,11 +736,12 @@ function getIdFactura(elem){
   //return
   $('#container').waitMe({
     effect : 'timer',
-    text : '',
+    text : 'Espere por favor.',
     bg : 'rgba(255,255,255,0.7)',
     color : '#000',
-    maxSize : '',
-    textPos : 'vertical'
+    maxSize : '50',
+    textPos : 'horizontal',
+    fontSize: ''    //default, '18px'
    });  
   (async () => {
     await axios.get('ajax/facturaingreso.ajax.php?op=TimbrarFact', {
@@ -715,7 +761,7 @@ function getIdFactura(elem){
         $('#container').waitMe("hide");
         //console.log(res.data.data.code)
         swal({
-          title: "¡Timbrado!",
+          title: "¡Factura Timbrada!",
           text: `Mensaje .${res.data.data.message}!!`,
           icon: "success",
           buttons: false,
@@ -748,7 +794,6 @@ ENVIA REPORTE DE ENTRADA AL ALMACEN DESDE EL DATATABLE
 $("#dt-FacturaIngreso tbody").on("click", "button.btnPrintPdf", function(){
   let idPrintPdf = $(this).attr("data-id");
   //let idPrintPdf = $(this).attr("data-folio");
-  //console.log(idPrintPdf); 
     if(idPrintPdf.length > 0){
      window.open("extensiones/fpdf/reportes/facturatimbrada.php?codigo="+idPrintPdf, "_blank");
     }
@@ -822,6 +867,8 @@ $("#modalCrearFactura").on('hidden.bs.modal', ()=> {
 });
 
 /*=============================================================*/
+//,'render': function (data, type, full, meta){  return '<input type="checkbox" name="ids[]" value="">';}
+/*************************************************** */
 
 init();
 

@@ -7,7 +7,10 @@ class ModeloUsuarios{
 static Public function MdlMostrarUsuarios($tabla, $campo, $valor){
 try {     
      if($campo !=null){    
-        $stmt=Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $campo=:$campo");
+        $stmt=Conexion::conectar()->prepare("SELECT usu.*, tec.alm_asignado
+		FROM $tabla usu 
+		INNER JOIN tecnicos tec ON tec.id=usu.user
+		WHERE usu.$campo=:$campo");
         
         $stmt->bindParam(":".$campo, $valor, PDO::PARAM_STR);
         
