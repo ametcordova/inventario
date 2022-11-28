@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 date_default_timezone_set("America/Mexico_City");
 
 $fechaHoy=date("Y-m-d");
@@ -34,7 +35,7 @@ switch ($_GET["op"]){
 			$fechadev2=$fechaHoy;
 		}
 
-  		$listarseries = ControladorOServicios::ctrListarOServicios($item, $valor, $orden, $fechadev1, $fechadev2);	
+  		$listarseries = ControladorOServicios::ctrListarOServicios($item, (int)$valor, $orden, $fechadev1, $fechadev2);	
 		  
   		if(count($listarseries) == 0){
 

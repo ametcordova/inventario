@@ -86,7 +86,7 @@ function dt_ListarFacturasIngreso(){
             autoPrint: false            //TRUE para abrir la impresora
         },
         {
-          text: 'Comp. de pago',
+          text: 'Comprob. de pago 2.0',
           className: 'btn btn-sm btn-dark ',
           action: function ( e, dt, node, config ) {
           GenCompPago20();
@@ -141,7 +141,7 @@ function dt_ListarFacturasIngreso(){
 } 
 /****************************************************************************** */
 // Handle click on "Select all" control
-$("#dt-FacturaIngreso").on("click", "#example-select-all", function(){
+$("#dt-FacturaIngreso").on("click", "#select-all", function(){
   // Get all rows with search applied
   var rows = tblFacturaIngreso.rows({ 'search': 'applied' }).nodes();
   // Check/uncheck checkboxes for all rows in the table
@@ -149,14 +149,15 @@ $("#dt-FacturaIngreso").on("click", "#example-select-all", function(){
 });
 /****************************************************************************** */
 function GenCompPago20(){
-     
+ ids=[];
   // Iterate over all selected checkboxes
   $.each(tblFacturaIngreso.$('input[type="checkbox"]'), function(index, rowId){
     if(this.checked){
-      console.log(index, rowId, parseInt(rowId.value))
+      //console.log(index, rowId, parseInt(rowId.value))
+      ids.push(parseInt(rowId.value));
     }
   });
-  //$('#example-console-rows').text(rows_selected.join(","));
+  console.log(ids);
 }
 /****************************************************************************** */
  $('#daterange-btn-factingreso').daterangepicker({

@@ -115,7 +115,7 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                 <tr class="thead-dark" style="height:10px !important; font-size:0.80em !important;">
                   <th style="width:1em;">ID</th>
                   <th style="width:3em;">Emp.</th>
-                  <th class="text-center">Técnico</th>
+                  <th >Técnico</th>
                   <th>OS</th>
                   <th>Teléfono</th>
                   <th>Almacén</th>

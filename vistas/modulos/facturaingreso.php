@@ -96,7 +96,7 @@ $fechaHoy = date("Y-m-d");
             <table class="table table-bordered table-hover compact table-sm table-striped dt-responsive" id="dt-FacturaIngreso" cellspacing="0" width="100%">
               <thead class="thead-dark" style="font-size:.8rem; height:1px">
                 <tr style="font-size:0.90em">
-                  <th class="text-center"> &nbsp&nbsp&nbsp<input type="checkbox" name="select_all" value="1" id="example-select-all"></th>
+                  <th class="text-center"> &nbsp&nbsp&nbsp<input type="checkbox" name="select_all" value="1" id="select-all"></th>
                   <th class="text-center">#</th>
                   <th class="text-center">Serie</th>
                   <th class="text-center">Folio</th>
