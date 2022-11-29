@@ -48,6 +48,7 @@ switch ($_GET["op"]){
             $fecha = date('d-m-Y', strtotime($value["fecha_instalacion"]));
             $nombre = substr($value["tecnico"],0,30);    //extrae el primer nombre del tecnico
 			$fact=$value["factura"];
+			$fagr=$fecha;
 			$capturo='<h6><span class="badge badge-info" title="'.$value["capturo"].'">'.$value["ultusuario"].'</span></h6>';
 			
 			//$tri = '<tr class="table-success"><td>'.($value["id"]).'</td>';
@@ -74,6 +75,7 @@ switch ($_GET["op"]){
 			      $value["telefono"],
 			      $value["almacen"],
 			      $fecha,
+				  $fagr,
 				  $capturo,
 			      $botonestado,
 				  $value["factura"],
@@ -292,9 +294,43 @@ switch ($_GET["op"]){
 		$respuesta = ControladorOServicios::ctrGetDataNumOS($tabla, $campo, $numos);
 
 		echo json_encode($respuesta);
-
-        
+     
      break;
+
+		case 'traeridos':
+	
+			$tabla="observa_os";
+				  
+			$item = "id_os";
+			if(isset($_GET["id"])){
+				$valor=$_GET["id"];
+			}
+	
+			  $traeridos = ControladorOServicios::ctrTraerIdOs($tabla, $item, (int)$valor);	
+			  
+			  if(count($traeridos) == 0){
+	
+				  echo '{"data": []}';           //arreglar, checar como va
+				  return;
+			  }    
+			
+			foreach($traeridos as $key => $value){
+	
+				  $data[]=array(
+					  $value["id"],
+					  $value["fecha"],
+					  $value["observa"],
+			   );
+			}
+		
+			$results = array(
+						"sEcho"=>1, //Información para el datatables
+						"iTotalRecords"=>count($data), //enviamos el total registros al datatable
+						"iTotalDisplayRecords"=>count($data), //enviamos el total registros a visualizar
+						"aaData"=>$data);
+		echo json_encode($results);        
+				
+		break;		 
 
 }  //FIN DE SWITCH
 

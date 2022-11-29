@@ -355,7 +355,6 @@ static Public function mdlGetDataOServicios($tabla, $campo, $valor, $status){
 	}
 }    
 /************************************************************************************* */
-
 	static Public function mdlGetDataNumOS($tabla, $campo, $numos){
 
 		try{     
@@ -374,6 +373,27 @@ static Public function mdlGetDataOServicios($tabla, $campo, $valor, $status){
 		}
 			
 	}
+/************************************************************************************* */
+
+/************************************************************************************* */
+static Public function mdlTraerIdOs($tabla, $item, $valor){
+
+	try{     
+		$sql="SELECT * FROM $tabla WHERE $item=:$item";
+	
+		$stmt=Conexion::conectar()->prepare($sql);
+		
+		$stmt->bindParam(":".$item, $valor, PDO::PARAM_STR);
+		
+		$stmt->execute();
+		
+		return $stmt->fetchAll();
+		
+	} catch (Exception $e) {
+			echo "Failed: " . $e->getMessage();
+	}
+		
+}
 /************************************************************************************* */
 
 }       //fin de la clase

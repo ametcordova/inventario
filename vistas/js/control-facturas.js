@@ -683,7 +683,7 @@ $('#myInputO').on( 'keyup change clear', function () {
   };
 } );
 
-
+/************************************************************* */
 //
 $('#TablaFacturas tbody').on( 'dblclick', 'td', function () {
   if(tabla.cell( this ).index().columnVisible==11){
@@ -696,7 +696,7 @@ $('#TablaFacturas tbody').on( 'dblclick', 'td', function () {
     $( "input[name='registroid']").val(numerodefactura);
   };
 });
-
+/*************************************************************** */
 //click para seleccionar y sumar importes
 $('#TablaFacturas tbody').on( 'click', 'tr', function () {
   $(this).toggleClass('selected');

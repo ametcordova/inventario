@@ -117,4 +117,15 @@ static public function ctrGetDataNumOS($tabla, $campo, $numos){
 
 }  
 
+/*=============================================
+
+============================================*/
+static public function ctrTraerIdOs($tabla, $item, $valor){
+
+	$respuesta = ModeloOServicios::mdlTraerIdOS($tabla, $item, $valor);
+
+	return $respuesta;
+
+}  
+
 }	//fin de la clase	

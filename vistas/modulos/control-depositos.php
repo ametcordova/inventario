@@ -170,7 +170,7 @@ $fechaHoy = date("Y-m-d");
      <form role="form" name="" id="form-AgregaDeposito" method="POST">
         <!-- Modal Header -->
         <div class="modal-header colorbackModal p-1">
-            <h3 class="modal-title">Agregar Depósito</h3>
+            <h4 class="modal-title">Agregar Depósito</h4>
             <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
         

@@ -8,6 +8,10 @@
     overflow-y: auto;
    }
    .kbw-signature { width: 33rem; height: 180px; }
+
+.dataTable_width_auto {
+  width: auto;
+}
 </style>
 <script>
   //evitar que se desconecte.
@@ -101,7 +105,8 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                   <th>OS</th>
                   <th>Teléfono</th>
                   <th>Almacén</th>
-                  <th>Fecha</th>
+                  <th>Fecha I.</th>
+                  <th title="Dbclick para capturar Obs.">FAGR</th>
                   <th>Us</th>
                   <th style="width:8em;">Status</th>
                   <th style="width:3em;">Fact</th>
@@ -119,7 +124,8 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                   <th>OS</th>
                   <th>Teléfono</th>
                   <th>Almacén</th>
-                  <th>Fecha</th>
+                  <th>Fecha I.</th>
+                  <th title="Dbclick para capturar Obs.">FAGR</th>
                   <th>Us</th>
                   <th style="width:8em;">Status</th>
                   <th style="width:3em;">Fact</th>
@@ -609,3 +615,80 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
     </div> <!-- fin del modal-content -->
   </div> <!-- fin del modal-lg -->
 </div> <!-- fin del modal  <div class="form-row"></div>   <script defer src="extensiones/plugins/jsignature/jSignature.CompressorSVG.js"></script>-->
+
+<!-- ==============================================================================
+            MODAL AGREGAR DEPOSITO
+===============================================================================-->
+<div class="modal fade" id="modalAgregarObservaOS" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+   
+    <div class="modal-content ui-widget-content">
+     <form role="form" id="form-AgregaObservaOS" method="POST" class="needs-validation" novalidate>
+        <!-- Modal Header -->
+        <div class="modal-header colorbackModal p-1">
+            <h5 class="modal-title" id="numerodeid">Agregar Fecha</h5>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body" style="font-size:.8rem">
+            
+          <div class="box-body">
+
+              <div class="form-row">
+                <div class="col-md-2 mb-1 mt-0 pt-0">
+                  <label for="idregos">Id:</label>
+                  <input type="text" class="form-control form-control-sm" id="idregos" name="idregos" placeholder="#Id" value="" readonly required>
+                </div>
+                <div class="col-md-3 mb-1 mt-0 pt-0">
+                  <label for="iddos">O.S.</label>
+                  <input type="text" class="form-control form-control-sm" id="iddos" name="iddos" placeholder="#OS" value=""  readonly required>
+                </div>
+                <div class="col-md-3 mb-1 mt-0 pt-0">
+                  <label for="idtel">Teléfono:</label>
+                  <input type="text" class="form-control form-control-sm" id="idtel" name="idtel" placeholder="#Tel" value=""  readonly required>
+                </div>
+                <div class="col-md-4 mb-1 mt-0 pt-0">
+                  <label for="validationCustom03">Fecha Agregado:</label>
+                  <input type="date" class="form-control form-control-sm" id="validationCustom03" placeholder="Fecha" value="" required>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="col-md-12 mt-0 pt-0">
+                  <label for="nvaobservaos">Obs:</label>
+                  <textarea class="form-control form-control-sm mt-0 pt-0" id="nvaobservaos" name="nvaobservaos" placeholder="Observaciones" rows="2" required></textarea>
+                </div>
+              </div>
+
+              
+            </div>   
+            <div class="dropdown-divider pt-1 mb-0 mt-1 bg-primary"></div>
+          </div>    <!-- fin del modal-body -->
+        
+          <div class="mt-0 mb-1 ml-1">
+            <table class="table table-bordered table-hover compact table-striped dataTable_width_auto" style="width:97%" id="detalleObserva">
+              <thead class="thead-dark" style="height:10px !important; font-size:0.78em !important;">
+                <tr>
+                  <th>#</th>
+                  <th>Fecha</th>
+                  <th>Observaciones</th>
+                </tr>
+              </thead>
+              <tbody style="height:6.5px !important; font-size:0.78em !important;">
+            </tbody>
+            </table>          
+          </div>
+        <!-- Modal footer -->
+        <div class="modal-footer colorbackModal p-1">
+          <button type="button" class="btn btn-sm btn-primary float-left py-0" data-dismiss="modal" tabindex="10"><i class="fa fa-reply"></i> 
+          Salir
+          </button>
+          <button type="submit" class="btn btn-sm btn-success py-0" tabindex="11"><i class="fa fa-save"></i> Guardar</button>
+        </div>
+      
+     </form>
+    </div> <!-- fin del modal-content -->
+  </div>
+</div>  <!-- fin del modal -->
+<!-- ==================================================================================== -->

@@ -7,22 +7,22 @@
       </li>
       
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="inicio" class="nav-link hover-underline-animation text-bold" style="color:magenta; font-style:oblique; text-decoration-style: wavy;">Inicio</a>
+        <a href="inicio" class="nav-link hover-underline-animation text-bold ml-3" style="color:magenta; font-style:oblique; text-decoration-style: wavy;">Inicio</a>
       </li>
 
 
       <?php if (isset($_SESSION['perfil']) && $_SESSION['perfil']=="Administrador" || trim($_SESSION["usuario"])=="ari" || trim($_SESSION["usuario"])=="visitante"){ ?>
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="control-facturas" class="nav-link font-weight-bold  ml-0 pl-0" >
-          <button type="button" class="btn btn-sm btn-info">Ctrl de Facturas</button>
+        <a href="control-facturas" class="nav-link font-weight-bold  ml-0 pl-0" title="Gestión de Facturas a Prov.">
+          <button type="button" class="btn btn-sm btn-info text-bold">Ctrl. Facturas</button>
         </a>
       </li>
       <?php } ?>
 
       <?php if (isset($_SESSION['perfil']) && $_SESSION['perfil']=="Administrador" || trim($_SESSION["usuario"])=="super"){ ?>
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="control-depositos" class="nav-link font-weight-bold ml-0 pl-0" >
-          <button type="button" class="btn btn-sm btn-fipabide">Ctrl Depósitos</button>
+        <a href="control-depositos" class="nav-link font-weight-bold ml-0 pl-0" title="Control de Depósitos Bancarios">
+          <button type="button" class="btn btn-sm btn-fipabide text-bold">Ctrl. Depósitos</button>
         </a>
       </li>
       <?php } ?>
@@ -30,15 +30,15 @@
       <?php if (isset($_SESSION['perfil']) && $_SESSION['perfil']=="Administrador" || trim($_SESSION["usuario"])=="super"){ ?>
       <li class="nav-item d-none d-sm-inline-block">
         <a href="adminoservicio" class="nav-link font-weight-bold ml-0 pl-0" title="Gestión de Orden de Servicios">
-          <button type="button" class="btn btn-sm" style="background-color:darkblue; color:white;">O S</button>
+          <button type="button" class="btn btn-sm text-bold" style="background-color:greenyellow; color:forestgreen;">O. S.</button>
         </a>
       </li>
       <?php } ?>
 
       <?php if (isset($_SESSION['perfil']) && $_SESSION['perfil']=="Administrador" || trim($_SESSION["usuario"])=="super"){ ?>
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="facturaingreso" class="nav-link font-weight-bold ml-0 pl-0" title="Nunosco Facturación V.4.0">
-          <img src="vistas/img/nunoscofacturacion40.png" class="img-responsive rounded float-right" style="width: 3.7rem;" alt="Img Factura">
+        <a href="facturaingreso" class="nav-link font-weight-bold ml-0 pl-0" title="Nunosco Facturación Ver. 4.0">
+          <img src="vistas/img/nunoscofacturacion40.jpg" class="img-responsive rounded float-right" style="width: 3.45rem;" alt="Img Factura">
         </a>
       </li>
       <?php } ?>

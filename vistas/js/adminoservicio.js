@@ -162,7 +162,7 @@ function listarOServicios(){
             btns.addClass('btn btn-success btn-sm');
           },  
           "columnDefs": [
-            {"className": "dt-center", "targets": [1,3,4,6,7,8,9,10]},
+            {"className": "dt-center", "targets": [1,3,4,6,7,8,9,10,11]},
             //{"className": "dt-right", "targets": [3,4]}				//"_all" para todas las columnas
             ],    
             select: false,     //se puso a false para poder seleccionar varios filas. true=1 fila
@@ -185,6 +185,60 @@ function listarOServicios(){
 }
 // ========= FIN LISTAR EN EL DATATABLE REGISTROS DE LA TABLA TABLAOS================
 
+/************************************************************* */
+//
+$('#DatatableOS tbody').on( 'dblclick', 'td', function () {
+  if(tblOrdendeServicios.cell( this ).index().columnVisible==7){
+    console.log(tblOrdendeServicios.row( this ).data()[0], tblOrdendeServicios.row( this ).data()[3]);
+    let numerodeid=tblOrdendeServicios.row( this ).data()[0];
+    let numerodeos=tblOrdendeServicios.row( this ).data()[3];
+    let numerodetel=tblOrdendeServicios.row( this ).data()[4];
+    $('#numerodeid').html("");
+    $('#numerodeid').html('<i class="fa fa-calendar"></i>'+' Capturar fecha de ID: #'+numerodeid);
+    $('#modalAgregarObservaOS').modal('show')
+    $( "input[name='idregos']").val(numerodeid);
+    $( "input[name='iddos']").val(numerodeos);
+    $( "input[name='idtel']").val(numerodetel);
+    traerdatosid(numerodeid);
+  };
+});
+/*************************************************************** */
+function traerdatosid(id){
+  tblOs=$('#detalleObserva').dataTable({
+          "paging": false,
+          "info": false,
+          "searching": false,
+          "columns": [
+            { "width": "5%" },
+            { "width": "8%" },
+            { "width": "85%" }
+          ],            
+          "columnDefs": [
+            {"className": "dt-center", 
+            "targets": [0]
+            },
+            {"className": "dt-center", 
+            "targets": [1]
+            },
+            {"className": "dt-left", 
+            "targets": [2]
+            }				//"_all" para todas las columnas
+            ],
+          "ajax":
+            {
+              url: 'ajax/adminoservicio.ajax.php?op=traeridos',
+              data: {"id": id},     
+              type : "GET",
+              dataType : "json",						
+              error: function(e){
+                console.log(e.responseText);
+              }
+            },
+      "bDestroy": true,
+      "iDisplayLength": 15,//Paginación
+      "order": [[ 0, 'desc' ]] //Ordenar (columna,orden)
+    }).DataTable();    
+}
 /**************************************************************/
 //añadir un INPUT en la columna de No. de Fact
 $('#DatatableOS tfoot th').each( function () {
@@ -193,7 +247,22 @@ $('#DatatableOS tfoot th').each( function () {
   if(title=="ID"){
     $(this).html('<input type="text" id="myID" style="width:25px; height:20px;" placeholder="'+title+'"/>');
   }
-  
+  //Hacer busqueda por la columna de No. de Fact. segun el dato del INPUT
+  $('#myID').on( 'keyup change clear', function () {
+    if(tblOrdendeServicios.column(0)){
+      tblOrdendeServicios.column(0).search(this.value).draw();
+    };
+  } );
+
+  if(title=="Técnico"){
+    $(this).html('<input type="text float-left" id="searchTec" style="width:20rem; height:20px;"  placeholder="'+title+'"/>');
+    $('#searchTec').on( 'keyup change clear', function () {
+      if(tblOrdendeServicios.column(2)){
+        tblOrdendeServicios.column(2).search(this.value).draw();
+      };
+    } );
+  }
+
   if(title=="OS"){
     $(this).html('<input type="text" id="myOS" style="width:50px; height:20px;" placeholder="'+title+'"/>');
     //Hacer busqueda por la columna de No. de Fact. segun el dato del INPUT
@@ -225,12 +294,6 @@ $('#DatatableOS tfoot th').each( function () {
   }
 });
 
-//Hacer busqueda por la columna de No. de Fact. segun el dato del INPUT
-$('#myID').on( 'keyup change clear', function () {
-  if(tblOrdendeServicios.column(0)){
-     tblOrdendeServicios.column(0).search(this.value).draw();
-  };
-} );
 /**************************************************************/
 
 /* ====================click para seleccionar OS ====================*/
