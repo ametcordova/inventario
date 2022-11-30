@@ -46,9 +46,11 @@ switch ($_GET["op"]){
         foreach($listarseries as $key => $value){
 
             $fecha = date('d-m-Y', strtotime($value["fecha_instalacion"]));
+			$fepp=IS_NULL($value["fecha_eppago"])?'':date('d-m-Y', strtotime($value["fecha_eppago"]));
             $nombre = substr($value["tecnico"],0,30);    //extrae el primer nombre del tecnico
 			$fact=$value["factura"];
-			$fagr=$fecha;
+			$fagr=IS_NULL($fepp)?'':$fepp;
+			//$nombre_usuario = $_GET['usuario'] ?? 'nadie';
 			$capturo='<h6><span class="badge badge-info" title="'.$value["capturo"].'">'.$value["ultusuario"].'</span></h6>';
 			
 			//$tri = '<tr class="table-success"><td>'.($value["id"]).'</td>';
@@ -332,6 +334,20 @@ switch ($_GET["op"]){
 				
 		break;		 
 
+		case 'guardarAgregaOS':
+			//$POST = json_decode(file_get_contents('php://input'), true);
+
+			$idregos=$_POST['idregos'];
+			$fechaagrega=$_POST['fechaagrega'];
+			$nvaobservaos=$_POST['nvaobservaos'];
+			$ultusuario=$_POST['idDeUsuario'];
+			$tabla="observa_os";
+			
+			$respuesta = ControladorOServicios::ctrGuardarAgregaOS($tabla, $idregos, $fechaagrega, $nvaobservaos, $ultusuario);
+	
+			echo json_encode($respuesta);
+	
+		break;		
 }  //FIN DE SWITCH
 
 function validar_fecha_espanol($fecha){

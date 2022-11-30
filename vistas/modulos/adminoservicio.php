@@ -105,8 +105,8 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                   <th>OS</th>
                   <th>Teléfono</th>
                   <th>Almacén</th>
-                  <th>Fecha I.</th>
-                  <th title="Dbclick para capturar Obs.">FAGR</th>
+                  <th>Fecha Inst.</th>
+                  <th title="Doble click para capturar y/o ver Obs.">FEPP</th>
                   <th>Us</th>
                   <th style="width:8em;">Status</th>
                   <th style="width:3em;">Fact</th>
@@ -124,8 +124,8 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                   <th>OS</th>
                   <th>Teléfono</th>
                   <th>Almacén</th>
-                  <th>Fecha I.</th>
-                  <th title="Dbclick para capturar Obs.">FAGR</th>
+                  <th>Fecha Inst.</th>
+                  <th title="Doble click para capturary/o ver Obs.">FEPP</th>
                   <th>Us</th>
                   <th style="width:8em;">Status</th>
                   <th style="width:3em;">Fact</th>
@@ -623,7 +623,7 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
   <div class="modal-dialog">
    
     <div class="modal-content ui-widget-content">
-     <form role="form" id="form-AgregaObservaOS" method="POST" class="needs-validation" novalidate>
+     <form role="form" id="form-AgregaObservaOS" method="POST">
         <!-- Modal Header -->
         <div class="modal-header colorbackModal p-1">
             <h5 class="modal-title" id="numerodeid">Agregar Fecha</h5>
@@ -631,14 +631,14 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
         </div>
         
         <!-- Modal body -->
-        <div class="modal-body" style="font-size:.8rem">
-            
-          <div class="box-body">
+          <div class="modal-body" style="font-size:.8rem">
+            <div class="box-body pb-0 mb-0 mt-0 text-center">
 
               <div class="form-row">
                 <div class="col-md-2 mb-1 mt-0 pt-0">
                   <label for="idregos">Id:</label>
-                  <input type="text" class="form-control form-control-sm" id="idregos" name="idregos" placeholder="#Id" value="" readonly required>
+                  <input type="text" class="form-control form-control-sm text-center" id="idregos" name="idregos" placeholder="#Id" value="" readonly required>
+                  <input type="hidden" name="idDeUsuario" value="<?php echo $_SESSION['id']; ?>">
                 </div>
                 <div class="col-md-3 mb-1 mt-0 pt-0">
                   <label for="iddos">O.S.</label>
@@ -649,25 +649,24 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                   <input type="text" class="form-control form-control-sm" id="idtel" name="idtel" placeholder="#Tel" value=""  readonly required>
                 </div>
                 <div class="col-md-4 mb-1 mt-0 pt-0">
-                  <label for="validationCustom03">Fecha Agregado:</label>
-                  <input type="date" class="form-control form-control-sm" id="validationCustom03" placeholder="Fecha" value="" required>
+                  <label for="fechaagrega">Fecha Agregado:</label>
+                  <input type="date" class="form-control form-control-sm" id="fechaagrega" name="fechaagrega" placeholder="Fecha" value="" required>
                 </div>
               </div>
 
               <div class="form-row">
                 <div class="col-md-12 mt-0 pt-0">
-                  <label for="nvaobservaos">Obs:</label>
-                  <textarea class="form-control form-control-sm mt-0 pt-0" id="nvaobservaos" name="nvaobservaos" placeholder="Observaciones" rows="2" required></textarea>
+                  <label for="nvaobservaos">Observacions:</label>
+                  <textarea class="form-control form-control-sm mt-0 pt-0" id="nvaobservaos" name="nvaobservaos" placeholder="Escriba aqui..." rows="2" required></textarea>
                 </div>
               </div>
 
-              
-            </div>   
-            <div class="dropdown-divider pt-1 mb-0 mt-1 bg-primary"></div>
+            </div>  <!-- fin del box-body --> 
+            
           </div>    <!-- fin del modal-body -->
-        
+          
           <div class="mt-0 mb-1 ml-1">
-            <table class="table table-bordered table-hover compact table-striped dataTable_width_auto" style="width:97%" id="detalleObserva">
+            <table class="table table-bordered table-hover compact table-striped dataTable_width_auto" cellspacing="0" style="width:97%" id="detalleObserva">
               <thead class="thead-dark" style="height:10px !important; font-size:0.78em !important;">
                 <tr>
                   <th>#</th>

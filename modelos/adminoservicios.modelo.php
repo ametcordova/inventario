@@ -165,7 +165,7 @@ try{
 	}
 	
 
-    $stmt = Conexion::conectar()->prepare("SELECT os.`id`,os.`id_empresa`, os.id_tecnico, os.`ordenservicio`,os.`telefono`,user.nombre AS tecnico, alm.nombre AS almacen, os.`fecha_instalacion`, os.`estatus`, os.factura, os.ultusuario, usu.nombre AS capturo
+    $stmt = Conexion::conectar()->prepare("SELECT os.`id`,os.`id_empresa`, os.id_tecnico, os.`ordenservicio`,os.`telefono`,user.nombre AS tecnico, alm.nombre AS almacen, os.`fecha_instalacion`, os.fecha_eppago, os.`estatus`, os.factura, os.ultusuario, usu.nombre AS capturo
     FROM $tabla os
     INNER JOIN almacenes alm ON alm.id=os.id_almacen
     INNER JOIN usuarios user ON user.user=os.id_tecnico
@@ -395,6 +395,39 @@ static Public function mdlTraerIdOs($tabla, $item, $valor){
 		
 }
 /************************************************************************************* */
+
+/*=============================================
+	REGISTRO ORDEN DE SERVICIO
+=============================================*/
+static public function mdlGuardarAgregaOS($tabla, $idregos, $fechaagrega, $nvaobservaos, $ultusuario){
+	
+	try {      
+
+		 $stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(id_os, fecha, observa, ultusuario) VALUES (:id_os, :fecha, :observa, :ultusuario)");
+			  
+			  $stmt->bindParam(":id_os", 		$idregos, PDO::PARAM_INT);
+			  $stmt->bindParam(":fecha", 		$fechaagrega, PDO::PARAM_STR);
+			  $stmt->bindParam(":observa",  	$nvaobservaos, PDO::PARAM_STR);
+			  $stmt->bindParam(":ultusuario",	$ultusuario, PDO::PARAM_INT);
+			  $stmt->execute();
+
+        if($stmt){
+			$tabla='tabla_os';
+			$query = Conexion::conectar()->prepare("UPDATE $tabla SET fecha_eppago=:fecha_eppago, ultusuario=:ultusuario WHERE id=:id");
+			  
+			  $query->bindParam(":id", 				$idregos, PDO::PARAM_INT);
+			  $query->bindParam(":fecha_eppago",	$fechaagrega, PDO::PARAM_STR);
+			  $query->bindParam(":ultusuario",		$ultusuario, PDO::PARAM_INT);
+			  $query->execute();
+
+          return "ok";
+        }else{
+          return "error";
+        }
+  } catch (Exception $e) {
+    echo "Failed: " . $e->getMessage();
+  }
+}
 
 }       //fin de la clase
 

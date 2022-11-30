@@ -128,4 +128,19 @@ static public function ctrTraerIdOs($tabla, $item, $valor){
 
 }  
 
+/*=============================================
+GUARDAR ORDENES DE SERVICIO 
+=============================================*/
+static public function ctrGuardarAgregaOS($tabla, $idregos, $fechaagrega, $nvaobservaos, $ultusuario){
+
+	$respuesta = ModeloOServicios::mdlGuardarAgregaOS($tabla, $idregos, $fechaagrega, $nvaobservaos, $ultusuario);
+
+	if($respuesta=='ok'){
+		return array('status' => 200);
+	}else{
+		return array('status' => 400);
+	}
+
+}
+
 }	//fin de la clase	

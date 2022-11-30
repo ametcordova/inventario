@@ -1,4 +1,8 @@
 //$( "#modalAgregarOS" ).draggable();
+$("#modalAgregarObservaOS").draggable({
+  handle: ".modal-header"
+});
+
 var item;
 var data;
 var modalEvento='';
@@ -185,60 +189,6 @@ function listarOServicios(){
 }
 // ========= FIN LISTAR EN EL DATATABLE REGISTROS DE LA TABLA TABLAOS================
 
-/************************************************************* */
-//
-$('#DatatableOS tbody').on( 'dblclick', 'td', function () {
-  if(tblOrdendeServicios.cell( this ).index().columnVisible==7){
-    console.log(tblOrdendeServicios.row( this ).data()[0], tblOrdendeServicios.row( this ).data()[3]);
-    let numerodeid=tblOrdendeServicios.row( this ).data()[0];
-    let numerodeos=tblOrdendeServicios.row( this ).data()[3];
-    let numerodetel=tblOrdendeServicios.row( this ).data()[4];
-    $('#numerodeid').html("");
-    $('#numerodeid').html('<i class="fa fa-calendar"></i>'+' Capturar fecha de ID: #'+numerodeid);
-    $('#modalAgregarObservaOS').modal('show')
-    $( "input[name='idregos']").val(numerodeid);
-    $( "input[name='iddos']").val(numerodeos);
-    $( "input[name='idtel']").val(numerodetel);
-    traerdatosid(numerodeid);
-  };
-});
-/*************************************************************** */
-function traerdatosid(id){
-  tblOs=$('#detalleObserva').dataTable({
-          "paging": false,
-          "info": false,
-          "searching": false,
-          "columns": [
-            { "width": "5%" },
-            { "width": "8%" },
-            { "width": "85%" }
-          ],            
-          "columnDefs": [
-            {"className": "dt-center", 
-            "targets": [0]
-            },
-            {"className": "dt-center", 
-            "targets": [1]
-            },
-            {"className": "dt-left", 
-            "targets": [2]
-            }				//"_all" para todas las columnas
-            ],
-          "ajax":
-            {
-              url: 'ajax/adminoservicio.ajax.php?op=traeridos',
-              data: {"id": id},     
-              type : "GET",
-              dataType : "json",						
-              error: function(e){
-                console.log(e.responseText);
-              }
-            },
-      "bDestroy": true,
-      "iDisplayLength": 15,//Paginación
-      "order": [[ 0, 'desc' ]] //Ordenar (columna,orden)
-    }).DataTable();    
-}
 /**************************************************************/
 //añadir un INPUT en la columna de No. de Fact
 $('#DatatableOS tfoot th').each( function () {
@@ -963,6 +913,96 @@ $('.deshabilitar').click(function() {
   $('#signature').signature(enable ? 'disable' : 'enable'); 
   $(this).text(enable ? 'Habilitar' : 'Deshabilitar'); 
 });
+/********************************************************** */
+
+/************************************************************* */
+// MODULO PARA LA CAPTURA DE FECHA DE ENVIO PARA LA ODC
+/************************************************************* */
+$('#DatatableOS tbody').on( 'dblclick', 'td', function () {
+  if(tblOrdendeServicios.cell( this ).index().columnVisible==7){
+    let numerodeid=tblOrdendeServicios.row( this ).data()[0];
+    let numerodeos=tblOrdendeServicios.row( this ).data()[3];
+    let numerodetel=tblOrdendeServicios.row( this ).data()[4];
+    $('#numerodeid').html("");
+    $('#numerodeid').html('<i class="fa fa-calendar"></i>'+' Capturar fecha de ID: #'+numerodeid);
+    $('#modalAgregarObservaOS').modal('show')
+    $( "input[name='idregos']").val(numerodeid);
+    $( "input[name='iddos']").val(numerodeos);
+    $( "input[name='idtel']").val(numerodetel);
+    traerdatosid(numerodeid);
+  };
+});
+/*************************************************************** */
+function traerdatosid(id){
+  tblOs=$('#detalleObserva').dataTable({
+          "language": {
+            "emptyTable": "Ningún dato disponible en la tabla"
+          },
+          "paging": false,
+          "info": false,
+          "searching": false,
+          "autoWidth": false,
+          "columns": [
+            { "width": "09%" },
+            { "width": "18%" },
+            { "width": "70%" }
+          ],            
+            "columnDefs": [
+              {"className": "dt-center", 
+              "targets": [0]
+              },
+              {"className": "dt-center", 
+              "targets": [1]
+              },
+              {"className": "dt-left", 
+              "targets": [2]
+              }
+            ],
+          "ajax":{
+              url: 'ajax/adminoservicio.ajax.php?op=traeridos',
+              data: {"id": id},     
+              type : "GET",
+              dataType : "json",						
+              error: function(e){
+                console.log(e.responseText);
+              }
+          },
+      "bDestroy": true,
+      "iDisplayLength": 15,//Paginación
+      "order": [[ 0, 'desc' ]] //Ordenar (columna,orden)
+    }).DataTable();    
+}
+/*======================================================================*/
+//ENVIAR FORMULARIO PARA GUARDAR FECHA DE ENTREGA PARA PAGOS 
+/*======================================================================*/
+$("body").on("submit", "#form-AgregaObservaOS", function( event ) {	
+  event.preventDefault();
+  event.stopPropagation();	
+    let formData = new FormData($("#form-AgregaObservaOS")[0]);
+
+    axios({ 
+      method  : 'post', 
+      url : 'ajax/adminoservicio.ajax.php?op=guardarAgregaOS', 
+      data : formData, 
+    }) 
+    .then((res)=>{ 
+      if(res.status=="200") {
+        $("input[name=fechaagrega]").val('');
+        $("textarea[name=nvaobservaos]").val('');
+        $('#DatatableOS').DataTable().ajax.reload(null, false)
+        $('#detalleObserva').DataTable().ajax.reload(null, false);
+      }
+
+    }) 
+    .catch((err) => {
+      alert("Registro No Guardado.")
+      throw err;
+    }); 
+
+});
+/**************************************************************/
+// TERMINA EL MODULO PARA EL ENVIO DE LA OS PARA ELAB. DE ODC
+/**************************************************************/
 
 /*==================================================================*/
 $('#daterange-btnOS').daterangepicker({
