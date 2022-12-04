@@ -306,6 +306,149 @@ class ClaseFacturar{
             $resp=array('403' => "Failed: " . $e->getMessage());	
         }
     }
+
+    /*========================================================= */
+//  FUNCION PARA CANCELAR FACTURA
+/*========================================================= */
+static public function CancelarFacturaWS($tabla, $campo, $valor, $rfcEmisor, $rfcReceptor, $uuid, $total){
+
+    header('Content-Type: application/json');
+
+    # OBJETO DEL API DE CONEXION
+    $url = 'https://app.facturaloplus.com/ws/servicio.do?wsdl';    //endpoint productivo
+    //$url = 'https://dev.facturaloplus.com/ws/servicio.do?wsdl';     //endpoint de pruebas
+
+    $objConexion = new ConexionWS($url);
+    //$folio=$valor;
+    $ultusuario=$_SESSION['id'];
+
+    //OBTENER EL DIRECTORIO PRINCIPAL
+    $dirpadre = dirname(__DIR__);
+
+    if(!file_exists($dirpadre.'/config/Certificados/CSD_MATRIZ_DIGB980626MX3_20220913_165347.key')){
+        $resp=array('code'=>401,'message'=>"File KEY does not exists");
+        return $resp;
+        exit;
+    };
+
+    if(!file_exists($dirpadre.'/config/Certificados/00001000000515088380.cer')){
+        $resp=array('code'=>401,'message'=>"File CER does not exists");
+        return $resp;
+        exit;
+    };
+
+/********************************************************************** */
+    # CREDENCIALES Y DATOS PARA CANCELACION DE FACTURA
+/********************************************************************** */    
+    $apikey = 'd2d1f88d95db4eb6b7a8c7105b1eb264';   //api key productivo
+    $motivo = '02';
+    $folioSustitucion='';
+    $rfcEmisor=$rfcEmisor;
+    $rfcReceptor=$rfcReceptor;
+    $uuid=$uuid;
+    $total=floatval($total);
+    $keyCSD = base64_encode(file_get_contents($dirpadre.'/config/Certificados/CSD_MATRIZ_DIGB980626MX3_20220913_165347.key'));
+    $cerCSD = base64_encode(file_get_contents($dirpadre.'/config/Certificados/00001000000515088380.cer'));
+    $passCSD = 'B26D06GV';
+    $response= $objConexion->operacion_cancelar2($apikey, $keyCSD, $cerCSD, $passCSD, $uuid, $rfcEmisor, $rfcReceptor, $total, $motivo, $folioSustitucion);
+    $res=json_decode($response,true);
+
+/*********************************************************************** */
+//DE PRUEBA
+/*********************************************************************** */
+// $apikey = '28bcba372e324116ac4332175ef8d441'; //api key dev - pruebas
+// $uuid = '4a5dc24d-e0a9-4172-9fdd-38b2dfbd4435';
+// $rfcEmisor = 'EKU9003173C9';
+// $rfcReceptor = 'XAXX010101000';
+// $total = 1.16;
+// $keyCSD = base64_encode(file_get_contents($dirpadre.'/config/Certificados/Pruebas/CSD_EKU9003173C9.key') );
+// $cerCSD = base64_encode(file_get_contents($dirpadre.'/config/Certificados/pruebas/CSD_EKU9003173C9.cer') );
+// $passCSD = '12345678a';
+// $motivo = '02';
+// $folioSustitucion = '';
+// $response=$objConexion->operacion_cancelar2($apikey, $keyCSD, $cerCSD, $passCSD, $uuid, $rfcEmisor, $rfcReceptor, $total, $motivo, $folioSustitucion);
+// $res=json_decode($response,true);
+/*********************************************************************** */
+
+    # RESPUESTA DEL SERVICIO
+    //echo 'code: '.$res['codigo'].'message: '.$res['mensaje'];
+    $resp=array('code'=>$res['codigo'],'message'=>$res['mensaje']);
+
+    /*
+        201 - Solicitud procesada con éxito.
+        307 - El CFDI contiene un timbre previo.
+        701 - Creditos insuficientes
+    */
+
+    $coderesp = array(
+        'Solicitud de cancelación exitosa' => 201,
+        'Solicitud de cancelación previamente enviada' => 202,
+        'UUID No corresponde el RFC del emisor y de quien solicita la cancelación.' => 203,
+        'No Existe'=> 205
+    );              //echo array_search(201,$coderesp, true);
+
+    //Cuando sea codigo "200" o "307" se guardaran los archivos XML y PDF
+    if ($res['codigo'] == '200' || $res['codigo'] == '201') {
+
+    	## GUARDAR ACUSE EN DIRECTORIO ACTUAL ##
+		file_put_contents('./cancelado/acuse_cancelacion.xml', $res['acuse']);
+
+        // Se crea el objeto de la respuesta del Servicio.
+        $dataOBJ = json_decode($res['datos'], false);
+
+        //Creamos los archivos con la extencion .xml y .pdf de la respuesta obtenida del parametro "data"
+        $bytes=file_put_contents('./cancelado/'.$rfcEmisor."-"."-CANCELADO".'.xml', $dataOBJ->XML);
+
+        file_put_contents('./cancelado/archivo_recibido.xml', $res['resultado']);
+        file_put_contents('./cancelado/archivo.xml', $dataOBJ);
+
+    }else{
+        $existcode=in_array($res['codigo'], $coderesp, true);
+        if($existcode){
+            //return(array_search(201,$coderesp, true));
+            return $resp;
+        }
+        return $resp;
+    }
+
+    if($bytes===false){
+        //echo "Error al escribir archivo XML.".PHP_EOL;
+        $resp = array('411' => 'Error al escribir archivo XML.');	
+        return $resp;
+   }
+
+    //Falta validad si existe archivo, para borrarlo.
+    $file = 'datoscancelacion.txt';
+
+    $uuid= $dataOBJ->UUID;
+
+    try {    
+            $fechacancelado=date("Y-m-d H:i:s");
+            $sql="UPDATE $tabla SET fechacancelado=:fechacancelado WHERE $campo=:$campo";
+            $stmt1 = Conexion::conectar()->prepare($sql);
+
+            $stmt1 -> bindParam(":fechatimbrado",   $fechacancelado,  PDO::PARAM_STR);
+            $stmt1 -> bindParam(":".$campo,         $valor, PDO::PARAM_INT);
+
+            $stmt1 -> execute();
+        
+
+        if(!$stmt1){
+            $resp = array('403' => 'Hubo un error al guardar');	
+            return $resp;
+        }
+
+        //array_push($resp, array('bytes'=>$bytes));
+
+        $uuid .= PHP_EOL . PHP_EOL;
+        file_put_contents('./cancelado/'.$file, $uuid, FILE_APPEND | LOCK_EX);
+        
+        return $resp;
+
+    } catch (Exception $e) {
+        $resp=array('403' => "Failed: " . $e->getMessage());	
+    }
+}
     
 }  //FIN DE LA CLASE
 /*========================================================= */

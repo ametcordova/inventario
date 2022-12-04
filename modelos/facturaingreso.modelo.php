@@ -16,7 +16,7 @@ try {
     }
 	$where.=' ORDER BY tb1.id DESC';
   
-	$sql="SELECT tb1.*,tb2.nombre AS nombrereceptor
+	$sql="SELECT tb1.*,tb2.nombre AS nombrereceptor, tb2.rfc AS rfcreceptor
     FROM $tabla tb1 
     INNER JOIN clientes tb2 ON tb1.idreceptor=tb2.id
     WHERE ".$where;

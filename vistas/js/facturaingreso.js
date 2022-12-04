@@ -1,4 +1,5 @@
 var arrayProductos=[];
+var modalEvento='';
 var renglonesfacturar=cantidadfacturar=cantidadimporte=sumasubtotal=sumatotal=0;
 const { ajax } = rxjs.ajax;
 //const { fromEvent } = rxjs;
@@ -156,6 +157,10 @@ function GenCompPago20(){
       //console.log(index, rowId, parseInt(rowId.value))
       ids.push(parseInt(rowId.value));
     }
+    if(ids.length>0){
+      $('#modalCrearComplementoPago').modal('show')
+    }
+
   });
   console.log(ids);
 }
@@ -842,6 +847,77 @@ $("#dt-FacturaIngreso tbody").on("click", "button.downloadXML", ()=>{
   
   })();  //fin del async
   
+})
+/*===================================================*/
+
+/*===================================================
+CANCELAR FACTURA
+===================================================*/
+$("#dt-FacturaIngreso tbody").on("click", "button.btnCancelFact", function(){
+  
+  let dataidfact        = $(this).data("idfact");
+  let datarfcemisor     = $(this).data("rfcemisor");
+  let datarfcreceptor   = $(this).data("rfcreceptor");
+  let datauuid          = $(this).data("uuid");
+  let dataimporte       = $(this).data("importe");
+  let datafechatimbrado = $(this).data("fechatimbrado");
+  let datafechacancelado= $(this).data("fechacancelado");
+  console.log(dataidfact, datarfcemisor, datarfcreceptor, datauuid, dataimporte, datafechatimbrado, datafechacancelado);
+  if(datafechacancelado.length>0){
+    alert("Factura Ya está cancelado")
+    return
+  }
+  $('#container').waitMe({
+    effect : 'timer',
+    text : 'Espere por favor.',
+    bg : 'rgba(255,255,255,0.7)',
+    color : '#000',
+    maxSize : '50',
+    textPos : 'horizontal',
+    fontSize: ''    //default, '18px'
+   });  
+  (async () => {
+    await axios.get('ajax/facturaingreso.ajax.php?op=CancelarFact', {
+      params: {
+        dataidfact: dataidfact,
+        datarfcemisor: datarfcemisor,
+        datarfcreceptor: datarfcreceptor,
+        datauuid: datauuid,
+        dataimporte: dataimporte,
+        datafechatimbrado: datafechatimbrado
+      }
+    })
+
+    .then((res)=>{ 
+      console.log(res.data.data.code)
+      if(res.data.data.code==200 || res.data.data.code==201) {
+        $('#dt-FacturaIngreso').DataTable().ajax.reload(null, false);
+        $('#container').waitMe("hide");
+        swal({
+          title: "¡Factura cancelada!",
+          text: `Mensaje .${res.data.data.message}!!`,
+          icon: "success",
+          buttons: false,
+          timer: 5000
+        })  //fin swal
+        
+      }else{
+          //console.log(res.data)
+          $('#container').waitMe("hide");
+          swal({
+            title: "¡Lo sentimos mucho!",
+            text: `Mensaje .${res.data.data.message}!!`,
+            icon: "error",
+            buttons: false,
+            timer: 5000
+          })  //fin swal
+      }          
+    }) 
+
+    .catch((err) => {throw err}); 
+  
+  })();  //fin del async
+
 })
 /*===================================================*/
 

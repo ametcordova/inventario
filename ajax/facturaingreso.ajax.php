@@ -60,13 +60,17 @@ switch ($_GET["op"]){
             // }
 
             if($value["uuid"]!=""){
-                $boton0 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-dark px-1 py-1' title='Factura timbrada'><i class='fa fa-bell fa-fw'></i> </button></td> ":"";
+                if($value["fechacancelado"]==''){
+                    $boton0 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-dark px-1 py-1' title='Factura timbrada'><i class='fa fa-bell fa-fw'></i> </button></td> ":"";
+                }else{
+                    $boton0 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-dark px-1 py-1 disabled' title='Factura cancelada'><i class='fa fa-bell fa-fw'></i> </button></td> ":"";
+                }
 
                 $boton1 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-warning px-1 py-1' title='Comp. de Pago timbrada'>".'P'.$value["id"]."</button></td> ":"";
 
                 $boton3 =getAccess($acceso, ACCESS_PRINTER)?"<a href='vistas/modulos/download.php?filename=$file&ruta=1&mime=xml' title='Descargar XML' class='btn btn-sm btn-info px-1 py-1'><i class='fa fa-file-code-o'></i></a> ":"";
                 $boton4 ='';
-                $boton5 =getAccess($acceso, ACCESS_DELETE)?"<td><button class='btn btn-danger btn-sm px-1 py-1 checabox' data-cancelafact='".$value['id']."' title='Cancelar Factura'><i class='fa fa-window-close'></i></button></td> ":"";
+                $boton5 =getAccess($acceso, ACCESS_DELETE)?"<td><button class='btn btn-danger btn-sm px-1 py-1 btnCancelFact' data-idfact='".$value['id']."' data-rfcemisor='".$value['rfcemisor']."' data-rfcreceptor='".$value['rfcreceptor']."' data-uuid='".$value['uuid']."' data-importe='".$value['totalfactura']."' data-fechatimbrado='".$value['fechatimbrado']."' data-fechacancelado='".$value['fechacancelado']."' title='Cancelar Factura'><i class='fa fa-window-close'></i></button></td> ":"";
 
             }else{
                 $boton0 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-danger px-1 py-1' onclick='getIdFactura(this)' title='Factura sin timbrar' data-idfactura='".$value['id']."' data-folio='".$value['folio']."' data-fechaelabora='".$value['fechaelaboracion']."' data-idempresa='".$value['id_empresa']."' data-serie='".$value['serie']."' data-rfcemisor='".$value['rfcemisor']."' ><i class='fa fa-bell-slash fa-fw'></i> </button></td> ":"";
@@ -76,7 +80,8 @@ switch ($_GET["op"]){
                 $boton3 ='';
 
                 $boton4 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-primary btn-sm px-1 py-1' data-editfact='".$value['id']."' title='Editar Factura' data-toggle='modal' data-target='#modalEditarEntradasAlmacen'><i class='fa fa-edit'></i></button></td> ":"";
-                $boton5 =getAccess($acceso, ACCESS_DELETE)?"<td><button class='btn btn-warning btn-sm px-1 py-1 checabox' data-delfact='".$value['id']."' title='Eliminar Factura '><i class='fa fa-trash'></i></button></td> ":"";
+                
+                $boton5 =getAccess($acceso, ACCESS_DELETE)?"<td><button class='btn btn-warning btn-sm px-1 py-1 checabox btnCancelFact' data-idfact='".$value['id']."' data-folio='".$value['folio']."' data-idempresa='".$value['id_empresa']."' data-serie='".$value['serie']."' data-rfcemisor='".$value['rfcemisor']."' data-importe='".$value['totalfactura']."' title='Eliminar Factura '><i class='fa fa-trash'></i></button></td> ":"";
 
             };
 
@@ -252,6 +257,8 @@ switch ($_GET["op"]){
         }    
         break;
 /************************************************************************************************** */
+//                 PARA TIMBRAR FACTURAR
+/************************************************************************************************** */
         case 'TimbrarFact':
             $fechaactual=new DateTime("now");
             $fecha = new DateTime($_GET['datafecha']);
@@ -297,7 +304,7 @@ switch ($_GET["op"]){
                 json_output(json_build(401, $resp, 'Respuesta ERRONEA del WS'));
 
         break;
-
+/************************************************************************************************** */
 
         case 'downloadXML':
             $folio          = $_GET['datafolio'];
@@ -320,6 +327,63 @@ switch ($_GET["op"]){
             //echo json_encode();
 
         break;
+
+    /************************************************************************************************** */
+    //   PARA CANCELAR FACTURA TIMBRADA
+     /************************************************************************************************** */
+        case 'CancelarFact':
+        $fechaactual=new DateTime("now");
+        $fecha = new DateTime($_GET['datafechatimbrado']);
+        $diff = $fecha->diff($fechaactual);
+        
+        // if($diff->d>0){
+        //     json_output(json_build(403, null, 'Mas de 1 dia.'));
+        //     exit;
+        // }
+
+        // if($diff->h<23 && $diff->i<50 ){
+        //     json_output(json_build(403, $diff->h, 'Tiene menos de 23 horas y 50 min.'));
+        // }
+        
+        $tabla          = "facturaingreso";
+        $campo          = "id";
+        $valor          = $_GET['dataidfact'];
+        $rfcEmisor      = $_GET['datarfcemisor'];
+        $rfcReceptor    = $_GET['datarfcreceptor'];
+        $total          = $_GET['dataimporte'];
+        $uuid           = $_GET['datauuid'];
+        
+        $resp = ClaseFacturar::CancelarFacturaWS($tabla, $campo, $valor, $rfcEmisor, $rfcReceptor, $uuid, $total);
+        
+        if($resp){
+            json_output(json_build(201, $resp, 'Respuesta Exitosa del WS'));    
+        }
+            json_output(json_build(401, $resp, 'Respuesta ERRONEA del WS'));
+
+    break;
+/************************************************************************************************** */
+
+    case 'downloadXML':
+        $folio          = $_GET['datafolio'];
+        $serie      = $_GET['dataserie'];
+        $rfcemisor  = $_GET['datarfcemisor'];
+
+        if(empty($folio)){
+            echo json_encode(401);  
+        }
+
+        $file=$rfcemisor.'-'.$serie.$folio;
+        $ruta="'../../ajax/salida/'";
+
+        //echo '<a href="descarga.php?file=archivoEjemplo.abc">Descargar</a>';
+        echo "<a href='../vistas/modulos/download.php?filename=$file&ruta=$ruta&mime=xml'class'btn btn-sm btn-info' </a>";
+        //<a href="#" class="btn btn-success">¿Soy un botón o un enlace?</a>
+
+        //descargar($folio, $serie, $rfcemisor);
+        
+        //echo json_encode();
+
+    break;        
 
 		default:
             json_output(json_build(403, null, 'No existe opciòn'));

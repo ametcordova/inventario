@@ -46,22 +46,6 @@ TRAER LOS DATOS DE INGRESOS
 function getDataI(tablaIngresos,fechaListar=null){
 //console.log(fechaListar)
 
-//const datas = new FormData();
-//datas.append('fechalistar', fechaListar);
-//datas.append('tabla', tablaIngresos);	
-	
-//for (var pair of datas.entries()){console.log(pair[0]+ ', ' + pair[1]);}
-// (async () => { 
-//   await fetch('ajax/control-presupuesto.ajax.php?op=obtenerRegistros', {
-//      method: 'GET',
-//      body: datas
-//   })
-//   .then(res=> res.json())
-// 	.then(datos=>{
-// 		console.log(datos);
-// 		table_ingreso(datos);
-// 	})
-// })();  //fin del async
 (async () => { 
   await axios.get('ajax/control-presupuesto.ajax.php?op=obtenerRegistros', {
     params: {

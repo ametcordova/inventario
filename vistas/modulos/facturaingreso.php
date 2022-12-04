@@ -7,6 +7,20 @@ table.dataTable.dataTable_width_auto {
   width: auto;
 }
 
+fieldset {
+background-color: #f4f1ed !important;
+color: firebrick !important;
+border-color: darkgoldenrod !important;
+border: 9px groove (internal value) !important;
+border-radius: 7px !important;
+width: 100% !important;
+}
+
+legend{
+color: darkblue !important;
+font-weight: bold !important;
+}
+
 </style>
 <script>
     document.addEventListener("DOMContentLoaded", ()=>{
@@ -128,7 +142,7 @@ $fechaHoy = date("Y-m-d");
 </div> <!-- /.content-wrapper -->
 
 <!-- ==============================================================================
-              MODAL PARA CAPTURAR LAS ENTRADAS AL ALMACEN
+              MODAL PARA CAPTURAR FACTURAR DE INGRESO
 ==================================================================================== -->
 <div class="modal fade" id="modalCrearFactura" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog modal-xlg">
@@ -147,7 +161,6 @@ $fechaHoy = date("Y-m-d");
           <div class="card-body m-0 p-0">
 
             <div class="form-row m-0">
-
               <!-- data-date-end-date=no puede seleccionar una fecha posterior a la actual -->
               <div class="form-group col-md-1 pt-0 my-0 text-center">
                 <label class="control-label p-0"><i class="fa fa-file-o"></i> No.</label>
@@ -173,7 +186,6 @@ $fechaHoy = date("Y-m-d");
                     }
                   ?>				  
                   </select>
-                  
               </div>              
 
               <div class="form-group col-md-1">
@@ -203,7 +215,7 @@ $fechaHoy = date("Y-m-d");
 
 
               <div class="form-group col-md-4">
-              <label><i class="fa fa-male"></i> Cliente:</label>
+                <label><i class="fa fa-male"></i> Cliente:</label>
                   <select class="form-control form-control-sm" name="nvoClienteReceptor" id="nvoClienteReceptor" style="width: 100%;" tabindex="4" required>
                   <option value="">Selecione Cliente</option>
                   <?php
@@ -226,10 +238,10 @@ $fechaHoy = date("Y-m-d");
                 <input type="text" class="form-control form-control-sm" name="rfcreceptor" id="rfcreceptor" value="" placeholder="" tabindex="" readonly title="Nombre Usuario ">
               </div>              
 
-            </div>
+            </div> <!-- fin del 1er form-row -->
 
 
-              <div class="form-row col-md-12 py-0">
+            <div class="form-row col-md-12 py-0">
 
               <div class="form-group col-md-3">
                 <label class="control-label" for="nvoregimenfiscalreceptor"><i class="fa fa-check"></i> Régimen Fiscal</label>
@@ -237,7 +249,7 @@ $fechaHoy = date("Y-m-d");
               </div>              
 
                 <div class="form-group col-md-2">
-                <label for="nvoFormaPago"><i class="fa fa-bookmark-o"></i> Forma de pago</label>
+                  <label for="nvoFormaPago"><i class="fa fa-bookmark-o"></i> Forma de pago</label>
                     <select class="form-control form-control-sm" name="nvoFormaPago" id="nvoFormaPago" title="Forma de Pago" tabindex="5" required>
                       <option value="">Seleccione Tipo</option>
                     </select>			  
@@ -259,7 +271,7 @@ $fechaHoy = date("Y-m-d");
                 </div>
 
                 <div class="form-group col-md-2">
-                <label for="nvoMetodoPago"><i class="fa fa-bookmark-o"></i> Método de pago</label>
+                  <label for="nvoMetodoPago"><i class="fa fa-bookmark-o"></i> Método de pago</label>
                     <select class="form-control form-control-sm" name="nvoMetodoPago" id="nvoMetodoPago" title="Método de pago" tabindex="7" required>
                       <option value="" selected>Seleccione Tipo</option>
                       <option value="PUE">PUE-Pago en una sola exhibición</option>
@@ -269,11 +281,10 @@ $fechaHoy = date("Y-m-d");
 
                 <div class="form-group col-md-3">
                   <label class="control-label" for="nvoemail"><i class="fa fa-envelope"></i> email</label>
-                  <input type="text" class="form-control form-control-sm uni-code" name="nvoemail" id="nvoemail" value="" placeholder="&#xf0e0; Email" tabindex="8" title="Correo electrónico">
+                  <input type="text" class="form-control form-control-sm uni-code" name="nvoemail" id="nvoemail" value="" placeholder="&#xf0e0; Email" tabindex="8" title="Correo electrónico" autocomplete="on">
                 </div>              
 
-
-            </div>
+            </div> <!-- fin del 2do form-row -->
 
             <div class="form-row col-md-12 p-1"> <span id="msjdeerrorentrada"></span></div>
 
@@ -399,6 +410,49 @@ $fechaHoy = date("Y-m-d");
   </div>
 </div>
 <!-- ==============================================================================
-                FIN MODAL PARA CAPTURAR ENTRADAS AL ALMACEN
+                FIN MODAL PARA CAPTURAR FACTURAS DE INGRESO
 ==================================================================================== -->
+
+<!-- ==============================================================================
+              MODAL PARA CAPTURAR COMPLEMENTO DE PAGO 2.0
+==================================================================================== -->
+<div class="modal fade" id="modalCrearComplementoPago" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-xlg">
+    <div class="modal-content">
+      <form role="form" id="formularioComplementoPago">
+        <!-- Modal Header -->
+        <div class="modal-header m-2 p-1" style="background-color:darkslategrey; color:floralwhite;">
+          <h6 class="modal-title"><i class="fa fa-plus-circle"></i> Complemento de Pago Ver. 2.0 &nbsp&nbsp  Usuario: <?php echo $_SESSION['nombre']; ?>
+          </h6>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <div class="modal-body m-0">  <!-- Modal body -->
+
+          <div class="card-body m-0 p-0">  <!-- card-body -->
+
+            <div class="form-row m-0">
+
+                    
+
+            </div>
+
+          </div> <!-- fin card-body -->
+
+        </div> <!-- fin Modal body -->
+
+        <!-- Modal footer -->
+        <div class="modal-footer m-1 p-1" style="background-color:darkslategrey; color:floralwhite;">
+          <button type="button" class="btn btn-dark btn-sm float-left" data-dismiss="modal"><i class="fa fa-reply"></i> Salir</button>
+          <button type="submit" class="btn btn-success btn-sm" id="btnGuardarCP"><i class="fa fa-save"></i> Guardar</button>
+        </div>
+
+      </form>   <!-- Cierra del form -->
+    </div> <!-- fin del modal-content -->
+  </div>
+</div>
+<!-- ==============================================================================
+                FIN MODAL PARA CAPTURAR FACTURAS DE INGRESO
+==================================================================================== -->
+
 <script defer src="vistas/js/facturaingreso.js?v=031120221401"></script>

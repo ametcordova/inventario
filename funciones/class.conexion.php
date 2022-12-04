@@ -213,5 +213,38 @@
 
 		}
 
+		/**
+		* 	NUEVAS FUNCIONES
+		**/
+
+		public function operacion_cancelar2($apikey, $keyCSD, $cerCSD, $passCSD, $uuid, $rfcEmisor, $rfcReceptor, $total, $motivo, $folioSustitucion)
+		{
+			$res = $this->client->cancelar2($apikey, $keyCSD, $cerCSD, $passCSD, $uuid, $rfcEmisor, $rfcReceptor, $total, $motivo, $folioSustitucion);
+
+			## RESPUESTA ORIGINAL DEL SERVICIO ##
+			//var_dump($res);
+
+			$acuse = NULL;
+
+			if ( $res->status == "success" )
+			{
+				$resData = json_decode($res->data);
+				$acuse = $resData->acuse;
+			}
+
+			$this->response = array(
+				'operacion' => 'cancelar2',
+				'codigo' => $res->code,
+				'mensaje' => $res->message,
+				'acuse' => $acuse,
+				'resultado' => $res->status
+				);
+
+			## GUARDAR ACUSE EN DIRECTORIO ACTUAL ##
+			//file_put_contents('rsc/acuse_cancelacion.xml', $acuse);
+			
+			return json_encode($this->response, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+		}		
+
 	}
 ?>

@@ -179,7 +179,7 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
 
                   <div class="form-group col-md-4 pt-0 mt-0">
                     <label for=""><i class="fa fa-male"></i> Técnico <span class="text-danger">*</span> </label>
-                    <select id="nvotecnico" class="form-control form-control-sm" name="nvotecnico" tabindex="1" required>
+                    <select id="nvotecnico" class="form-control form-control-sm" name="nvotecnico" tabindex="1" required autofocus>
                       <option value="">Selecione Técnico</option>
                       <?php
                       $item = 'status';
@@ -232,12 +232,12 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
 
                 <div class="form-group col-md-2 pt-0 mt-0">
                   <label class="control-label"><i class="fa fa-check"></i>Pisaplex</label>
-                  <input type="number" class="form-control form-control-sm" name="numpisaplex" id="numpisaplex" value="" step="any" placeholder="" tabindex="6" title="Numero Pisaplex">
+                  <input type="number" class="form-control form-control-sm" name="numpisaplex" id="numpisaplex" value="" step="any" placeholder="" tabindex="6" title="Numero Pisaplex" autocomplete="on">
                 </div>
 
                 <div class="form-group col-md-2 pt-0 mt-0">
                   <label class="control-label"><i class="fa fa-asterisk"></i> Tipo:</label>
-                  <input type="text" class="form-control form-control-sm" name="numtipo" id="numtipo" value="" step="any" placeholder="" tabindex="7" title="Numero Tipo">
+                  <input type="text" class="form-control form-control-sm" name="numtipo" id="numtipo" value="" step="any" placeholder="" tabindex="7" title="Numero Tipo" autocomplete="on">
                 </div>
 
                 <div class="form-group col-md-5 pt-0 mt-0">
@@ -253,27 +253,27 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                 </div>
                 <div class="form-group col-md-4">
                   <label class="control-label"><i class="fa fa-road"></i> Colonia: <span class="text-danger">*</span></label>
-                  <input type="text" class="form-control form-control-sm" name="coloniaos" id="coloniaos" value="" placeholder="" tabindex="10" title="Colonia" required>
+                  <input type="text" class="form-control form-control-sm" name="coloniaos" id="coloniaos" value="" placeholder="" tabindex="10" title="Colonia" required autocomplete="on">
                 </div>
               </div>
 
               <div class="form-row pt-0 pb-0">
                 <div class="form-group col-md-2">
                   <label class="control-label"><i class="fa fa-map-marker"></i> Distrito:</label>
-                  <input type="text" class="form-control form-control-sm" name="distritoos" id="distritoos" value="" placeholder="" tabindex="11" title="Distrito">
+                  <input type="text" class="form-control form-control-sm" name="distritoos" id="distritoos" value="" placeholder="" tabindex="11" title="Distrito" autocomplete="on">
                 </div>
 
                 <div class="form-group col-md-2">
                   <label class="control-label"><i class="fa fa-flag-checkered"></i> Terminal:</label>
-                  <input type="text" class="form-control form-control-sm" name="terminalos" id="terminalos" value="" placeholder="" tabindex="12" title="Numero Tipo">
+                  <input type="text" class="form-control form-control-sm" name="terminalos" id="terminalos" value="" placeholder="" tabindex="12" title="Numero Tipo" autocomplete="on">
                 </div>
                 <div class="form-group col-md-2">
                   <label class="control-label"><i class="fa fa-ship"></i> Puerto:</label>
-                  <input type="text" class="form-control form-control-sm" name="puertoos" id="puertoos" value="" placeholder="" tabindex="13" title="Numero Tipo">
+                  <input type="text" class="form-control form-control-sm" name="puertoos" id="puertoos" value="" placeholder="" tabindex="13" title="Numero Tipo" autocomplete="on">
                 </div>
                 <div class="form-group col-md-6">
                   <label class="control-label"><i class="fa fa-openid"></i> Nombre quien recibe: <span class="text-danger">*</span></label>
-                  <input type="text" class="form-control form-control-sm" name="nombrefirma" id="nombrefirma" value="" placeholder="" tabindex="14" title="Numero Tipo" required>
+                  <input type="text" class="form-control form-control-sm" name="nombrefirma" id="nombrefirma" value="" placeholder="" tabindex="14" title="Numero Tipo" required autocomplete="on">
                 </div>
               </div>
               

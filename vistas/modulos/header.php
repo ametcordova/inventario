@@ -37,8 +37,8 @@
 
       <?php if (isset($_SESSION['perfil']) && $_SESSION['perfil']=="Administrador" || trim($_SESSION["usuario"])=="super"){ ?>
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="facturaingreso" class="nav-link font-weight-bold ml-0 pl-0" title="Nunosco Facturación Ver. 4.0">
-          <img src="vistas/img/nunoscofacturacion40.jpg" class="img-responsive rounded float-right" style="width: 3.45rem;" alt="Img Factura">
+        <a href="facturaingreso" class="nav-link font-weight-bold ml-0 pl-0" title="Nunosco Facturación Ver. 4.0- Alt-Q" accesskey="q">
+          <img srcset="vistas/img/nunoscofacturacion40.jpg 1x, vistas/img/nunoscofacturacion40.jpg 2x" class="img-responsive rounded float-right" style="width: 3.45rem;" alt="Img Factura">
         </a>
       </li>
       <?php } ?>
