@@ -157,12 +157,48 @@ function GenCompPago20(){
       //console.log(index, rowId, parseInt(rowId.value))
       ids.push(parseInt(rowId.value));
     }
-    if(ids.length>0){
-      $('#modalCrearComplementoPago').modal('show')
-    }
-
   });
-  console.log(ids);
+
+    if(ids.length==0){
+      return
+    }
+    (async () => {   
+      await axios.get('ajax/facturaingreso.ajax.php?op=GetDatosFact', {
+        params: {
+          ids: ids,
+        }
+      })
+      .then((res)=>{ 
+        if(res.status==200) {
+          //console.log(res.data[0])
+          let importefactura=new Intl.NumberFormat('en', {style: 'currency',currency: 'USD',currencySign: 'accounting',}).format(res.data[0].totalfactura);
+          //$("#subtotal").html(sumasubtotalTot);
+        
+          $('input[name=nombreemisorcp]').val(res.data[0].nombreemisor);
+          $('input[name=rfcemisorcp]').val(res.data[0].rfcemisor);
+          $('input[name=cpemisorcp]').val(res.data[0].idlugarexpedicion);
+          $('input[name=nombrereceptorcp]').val(res.data[0].nombrereceptor);
+          $('input[name=rfcreceptorcp]').val(res.data[0].rfcreceptor);
+          $('input[name=monedacp]').val(res.data[0].id_moneda+'-'+res.data[0].moneda);
+          $('input[name=seriefolio]').val(res.data[0].serie+res.data[0].folio);
+          $('input[name=uuidcp]').val(res.data[0].uuid);
+          $('input[name=montoriginalrcp]').val(importefactura);
+          $('input[name=saldoactualcp]').val(importefactura);
+
+          $('#modalCrearComplementoPago').modal('show')
+
+          if(res.data===false){
+            $("#btnGuardarFacturar").hide();
+          }
+        }          
+      }) 
+  
+      .catch((err) => {throw err}); 
+    
+    })();  //fin del async  
+  
+  
+  //console.log(ids);
 }
 /****************************************************************************** */
  $('#daterange-btn-factingreso').daterangepicker({
@@ -370,10 +406,11 @@ $('#idEmpresa, #nvoClienteReceptor').on('change, blur', ()=> {
 /*********************** CON RxJS y JSON ************************************ */
 const catFormaPago = `config/catalogosat/c_FormaPago.json`;
 const users = ajax(catFormaPago);
-const searchBtnElement = document.getElementById('nvoFormaPago');  
+const searchBtnElement = document.getElementById('nvoFormaPago');
 // Search button observable
-const click$ = fromEvent(searchBtnElement,  'click');
-click$.subscribe({
+const click1$ = fromEvent(searchBtnElement, 'click');
+
+click1$.subscribe({
   next: (e) => formasdepago()
 });
 

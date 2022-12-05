@@ -96,7 +96,29 @@ static public function ctrGetDatosEmpresa($item, $valor){
 
 }  
 
+/*=================MOSTRAR PRODUCTOS ================================ */
+static public function ctrGetDatosFact($tabla, $campo, $valor){
+	$respuesta = ModeloFacturaIngreso::mdlGetDatosFact($tabla, $campo, $valor);
+    return $respuesta;
+    
+}
+/*====================================================================*/
 
+/*=================MOSTRAR FORMA DE PAGO ================================ */
+static public function ctrGetFormaPago(){
+	$tabla='c_formapago';
+	$respuesta = ModeloFacturaIngreso::mdlGetFormaPago($tabla);
+    return $respuesta;
+}
+/*====================================================================*/
+
+/*=================MOSTRAR OBJETO DE IMPUESTOS ================================ */
+static public function ctrGetObjetoImpuesto(){
+	$tabla='c_objetoimp';
+	$respuesta = ModeloFacturaIngreso::mdlGetObjetoImpuesto($tabla);
+    return $respuesta;
+}
+/*====================================================================*/
 
 
 

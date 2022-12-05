@@ -245,6 +245,34 @@ static public function mdlObtenerDatosFactura($tabla, $campo, $valor){
 }
 
 /*=============================================
+OBTENER DATOS PARA ELABOR COMPLEMENTO DE PAGO
+=============================================*/
+static public function mdlGetDatosFact($tabla, $campo, $valor){
+    try {    
+        $ids=implode(",",$valor);
+        //tabla=facturaingreso
+        $stmt = Conexion::conectar()->prepare("SELECT tb1.id, tb1.serie, tb1.folio, tb1.uuid, tb1.rfcemisor, tb1.idlugarexpedicion,tb1.idreceptor, tb1.subtotal, tb1.impuestos, tb1.totalfactura, emp.razonsocial AS nombreemisor, cli.nombre AS nombrereceptor, cli.rfc AS rfcreceptor, tb1.idmoneda, mx.id_moneda, mx.descripcion AS moneda
+        FROM $tabla tb1
+        INNER JOIN empresa emp ON emp.id=tb1.id_empresa
+        INNER JOIN clientes cli ON cli.id=tb1.idreceptor
+        INNER JOIN c_moneda mx ON mx.id=tb1.idmoneda
+        WHERE tb1.id IN ($ids)");
+
+        //WHERE tb1.$campo= :$campo");
+        //$stmt->bindParam(":id", $valor, PDO::PARAM_INT);
+
+        $stmt -> execute();
+
+        return $stmt -> fetchAll();
+
+        $stmt = null;
+
+    } catch (Exception $e) {
+        echo "Failed: " . $e->getMessage();
+    }
+}
+
+/*=============================================
 	BUSCAR 
 =============================================*/
 static public function mdlObtenerDatosTimbre($tabla, $campo, $valor){
@@ -292,6 +320,37 @@ static public function mdlGetDatosEmpresa($tabla, $item, $valor){
 	
 }
 
+/*=============================================
+TABLA FORMA PAGO
+=============================================*/
+static public function mdlGetFormaPago($tabla){
+    try {    
+        //tabla=c_formapago
+        $stmt = Conexion::conectar()->prepare("SELECT id, descripcionformapago FROM $tabla");
+        $stmt -> execute();
+        return $stmt -> fetchAll();
+        $stmt = null;
+
+    } catch (Exception $e) {
+        echo "Failed: " . $e->getMessage();
+    }
+}
+
+/*=============================================
+TABLA OBJETO DE IMPUESTO
+=============================================*/
+static public function mdlGetObjetoImpuesto($tabla){
+    try {    
+        //tabla=c_objetoimp
+        $stmt = Conexion::conectar()->prepare("SELECT id, descripcion FROM $tabla");
+        $stmt -> execute();
+        return $stmt -> fetchAll();
+        $stmt = null;
+
+    } catch (Exception $e) {
+        echo "Failed: " . $e->getMessage();
+    }
+}
 
 } //fin de la clase
 

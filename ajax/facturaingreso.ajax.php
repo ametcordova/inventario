@@ -382,8 +382,31 @@ switch ($_GET["op"]){
         //descargar($folio, $serie, $rfcemisor);
         
         //echo json_encode();
+    break;
 
+    case 'getDataClavesFact':
+        $tabla = "clavesfacturacion";
+        $campo = "idprodservicio";
+        $valor = $_GET['idprod'];
+
+        $respuesta = ControladorFacturaIngreso::ctrgetClavesFact($tabla, $campo, $valor);
+
+        echo json_encode($respuesta);
+    
     break;        
+
+    case 'GetDatosFact':
+        $tabla = "facturaingreso";
+        $campo = "id";
+        $valor = $_GET['ids'];
+
+        $respuesta = ControladorFacturaIngreso::ctrGetdatosFact($tabla, $campo, $valor);
+        echo json_encode($respuesta);
+
+        //echo json_encode($valor);
+    
+    break;
+
 
 		default:
             json_output(json_build(403, null, 'No existe opciòn'));
