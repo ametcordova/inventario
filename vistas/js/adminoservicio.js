@@ -236,8 +236,8 @@ $('#DatatableOS tfoot th').each( function () {
   if(title=="Fact"){
     $(this).html('<input type="text" id="myFact" style="width:40px; height:20px;" placeholder="'+title+'"/>');
     $('#myFact').on( 'keyup change clear', function () {
-      if(tblOrdendeServicios.column(9)){
-         tblOrdendeServicios.column(9).search(this.value).draw();
+      if(tblOrdendeServicios.column(10)){
+         tblOrdendeServicios.column(10).search(this.value).draw();
       };
     } );
     

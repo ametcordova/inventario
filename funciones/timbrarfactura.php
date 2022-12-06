@@ -307,7 +307,7 @@ class ClaseFacturar{
         }
     }
 
-    /*========================================================= */
+/*========================================================= */
 //  FUNCION PARA CANCELAR FACTURA
 /*========================================================= */
 static public function CancelarFacturaWS($tabla, $campo, $valor, $rfcEmisor, $rfcReceptor, $uuid, $total){
@@ -343,9 +343,6 @@ static public function CancelarFacturaWS($tabla, $campo, $valor, $rfcEmisor, $rf
     $apikey = 'd2d1f88d95db4eb6b7a8c7105b1eb264';   //api key productivo
     $motivo = '02';
     $folioSustitucion='';
-    $rfcEmisor=$rfcEmisor;
-    $rfcReceptor=$rfcReceptor;
-    $uuid=$uuid;
     $total=floatval($total);
     $keyCSD = base64_encode(file_get_contents($dirpadre.'/config/Certificados/CSD_MATRIZ_DIGB980626MX3_20220913_165347.key'));
     $cerCSD = base64_encode(file_get_contents($dirpadre.'/config/Certificados/00001000000515088380.cer'));

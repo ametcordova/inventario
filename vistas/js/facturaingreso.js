@@ -47,7 +47,6 @@ function dt_ListarFacturasIngreso(){
      
    }	   
  
-
 // B: Botonera de exportaciones de datos.
 // f: Campo de búsqueda.
 // i: Información sobre los registros.
@@ -118,13 +117,25 @@ function dt_ListarFacturasIngreso(){
           {"width:":"10px", "className": "dt-center", "targets": [8]},
           {"className": "dt-left", "targets": [7]},
           {"className": "dt-right", "targets": [9]},
-          {"className": "dt-center", "targets": [6,10]},				//"_all" para todas las columnas
-          {"className": "dt-center", "targets": [11]}				//"_all" para todas las columnas
+          {"className": "dt-center", "targets": [6,10,11]},				//"_all" para todas las columnas
+          // {
+          //   "className": "dt-center",
+          //   "targets": 10,
+          //   "visible": false,
+          //   "searchable": false
+          // },
           ],
-          select: {
-            style: 'multi', // 'single', 'multi', 'os', 'multi+shift'
+            select: {
+            style: 'multi',   // 'single', 'multi', 'os', 'multi+shift'
             selector: 'td:first-child',
-        },          
+        },
+      //   "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {		//cambiar el tamaño de la fuente
+      //     var valor = tblFacturaIngreso.row(this); 
+      //     console.log(nRow, valor)
+      //     if(aData[10]===' '){
+      //       $('td', nRow).css('background-color', 'Red');
+      //     }
+      // },                  
 		"ajax":
 				{
           url: 'ajax/facturaingreso.ajax.php?op=listar',
@@ -180,7 +191,7 @@ function GenCompPago20(){
           $('input[name=nombrereceptorcp]').val(res.data[0].nombrereceptor);
           $('input[name=rfcreceptorcp]').val(res.data[0].rfcreceptor);
           $('input[name=monedacp]').val(res.data[0].id_moneda+'-'+res.data[0].moneda);
-          $('input[name=seriefolio]').val(res.data[0].serie+res.data[0].folio);
+          $('input[name=seriefolio]').val(res.data[0].serie+'-'+res.data[0].folio);
           $('input[name=uuidcp]').val(res.data[0].uuid);
           $('input[name=montoriginalrcp]').val(importefactura);
           $('input[name=saldoactualcp]').val(importefactura);

@@ -50,8 +50,6 @@ switch ($_GET["op"]){
             $rfcemisor=$value["rfcemisor"];
             $file=$rfcemisor.'-'.$serie.$folio.'.xml';
 
-            $tri = '<tr><td>'.($value["id"]).'</td>';
-            $trf='</tr';
             $status="Timbrado";
             //if($folio%2==0){        //si ya tiene complemento de pago
                 $chek="<input type='checkbox' name='ids[]' value='".$value["id"]."'>";
@@ -63,7 +61,7 @@ switch ($_GET["op"]){
                 if($value["fechacancelado"]==''){
                     $boton0 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-dark px-1 py-1' title='Factura timbrada'><i class='fa fa-bell fa-fw'></i> </button></td> ":"";
                 }else{
-                    $boton0 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-dark px-1 py-1 disabled' title='Factura cancelada'><i class='fa fa-bell fa-fw'></i> </button></td> ":"";
+                    $boton0 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-dark px-1 py-1 disabled bg-danger text-white' title='Factura cancelada'><i class='fa fa-bell fa-fw'></i> </button></td> ":"";
                 }
 
                 $boton1 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-warning px-1 py-1' title='Comp. de Pago timbrada'>".'P'.$value["id"]."</button></td> ":"";

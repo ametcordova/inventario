@@ -352,6 +352,22 @@ static public function mdlGetObjetoImpuesto($tabla){
     }
 }
 
+/*=============================================
+TABLA OBJETO DE IMPUESTO
+=============================================*/
+static public function mdlGetTasaImpuesto($tabla){
+    try {    
+        //tabla=c_objetoimp
+        $stmt = Conexion::conectar()->prepare("SELECT id, descripcion, tasa FROM $tabla");
+        $stmt -> execute();
+        return $stmt -> fetchAll();
+        $stmt = null;
+
+    } catch (Exception $e) {
+        echo "Failed: " . $e->getMessage();
+    }
+}
+
 } //fin de la clase
 
 

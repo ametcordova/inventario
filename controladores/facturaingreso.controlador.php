@@ -120,6 +120,13 @@ static public function ctrGetObjetoImpuesto(){
 }
 /*====================================================================*/
 
+/*=================MOSTRAR IMPUESTOS ================================ */
+static public function ctrGetTasaImpuesto(){
+	$tabla='c_impuesto';
+	$respuesta = ModeloFacturaIngreso::mdlGetTasaImpuesto($tabla);
+    return $respuesta;
+}
+/*====================================================================*/
 
 
 }   //fin de la clase
