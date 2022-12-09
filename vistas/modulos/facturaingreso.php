@@ -440,39 +440,39 @@ $fechaHoy = date("Y-m-d");
 
               <div class="form-group col-md-6">
                 <label class="control-label p-0 mt-0" for="nombreemisorcp"><i class="fa fa-building"></i> Nombre Emisor:</label>
-                <input type="text" class="form-control form-control-sm mt-0" name="nombreemisorcp" id="nombreemisorcp" tabindex="" readonly title="Nombre  ">
+                <input type="text" class="form-control form-control-sm mt-0" name="nombreemisorcp" id="nombreemisorcp" readonly title="Nombre  ">
               </div>              
 
               <div class="form-group col-md-2">
                 <label class="control-label p-0 mt-0" for="rfcemisorcp"><i class="fa fa-check"></i> RFC Emisor:</label>
-                <input type="text" class="form-control form-control-sm mt-0 text-center" name="rfcemisorcp" id="rfcemisorcp" tabindex="" readonly title="Nombre  ">
+                <input type="text" class="form-control form-control-sm mt-0 text-center" name="rfcemisorcp" id="rfcemisorcp" readonly title="Nombre  ">
               </div>              
 
               <div class="form-group col-md-2">
                 <label class="control-label p-0 mt-0" for="cpemisorcp"><i class="fa fa-check"></i> Cod. Postal:</label>
-                <input type="text" class="form-control form-control-sm mt-0 text-center" name="cpemisorcp" id="cpemisorcp" tabindex="" readonly title="Nombre  ">
+                <input type="text" class="form-control form-control-sm mt-0 text-center" name="cpemisorcp" id="cpemisorcp" readonly title="Nombre  ">
               </div>              
             </div>
 
             <div class="form-row m-0">
                 <div class="form-group col-md-5">
                   <label class="control-label p-0 mt-0" for="nombrereceptorcp"><i class="fa fa-building"></i> Nombre Receptor:</label>
-                  <input type="text" class="form-control form-control-sm mt-0" name="nombrereceptorcp" id="nombrereceptorcp" tabindex="" readonly title="Nombre  ">
+                  <input type="text" class="form-control form-control-sm mt-0" name="nombrereceptorcp" id="nombrereceptorcp" readonly title="Nombre  ">
                 </div>              
 
                 <div class="form-group col-md-2">
                   <label class="control-label p-0 mt-0" for="rfcreceptorcp"><i class="fa fa-check"></i> RFC Receptor:</label>
-                  <input type="text" class="form-control form-control-sm mt-0 text-center" name="rfcreceptorcp" id="rfcreceptorcp" tabindex="" readonly title="Nombre  ">
+                  <input type="text" class="form-control form-control-sm mt-0 text-center" name="rfcreceptorcp" id="rfcreceptorcp" readonly title="Nombre  ">
                 </div>              
 
                 <div class="form-group col-md-2">
                   <label class="control-label p-0 mt-0" for="monedacp"><i class="fa fa-building"></i> Moneda:</label>
-                  <input type="text" class="form-control form-control-sm mt-0" name="monedacp" id="monedacp" tabindex="" readonly title="Moneda ">
+                  <input type="text" class="form-control form-control-sm mt-0" name="monedacp" id="monedacp" readonly title="Moneda ">
                 </div>              
 
                 <div class="form-group col-md-3">
                   <label class="control-label p-0 mt-0" for="fechapagocp"><i class="fa fa-calendar"></i> Fecha Pago:</label>
-                  <input type="datetime-local" class="form-control form-control-sm mt-0 text-center" name="fechapagocp" tabindex="" title="Fecha de pago">
+                  <input type="datetime-local" class="form-control form-control-sm mt-0 text-center" name="fechapagocp" tabindex="1" title="Fecha de pago" required>
                 </div>
 
               </div>
@@ -481,7 +481,7 @@ $fechaHoy = date("Y-m-d");
                 
                 <div class="form-group col-md-4">
                   <label class="control-label p-0 mt-0" for="formapagocp"><i class="fa fa-check"></i> Forma de Pago:</label>
-                  <select class="form-control form-control-sm" name="formapagocp" id="formapagocp" title="Forma de Pago" tabindex="5" required>
+                  <select class="form-control form-control-sm" name="formapagocp" id="formapagocp" title="Forma de Pago" tabindex="2" required>
                       <option value="">Seleccione Tipo</option>
                       <?php
                       $formadepago = ControladorFacturaIngreso::ctrGetFormaPago();
@@ -494,7 +494,7 @@ $fechaHoy = date("Y-m-d");
 
                 <div class="form-group col-md-3">
                   <label class="control-label p-0 mt-0" for="metodopagocp"><i class="fa fa-check"></i> Metodo de pago:</label>
-                  <select class="form-control form-control-sm" name="metodopagocp" id="metodopagocp" title="Método de pago" tabindex="7" required>
+                  <select class="form-control form-control-sm" name="metodopagocp" id="metodopagocp" title="Método de pago" tabindex="3" required>
                       <option value="" selected>Seleccione Tipo</option>
                       <option value="PUE">PUE-Pago en una sola exhibición</option>
                       <option value="PPD">PPD-Pago en parcialidades o diferido</option>
@@ -503,7 +503,7 @@ $fechaHoy = date("Y-m-d");
 
                 <div class="form-group col-md-3">
                   <label class="control-label p-0 mt-0" for="objetoimpcp"><i class="fa fa-check"></i> Obj Impuesto:</label>
-                  <select class="form-control form-control-sm" name="objetoimpcp" id="objetoimpcp" title="Objeto de Impuesto" tabindex="5" required>
+                  <select class="form-control form-control-sm" name="objetoimpcp" id="objetoimpcp" title="Objeto de Impuesto" tabindex="4" required>
                       <option value="">Seleccione Tipo</option>
                       <?php
                       $objetoimpuesto = ControladorFacturaIngreso::ctrGetObjetoImpuesto();
@@ -515,13 +515,17 @@ $fechaHoy = date("Y-m-d");
                 </div>              
 
                 <div class="form-group col-md-2">
-                  <label class="control-label p-0 mt-0" for="tasacp"><i class="fa fa-check"></i> Tasa:</label>
-                  <select class="form-control form-control-sm" name="tasacp" id="tasacp" title="Tasa de Impuesto" tabindex="5" required>
+                  <label class="control-label p-0 mt-0" for="tipoimpuestocp"><i class="fa fa-check"></i> Tipo Imp:</label>
+                  <select class="form-control form-control-sm tipoimpuestocp" name="tipoimpuestocp" id="tipoimpuestocp" title="Tasa de Impuesto" tabindex="5" required>
                       <option value="">Seleccione Tipo</option>
                       <?php
-                      $tasaimpuesto = ControladorFacturaIngreso::ctrGetTasaImpuesto();
-                      foreach ($tasaimpuesto as $key => $value) {
-                        echo '<option value="'.$value["id"].'">'.$value["id"].' - '. $value["descripcion"] .' - '. $value["tasa"]. '</option>';
+                      $tipoimpuesto = ControladorFacturaIngreso::ctrGetTasaImpuesto();
+                      foreach ($tipoimpuesto as $key => $value) {
+                        if($value["id"]==002){
+                          echo '<option selected value="'.$value["id"].'">'.$value["id"].' - '. $value["descripcion"] .' - '. $value["tasa"]. '</option>';
+                        }else{
+                          echo '<option value="'.$value["id"].'">'.$value["id"].' - '. $value["descripcion"] .' - '. $value["tasa"]. '</option>';
+                        }
                       }
                       ?>
                   </select>
@@ -532,91 +536,65 @@ $fechaHoy = date("Y-m-d");
               <div class="form-row m-0">
                 <div class="form-group col-md-2">
                   <label class="control-label p-0 mt-0" for="numoperacioncp"><i class="fa fa-check"></i> No. Operación:</label>
-                  <input type="text" class="form-control form-control-sm mt-0" name="numoperacioncp" id="numoperacioncp" tabindex="" title="Nombre  ">
+                  <input type="text" class="form-control form-control-sm mt-0" name="numoperacioncp" id="numoperacioncp" tabindex="6" title="Nombre  ">
                 </div>              
                 
                 <div class="form-group col-md-4">
                   <label class="control-label p-0 mt-0" for="cuentaordenantecp"><i class="fa fa-check"></i> Cuenta Ordenante:</label>
-                  <input type="text" class="form-control form-control-sm mt-0" name="cuentaordenantercp" id="cuentaordenantecp" tabindex="" title="Nombre  ">
+                  <input type="text" class="form-control form-control-sm mt-0" name="cuentaordenantercp" id="cuentaordenantecp" tabindex="7" title="Nombre  ">
                 </div>              
                 
                 <div class="form-group col-md-4">
                   <label class="control-label p-0 mt-0" for="cuentabeneficiariocp"><i class="fa fa-calendar"></i> Cuenta Beneficiario:</label>
-                  <input type="text" class="form-control form-control-sm mt-0" name="cuentabeneficiariocp" tabindex="" title="Fecha de pago">
+                  <input type="text" class="form-control form-control-sm mt-0" name="cuentabeneficiariocp" tabindex="8" title="Fecha de pago" >
                 </div>
 
                 <div class="form-group col-md-2">
                   <label class="control-label p-0 mt-0" for="totalpagofact"><i class="fa fa-check"></i> Total Pago:</label>
-                  <input type="number" class="form-control form-control-sm mt-0 text-center" name="totalpagofact" id="totalpagofact" tabindex="" title="Nombre  ">
+                  <input type="number" class="form-control form-control-sm mt-0 text-center font-weight-bold text-primary" name="totalpagofact" id="totalpagofact" tabindex="9" title="Nombre" style="font-size:1.4em;" required>
                 </div>              
               </div>
+              <!-- ==================================================================
+              // AQUI TERMINA LA PARTE ESTATICA DEL COMPLEMENTO DE PAGO 2.0
+              ================================================================== --> 
+            <div class="dropdown-divider p-1 mb-0 mt-0 bg-info"></div>
+            
+              <div id="doctosrelacionados">
 
-              <div class="dropdown-divider p-1 mb-0 mt-0 bg-info"></div>
+              </div>  <!-- fin de ID doctosrelacionados -->
 
-            <div class="form-row m-0">
-                <div class="form-group col-md-2">
-                  <label class="control-label p-0 mt-0" for="seriefolio"><i class="fa fa-building"></i> Folio:</label>
-                  <input type="text" class="form-control form-control-sm p-0 mt-0 text-center" name="seriefolio" id="seriefolio" tabindex="" readonly title="Moneda ">
-                </div>              
+                  <div class="row" id="datosdecp" style="background-color:bisque;">
+                    <div class="col-lg-2 col-md-2 col-sm-10 text-left">
+                      <button type="button" class="btn btn-sm mb-1 ml-1 mr-1 p-0"># Factura(s): &nbsp 
+                        <span class="badge" id="numdefacts" style="font-size:1rem;"></span>
+                      </button>
+                    </div>   <!-- /.col -->
 
-                <div class="form-group col-md-4">
-                  <label class="control-label p-0 mt-0" for="uuidcp"><i class="fa fa-check"></i> UUID:</label>
-                  <input type="text" class="form-control form-control-sm mt-0" name="uuidcp" tabindex="" readonly title="Nombre  ">
-                </div>              
+                    <div class="col-lg-2 col-md-2 col-sm-10 text-right">
+                        <button type="button" class="btn btn-sm mb-1 mr-1 p-0">Subtotal: &nbsp 
+                          <span class="badge" id="subtotalcp" style="font-size:1rem;"></span>
+                        </button>
+                    </div>
 
-                <div class="form-group col-md-2">
-                  <label class="control-label p-0 mt-0" for="montoriginalcp"><i class="fa fa-check"></i>Importe</label>
-                  <input type="text" class="form-control form-control-sm mt-0 text-right" name="montoriginalrcp" id="montoriginalcp" tabindex="" readonly title="Nombre  ">
-                </div>              
+                    <div class="col-lg-2 col-md-2 col-sm-10 text-right">
+                        <button type="button" class="btn btn-sm mb-1 mr-1 p-0">Impuesto: &nbsp 
+                          <span class="badge" id="impuestocp" style="font-size:1rem;"></span>
+                        </button>
+                    </div>
 
-                <div class="form-group col-md-2">
-                  <label class="control-label p-0 mt-0" for="saldoactualcp"><i class="fa fa-building"></i> Saldo Actual:</label>
-                  <input type="text" class="form-control form-control-sm mt-0 text-right" name="saldoactualcp" id="saldoactualcp" tabindex="" readonly title="Moneda ">
-                </div>              
+                    <div class="col-lg-2 col-md-2 col-sm-10 text-right">
+                        <button type="button" class="btn btn-sm mb-1 mr-1 p-0">Otros: &nbsp 
+                          <span class="badge" id="otrosimpcp" style="font-size:1rem;"></span>
+                        </button>
+                    </div>
 
-                <div class="form-group col-md-2 text-center">
-                  <label class="control-label p-0 mt-0" for="parcialidadcp"><i class="fa fa-calendar"></i> Pago #:</label>
-                  <input type="text" class="form-control form-control-sm mt-0 text-center" name="parcialidadcp" tabindex="" value=1 title="Fecha de pago">
-                </div>
+                    <div class="col-lg-2 col-md-2 col-sm-10 text-right">
+                        <button type="button" class="btn btn-sm mb-1 mr-1 p-0">Total pago: &nbsp 
+                          <span class="badge" id="totalcp" style="font-size:1rem;"></span>
+                        </button>
+                    </div>
+                  </div>
 
-            </div>
-
-            <div class="form-row m-0">
-
-                <div class="form-group col-md-2">
-                  <label class="control-label p-0 mt-0" for="importepagadocp"><i class="fa fa-check"></i> Importe Pagado:</label>
-                  <input type="text" class="form-control form-control-sm mt-0" name="importepagadocp" id="importepagadocp" tabindex="" title="Nombre  ">
-                </div>              
-
-                
-                <div class="form-group col-md-2">
-                  <label class="control-label p-0 mt-0" for="basepagocp"><i class="fa fa-calendar"></i> Base:</label>
-                  <input type="text" class="form-control form-control-sm mt-0" name="basepagocp" tabindex="" readonly title="Fecha de pago">
-                </div>
-                
-                <div class="form-group col-md-2">
-                  <label class="control-label p-0 mt-0" for="totalimpuestocp"><i class="fa fa-check"></i> Impuesto:</label>
-                  <input type="number" class="form-control form-control-sm mt-0" name="totalimpuestocp" id="totalimpuestocp" tabindex="" readonly title="Nombre  ">
-                </div>              
-
-                <div class="form-group col-md-2">
-                  <label class="control-label p-0 mt-0" for="otropagos"><i class="fa fa-check"></i> Retenciones:</label>
-                  <input type="number" class="form-control form-control-sm mt-0" name="otropagos" id="otropagos" tabindex="" readonly title="Nombre  ">
-                </div>              
-
-                <div class="form-group col-md-2">
-                  <label class="control-label p-0 mt-0" for="montopagadocp"><i class="fa fa-check"></i> Monto Pago:</label>
-                  <input type="text" class="form-control form-control-sm mt-0" name="montopagadorcp" id="montopagadocp" tabindex="" readonly title="Nombre  ">
-                </div>              
-
-                <div class="form-group col-md-2">
-                  <label class="control-label p-0 mt-0" for="saldoinsolutocp"><i class="fa fa-check"></i> Saldo Insoluto:</label>
-                  <input type="text" class="form-control form-control-sm mt-0" name="saldoinsolutorcp" id="saldoinsolutocp" tabindex="" readonly title="Nombre  ">
-                </div>              
-
-              </div>
-              <div class="dropdown-divider p-1 mb-0 mt-0 bg-info"></div>
-              
 
             </div> <!-- fin card-body -->
 
