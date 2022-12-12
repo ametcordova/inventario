@@ -1,0 +1,177 @@
+{
+    "Comprobante": {
+        "Version": "4.0",
+        "Serie": "A",
+        "Folio": "387",
+        "Fecha": "2022-11-23T13:25:16",
+        "FormaPago": "99",
+        "NoCertificado": "00001000000515088380",
+        "CondicionesDePago": "NA",
+        "SubTotal": "8840.00",
+        "Moneda": "MXN",
+        "TipoCambio": "1",
+        "Total": "10254.40",
+        "TipoDeComprobante": "I",
+        "Exportacion": "01",
+        "MetodoPago": "PPD",
+        "LugarExpedicion": "29027",
+        "Emisor": {
+            "Rfc": "DIGB980626MX3",
+            "Nombre": "BRUNO DIAZ GORDILLO",
+            "RegimenFiscal": "621"
+        },
+        "Receptor": {
+            "Rfc": "CIC991214L94",
+            "Nombre": "CARSO INFRAESTRUCTURA Y CONSTRUCCION",
+            "DomicilioFiscalReceptor": "11529",
+            "RegimenFiscalReceptor": "623",
+            "UsoCFDI": "I01"
+        },
+        "Conceptos": [
+            {
+                "ClaveProdServ": "72151602",
+                "NoIdentificacion": "1",
+                "Cantidad": "2",
+                "ClaveUnidad": "E48",
+                "Unidad": "Unidad de servicio",
+                "Descripcion": "BAJANTE AEREO DE 50 M. MIGRACIONES: 17112022/46 SUR1 PROY: CAR063148. ODC: 00080229. No. REPSE: 09679. CONTRATO: BAJSUR063-01",
+                "ValorUnitario": "1105.000000",
+                "Importe": "2210",
+                "ObjetoImp": "02",
+                "Impuestos": {
+                    "Traslados": [
+                        {
+                            "Base": "2210",
+                            "Impuesto": "002",
+                            "TipoFactor": "Tasa",
+                            "TasaOCuota": "0.160000",
+                            "Importe": "353.6"
+                        }
+                    ]
+                }
+            },
+            {
+                "ClaveProdServ": "72151602",
+                "NoIdentificacion": "1",
+                "Cantidad": "1",
+                "ClaveUnidad": "E48",
+                "Unidad": "Unidad de servicio",
+                "Descripcion": "BAJANTE AEREO DE 75 M. MIGRACIONES: 17112022/46 SUR1 PROY: CAR063148. ODC: 00080229. No. REPSE: 09679. CONTRATO: BAJSUR063-01",
+                "ValorUnitario": "1105.000000",
+                "Importe": "1105",
+                "ObjetoImp": "02",
+                "Impuestos": {
+                    "Traslados": [
+                        {
+                            "Base": "1105",
+                            "Impuesto": "002",
+                            "TipoFactor": "Tasa",
+                            "TasaOCuota": "0.160000",
+                            "Importe": "176.8"
+                        }
+                    ]
+                }
+            },
+            {
+                "ClaveProdServ": "72151602",
+                "NoIdentificacion": "1",
+                "Cantidad": "1",
+                "ClaveUnidad": "E48",
+                "Unidad": "Unidad de servicio",
+                "Descripcion": "BAJANTE AEREO DE 125 M. MIGRACIONES: 17112022/46 SUR1. PROY: CAR063148. ODC: 00080229. No. REPSE: 09679. CONTRATO: BAJSUR063-01",
+                "ValorUnitario": "1105.000000",
+                "Importe": "1105",
+                "ObjetoImp": "02",
+                "Impuestos": {
+                    "Traslados": [
+                        {
+                            "Base": "1105",
+                            "Impuesto": "002",
+                            "TipoFactor": "Tasa",
+                            "TasaOCuota": "0.160000",
+                            "Importe": "176.8"
+                        }
+                    ]
+                }
+            },
+            {
+                "ClaveProdServ": "72151602",
+                "NoIdentificacion": "1",
+                "Cantidad": "2",
+                "ClaveUnidad": "E48",
+                "Unidad": "Unidad de servicio",
+                "Descripcion": "BAJANTE AEREO DE 200 M. MIGRACIONES: 17112022/46 SUR1. PROY: CAR063148. ODC: 00080229. No. REPSE: 09679. CONTRATO: BAJSUR063-01",
+                "ValorUnitario": "1105.000000",
+                "Importe": "2210",
+                "ObjetoImp": "02",
+                "Impuestos": {
+                    "Traslados": [
+                        {
+                            "Base": "2210",
+                            "Impuesto": "002",
+                            "TipoFactor": "Tasa",
+                            "TasaOCuota": "0.160000",
+                            "Importe": "353.6"
+                        }
+                    ]
+                }
+            },
+            {
+                "ClaveProdServ": "72151602",
+                "NoIdentificacion": "1",
+                "Cantidad": "1",
+                "ClaveUnidad": "E48",
+                "Unidad": "Unidad de servicio",
+                "Descripcion": "BAJANTE AEREO DE 250 M. MIGRACIONES: 17112022/46 SUR1. PROY: CAR063148. ODC: 00080229. No. REPSE: 09679. CONTRATO: BAJSUR063-01",
+                "ValorUnitario": "1105.000000",
+                "Importe": "1105",
+                "ObjetoImp": "02",
+                "Impuestos": {
+                    "Traslados": [
+                        {
+                            "Base": "1105",
+                            "Impuesto": "002",
+                            "TipoFactor": "Tasa",
+                            "TasaOCuota": "0.160000",
+                            "Importe": "176.8"
+                        }
+                    ]
+                }
+            },
+            {
+                "ClaveProdServ": "72151602",
+                "NoIdentificacion": "1",
+                "Cantidad": "1",
+                "ClaveUnidad": "E48",
+                "Unidad": "Unidad de servicio",
+                "Descripcion": "BAJANTE AEREO DE 300 M. MIGRACIONES: 17112022/46 SUR1. PROY: CAR063148. ODC: 00080229. No. REPSE: 09679. CONTRATO: BAJSUR063-01",
+                "ValorUnitario": "1105.000000",
+                "Importe": "1105",
+                "ObjetoImp": "02",
+                "Impuestos": {
+                    "Traslados": [
+                        {
+                            "Base": "1105",
+                            "Impuesto": "002",
+                            "TipoFactor": "Tasa",
+                            "TasaOCuota": "0.160000",
+                            "Importe": "176.8"
+                        }
+                    ]
+                }
+            }
+        ],
+        "Impuestos": {
+            "TotalImpuestosTrasladados": "1414.40",
+            "Traslados": [
+                {
+                    "Base": "8840",
+                    "Impuesto": "002",
+                    "TipoFactor": "Tasa",
+                    "TasaOCuota": "0.160000",
+                    "Importe": "1414.40"
+                }
+            ]
+        }
+    }
+}

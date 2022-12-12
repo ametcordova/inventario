@@ -1,0 +1,133 @@
+{
+    "Comprobante": {
+        "Version": "4.0",
+        "Serie": "A",
+        "Folio": "396",
+        "Fecha": "2022-12-09T22:07:59",
+        "FormaPago": "99",
+        "NoCertificado": "00001000000515088380",
+        "CondicionesDePago": "NA",
+        "SubTotal": "20995.00",
+        "Moneda": "MXN",
+        "TipoCambio": "1",
+        "Total": "24354.20",
+        "TipoDeComprobante": "I",
+        "Exportacion": "01",
+        "MetodoPago": "PPD",
+        "LugarExpedicion": "29027",
+        "Emisor": {
+            "Rfc": "DIGB980626MX3",
+            "Nombre": "BRUNO DIAZ GORDILLO",
+            "RegimenFiscal": "621"
+        },
+        "Receptor": {
+            "Rfc": "CIC991214L94",
+            "Nombre": "CARSO INFRAESTRUCTURA Y CONSTRUCCION",
+            "DomicilioFiscalReceptor": "11529",
+            "RegimenFiscalReceptor": "623",
+            "UsoCFDI": "I01"
+        },
+        "Conceptos": [
+            {
+                "ClaveProdServ": "72151602",
+                "NoIdentificacion": "1",
+                "Cantidad": "2",
+                "ClaveUnidad": "E48",
+                "Unidad": "Unidad de servicio",
+                "Descripcion": "BAJANTE AEREO DE 75 M. MIGRACIONES 08122022/49 SUR1. PROY: CAR070231 ODC: 00088882. No. REPSE: 09679. CONTRATO: BAJSUR063-01",
+                "ValorUnitario": "1105.000000",
+                "Importe": "2210",
+                "ObjetoImp": "02",
+                "Impuestos": {
+                    "Traslados": [
+                        {
+                            "Base": "2210",
+                            "Impuesto": "002",
+                            "TipoFactor": "Tasa",
+                            "TasaOCuota": "0.160000",
+                            "Importe": "353.6"
+                        }
+                    ]
+                }
+            },
+            {
+                "ClaveProdServ": "72151602",
+                "NoIdentificacion": "1",
+                "Cantidad": "7",
+                "ClaveUnidad": "E48",
+                "Unidad": "Unidad de servicio",
+                "Descripcion": "BAJANTE AEREO DE 125 M. MIGRACIONES 08122022/49 SUR1. PROY: CAR070231 ODC: 00088882. No. REPSE: 09679. CONTRATO: BAJSUR063-01",
+                "ValorUnitario": "1105.000000",
+                "Importe": "7735",
+                "ObjetoImp": "02",
+                "Impuestos": {
+                    "Traslados": [
+                        {
+                            "Base": "7735",
+                            "Impuesto": "002",
+                            "TipoFactor": "Tasa",
+                            "TasaOCuota": "0.160000",
+                            "Importe": "1237.6"
+                        }
+                    ]
+                }
+            },
+            {
+                "ClaveProdServ": "72151602",
+                "NoIdentificacion": "1",
+                "Cantidad": "2",
+                "ClaveUnidad": "E48",
+                "Unidad": "Unidad de servicio",
+                "Descripcion": "BAJANTE AEREO DE 150 M. MIGRACIONES 08122022/49 SUR1. PROY: CAR070231 ODC: 00088882. No. REPSE: 09679. CONTRATO: BAJSUR063-01",
+                "ValorUnitario": "1105.000000",
+                "Importe": "2210",
+                "ObjetoImp": "02",
+                "Impuestos": {
+                    "Traslados": [
+                        {
+                            "Base": "2210",
+                            "Impuesto": "002",
+                            "TipoFactor": "Tasa",
+                            "TasaOCuota": "0.160000",
+                            "Importe": "353.6"
+                        }
+                    ]
+                }
+            },
+            {
+                "ClaveProdServ": "72151602",
+                "NoIdentificacion": "1",
+                "Cantidad": "8",
+                "ClaveUnidad": "E48",
+                "Unidad": "Unidad de servicio",
+                "Descripcion": "BAJANTE AEREO DE 250 M. MIGRACIONES 08122022/49 SUR1. PROY: CAR070231 ODC: 00088882. No. REPSE: 09679. CONTRATO: BAJSUR063-01",
+                "ValorUnitario": "1105.000000",
+                "Importe": "8840",
+                "ObjetoImp": "02",
+                "Impuestos": {
+                    "Traslados": [
+                        {
+                            "Base": "8840",
+                            "Impuesto": "002",
+                            "TipoFactor": "Tasa",
+                            "TasaOCuota": "0.160000",
+                            "Importe": "1414.4"
+                        }
+                    ]
+                }
+            }
+        ],
+        "Impuestos": {
+            "TotalImpuestosTrasladados": "3359.20",
+            "Traslados": [
+                {
+                    "Base": "20995",
+                    "Impuesto": "002",
+                    "TipoFactor": "Tasa",
+                    "TasaOCuota": "0.160000",
+                    "Importe": "3359.20"
+                }
+            ]
+        }
+    }
+}

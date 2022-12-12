@@ -196,6 +196,9 @@ function GenCompPago20(){
           doctosrelacionados(res.data) 
 
           $('#modalCrearComplementoPago').modal('show')
+          setTimeout(function() { 
+            $('input[name=fechapagocp]').focus();
+          }, 800);
 
           if(res.data===false){
             $("#btnGuardarCP").hide();
@@ -255,7 +258,7 @@ datos.forEach(function(elem,index,arreglo) {            //nombres.forEach((eleme
   
   <div class="form-group col-md-2">
   <label class="control-label p-0 mt-0" for="basepagocp"><i class="fa fa-calendar"></i> Base:</label>
-  <input type="text" class="form-control form-control-sm mt-0 text-right" name="basepagocp${index}" readonly title="Fecha de pago">
+  <input type="text" class="form-control form-control-sm mt-0 text-right tocalculate" name="basepagocp${index}" value=0 readonly title="Fecha de pago">
   </div>
   
   <div class="form-group col-md-1">
@@ -265,29 +268,29 @@ datos.forEach(function(elem,index,arreglo) {            //nombres.forEach((eleme
   
   <div class="form-group col-md-2">
   <label class="control-label p-0 mt-0" for="totalimpuestocp"><i class="fa fa-check"></i> Impuesto:</label>
-  <input type="number" class="form-control form-control-sm mt-0 text-right" name="totalimpuestocp${index}" id="totalimpuestocp${index}" readonly title="Nombre  ">
+  <input type="number" class="form-control form-control-sm mt-0 text-right tocalculate" name="totalimpuestocp${index}" value=0 readonly title="Nombre  ">
   </div>              
   
   <div class="form-group col-md-1">
   <label class="control-label p-0 mt-0" for="otropagos"><i class="fa fa-check"></i> Otros:</label>
-  <input type="number" class="form-control form-control-sm mt-0 text-right" name="otropagos${index}" id="otropagos${index}" readonly title="Nombre  ">
+  <input type="number" class="form-control form-control-sm mt-0 text-right tocalculate" name="otropagos${index}" value=0 readonly title="Nombre  ">
   </div>              
   
   <div class="form-group col-md-2">
   <label class="control-label p-0 mt-0" for="montopagadocp"><i class="fa fa-check"></i> Monto Pago:</label>
-  <input type="text" class="form-control form-control-sm mt-0 text-right" name="montopagadocp${index}" id="montopagadocp${index}" readonly title="Nombre  ">
+  <input type="text" class="form-control form-control-sm mt-0 text-right" name="montopagadocp${index}" readonly title="Nombre  ">
   </div>              
   
   <div class="form-group col-md-2">
   <label class="control-label p-0 mt-0" for="saldoinsolutocp"><i class="fa fa-check"></i> Saldo Insoluto:</label>
-  <input type="number" class="form-control form-control-sm mt-0 text-center font-weight-bold text-primary" name="saldoinsolutocp${index}" id="saldoinsolutocp${index}" readonly title="Nombre  ">
+  <input type="number" class="form-control form-control-sm mt-0 text-center font-weight-bold text-primary" name="saldoinsolutocp${index}" readonly title="Nombre  ">
   </div>              
   
   </div>
   <div class="dropdown-divider p-1 mb-0 mt-0 bg-info"></div>
   `;
   indexcp=index+1;
-  console.log(index,arreglo, indexcp)
+  //console.log(index,arreglo, indexcp)
 });
 //Stotalpagado=new Intl.NumberFormat('en', {style: 'currency',currency: 'USD',currencySign: 'accounting',}).format(totalpagado);
 $('input[name="totalpagofact"]').val(totalpagofact);
@@ -318,27 +321,50 @@ $(document).on('change', '.importepagadocp',function() {
     return
   }
   let importepago=document.getElementsByName("importepagadocp"+getValue)[0].value;    //con Vainilla JS //let importepago=ip[0].value;
-  
-  let saldoactualcp=$("input[name=saldoactualcp"+getValue).val();
 
-  $("input[name=basepagocp"+getValue).val((importepago/(parseFloat($('input[name=tasaimpcp]').val())+1)).toFixed(2));
-  $("input[name=totalimpuestocp"+getValue).val((importepago-$("input[name=basepagocp"+getValue).val()).toFixed(2));
+  let saldoactualcp=$("input[name=saldoactualcp"+getValue).val();
+  
+  $("input[name=basepagocp"+getValue).val((importepago/(parseFloat($('input[name=tasaimpcp]').val())+1)).toFixed(2)); //subtotal
+
+  $("input[name=totalimpuestocp"+getValue).val((importepago-$("input[name=basepagocp"+getValue).val()).toFixed(2));   //iva
+
   $('input[name=montopagadocp'+getValue).val(importepago)
+
   $('input[name=saldoinsolutocp'+getValue).val(saldoactualcp-$('input[name=montopagadocp'+getValue).val());
 
-  console.log(importepago, saldoactualcp, $('input[name=basepagocp'+getValue).val() )
-  sumatorias(indexcp);
+  sumatorias(true, indexcp);
   return
 });
 
-function sumatorias(indexcp){
-  let subtotalcp=new Intl.NumberFormat('en', {style: 'currency',currency: 'USD',currencySign: 'accounting',}).format(sumasubtotal);
+function sumatorias(exit, indexcp){
+let sumasubtotal=sumaimpuesto=restaotros=0;
+let index=0;
+$(".tocalculate").each(function(){
+  //console.log($("input[name=basepagocp"+index).val());
+  sumasubtotal+=parseFloat($("input[name=basepagocp"+index).val());
+  //console.log($("input[name=totalimpuestocp"+index).val());
+  sumaimpuesto+=parseFloat($("input[name=totalimpuestocp"+index).val());
+  //console.log($("input[name=otropagos"+index).val());
+  restaotros+=parseFloat($("input[name=otropagos"+index).val());
+  index++;
+  if(exit && indexcp==index){     //esta es la forma de salir de un each
+    return false;
+  }
+});  
+
+sumatotal=sumasubtotal+sumaimpuesto-restaotros;
+//console.log(sumatotal,sumasubtotal,sumaimpuesto,restaotros);
+subtotalcp=impuestocp=otroscp=totalcp=0;
+  subtotalcp=new Intl.NumberFormat('en', {style: 'currency',currency: 'USD',currencySign: 'accounting',}).format(sumasubtotal);
   $("#subtotalcp").html(subtotalcp);
 
-  let impuestocp=new Intl.NumberFormat('en', {style: 'currency',currency: 'USD',currencySign: 'accounting',}).format(impuesto);
-	$("#impuestocp").html(impuestocp);
+  impuestocp=new Intl.NumberFormat('en', {style: 'currency',currency: 'USD',currencySign: 'accounting',}).format(sumaimpuesto);
+  $("#impuestocp").html(impuestocp);
 
-  let totalcp=new Intl.NumberFormat('en', {style: 'currency',currency: 'USD',currencySign: 'accounting',}).format(sumatotal);
+  otroscp=new Intl.NumberFormat('en', {style: 'currency',currency: 'USD',currencySign: 'accounting',}).format(restaotros);
+	$("#otrosimpcp").html(otroscp);
+
+  totalcp=new Intl.NumberFormat('en', {style: 'currency',currency: 'USD',currencySign: 'accounting',}).format(sumatotal);
 	$("#totalcp").html(totalcp);
 
 	$("#numdefacts").html(indexcp);
@@ -573,6 +599,7 @@ function recorrerjson(data){
     let $nuevaformapago = $('#nvoFormaPago');
     $.each(data , function(i, val) {
       $nuevaformapago.append('<option value='+data[i].id + '>' + data[i].id+'-'+data[i].descripcion + '</option>');
+      //$nuevaformapago.append('<option value='+data[i].id + '>' + data[i].id+'-'+data[i].descripcion +val.id + ' </option>');
     })
 }
 
@@ -1108,7 +1135,7 @@ $("#dt-FacturaIngreso tbody").on("click", "button.btnCancelFact", function(){
 $('#modalCrearFactura').on('show.bs.modal', function (event) {
   UltimoNumIdFactura();		//TRAE EL SIGUIENTE NUMERO 
   renglonesfacturar=cantidadfacturar=0;
-	$("#renglonentradas, #subtotal, #impuesto, #total").html("");
+	$("#renglonentradas, #totalitems, #subtotal, #impuesto, #total").html("");
 	$("#totalentradasalmacen").html("");
 })
 /**************************************************************** */
@@ -1123,6 +1150,7 @@ $("#modalCrearFactura").on('hidden.bs.modal', ()=> {
   $("#tabladedetalles").empty();                   //vacia tbody
   $('#cveprodfactura').val(null).trigger('change');      //inicializa el select de productos
   arrayProductos["length"]=0;                      //inicializa array
+  $("#renglonentradas, #totalitems, #subtotal, #impuesto, #total").html("");
 });
 
 /*=============================================================*/

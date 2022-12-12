@@ -1,0 +1,155 @@
+{
+    "Comprobante": {
+        "Version": "4.0",
+        "Serie": "A",
+        "Folio": "391",
+        "Fecha": "2022-12-01T11:37:44",
+        "FormaPago": "99",
+        "NoCertificado": "00001000000515088380",
+        "CondicionesDePago": "NA",
+        "SubTotal": "26347.00",
+        "Moneda": "MXN",
+        "TipoCambio": "1",
+        "Total": "30562.52",
+        "TipoDeComprobante": "I",
+        "Exportacion": "01",
+        "MetodoPago": "PPD",
+        "LugarExpedicion": "29027",
+        "Emisor": {
+            "Rfc": "DIGB980626MX3",
+            "Nombre": "BRUNO DIAZ GORDILLO",
+            "RegimenFiscal": "621"
+        },
+        "Receptor": {
+            "Rfc": "CIC991214L94",
+            "Nombre": "CARSO INFRAESTRUCTURA Y CONSTRUCCION",
+            "DomicilioFiscalReceptor": "11529",
+            "RegimenFiscalReceptor": "623",
+            "UsoCFDI": "I01"
+        },
+        "Conceptos": [
+            {
+                "ClaveProdServ": "72151602",
+                "NoIdentificacion": "1",
+                "Cantidad": "10",
+                "ClaveUnidad": "E48",
+                "Unidad": "Unidad de servicio",
+                "Descripcion": "BAJANTE AEREO DE 50 M. PROY: CAR065884. ODC: 00083932. No. REPSE: 09679. CONTRATO: BAJSUR063-01",
+                "ValorUnitario": "1105.000000",
+                "Importe": "11050",
+                "ObjetoImp": "02",
+                "Impuestos": {
+                    "Traslados": [
+                        {
+                            "Base": "11050",
+                            "Impuesto": "002",
+                            "TipoFactor": "Tasa",
+                            "TasaOCuota": "0.160000",
+                            "Importe": "1768"
+                        }
+                    ]
+                }
+            },
+            {
+                "ClaveProdServ": "72151602",
+                "NoIdentificacion": "1",
+                "Cantidad": "8",
+                "ClaveUnidad": "E48",
+                "Unidad": "Unidad de servicio",
+                "Descripcion": "BAJANTE AEREO DE 75 M. PROY: CAR065884. ODC: 00083932. No. REPSE: 09679. CONTRATO: BAJSUR063-01",
+                "ValorUnitario": "1105.000000",
+                "Importe": "8840",
+                "ObjetoImp": "02",
+                "Impuestos": {
+                    "Traslados": [
+                        {
+                            "Base": "8840",
+                            "Impuesto": "002",
+                            "TipoFactor": "Tasa",
+                            "TasaOCuota": "0.160000",
+                            "Importe": "1414.4"
+                        }
+                    ]
+                }
+            },
+            {
+                "ClaveProdServ": "72151602",
+                "NoIdentificacion": "1",
+                "Cantidad": "1",
+                "ClaveUnidad": "E48",
+                "Unidad": "Unidad de servicio",
+                "Descripcion": "BAJANTE AEREO DE 125 M. PROY: CAR065884. ODC: 00083932. No. REPSE: 09679. CONTRATO: BAJSUR063-01",
+                "ValorUnitario": "1105.000000",
+                "Importe": "1105",
+                "ObjetoImp": "02",
+                "Impuestos": {
+                    "Traslados": [
+                        {
+                            "Base": "1105",
+                            "Impuesto": "002",
+                            "TipoFactor": "Tasa",
+                            "TasaOCuota": "0.160000",
+                            "Importe": "176.8"
+                        }
+                    ]
+                }
+            },
+            {
+                "ClaveProdServ": "72151602",
+                "NoIdentificacion": "1",
+                "Cantidad": "1",
+                "ClaveUnidad": "E48",
+                "Unidad": "Unidad de servicio",
+                "Descripcion": "BAJANTE SUBTERRANEO DE 50 M. PROY: CAR065884. ODC: 00083932. No. REPSE: 09679. CONTRATO: BAJSUR063-01",
+                "ValorUnitario": "1338",
+                "Importe": "1338",
+                "ObjetoImp": "02",
+                "Impuestos": {
+                    "Traslados": [
+                        {
+                            "Base": "1338",
+                            "Impuesto": "002",
+                            "TipoFactor": "Tasa",
+                            "TasaOCuota": "0.160000",
+                            "Importe": "214.08"
+                        }
+                    ]
+                }
+            },
+            {
+                "ClaveProdServ": "72151602",
+                "NoIdentificacion": "1",
+                "Cantidad": "3",
+                "ClaveUnidad": "E48",
+                "Unidad": "Unidad de servicio",
+                "Descripcion": "BAJANTE SUBTERRANEO DE 75 M. PROY: CAR065884. ODC: 00083932. No. REPSE: 09679. CONTRATO: BAJSUR063-01",
+                "ValorUnitario": "1338",
+                "Importe": "4014",
+                "ObjetoImp": "02",
+                "Impuestos": {
+                    "Traslados": [
+                        {
+                            "Base": "4014",
+                            "Impuesto": "002",
+                            "TipoFactor": "Tasa",
+                            "TasaOCuota": "0.160000",
+                            "Importe": "642.24"
+                        }
+                    ]
+                }
+            }
+        ],
+        "Impuestos": {
+            "TotalImpuestosTrasladados": "4215.52",
+            "Traslados": [
+                {
+                    "Base": "26347",
+                    "Impuesto": "002",
+                    "TipoFactor": "Tasa",
+                    "TasaOCuota": "0.160000",
+                    "Importe": "4215.52"
+                }
+            ]
+        }
+    }
+}

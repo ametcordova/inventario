@@ -1,0 +1,67 @@
+{
+    "Comprobante": {
+        "Version": "4.0",
+        "Serie": "A",
+        "Folio": "382",
+        "Fecha": "2022-11-10T15:57:28",
+        "FormaPago": "99",
+        "NoCertificado": "00001000000515088380",
+        "CondicionesDePago": "NA",
+        "SubTotal": "24714.44",
+        "Moneda": "MXN",
+        "TipoCambio": "1",
+        "Total": "28668.75",
+        "TipoDeComprobante": "I",
+        "Exportacion": "01",
+        "MetodoPago": "PPD",
+        "LugarExpedicion": "29027",
+        "Emisor": {
+            "Rfc": "DIGB980626MX3",
+            "Nombre": "BRUNO DIAZ GORDILLO",
+            "RegimenFiscal": "621"
+        },
+        "Receptor": {
+            "Rfc": "CIC991214L94",
+            "Nombre": "CARSO INFRAESTRUCTURA Y CONSTRUCCION",
+            "DomicilioFiscalReceptor": "11529",
+            "RegimenFiscalReceptor": "623",
+            "UsoCFDI": "I01"
+        },
+        "Conceptos": [
+            {
+                "ClaveProdServ": "72151602",
+                "NoIdentificacion": "1",
+                "Cantidad": "62",
+                "ClaveUnidad": "E48",
+                "Unidad": "Unidad de servicio",
+                "Descripcion": "ATENCION QUEJAS. BRUNO DIAZ QI 07112022/44 SUR2. PROY: CAR060427. ODC:  00075953. No. REPSE: 09679. CONTRATO: BAJSUR063-01",
+                "ValorUnitario": "398.62",
+                "Importe": "24714.44",
+                "ObjetoImp": "02",
+                "Impuestos": {
+                    "Traslados": [
+                        {
+                            "Base": "24714.44",
+                            "Impuesto": "002",
+                            "TipoFactor": "Tasa",
+                            "TasaOCuota": "0.160000",
+                            "Importe": "3954.3104"
+                        }
+                    ]
+                }
+            }
+        ],
+        "Impuestos": {
+            "TotalImpuestosTrasladados": "3954.31",
+            "Traslados": [
+                {
+                    "Base": "24714.44",
+                    "Impuesto": "002",
+                    "TipoFactor": "Tasa",
+                    "TasaOCuota": "0.160000",
+                    "Importe": "3954.31"
+                }
+            ]
+        }
+    }
+}

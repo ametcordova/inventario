@@ -368,7 +368,7 @@ $fechaHoy = date("Y-m-d");
                       </button>
                     </div>   <!-- /.col -->
                     <button type="button" class="btn btn-sm mb-1 mr-1 p-0">Cant: &nbsp 
-                      <span class="badge" id="totalentradasalmacen" style="font-size:1rem;"></span>
+                      <span class="badge" id="totalitems" style="font-size:1rem;"></span>
                     </button>
 
                     <div class="col-lg-2 col-md-2 col-sm-10 text-right">

@@ -52,7 +52,7 @@ switch ($_GET["op"]){
 
             $status="Timbrado";
             //if($folio%2==0){        //si ya tiene complemento de pago
-                $chek="<input type='checkbox' name='ids[]' value='".$value["id"]."'>";
+                //$chek="<input type='checkbox' name='ids[]' value='".$value["id"]."'>";
             // }else{
             //     $chek="<input type='checkbox' name='ids[]' value='".$value["id"]."' disabled>";
             // }
@@ -60,6 +60,7 @@ switch ($_GET["op"]){
             if($value["uuid"]!=""){
                 if($value["fechacancelado"]==''){
                     $boton0 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-dark px-1 py-1' title='Factura timbrada'><i class='fa fa-bell fa-fw'></i> </button></td> ":"";
+                    $chek="<input type='checkbox' name='ids[]' value='".$value["id"]."'>";
                 }else{
                     $boton0 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-dark px-1 py-1 disabled bg-danger text-white' title='Factura cancelada'><i class='fa fa-bell fa-fw'></i> </button></td> ":"";
                 }
