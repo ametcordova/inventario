@@ -63,6 +63,7 @@ switch ($_GET["op"]){
                     $chek="<input type='checkbox' name='ids[]' value='".$value["id"]."'>";
                 }else{
                     $boton0 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-dark px-1 py-1 disabled bg-danger text-white' title='Factura cancelada'><i class='fa fa-bell fa-fw'></i> </button></td> ":"";
+                    $chek="<input type='checkbox' value=''>";
                 }
 
                 $boton1 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-warning px-1 py-1' title='Comp. de Pago timbrada'>".'P'.$value["id"]."</button></td> ":"";
@@ -243,7 +244,7 @@ switch ($_GET["op"]){
                         
                         $rspta = ControladorFacturaIngreso::ctrCrearFacturaIngreso($tabla, $facturaingreso);    //$_POST[""]
                         if($rspta=='ok')
-                            json_output(json_build(201, 'ok', 'Factura guardado con éxito'));
+                            json_output(json_build(201, 'ok', 'Pre-Factura guardada con éxito'));
                 }else{
                     throw new Exception("Expresion no aceptada");
                     return false;  
@@ -406,13 +407,105 @@ switch ($_GET["op"]){
     
     break;
 
+/************************************************************************************************** */    
+    case 'GuardarREP':
+        try{
+            if(isset($_POST["idemisorrep"])){  
+                
+                    //Tabla a guardar datos de complemento de Pago 2.0
+                    $tabla = "complementodepago";
+
+                    //calculo para sacar el total a facturar
+                    $tasaimpuesto=((float)$_POST["tasaimpcp"])+1;
+                    $totalrecibo=(float) $_POST["totalpagofact"];
+                    $iva=($tasaimpuesto-1)*100;         //1.16-1=.16*100=16
+                    $subtotal=$totalrecibo/$tasaimpuesto;   //29662
+                    $totalimpuesto=($subtotal*$iva)/100;
+                    $saldoinsoluto=0;   //pendiente sumar saldos insolutos de c/factura
+                    $conceptos_json=null;
+                    $doctosrelacionados_json=null;
+                    //creamos un array para los documentos relacionados
+                    $datosjson = array(); 
+
+					foreach ($_POST["countitems"] as $valor){
+						//echo "El valor de $clave es: $valor";
+						$datosjson[]=array(
+                                    "idDocumento"       => trim($_POST["uuidcp$valor"]),
+									"Serie"             => $_POST["serie$valor"],
+									"Folio"             => $_POST["folio$valor"],
+									"NumParcialidad"    => $_POST["parcialidadcp$valor"],
+									"ImpSaldoAnt"       => $_POST["saldoactualcp$valor"],
+									"ImpPagado"         => $_POST["importepagadocp$valor"],
+									"ImpSaldoInsoluto"  => $_POST["saldoinsolutocp$valor"],
+									"BaseDR"            => $_POST["basepagocp$valor"],
+									"ImporteDR"         => $_POST["totalimpuestocp$valor"]
+									);
+					};	
+
+                    //Creamos el JSON del Array
+                    $doctosrelacionados_json=json_encode($datosjson);
+
+                    if ($doctosrelacionados_json === FALSE) {
+                        throw new Exception("JSON mal formado");
+                    }             
+                    
+                    /* `inventario`.`complementodepago` */
+                    $complementodepago= array(
+                        'tipodecomprobante' => "P",
+                        //'foliorep' => $_POST["foliorep"],
+                        'fechaelaboracion'  => date("Y-m-d H:i:s"),
+                        'idrfcemisor'       => $_POST['idemisorrep'],
+                        'cpemisor'          => $_POST['cpemisorcp'],
+                        'idrfcreceptor'     => $_POST["idreceptorrep"],
+                        'fechapago'         => $_POST["fechapagocp"],
+                        'idformapagorep'    => $_POST["formapagocp"],
+                        'idmetodopagorep'   => $_POST["metodopagocp"],
+                        'idobjetoimpuesto'  => $_POST["objetoimpcp"],
+                        'idmoneda'          => $_POST["idtipomoneda"],
+                        'numoperacion'      => $_POST["numoperacioncp"],
+                        'cuentaordenante'   => $_POST["cuentaordenantercp"],
+                        'cuentabeneficiario'=> $_POST["cuentabeneficiariocp"],
+                        'conceptos'         => $conceptos_json,
+                        'doctosrelacionados'=> $doctosrelacionados_json,
+                        'idimpuesto'        => $_POST["tipoimpuestocp"],
+                        'totalrecibo'       => $_POST["totalpagofact"],
+                        'tasa'              => $_POST["tasaimpcp"],
+                        'subtotal'          => $subtotal,
+                        'totalimpuesto'     => $totalimpuesto,
+                        'saldoinsoluto'     => $saldoinsoluto,
+                        'ultusuario'        => $_POST['idDeUsuario']
+                    );
+                        
+                        $rspta = ControladorFacturaIngreso::ctrGuardarRep($tabla, $complementodepago);    //$_POST[""]
+                        if($rspta=='ok')
+                            json_output(json_build(201, 'ok', 'Complemento de Pago guardado con éxito'));
+            }else{
+                throw new Exception("ID Emisor no existe");
+                return false;  
+            }
+        } catch (Exception $e) {
+            json_output(json_build(403, null, $e->getMessage()));
+        }    
+        break;
+    /************************************************************************************************** */    
 
 		default:
-            json_output(json_build(403, null, 'No existe opciòn'));
+            json_output(json_build(403, null, 'No existe opciòn. Revise'));
 			return false;
 		break;
 
 
 
 } // fin del switch
+
+/*
+$age = array("Peter"=>"35", "Ben"=>"37", "Joe"=>"43");
+
+foreach($age as $x => $val) {
+  echo "$x = $val<br>";
+}
+/*Peter = 35
+Ben = 37
+Joe = 43
+*/
 

@@ -128,6 +128,13 @@ static public function ctrGetTasaImpuesto(){
 }
 /*====================================================================*/
 
+/*=================GUARDAR DATOS DE COMPLEMENTO DE PAGO ================================ */
+static public function ctrGuardarRep($tabla, $complementodepago){
+	$respuesta = ModeloFacturaIngreso::mdlGuardarRep($tabla, $complementodepago);
+	return $respuesta;
+}  
+/*=================FIN DE GUARDAR DATOS DE COMPLEMENTO DE PAGO ================================ */
+
 
 }   //fin de la clase
 ?>

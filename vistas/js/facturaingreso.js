@@ -167,10 +167,11 @@ function GenCompPago20(){
  ids=[];
   // Iterate over all selected checkboxes
   $.each(tblFacturaIngreso.$('input[type="checkbox"]'), function(index, rowId){
-    if(this.checked){
-      //console.log(index, rowId, parseInt(rowId.value))
+    if(this.checked && parseInt(rowId.value)>0){
       ids.push(parseInt(rowId.value));
+      //console.log(index, rowId, parseInt(rowId.value))
     }
+    
   });
 
     if(ids.length==0){
@@ -185,13 +186,17 @@ function GenCompPago20(){
       .then((res)=>{ 
         if(res.status==200) {
           //console.log(res.data)
-       
+          $('input[name=idEmpresa]').val(res.data[0].id_empresa);
+          $('input[name=foliorep]').val(res.data[0].serierep+(parseInt(res.data[0].foliorep)+1));
+          $('input[name=idemisorrep]').val(res.data[0].idemisor);
           $('input[name=nombreemisorcp]').val(res.data[0].nombreemisor);
           $('input[name=rfcemisorcp]').val(res.data[0].rfcemisor);
           $('input[name=cpemisorcp]').val(res.data[0].idlugarexpedicion);
+          $('input[name=idreceptorrep]').val(res.data[0].idreceptor);
           $('input[name=nombrereceptorcp]').val(res.data[0].nombrereceptor);
           $('input[name=rfcreceptorcp]').val(res.data[0].rfcreceptor);
           $('input[name=monedacp]').val(res.data[0].id_moneda+'-'+res.data[0].moneda);
+          $('input[name=idtipomoneda]').val(res.data[0].idmoneda);
 
           doctosrelacionados(res.data) 
 
@@ -224,27 +229,30 @@ datos.forEach(function(elem,index,arreglo) {            //nombres.forEach((eleme
   <div class="form-row m-0">
   <div class="form-group col-md-2">
     <label class="control-label p-0 mt-0" for="seriefolio"><i class="fa fa-building"></i> Folio:</label>
-    <input type="text" class="form-control form-control-sm p-0 mt-0 text-center" name="seriefolio[]" id="seriefolio" value="${elem.serie}-${elem.folio}" readonly title="Moneda ">
+    <input type="text" class="form-control form-control-sm p-0 mt-0 text-center font-weight-bold" name="folio[]" value="" readonly title="Folio Factura" placeholder="${elem.serie}-${elem.folio}">
+    <input type="hidden" name="countitems[]" value=${index}>
+    <input type="hidden" name="serie${index}" value=${elem.serie}>
+    <input type="hidden" name="folio${index}" value=${elem.folio}>
   </div>              
   
   <div class="form-group col-md-4">
     <label class="control-label p-0 mt-0" for="uuidcp"><i class="fa fa-check"></i> UUID:</label>
-    <input type="text" class="form-control form-control-sm mt-0" name="uuidcp" tabindex="" readonly title="Nombre" value="${elem.uuid}" required>
+    <input type="text" class="form-control form-control-sm mt-0" name="uuidcp${index}" tabindex="" readonly title="Nombre" value="${elem.uuid}" required>
   </div>              
   
   <div class="form-group col-md-2">
     <label class="control-label p-0 mt-0" for="montoriginalcp"><i class="fa fa-check"></i>Importe Fact.</label>
-    <input type="text" class="form-control form-control-sm mt-0 text-right" name="montoriginalrcp" id="montoriginalcp" readonly title="Nombre" value="${elem.totalfactura}">
+    <input type="text" class="form-control form-control-sm mt-0 text-right" name="montoriginalrcp${index}" readonly title="Nombre" value="${elem.totalfactura}">
   </div>              
   
   <div class="form-group col-md-2">
     <label class="control-label p-0 mt-0" for="saldoactualcp"><i class="fa fa-building"></i> Saldo Actual:</label>
-    <input type="number" class="form-control form-control-sm mt-0 text-right" name="saldoactualcp${index}" id="saldoactualcp${index}" step="any" readonly title="Moneda" value="${elem.saldoinsoluto}">
+    <input type="number" class="form-control form-control-sm mt-0 text-right" name="saldoactualcp${index}" step="any" readonly title="Moneda" value="${elem.saldoinsoluto}">
   </div>              
   
   <div class="form-group col-md-2 text-center">
-    <label class="control-label p-0 mt-0" for="parcialidadcp"><i class="fa fa-calendar"></i> Pago #:</label>
-    <input type="text" class="form-control form-control-sm mt-0 text-center" name="parcialidadcp" tabindex="10" value=1 title="Fecha de pago" required>
+    <label class="control-label p-0 mt-0" for="parcialidadcp"><i class="fa fa-hashtag"></i> Parcialidad:</label>
+    <input type="text" class="form-control form-control-sm mt-0 text-center" name="parcialidadcp${index}" tabindex="10" value=1 title="Fecha de pago" required>
   </div>
   </div>
   
@@ -263,7 +271,7 @@ datos.forEach(function(elem,index,arreglo) {            //nombres.forEach((eleme
   
   <div class="form-group col-md-1">
   <label class="control-label p-0 mt-0" for="tasaimpcp"><i class="fa fa-check"></i> Tasa:</label>
-  <input type="text" class="form-control form-control-sm mt-0 text-right" name="tasaimpcp" id="tasaimpcp" readonly title="Nombre  ">
+  <input type="text" class="form-control form-control-sm mt-0 text-right" name="tasaimpcp" readonly title="Tasa Impuesto  ">
   </div>              
   
   <div class="form-group col-md-2">
@@ -278,12 +286,12 @@ datos.forEach(function(elem,index,arreglo) {            //nombres.forEach((eleme
   
   <div class="form-group col-md-2">
   <label class="control-label p-0 mt-0" for="montopagadocp"><i class="fa fa-check"></i> Monto Pago:</label>
-  <input type="text" class="form-control form-control-sm mt-0 text-right" name="montopagadocp${index}" readonly title="Nombre  ">
+  <input type="text" class="form-control form-control-sm mt-0 text-right" name="montopagadocp${index}" readonly title="Monto pagado">
   </div>              
   
   <div class="form-group col-md-2">
   <label class="control-label p-0 mt-0" for="saldoinsolutocp"><i class="fa fa-check"></i> Saldo Insoluto:</label>
-  <input type="number" class="form-control form-control-sm mt-0 text-center font-weight-bold text-primary" name="saldoinsolutocp${index}" readonly title="Nombre  ">
+  <input type="number" class="form-control form-control-sm mt-0 text-center font-weight-bold text-primary" name="saldoinsolutocp${index}" readonly title="Saldo Insoluto">
   </div>              
   
   </div>
@@ -309,11 +317,9 @@ function updatetax(){
   $('input[name=tasaimpcp]').val(tipoimp)
 }
 
-$(document).on('change', '.importepagadocp',function() {
+$(document).on('change, blur', '.importepagadocp',function() {
   let getValue = $(this).data('id');
   //let target =$(this).data('target');
-  //console.log(target)
-  
   let totalpagoct=$('input[name=totalpagofact]').val();
   if(totalpagoct<1){
     $('input[name=importepagadocp]'+getValue).val(0)
@@ -333,7 +339,6 @@ $(document).on('change', '.importepagadocp',function() {
   $('input[name=saldoinsolutocp'+getValue).val(saldoactualcp-$('input[name=montopagadocp'+getValue).val());
 
   sumatorias(true, indexcp);
-  return
 });
 
 function sumatorias(exit, indexcp){
@@ -370,6 +375,57 @@ subtotalcp=impuestocp=otroscp=totalcp=0;
 	$("#numdefacts").html(indexcp);
 
 }
+
+/*======================================================================*/
+//ENVIAR FORMULARIO PARA GUARDAR DATOS DE FACTURA
+/*======================================================================*/
+$("body").on("submit", "#formularioComplementoPago", function( event ) {	
+  event.preventDefault();
+  event.stopPropagation();
+  let formData = new FormData($("#formularioComplementoPago")[0]);   
+   for (let pair of formData.entries()){
+     console.table(pair[0]+ ', ' + pair[1]);
+   } 
+
+   axios({ 
+    method  : 'post', 
+    url : 'ajax/facturaingreso.ajax.php?op=GuardarREP', 
+    data : formData, 
+  }) 
+  .then((res)=>{ 
+    console.log(res);
+    if(res.status===200) {
+      //console.log(res.data['status'])
+
+      $('#dt-FacturaIngreso').DataTable().ajax.reload(null, false);
+      $('#modalCrearComplementoPago').modal('hide')
+
+      swal({
+        title: "¡Registro Guardado!",
+        text: `${res.data.msg}`,
+        icon: "success",
+        button: "Cerrar",
+        timer:3000
+      })  //fin swal
+
+    }else{
+      console.log(res.data, res.status)
+      swal({
+        title: "¡Lo sentimos mucho!!",
+        text: `No fue posible Guardar Registro. ${res.data.msg}!!`,
+        icon: "error",
+        buttons: false,
+        timer: 3000
+      })  //fin swal
+
+    }          
+
+  }) 
+
+  return
+});  
+/*======================================================================*/
+
 
 /****************************************************************************** */
  $('#daterange-btn-factingreso').daterangepicker({
@@ -907,7 +963,7 @@ $("body").on("submit", "#formularioFactura", function( event ) {
               $('#modalCrearFactura').modal('hide')
 
               swal({
-                title: "¡Pre-Factura Guardada!",
+                title: "¡Registro Guardado!",
                 text: `${res.data.msg}`,
                 icon: "success",
                 button: "Cerrar",

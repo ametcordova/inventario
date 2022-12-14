@@ -433,14 +433,21 @@ $fechaHoy = date("Y-m-d");
 
             <div class="form-row m-0">
               <div class="form-group col-md-2">
-                <label class="control-label p-0 mt-0" for="fechaelaboracp"><i class="fa fa-calendar"></i> Fecha Elabora:</label>
+                <label class="control-label p-0 mt-0" for="fechaelaboracp"><i class="fa fa-calendar"></i> Fecha Elaboración:</label>
                 <input type="date" class="form-control form-control-sm mt-0 text-center" name="fechaelaboracp" value="<?= $fechaHoy ?>" tabindex="1" readonly title="Fecha elaboración">
                 <input type="hidden" name="idDeUsuario" value="<?php echo $_SESSION['id']; ?>">
+                <input type="hidden" name="idEmpresa" value="">
               </div>
 
-              <div class="form-group col-md-6">
+              <div class="form-group col-md-1">
+                <label class="control-label p-0 mt-0" for="foliorep"><i class="fa fa-hashtag"></i> REP:</label>
+                <input type="text" class="form-control form-control-sm mt-0 text-center" name="foliorep" id="foliorep" readonly title="Folio REP ">
+              </div>              
+
+              <div class="form-group col-md-5">
                 <label class="control-label p-0 mt-0" for="nombreemisorcp"><i class="fa fa-building"></i> Nombre Emisor:</label>
                 <input type="text" class="form-control form-control-sm mt-0" name="nombreemisorcp" id="nombreemisorcp" readonly title="Nombre  ">
+                <input type="hidden" name="idemisorrep" value="">
               </div>              
 
               <div class="form-group col-md-2">
@@ -458,6 +465,7 @@ $fechaHoy = date("Y-m-d");
                 <div class="form-group col-md-5">
                   <label class="control-label p-0 mt-0" for="nombrereceptorcp"><i class="fa fa-building"></i> Nombre Receptor:</label>
                   <input type="text" class="form-control form-control-sm mt-0" name="nombrereceptorcp" id="nombrereceptorcp" readonly title="Nombre  ">
+                  <input type="hidden" name="idreceptorrep" value="">
                 </div>              
 
                 <div class="form-group col-md-2">
@@ -467,7 +475,8 @@ $fechaHoy = date("Y-m-d");
 
                 <div class="form-group col-md-2">
                   <label class="control-label p-0 mt-0" for="monedacp"><i class="fa fa-building"></i> Moneda:</label>
-                  <input type="text" class="form-control form-control-sm mt-0" name="monedacp" id="monedacp" readonly title="Moneda ">
+                  <input type="text" class="form-control form-control-sm mt-0" name="monedacp" id="monedacp" readonly title="Tipo Moneda">
+                  <input type="hidden" name="idtipomoneda">
                 </div>              
 
                 <div class="form-group col-md-3">
@@ -496,8 +505,8 @@ $fechaHoy = date("Y-m-d");
                   <label class="control-label p-0 mt-0" for="metodopagocp"><i class="fa fa-check"></i> Metodo de pago:</label>
                   <select class="form-control form-control-sm" name="metodopagocp" id="metodopagocp" title="Método de pago" tabindex="3" required>
                       <option value="" selected>Seleccione Tipo</option>
-                      <option value="PUE">PUE-Pago en una sola exhibición</option>
-                      <option value="PPD">PPD-Pago en parcialidades o diferido</option>
+                      <option value='1'>PUE-Pago en una sola exhibición</option>
+                      <option value='2'>PPD-Pago en parcialidades o diferido</option>
                     </select>			  
                 </div>              
 
@@ -536,22 +545,22 @@ $fechaHoy = date("Y-m-d");
               <div class="form-row m-0">
                 <div class="form-group col-md-2">
                   <label class="control-label p-0 mt-0" for="numoperacioncp"><i class="fa fa-check"></i> No. Operación:</label>
-                  <input type="text" class="form-control form-control-sm mt-0" name="numoperacioncp" id="numoperacioncp" tabindex="6" title="Nombre  ">
+                  <input type="text" class="form-control form-control-sm mt-0" name="numoperacioncp" id="numoperacioncp" tabindex="6" title="Número de operación">
                 </div>              
                 
                 <div class="form-group col-md-4">
                   <label class="control-label p-0 mt-0" for="cuentaordenantecp"><i class="fa fa-check"></i> Cuenta Ordenante:</label>
-                  <input type="text" class="form-control form-control-sm mt-0" name="cuentaordenantercp" id="cuentaordenantecp" tabindex="7" title="Nombre  ">
+                  <input type="text" class="form-control form-control-sm mt-0" name="cuentaordenantercp" id="cuentaordenantecp" tabindex="7" title="Número de cuenta ordenante">
                 </div>              
                 
                 <div class="form-group col-md-4">
                   <label class="control-label p-0 mt-0" for="cuentabeneficiariocp"><i class="fa fa-calendar"></i> Cuenta Beneficiario:</label>
-                  <input type="text" class="form-control form-control-sm mt-0" name="cuentabeneficiariocp" tabindex="8" title="Fecha de pago" >
+                  <input type="text" class="form-control form-control-sm mt-0" name="cuentabeneficiariocp" tabindex="8" title="Numero de cuenta beneficiario" >
                 </div>
 
                 <div class="form-group col-md-2">
                   <label class="control-label p-0 mt-0" for="totalpagofact"><i class="fa fa-check"></i> Total Pago:</label>
-                  <input type="number" class="form-control form-control-sm mt-0 text-center font-weight-bold text-primary" name="totalpagofact" id="totalpagofact" tabindex="9" title="Nombre" style="font-size:1.4em;" required>
+                  <input type="number" class="form-control form-control-sm mt-0 text-center font-weight-bold text-primary" name="totalpagofact" id="totalpagofact" tabindex="9" title="Nombre" style="font-size:1.4em;" step="any" required>
                 </div>              
               </div>
               <!-- ==================================================================
@@ -588,7 +597,7 @@ $fechaHoy = date("Y-m-d");
                         </button>
                     </div>
 
-                    <div class="col-lg-2 col-md-2 col-sm-10 text-right">
+                    <div class="col-lg-3 col-md-3 col-sm-10 text-right">
                         <button type="button" class="btn btn-sm mb-1 mr-1 p-0">Total pago: &nbsp 
                           <span class="badge" id="totalcp" style="font-size:1rem;"></span>
                         </button>
@@ -603,9 +612,8 @@ $fechaHoy = date("Y-m-d");
         <!-- Modal footer -->
         <div class="modal-footer m-1 p-1" style="background-color:darkslategrey; color:floralwhite;">
           <button type="button" class="btn btn-dark btn-sm float-left" data-dismiss="modal"><i class="fa fa-reply"></i> Salir</button>
-          <button type="submit" class="btn btn-success btn-sm" id="btnGuardarCP"><i class="fa fa-save"></i> Guardar</button>
+          <button type="submit" class="btn btn-success btn-sm" id="btnGuardarCP"><i class="fa fa-save" tabindex="12"></i> Guardar</button>
         </div>
-
       </form>   <!-- Cierra del form -->
     </div> <!-- fin del modal-content -->
   </div>

@@ -38,11 +38,11 @@ try {
 /*=============================================
 	OBTENER EL ULTIMO REGISTRO-ID CAPTURADO 
 =============================================*/
-static public function mdlObtenerUltimoNumero($tabla, $campo){
+static public function mdlObtenerUltimoNumero($tabla, $campo, $valor=null){
 	try {
 			
-        if($campo==null){
-            $stmt=Conexion::conectar()->prepare("SELECT MAX(id) AS id, MAX(folio) AS folio FROM $tabla");
+        if($valor!=null){
+            $stmt=Conexion::conectar()->prepare("SELECT MAX($campo) AS folio FROM $tabla WHERE id=$valor");
         }else{
             $stmt=Conexion::conectar()->prepare("SELECT MAX($campo) AS folio FROM $tabla");
         }
@@ -251,7 +251,7 @@ static public function mdlGetDatosFact($tabla, $campo, $valor){
     try {    
         $ids=implode(",",$valor);
         //tabla=facturaingreso
-        $stmt = Conexion::conectar()->prepare("SELECT tb1.id, tb1.serie, tb1.folio, tb1.uuid, tb1.rfcemisor, tb1.idlugarexpedicion,tb1.idreceptor, tb1.subtotal, tb1.impuestos, tb1.totalfactura,tb1.saldoinsoluto, emp.razonsocial AS nombreemisor, cli.nombre AS nombrereceptor, cli.rfc AS rfcreceptor, tb1.idmoneda, mx.id_moneda, mx.descripcion AS moneda
+        $stmt = Conexion::conectar()->prepare("SELECT tb1.id, tb1.id_empresa, tb1.serie, tb1.folio, tb1.uuid, tb1.rfcemisor, tb1.idlugarexpedicion, emp.id AS idemisor, emp.serierep, emp.foliorep, tb1.subtotal, tb1.impuestos, tb1.totalfactura,tb1.saldoinsoluto, emp.razonsocial AS nombreemisor, cli.id AS idreceptor, cli.nombre AS nombrereceptor, cli.rfc AS rfcreceptor, tb1.idmoneda, mx.id_moneda, mx.descripcion AS moneda
         FROM $tabla tb1
         INNER JOIN empresa emp ON emp.id=tb1.id_empresa
         INNER JOIN clientes cli ON cli.id=tb1.idreceptor
@@ -368,7 +368,88 @@ static public function mdlGetTasaImpuesto($tabla){
     }
 }
 
+/*=============================================
+	GUARDAR FACTURA DE INGRESO
+=============================================*/
+static public function mdlGuardarRep($tabla, $complementodepago){
+	try {      
+        //OBTENEMOS EL ÚLTIMO ID GUARDADO EN TABLA FACTURAINGRESO
+        $campo='foliorep';
+        $valor=$complementodepago["idrfcemisor"];
+        $tablaempresa='empresa';
+        $query=self::mdlObtenerUltimoNumero($tablaempresa, $campo, $valor);
+            $folio=$query[0];
+                if(is_null($folio)){
+                  $folio=1;
+                  $foliorep='P'.$folio;
+                }else{
+                    $folio++;
+                    $foliorep='P'.$folio;
+                }
+        
+        //GUARDAMOS EN TABLA FACTURAINGRESO
+        $stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(tipodecomprobante, foliorep, fechaelaboracion, idrfcemisor,cpemisor, idrfcreceptor, fechapago, idformapagorep, idmetodopagorep, idobjetoimpuesto, idmoneda, numoperacion, cuentaordenante, cuentabeneficiario, conceptos, doctosrelacionados, idimpuesto, totalrecibo, tasa, subtotal, totalimpuesto, saldoinsoluto, ultusuario) VALUES (:tipodecomprobante, :foliorep, :fechaelaboracion, :idrfcemisor,:cpemisor, :idrfcreceptor, :fechapago, :idformapagorep, :idmetodopagorep, :idobjetoimpuesto, :idmoneda, :numoperacion, :cuentaordenante, :cuentabeneficiario, :conceptos, :doctosrelacionados, :idimpuesto, :totalrecibo, :tasa, :subtotal, :totalimpuesto, :saldoinsoluto, :ultusuario)");
+
+        $stmt->bindParam(":tipodecomprobante",  $complementodepago["tipodecomprobante"], PDO::PARAM_STR);
+        $stmt->bindParam(":foliorep",           $foliorep, PDO::PARAM_STR);
+        $stmt->bindParam(":fechaelaboracion",   $complementodepago["fechaelaboracion"], PDO::PARAM_STR);
+        $stmt->bindParam(":idrfcemisor",        $complementodepago["idrfcemisor"], PDO::PARAM_INT);
+        $stmt->bindParam(":cpemisor",           $complementodepago["cpemisor"], PDO::PARAM_INT);
+        $stmt->bindParam(":idrfcreceptor",      $complementodepago["idrfcreceptor"], PDO::PARAM_INT);
+        $stmt->bindParam(":fechapago",          $complementodepago["fechapago"], PDO::PARAM_STR);
+        $stmt->bindParam(":idformapagorep",     $complementodepago["idformapagorep"], PDO::PARAM_INT);
+        $stmt->bindParam(":idmetodopagorep",    $complementodepago["idmetodopagorep"], PDO::PARAM_INT);
+        $stmt->bindParam(":idobjetoimpuesto",   $complementodepago["idobjetoimpuesto"], PDO::PARAM_INT);
+        $stmt->bindParam(":idmoneda",           $complementodepago["idmoneda"], PDO::PARAM_INT);
+        $stmt->bindParam(":numoperacion",       $complementodepago["numoperacion"], PDO::PARAM_STR);
+        $stmt->bindParam(":cuentaordenante",    $complementodepago["cuentaordenante"], PDO::PARAM_STR);
+        $stmt->bindParam(":cuentabeneficiario", $complementodepago["cuentabeneficiario"], PDO::PARAM_STR);
+        $stmt->bindParam(":conceptos",          $complementodepago["conceptos"], PDO::PARAM_STR);
+        $stmt->bindParam(":doctosrelacionados", $complementodepago["doctosrelacionados"], PDO::PARAM_STR);
+        $stmt->bindParam(":idimpuesto",         $complementodepago["idimpuesto"], PDO::PARAM_INT);
+        $stmt->bindParam(":totalrecibo",        $complementodepago["totalrecibo"], PDO::PARAM_STR);
+        $stmt->bindParam(":tasa",               $complementodepago["tasa"], PDO::PARAM_STR);
+        $stmt->bindParam(":subtotal",           $complementodepago["subtotal"], PDO::PARAM_STR);
+        $stmt->bindParam(":totalimpuesto",      $complementodepago["totalimpuesto"], PDO::PARAM_STR);
+        $stmt->bindParam(":saldoinsoluto",      $complementodepago["saldoinsoluto"], PDO::PARAM_STR);
+        $stmt->bindParam(":ultusuario",         $complementodepago["ultusuario"], PDO::PARAM_INT);
+        $stmt->execute();
+
+        if($stmt){
+           //ACTUALIZA FOLIO DE COMPLEMENTO DE PAGO
+            $query = Conexion::conectar()->prepare("UPDATE $tablaempresa SET foliorep=:foliorep WHERE id = :id");
+            $query->bindParam(":id",        $complementodepago["idrfcemisor"], PDO::PARAM_INT);
+            $query->bindParam(":foliorep",  $folio, PDO::PARAM_INT);
+            $query->execute();
+
+           return "ok";
+        }else{
+            return "error";
+        }
+
+        $stmt=null;
+        $query=null;
+
+	} catch (Exception $e) {
+		echo "Failed: " . $e->getMessage();
+   }
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 } //fin de la clase
-
-
-?>

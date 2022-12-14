@@ -32,14 +32,6 @@ try{
          //if ( $stmt->rowCount() > 0 ) { do something here }
   }
     
-      if($stmt){
-        return true;
-     	}else{
- 		      return false;
-      }         
-        
-        $stmt->close();
-        
         $stmt=null;
 
 } catch (Exception $e) {
@@ -80,8 +72,6 @@ try{
 			return false;
 
 	   }         
-        
-        $stmt->close();
         
         $stmt=null;
 } catch (Exception $e) {

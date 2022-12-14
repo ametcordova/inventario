@@ -128,10 +128,10 @@ require_once('tcpdf_include.php');
 			$datos_instalacion_json=json_decode($respuesta['datos_instalacion'],TRUE);		//decodifica los datos JSON 
 			$datos_material_json=json_decode($respuesta['datos_material'],TRUE);		//decodifica los datos JSON 
 			//echo $datos_instalacion_json[0]['numpisaplex'];
-			$pdf->Ln(4);
-			$pdf->SetDrawColor(0,0,0);
-			$pdf->SetFillColor(255,0,0);
-			$pdf->SetTextColor(255,255,255);
+			$pdf->Ln(7.5);
+			$pdf->SetDrawColor(0,0,0);		//color borde
+			$pdf->SetFillColor(250,239,8);	//color relleno
+			$pdf->SetTextColor(0,0,0);		//color Texto
 			$pdf->SetLineWidth(.3);     //GRUESO DE LOS BORDES
 			$pdf->SetFont('Helvetica','B',10);
 			$pdf->Cell(0,6,'ORDEN DE SERVICIO',1,0,'C',true);
@@ -139,7 +139,7 @@ require_once('tcpdf_include.php');
 			$pdf->SetDrawColor(0,0,0);
 			$pdf->SetFillColor(255,255,255);
 			$pdf->SetTextColor(0,0,0);
-			$pdf->Ln(1);
+			$pdf->Ln(.2);
 			// ---------------------------------------------------------		
 			$pdf->Cell(10,6,'',0,0,'R',true);
 			$pdf->Cell(23,6,utf8_decode('TELEFONO:'),0,0,'L',true);
@@ -151,8 +151,8 @@ require_once('tcpdf_include.php');
 			$pdf->SetX(140);    
 			$pdf->Cell(10,6,'',0,0,'R',true);
 			$pdf->Cell(25,6,'FACTURA:',0,0,'R',true);
-			$pdf->Cell(20,6,$factura,1,0,'C',true);
-			$pdf->Ln(10);
+			$pdf->Cell(25,6,$factura,1,0,'C',true);
+			$pdf->Ln(7.5);
 	
 			$pdf->Cell(33,6,'NÚMERO DE OS:',0,0,'L',true);
 			$pdf->Cell(30,6,$respuesta['ordenservicio'],1,0,'C',true);
@@ -161,11 +161,11 @@ require_once('tcpdf_include.php');
 			$pdf->Cell(25,6,$datos_instalacion_json[0]['numpisaplex'],1,0,'C',true);
 			$pdf->SetX(123);
 			$pdf->Cell(12,6,'TIPO:',0,0,'L',true);
-			$pdf->Cell(24,6,$datos_instalacion_json[0]['numtipo'],1,0,'C',true);
-			$pdf->SetX(160);
+			$pdf->Cell(20,6,$datos_instalacion_json[0]['numtipo'],1,0,'C',true);
+			$pdf->SetX(156);
 			$pdf->Cell(24,6,'FOLIO TEC:',0,0,'C',true);
 			$pdf->Cell(20,6,'',1,0,'C',true);
-			$pdf->Ln(10);
+			$pdf->Ln(7.5);
 	
 			$pdf->Cell(55,6,'NOMBRE DEL CONTRATANTE:',0,0,'R',true);
 			$pdf->Cell(140,6,$respuesta['nombrecontrato'],1,0,'L',true);
@@ -185,7 +185,7 @@ require_once('tcpdf_include.php');
 			$pdf->SetX(125);
 			$pdf->Cell(15,6,'DEPTO:',0,0,'L',true);
 			$pdf->Cell(25,6,'',1,0,'C',true);
-			$pdf->Ln(9);
+			$pdf->Ln(7);
 	
 			$pdf->SetFont('helvetica','B',7);
 			$pdf->Cell(178,2,'NAVEGACIÓN',0,'B','R',true);
@@ -203,7 +203,7 @@ require_once('tcpdf_include.php');
 			$pdf->Cell(23,5,'DESCARGA',0,0,'C',true);
 			$pdf->SetX(180);
 			$pdf->Cell(23,5,'CARGA',0,0,'C',true);
-			$pdf->Ln();	
+			$pdf->Ln(4.5);	
 
 			$pdf->SetFont('helvetica','',8);
 			$pdf->Cell(35,6,$datos_instalacion_json[0]['distritoos'],1,0,'C',true);
@@ -219,11 +219,11 @@ require_once('tcpdf_include.php');
 			$pdf->Cell(23,6,'',1,0,'C',true);
 			$pdf->SetX(180);
 			$pdf->Cell(23,6,'',1,0,'C',true);
-			$pdf->Ln(9);
+			$pdf->Ln(7.5);
 	
-			$pdf->SetDrawColor(128,0,0);
-			$pdf->SetFillColor(255,0,0);
-			$pdf->SetTextColor(255,255,255);
+			$pdf->SetDrawColor(0,0,0);
+			$pdf->SetFillColor(250,239,8);
+			$pdf->SetTextColor(0,0,0);
 			$pdf->SetLineWidth(.3);     //GRUESO DE LOS BORDES
 			$pdf->SetFont('helvetica','B',10);
 			$pdf->Cell(0,6,'DATOS DEL MODEM RETIRADO AL CLIENTE',1,0,'C',true);
@@ -241,11 +241,11 @@ require_once('tcpdf_include.php');
 			$pdf->Ln();
 			$pdf->Cell(60,6,'NÚMERO DE SERIE:',0,0,'R',true);
 			$pdf->Cell(100,6,$modemnumserie,1,0,'L',true);
-			$pdf->Ln(9);
+			$pdf->Ln(8);
 
-			$pdf->SetDrawColor(128,0,0);
-			$pdf->SetFillColor(255,0,0);
-			$pdf->SetTextColor(255,255,255);
+			$pdf->SetDrawColor(0,0,0);
+			$pdf->SetFillColor(250,239,8);
+			$pdf->SetTextColor(0,0,0);
 			$pdf->SetLineWidth(.3);     //GRUESO DE LOS BORDES
 			$pdf->SetFont('helvetica','B',10);
 			$pdf->Cell(0,6,'DATOS DE LA ONT INSTALADA',1,0,'C',true);
@@ -263,7 +263,7 @@ require_once('tcpdf_include.php');
 			$pdf->Ln();
 			$pdf->Cell(60,6,'KEY:',0,0,'R',true);
 			$pdf->Cell(100,6,'',1,0,'L',true);
-			$pdf->Ln(10);
+			$pdf->Ln(8);
 	
 			$pdf->SetFont('helvetica','B',7);
 			$pdf->Cell(0,10,'OBSERVACIONES:',1,0,'L',true);
@@ -274,11 +274,12 @@ require_once('tcpdf_include.php');
 				$gety=$pdf->GetY();
 
 				$cadena = $respuesta['firma'];
-				$separador = "image/svg+xml,";
-				$firma = explode($separador, $cadena);
-				$pdf->ImageSVG('@'.$firma[1], $x=$getx+75, $y=$gety-57, $w='50', $h=97, $link='', $align='', $palign='', $border=0, $fitonpage=false);
+				if($cadena!="Sin Firma"){
+					$separador = "image/svg+xml,";
+					$firma = explode($separador, $cadena);
+					$pdf->ImageSVG('@'.$firma[1], $x=$getx+75, $y=$gety-57, $w='50', $h=97, $link='', $align='', $palign='', $border=0, $fitonpage=false);
+				}
 				// -------------------------------------------------------------			
-
 
 			$pdf->SetFont('Helvetica','',8);
 			$pdf->Cell(200,4,$datos_instalacion_json[0]['nombrefirma'],0,0,'C',true);
@@ -295,11 +296,11 @@ require_once('tcpdf_include.php');
 			$pdf->Cell(62,4,'NOMBRE Y FIRMA (CLIENTE)','LRB',0,'C',true);
 			$pdf->SetX(144);
 			$pdf->Cell(62,4,'NOMBRE Y FIRMA (CLIENTE)','LRB',0,'C',true);
-			$pdf->Ln(10);
+			$pdf->Ln(7);
 	
-			$pdf->SetDrawColor(128,0,0);
-			$pdf->SetFillColor(255,0,0);
-			$pdf->SetTextColor(255,255,255);
+			$pdf->SetDrawColor(0,0,0);
+			$pdf->SetFillColor(250,239,8);
+			$pdf->SetTextColor(0,0,0);
 			$pdf->SetLineWidth(.3);     
 			$pdf->SetFont('helvetica','B',10);
 			$pdf->Cell(0,6,'MATERIAL INSTALADO',1,0,'C',true);
@@ -309,7 +310,8 @@ require_once('tcpdf_include.php');
 			$pdf->Ln(7.5);
 
 			// Colors, line width and bold font
-			$pdf->SetFillColor(0, 95, 100, 0);
+			$pdf->SetDrawColor(2,20,70);
+			$pdf->SetFillColor(2, 20, 70);
 			$pdf->SetTextColor(255, 255, 255);
 			$pdf->SetFont('', 'B',10);
 			
@@ -327,6 +329,7 @@ require_once('tcpdf_include.php');
 			$pdf->Ln(7.5);
         	// ---------------------------------------------------------			
 			$total_material = 0;
+			$items=sizeof($datos_material_json);
 			foreach ($datos_material_json as $row) {
 	
 				$itemProducto ='id';
@@ -350,11 +353,14 @@ require_once('tcpdf_include.php');
 			}   //termina el foreach
 
 				// Colors, line width and bold font
-				$pdf->SetFillColor(0, 95, 100, 0);
+				$pdf->SetDrawColor(2,20,70);
+				$pdf->SetFillColor(2, 20, 70);
 				$pdf->SetTextColor(255, 255, 255);
 				$pdf->SetFont('', 'B',10);
 
-				$pdf->Cell(185, 6.5,'Total Material:', 1, 0, 'R', 1);
+				$pdf->Cell(25, 6.5,'Total Items:', 1, 0, 'R', 1);
+				$pdf->Cell(15, 6.5, $items, 1, 0, 'L', 1);			
+				$pdf->Cell(145, 6.5,'Total Material:', 1, 0, 'R', 1);
 				$pdf->Cell(15, 6.5, number_format($total_material,2, '.',','), 1, 0, 'C', 1);			
 				$pdf->Ln();
 

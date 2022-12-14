@@ -568,8 +568,8 @@ $('#factpagadas').on('ifUnchecked', function (event) {
             btns.addClass('btn btn-success btn-sm');
           },  
       "columnDefs": [
-        {"className": "dt-center", "targets": [0,1,4,9,10,11,12,13,14]},
-        {"className": "dt-right", "targets": [5,6,7,8]}				//"_all" para todas las columnas
+        {"className": "dt-center", "targets": [0,1,4,5,9,10,11,12,13,14]},
+        {"className": "dt-right", "targets": [6,7,8]}				//"_all" para todas las columnas
         ],
       "footerCallback": function ( row, data, start, end, display ) {
         var api = this.api();
