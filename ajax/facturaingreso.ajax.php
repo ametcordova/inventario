@@ -10,6 +10,7 @@ require_once "../modelos/facturaingreso.modelo.php";
 require_once "../controladores/permisos.controlador.php";
 require_once "../modelos/permisos.modelo.php";
 require_once "../funciones/timbrarfactura.php";
+require_once "../funciones/timbrarrep.php";
 require_once '../funciones/funciones.php';
 include_once 'downloadxml.php';
 
@@ -460,6 +461,7 @@ switch ($_GET["op"]){
                         'fechapago'         => $_POST["fechapagocp"],
                         'idformapagorep'    => $_POST["formapagocp"],
                         'idmetodopagorep'   => $_POST["metodopagocp"],
+                        'idusocfdi'         => $_POST["idusocfdi"],
                         'idobjetoimpuesto'  => $_POST["objetoimpcp"],
                         'idmoneda'          => $_POST["idtipomoneda"],
                         'numoperacion'      => $_POST["numoperacioncp"],
@@ -489,6 +491,48 @@ switch ($_GET["op"]){
         break;
     /************************************************************************************************** */    
 
+/************************************************************************************************** */
+//                 PARA TIMBRAR FACTURAR
+/************************************************************************************************** */
+    case 'TimbrarRep':
+        try{
+                if(isset($_GET['dataid'])){  
+    
+                    $fechaactual=new DateTime("now");
+                    // $fecha = new DateTime($_GET['datafecha']);
+                    // $diff = $fecha->diff($fechaactual);
+                    
+                    // if($diff->d>0){
+                    //     json_output(json_build(403, null, 'Mas de 1 dia.'));
+                    //     exit;
+                    // }
+
+                    $tabla          = "complementodepago";
+                    $campo          = "id";
+                    $valor          = $_GET['dataid'];
+
+                    $respuesta = ClaseFacturarRep::GenerarJsonFacturaRep($tabla, $campo, $valor);
+
+                    if(intval($respuesta)===0){
+                        json_output(json_build(401, intval($respuesta), 'No se creo el archivo JSON'));
+                    }
+                    
+                    // $tablatimbrada='datosfacturatimbre';
+                    // $resp = ClaseFacturar::EnviarJsonFacturaWS($tabla, $tablatimbrada, $campo, $valor, $folio, $dataidempresa, $dataserie, $datarfcemisor);
+                    
+                    if($respuesta){
+                        json_output(json_build(201, $respuesta, 'Respuesta Exitosa del WS'));    
+                    }else{
+                        json_output(json_build(401, $respuesta, 'Respuesta ERRONEA del WS'));    
+                    }
+                }else{
+                    json_output(json_build(401, $respuesta, 'Respuesta ERRONEA del WS'));
+                }
+        } catch (Exception $e) {
+            json_output(json_build(403, null, $e->getMessage()));
+        }    
+    break;
+/************************************************************************************************** */    
 		default:
             json_output(json_build(403, null, 'No existe opciòn. Revise'));
 			return false;

@@ -1,0 +1,118 @@
+{
+    "Comprobante": {
+        "Version": "4.0",
+        "Serie": "P",
+        "Folio": "140",
+        "Fecha": "2022-12-14T23:01:53",
+        "NoCertificado": "00001000000515088380",
+        "SubTotal": 0,
+        "Moneda": "XXX",
+        "Total": 0,
+        "TipoDeComprobante": "P",
+        "Exportacion": "01",
+        "LugarExpedicion": "29027",
+        "Emisor": {
+            "Rfc": "DIGB980626MX3",
+            "Nombre": "BRUNO DIAZ GORDILLO",
+            "RegimenFiscal": "621"
+        },
+        "Receptor": {
+            "Rfc": "CIC991214L94",
+            "Nombre": "CARSO INFRAESTRUCTURA Y CONSTRUCCION",
+            "DomicilioFiscalReceptor": "11529",
+            "RegimenFiscalReceptor": "623",
+            "UsoCFDI": "CP0"
+        },
+        "Conceptos": [
+            {
+                "ClaveProdServ": "84111506",
+                "Cantidad": 1,
+                "ClaveUnidad": "ACT",
+                "Descripcion": "Pago",
+                "ValorUnitario": 0,
+                "Importe": 0,
+                "ObjetoImp": "01"
+            }
+        ],
+        "Complemento": [
+            {
+                "Pagos20": {
+                    "Version": "2.0",
+                    "Totales": {
+                        "TotalTrasladosBaseIVA16": "46936.00",
+                        "TotalTrasladosImpuestoIVA16": "7509.76",
+                        "MontoTotalPagos": "54445.76"
+                    },
+                    "Pago": [
+                        {
+                            "FechaPago": "2022-12-14 11:36:00",
+                            "FormaDePagoP": "03",
+                            "MonedaP": "MXN",
+                            "TipoCambioP": "1",
+                            "NumOperacion": "12345789",
+                            "Monto": "54445.76",
+                            "DoctoRelacionado": {
+                                "0": {
+                                    "IdDocumento": "5B905DE9-8B0F-4AE8-8A7A-C8DD08C76A46",
+                                    "Serie": "A",
+                                    "Folio": "387",
+                                    "MonedaDR": "MXN",
+                                    "EquivalenciaDR": "1",
+                                    "NumParcialidad": "1",
+                                    "ImpSaldoAnt": "10254.40",
+                                    "ImpPagado": "10254.40",
+                                    "ImpSaldoInsoluto": "0",
+                                    "ObjetoImpDR": "02",
+                                    "ImpuestosDR": {
+                                        "TrasladosDR": [
+                                            {
+                                                "BaseDR": "8840.00",
+                                                "ImpuestoDR": "002",
+                                                "TipoFactorDR": "Tasa",
+                                                "TasaOCuotaDR": "0.160000",
+                                                "ImporteDR": "1414.40"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "1": {
+                                    "IdDocumento": "D2DED25A-DC00-4D97-B1F8-260FC5AD9795",
+                                    "Serie": "A",
+                                    "Folio": "388",
+                                    "MonedaDR": "MXN",
+                                    "EquivalenciaDR": "1",
+                                    "NumParcialidad": "1",
+                                    "ImpSaldoAnt": "44191.36",
+                                    "ImpPagado": "44191.36",
+                                    "ImpSaldoInsoluto": "0",
+                                    "ObjetoImpDR": "02",
+                                    "ImpuestosDR": {
+                                        "TrasladosDR": [
+                                            {
+                                                "BaseDR": "38096.00",
+                                                "ImpuestoDR": "002",
+                                                "TipoFactorDR": "Tasa",
+                                                "TasaOCuotaDR": "0.160000",
+                                                "ImporteDR": "6095.36"
+                                            }]
+                                    }
+                                },
+                                "ImpuestosP": {
+                                    "TrasladosP": [
+                                        {
+                                            "BaseP": "46936.00",
+                                            "ImpuestoP": "002",
+                                            "TipoFactorP": "Tasa",
+                                            "TasaOCuotaP": "0.160000",
+                                            "ImporteP": "54445.76"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

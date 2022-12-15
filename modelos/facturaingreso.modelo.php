@@ -388,7 +388,7 @@ static public function mdlGuardarRep($tabla, $complementodepago){
                 }
         
         //GUARDAMOS EN TABLA FACTURAINGRESO
-        $stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(tipodecomprobante, foliorep, fechaelaboracion, idrfcemisor,cpemisor, idrfcreceptor, fechapago, idformapagorep, idmetodopagorep, idobjetoimpuesto, idmoneda, numoperacion, cuentaordenante, cuentabeneficiario, conceptos, doctosrelacionados, idimpuesto, totalrecibo, tasa, subtotal, totalimpuesto, saldoinsoluto, ultusuario) VALUES (:tipodecomprobante, :foliorep, :fechaelaboracion, :idrfcemisor,:cpemisor, :idrfcreceptor, :fechapago, :idformapagorep, :idmetodopagorep, :idobjetoimpuesto, :idmoneda, :numoperacion, :cuentaordenante, :cuentabeneficiario, :conceptos, :doctosrelacionados, :idimpuesto, :totalrecibo, :tasa, :subtotal, :totalimpuesto, :saldoinsoluto, :ultusuario)");
+        $stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(tipodecomprobante, foliorep, fechaelaboracion, idrfcemisor,cpemisor, idrfcreceptor, fechapago, idformapagorep, idmetodopagorep, idusocfdi, idobjetoimpuesto, idmoneda, numoperacion, cuentaordenante, cuentabeneficiario, conceptos, doctosrelacionados, idimpuesto, totalrecibo, tasa, subtotal, totalimpuesto, saldoinsoluto, ultusuario) VALUES (:tipodecomprobante, :foliorep, :fechaelaboracion, :idrfcemisor,:cpemisor, :idrfcreceptor, :fechapago, :idformapagorep, :idmetodopagorep, :idusocfdi, :idobjetoimpuesto, :idmoneda, :numoperacion, :cuentaordenante, :cuentabeneficiario, :conceptos, :doctosrelacionados, :idimpuesto, :totalrecibo, :tasa, :subtotal, :totalimpuesto, :saldoinsoluto, :ultusuario)");
 
         $stmt->bindParam(":tipodecomprobante",  $complementodepago["tipodecomprobante"], PDO::PARAM_STR);
         $stmt->bindParam(":foliorep",           $foliorep, PDO::PARAM_STR);
@@ -399,6 +399,7 @@ static public function mdlGuardarRep($tabla, $complementodepago){
         $stmt->bindParam(":fechapago",          $complementodepago["fechapago"], PDO::PARAM_STR);
         $stmt->bindParam(":idformapagorep",     $complementodepago["idformapagorep"], PDO::PARAM_INT);
         $stmt->bindParam(":idmetodopagorep",    $complementodepago["idmetodopagorep"], PDO::PARAM_INT);
+        $stmt->bindParam(":idusocfdi",          $complementodepago["idusocfdi"], PDO::PARAM_INT);
         $stmt->bindParam(":idobjetoimpuesto",   $complementodepago["idobjetoimpuesto"], PDO::PARAM_INT);
         $stmt->bindParam(":idmoneda",           $complementodepago["idmoneda"], PDO::PARAM_INT);
         $stmt->bindParam(":numoperacion",       $complementodepago["numoperacion"], PDO::PARAM_STR);
@@ -416,7 +417,7 @@ static public function mdlGuardarRep($tabla, $complementodepago){
         $stmt->execute();
 
         if($stmt){
-           //ACTUALIZA FOLIO DE COMPLEMENTO DE PAGO
+           //ACTUALIZA FOLIO DE COMPLEMENTO DE PAGO TABLA EMPRESA
             $query = Conexion::conectar()->prepare("UPDATE $tablaempresa SET foliorep=:foliorep WHERE id = :id");
             $query->bindParam(":id",        $complementodepago["idrfcemisor"], PDO::PARAM_INT);
             $query->bindParam(":foliorep",  $folio, PDO::PARAM_INT);

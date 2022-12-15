@@ -544,16 +544,21 @@ $fechaHoy = date("Y-m-d");
             
               <div class="form-row m-0">
                 <div class="form-group col-md-2">
+                  <label class="control-label p-0 mt-0" for="usocfdicp"><i class="fa fa-check"></i> Uso CFDI:</label>
+                  <input type="text" class="form-control form-control-sm mt-0" name="usocfdicp" id="usocfdicp" value="CP01" title="Uso del CFDI de pago" readonly>
+                </div>              
+                
+                <div class="form-group col-md-2">
                   <label class="control-label p-0 mt-0" for="numoperacioncp"><i class="fa fa-check"></i> No. Operación:</label>
                   <input type="text" class="form-control form-control-sm mt-0" name="numoperacioncp" id="numoperacioncp" tabindex="6" title="Número de operación">
                 </div>              
-                
-                <div class="form-group col-md-4">
+
+                <div class="form-group col-md-3">
                   <label class="control-label p-0 mt-0" for="cuentaordenantecp"><i class="fa fa-check"></i> Cuenta Ordenante:</label>
                   <input type="text" class="form-control form-control-sm mt-0" name="cuentaordenantercp" id="cuentaordenantecp" tabindex="7" title="Número de cuenta ordenante">
                 </div>              
                 
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-3">
                   <label class="control-label p-0 mt-0" for="cuentabeneficiariocp"><i class="fa fa-calendar"></i> Cuenta Beneficiario:</label>
                   <input type="text" class="form-control form-control-sm mt-0" name="cuentabeneficiariocp" tabindex="8" title="Numero de cuenta beneficiario" >
                 </div>

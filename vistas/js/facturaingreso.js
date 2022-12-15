@@ -87,10 +87,17 @@ function dt_ListarFacturasIngreso(){
             autoPrint: false            //TRUE para abrir la impresora
         },
         {
-          text: 'Comprob. de pago 2.0',
+          text: 'Generar REP 2.0',
           className: 'btn btn-sm btn-dark ',
           action: function ( e, dt, node, config ) {
           GenCompPago20();
+          }
+        },
+        {
+          text: 'Gestión REP 2.0',
+          className: 'btn btn-sm btn-info',
+          action: function ( e, dt, node, config ) {
+          GestionCompPago20();
           }
         },
         ],
@@ -394,7 +401,7 @@ $("body").on("submit", "#formularioComplementoPago", function( event ) {
   }) 
   .then((res)=>{ 
     console.log(res);
-    if(res.status===200) {
+    if(res.status===201) {
       //console.log(res.data['status'])
 
       $('#dt-FacturaIngreso').DataTable().ajax.reload(null, false);
@@ -1185,6 +1192,41 @@ $("#dt-FacturaIngreso tbody").on("click", "button.btnCancelFact", function(){
 
 })
 /*===================================================*/
+function GestionCompPago20(){
+  console.log('entra');
+  (async () => {
+    await axios.get('ajax/facturaingreso.ajax.php?op=TimbrarRep', {
+      params: {
+        dataid: "1"
+      }
+    })
+
+    .then((res)=>{ 
+      console.log(res.data)
+      if(res.data.status==201) {
+        swal({
+          title: "¡Registro Guardado!",
+          text: `${res.data.msg}`,
+          icon: "success",
+          button: "Cerrar",
+          timer:2000
+        })  //fin swal
+  
+      }else{
+        console.log(res.data, res.status)
+        swal({
+          title: "¡Lo sentimos mucho!!",
+          text: `No fue posible Guardar Registro. ${res.data.msg}!!`,
+          icon: "error",
+          buttons: false,
+          timer: 2000
+        })  //fin swal
+        }          
+    })   
+
+  })();  //fin del async
+
+}
 
 /**************************************************************** */
 //AL ABRIR EL MODAL TRAER EL ULTIMO NUMERO
