@@ -176,7 +176,7 @@ function GenCompPago20(){
   $.each(tblFacturaIngreso.$('input[type="checkbox"]'), function(index, rowId){
     if(this.checked && parseInt(rowId.value)>0){
       ids.push(parseInt(rowId.value));
-      //console.log(index, rowId, parseInt(rowId.value))
+      console.log(index, rowId, parseInt(rowId.value))
     }
     
   });
@@ -192,7 +192,7 @@ function GenCompPago20(){
       })
       .then((res)=>{ 
         if(res.status==200) {
-          //console.log(res.data)
+          console.log(res.data)
           $('input[name=idEmpresa]').val(res.data[0].id_empresa);
           $('input[name=foliorep]').val(res.data[0].serierep+(parseInt(res.data[0].foliorep)+1));
           $('input[name=idemisorrep]').val(res.data[0].idemisor);
@@ -308,7 +308,7 @@ datos.forEach(function(elem,index,arreglo) {            //nombres.forEach((eleme
   //console.log(index,arreglo, indexcp)
 });
 //Stotalpagado=new Intl.NumberFormat('en', {style: 'currency',currency: 'USD',currencySign: 'accounting',}).format(totalpagado);
-$('input[name="totalpagofact"]').val(totalpagofact);
+$('input[name="totalpagofact"]').val((totalpagofact).toFixed(2));
 updatetax();
 }
 
@@ -1195,7 +1195,7 @@ $("#dt-FacturaIngreso tbody").on("click", "button.btnCancelFact", function(){
 function GestionCompPago20(){
   console.log('entra');
   (async () => {
-    await axios.get('ajax/facturaingreso.ajax.php?op=TimbrarRep', {
+    await axios.get('ajax/facturaingreso.ajax.php?op=GenerarRep20', {
       params: {
         dataid: "1"
       }

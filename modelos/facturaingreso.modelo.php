@@ -251,7 +251,7 @@ static public function mdlGetDatosFact($tabla, $campo, $valor){
     try {    
         $ids=implode(",",$valor);
         //tabla=facturaingreso
-        $stmt = Conexion::conectar()->prepare("SELECT tb1.id, tb1.id_empresa, tb1.serie, tb1.folio, tb1.uuid, tb1.rfcemisor, tb1.idlugarexpedicion, emp.id AS idemisor, emp.serierep, emp.foliorep, tb1.subtotal, tb1.impuestos, tb1.totalfactura,tb1.saldoinsoluto, emp.razonsocial AS nombreemisor, cli.id AS idreceptor, cli.nombre AS nombrereceptor, cli.rfc AS rfcreceptor, tb1.idmoneda, mx.id_moneda, mx.descripcion AS moneda
+        $stmt = Conexion::conectar()->prepare("SELECT tb1.id, tb1.id_empresa, tb1.serie, tb1.folio, tb1.uuid, tb1.rfcemisor, tb1.idlugarexpedicion, emp.id AS idemisor, emp.serierep, emp.foliorep, tb1.subtotal, tb1.impuestos, tb1.totalfactura, tb1.saldoinsoluto, emp.razonsocial AS nombreemisor, cli.id AS idreceptor, cli.nombre AS nombrereceptor, cli.rfc AS rfcreceptor, tb1.idmoneda, mx.id_moneda, mx.descripcion AS moneda
         FROM $tabla tb1
         INNER JOIN empresa emp ON emp.id=tb1.id_empresa
         INNER JOIN clientes cli ON cli.id=tb1.idreceptor

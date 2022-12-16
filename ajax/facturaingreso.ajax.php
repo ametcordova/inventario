@@ -9,8 +9,8 @@ require_once "../controladores/facturaingreso.controlador.php";
 require_once "../modelos/facturaingreso.modelo.php";
 require_once "../controladores/permisos.controlador.php";
 require_once "../modelos/permisos.modelo.php";
-require_once "../funciones/timbrarfactura.php";
-require_once "../funciones/timbrarrep.php";
+require_once "../funciones/generarrep20.php";
+require_once "../funciones/timbrarrep20.php";
 require_once '../funciones/funciones.php';
 include_once 'downloadxml.php';
 
@@ -511,14 +511,15 @@ switch ($_GET["op"]){
                     $campo          = "id";
                     $valor          = $_GET['dataid'];
 
-                    $respuesta = ClaseFacturarRep::GenerarJsonFacturaRep($tabla, $campo, $valor);
+                    $respuesta = ClaseGenerarRep20::GenerarJsonRep20($tabla, $campo, $valor);
 
                     if(intval($respuesta)===0){
                         json_output(json_build(401, intval($respuesta), 'No se creo el archivo JSON'));
+                    }else{
+                        // $tabla='complementodepago';
+                        //$respuesta = ClaseTimbrarRep20::EnviarJsonRep20WS($tabla, $campo, $valor, $folio, $datarfcemisor);
                     }
                     
-                    // $tablatimbrada='datosfacturatimbre';
-                    // $resp = ClaseFacturar::EnviarJsonFacturaWS($tabla, $tablatimbrada, $campo, $valor, $folio, $dataidempresa, $dataserie, $datarfcemisor);
                     
                     if($respuesta){
                         json_output(json_build(201, $respuesta, 'Respuesta Exitosa del WS'));    

@@ -1,8 +1,5 @@
 <?php
-//namespace TIMBRADORXPRESS\API;
-// if(!strlen(session_id())>1){
-//     session_start();
-// }
+
 // Se especifica la zona horaria
 date_default_timezone_set("America/Mexico_City");
 
@@ -12,19 +9,10 @@ error_reporting(E_ALL);
 /*********************************************/
 require_once dirname( __DIR__ ).'/modelos/conexion.php';
 
-$exist=file_exists(__DIR__ . '/class.conexion.php');
-
-    if($exist){
-        require_once __DIR__ . '/class.conexion.php';
-    }else{
-        exit;
-     };
-
-use TIMBRADORXPRESS\API\ConexionWS;
 /*********************************************/
-class ClaseFacturarRep{
+class ClaseGenerarRep20{
 
-    static public function GenerarJsonFacturaRep($tabla, $campo, $valor){
+    static public function GenerarJsonRep20($tabla, $campo, $valor){
     $bytes=0;
     // $tabla=complementodepago
     $sql="SELECT tb1.*, emp.rfc, emp.razonsocial AS nombreemisor, emp.numerocertificado, emp.regimenfiscalemisor, emp.serierep, emp.id_exportacion, clie.rfc AS rfcreceptor, clie.nombre AS nombrereceptor, clie.codpostal AS cpreceptor, clie.regimenfiscal AS regfiscalreceptor, mon.id_moneda, cfdi.id_cfdi
@@ -84,6 +72,7 @@ class ClaseFacturarRep{
     $datos['Comprobante']['Complemento'][0]['Pagos20']['Totales']["TotalTrasladosBaseIVA16"] =  $datosdefactura['subtotal'];
     $datos['Comprobante']['Complemento'][0]['Pagos20']['Totales']["TotalTrasladosImpuestoIVA16"] =  $datosdefactura['totalimpuesto'];
     $datos['Comprobante']['Complemento'][0]['Pagos20']['Totales']["MontoTotalPagos"] =  $datosdefactura['totalrecibo'];
+
     $datos['Comprobante']['Complemento'][0]['Pagos20']["Pago"][0]['FechaPago'] =  $datosdefactura['fechapago'];
     $datos['Comprobante']['Complemento'][0]['Pagos20']["Pago"][0]["FormaDePagoP"] =  $datosdefactura['idformapagorep'];
     $datos['Comprobante']['Complemento'][0]['Pagos20']["Pago"][0]["MonedaP"] =  "MXN";   //Modificar
@@ -105,16 +94,16 @@ class ClaseFacturarRep{
 
         $datos['Comprobante']['Complemento'][0]['Pagos20']["Pago"][0]["DoctoRelacionado"][$key]["ImpuestosDR"]["TrasladosDR"][0]["BaseDR"] = $value['BaseDR'];
         $datos['Comprobante']['Complemento'][0]['Pagos20']["Pago"][0]["DoctoRelacionado"][$key]["ImpuestosDR"]["TrasladosDR"][0]["ImpuestoDR"] = $datosdefactura['idimpuesto'];
-        $datos['Comprobante']['Complemento'][0]['Pagos20']["Pago"][0]["DoctoRelacionado"][$key]["ImpuestosDR"]["TrasladosDR"][0]["TipoFactorDR"] = 'Tasa';      //revisar
+        $datos['Comprobante']['Complemento'][0]['Pagos20']["Pago"][0]["DoctoRelacionado"][$key]["ImpuestosDR"]["TrasladosDR"][0]["TipoFactorDR"] = 'Tasa';    
         $datos['Comprobante']['Complemento'][0]['Pagos20']["Pago"][0]["DoctoRelacionado"][$key]["ImpuestosDR"]["TrasladosDR"][0]["TasaOCuotaDR"] = $datosdefactura['tasa'];
         $datos['Comprobante']['Complemento'][0]['Pagos20']["Pago"][0]["DoctoRelacionado"][$key]["ImpuestosDR"]["TrasladosDR"][0]["ImporteDR"] = $value['ImporteDR'];
     }
 
-    $datos['Comprobante']['Complemento'][0]['Pagos20']["Pago"][0]["DoctoRelacionado"]["ImpuestosP"]["TrasladosP"][0]["BaseP"] = $datosdefactura['subtotal'];
-    $datos['Comprobante']['Complemento'][0]['Pagos20']["Pago"][0]["DoctoRelacionado"]["ImpuestosP"]["TrasladosP"][0]["ImpuestoP"] = $datosdefactura['idimpuesto'];
-    $datos['Comprobante']['Complemento'][0]['Pagos20']["Pago"][0]["DoctoRelacionado"]["ImpuestosP"]["TrasladosP"][0]["TipoFactorP"] = 'Tasa';
-    $datos['Comprobante']['Complemento'][0]['Pagos20']["Pago"][0]["DoctoRelacionado"]["ImpuestosP"]["TrasladosP"][0]["TasaOCuotaP"] = $datosdefactura['tasa'];
-    $datos['Comprobante']['Complemento'][0]['Pagos20']["Pago"][0]["DoctoRelacionado"]["ImpuestosP"]["TrasladosP"][0]["ImporteP"] = $datosdefactura['totalrecibo'];
+        $datos['Comprobante']['Complemento'][0]['Pagos20']["Pago"][0]["ImpuestosP"]["TrasladosP"][0]["BaseP"] = $datosdefactura['subtotal'];
+        $datos['Comprobante']['Complemento'][0]['Pagos20']["Pago"][0]["ImpuestosP"]["TrasladosP"][0]["ImpuestoP"] = $datosdefactura['idimpuesto'];
+        $datos['Comprobante']['Complemento'][0]['Pagos20']["Pago"][0]["ImpuestosP"]["TrasladosP"][0]["TipoFactorP"] = 'Tasa';
+        $datos['Comprobante']['Complemento'][0]['Pagos20']["Pago"][0]["ImpuestosP"]["TrasladosP"][0]["TasaOCuotaP"] = $datosdefactura['tasa'];
+        $datos['Comprobante']['Complemento'][0]['Pagos20']["Pago"][0]["ImpuestosP"]["TrasladosP"][0]["ImporteP"] = $datosdefactura['totalrecibo'];
 
 
     $invoice_json = json_encode($datos, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
