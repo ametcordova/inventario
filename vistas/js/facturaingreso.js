@@ -176,7 +176,7 @@ function GenCompPago20(){
   $.each(tblFacturaIngreso.$('input[type="checkbox"]'), function(index, rowId){
     if(this.checked && parseInt(rowId.value)>0){
       ids.push(parseInt(rowId.value));
-      console.log(index, rowId, parseInt(rowId.value))
+      console.log(index, parseInt(rowId.value))
     }
     
   });
@@ -204,6 +204,7 @@ function GenCompPago20(){
           $('input[name=rfcreceptorcp]').val(res.data[0].rfcreceptor);
           $('input[name=monedacp]').val(res.data[0].id_moneda+'-'+res.data[0].moneda);
           $('input[name=idtipomoneda]').val(res.data[0].idmoneda);
+          $('input[name=idusocfdi]').val(23);
 
           doctosrelacionados(res.data) 
 
@@ -401,7 +402,7 @@ $("body").on("submit", "#formularioComplementoPago", function( event ) {
   }) 
   .then((res)=>{ 
     console.log(res);
-    if(res.status===201) {
+    if(res.status===200) {
       //console.log(res.data['status'])
 
       $('#dt-FacturaIngreso').DataTable().ajax.reload(null, false);
@@ -1193,33 +1194,97 @@ $("#dt-FacturaIngreso tbody").on("click", "button.btnCancelFact", function(){
 })
 /*===================================================*/
 function GestionCompPago20(){
-  console.log('entra');
+  $('#modalGestionREP20').modal('show')
+  abrirDatatable();
+}
+
+/*************************************************************************** */
+function abrirDatatable(){
+  //console.log(identrada)
+  tblRep20=$('#tblComplementoPago20').dataTable(
+    {
+      "aProcessing": true,//Activamos el procesamiento del datatables
+      "aServerSide": true,//Paginación y filtrado realizados por el servidor
+      "lengthMenu": [ [10, 25, 50,100, -1], [10, 25, 50, 100, "Todos"] ],
+      "language": {
+        "url": "extensiones/espanol.json",
+      },    
+      "bAutoWidth": false,
+      "columnDefs": [
+        { "width": "5px", targets: 0 },    //id
+        { "width": "5px", targets: 1 },    //folio
+        { "width": "65px", targets: 2 },   //fecha
+        { "width": "65px", targets: 3 },   //fecha timbrado
+        { "width": "70px", targets: 4 },    //rfc emisor
+        { "width": "70px", targets: 5 },    //rfc receptor
+        { "width": "30px", "className": "dt-right", "targets": [6], render: $.fn.dataTable.render.number( ',','.',2,'$') },    //total pagado
+        { "width": "47px", "className": "dt-center", "targets": [7] }    //acciones
+      ],
+      "ajax":
+          {
+            url: 'ajax/facturaingreso.ajax.php?op=ListCompPago20',
+            data: {"dateyear": 2022},
+            type : "POST",
+            dataType : "json",						
+            error: function(e){
+              console.log(e.responseText);
+            }
+          },
+      "bDestroy": true,
+      "iDisplayLength": 10,//Paginación
+      "order": [[ 0, "desc" ]]//Ordenar (columna,orden)
+    }).DataTable();    
+      
+  }
+/*===================================================*/
+function TimbrarCompPago20(elem){
+
+  let dataid = elem.dataset.id;
+  let datafolio = elem.dataset.folio;
+  let datarfcemisor = elem.dataset.rfcemisor;
+  //console.log('id:',dataid, datafolio, datarfcemisor);
+
+  $('#container').waitMe({
+    effect : 'timer',
+    text : 'Espere por favor.',
+    bg : 'rgba(255,255,255,0.7)',
+    color : '#000',
+    maxSize : '50',
+    textPos : 'horizontal',
+    fontSize: ''    //default, '18px'
+   });  
+
   (async () => {
     await axios.get('ajax/facturaingreso.ajax.php?op=GenerarRep20', {
       params: {
-        dataid: "1"
+        dataid:         dataid,
+        datafolio:      datafolio,
+        datarfcemisor: datarfcemisor
       }
     })
 
     .then((res)=>{ 
       console.log(res.data)
       if(res.data.status==201) {
+        $('#tblComplementoPago20').DataTable().ajax.reload(null, false);
+        $('#container').waitMe("hide");
         swal({
-          title: "¡Registro Guardado!",
+          title: "¡Complemento de Pago Timbrado!",
           text: `${res.data.msg}`,
           icon: "success",
           button: "Cerrar",
-          timer:2000
+          timer:3000
         })  //fin swal
   
       }else{
-        console.log(res.data, res.status)
+        //console.log(res.data, res.status)
+        $('#container').waitMe("hide");
         swal({
           title: "¡Lo sentimos mucho!!",
-          text: `No fue posible Guardar Registro. ${res.data.msg}!!`,
+          text: `No fue posible realizar timbrado. ${res.data.msg}!!`,
           icon: "error",
           buttons: false,
-          timer: 2000
+          timer: 3000
         })  //fin swal
         }          
     })   

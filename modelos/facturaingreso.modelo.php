@@ -251,7 +251,7 @@ static public function mdlGetDatosFact($tabla, $campo, $valor){
     try {    
         $ids=implode(",",$valor);
         //tabla=facturaingreso
-        $stmt = Conexion::conectar()->prepare("SELECT tb1.id, tb1.id_empresa, tb1.serie, tb1.folio, tb1.uuid, tb1.rfcemisor, tb1.idlugarexpedicion, emp.id AS idemisor, emp.serierep, emp.foliorep, tb1.subtotal, tb1.impuestos, tb1.totalfactura, tb1.saldoinsoluto, emp.razonsocial AS nombreemisor, cli.id AS idreceptor, cli.nombre AS nombrereceptor, cli.rfc AS rfcreceptor, tb1.idmoneda, mx.id_moneda, mx.descripcion AS moneda
+        $stmt = Conexion::conectar()->prepare("SELECT tb1.id, tb1.id_empresa, tb1.serie, tb1.folio, tb1.uuid, tb1.rfcemisor, tb1.idlugarexpedicion, emp.id AS idemisor, emp.serierep, emp.foliorep, tb1.subtotal, tb1.impuestos, tb1.totalfactura,tb1.saldoinsoluto, emp.razonsocial AS nombreemisor, cli.id AS idreceptor, cli.nombre AS nombrereceptor, cli.rfc AS rfcreceptor, tb1.idmoneda, mx.id_moneda, mx.descripcion AS moneda
         FROM $tabla tb1
         INNER JOIN empresa emp ON emp.id=tb1.id_empresa
         INNER JOIN clientes cli ON cli.id=tb1.idreceptor
@@ -434,11 +434,41 @@ static public function mdlGuardarRep($tabla, $complementodepago){
 	} catch (Exception $e) {
 		echo "Failed: " . $e->getMessage();
    }
-
-
-
 }
 
+/*=============================================
+	LISTAR SALIDAS
+=============================================*/
+static public function mdlListarRep20($tblRep20, $year, $usuario, $todes){
+    try {
+         $where='1=1';
+              
+        //$where='tbl.fechaelaboracion="'.$year.'" ';
+        if($todes>0){
+            $where.=' AND tbl.ultusuario="'.$usuario.'"';
+        }
+        $where.=' ORDER BY tbl.id DESC';
+      
+        $sql="SELECT tbl.*, emp.rfc AS rfcemisor, cli.rfc AS rfcreceptor FROM $tblRep20 tbl
+        INNER JOIN empresa emp ON emp.id=tbl.idrfcemisor
+        INNER JOIN clientes cli ON cli.id=tbl.idrfcreceptor
+        WHERE ".$where;
+        
+              $stmt = Conexion::conectar()->prepare($sql);
+      
+        $stmt -> execute();
+      
+        return $stmt -> fetchAll();
+      
+        $stmt = null;
+    
+    } catch (Exception $e) {
+        echo "Failed: " . $e->getMessage();
+    }
+    
+}	
+    
+/*=========================================================================================*/   
 
 
 

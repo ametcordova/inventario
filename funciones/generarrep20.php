@@ -12,7 +12,7 @@ require_once dirname( __DIR__ ).'/modelos/conexion.php';
 /*********************************************/
 class ClaseGenerarRep20{
 
-    static public function GenerarJsonRep20($tabla, $campo, $valor){
+    static public function GenerarJsonRep20($tabla, $campo, $valor, $datafolio, $datarfcemisor){
     $bytes=0;
     // $tabla=complementodepago
     $sql="SELECT tb1.*, emp.rfc, emp.razonsocial AS nombreemisor, emp.numerocertificado, emp.regimenfiscalemisor, emp.serierep, emp.id_exportacion, clie.rfc AS rfcreceptor, clie.nombre AS nombrereceptor, clie.codpostal AS cpreceptor, clie.regimenfiscal AS regfiscalreceptor, mon.id_moneda, cfdi.id_cfdi
@@ -33,15 +33,17 @@ class ClaseGenerarRep20{
     /*********************************************/
     $doctosrelacionados=json_decode($datosdefactura['doctosrelacionados'],true);
     $foliorep=substr($datosdefactura['foliorep'],1);
+    $dateTime = new DateTime($datosdefactura['fechapago']);
+    $fechapago = $dateTime->format("Y-m-d\TH:i:s");
     // Datos de la Factura
     $datos['Comprobante']['Version'] = '4.0';
     $datos['Comprobante']['Serie'] = $datosdefactura['serierep'];
     $datos['Comprobante']['Folio'] = $foliorep;
     $datos['Comprobante']['Fecha'] = date('Y-m-d\TH:i:s', time() - 120);
     $datos['Comprobante']['NoCertificado'] = $datosdefactura['numerocertificado'];
-    $datos['Comprobante']['SubTotal'] = 0;
+    $datos['Comprobante']['SubTotal'] = '0';
     $datos['Comprobante']['Moneda'] = 'XXX';
-    $datos['Comprobante']['Total'] = 0;
+    $datos['Comprobante']['Total'] = '0';
     $datos['Comprobante']['TipoDeComprobante'] = $datosdefactura['tipodecomprobante'];
     $datos['Comprobante']['Exportacion'] = $datosdefactura['id_exportacion'];
     $datos['Comprobante']['LugarExpedicion'] = $datosdefactura['cpemisor'];
@@ -60,11 +62,11 @@ class ClaseGenerarRep20{
     
     // DATOS DE LOS CONCEPTOS
     $datos['Comprobante']['Conceptos'][0]['ClaveProdServ'] = '84111506';
-    $datos['Comprobante']['Conceptos'][0]['Cantidad'] = 1;
+    $datos['Comprobante']['Conceptos'][0]['Cantidad'] = '1';
     $datos['Comprobante']['Conceptos'][0]['ClaveUnidad'] = 'ACT';
     $datos['Comprobante']['Conceptos'][0]['Descripcion'] = 'Pago';
-    $datos['Comprobante']['Conceptos'][0]['ValorUnitario'] = 0;
-    $datos['Comprobante']['Conceptos'][0]['Importe'] = 0;
+    $datos['Comprobante']['Conceptos'][0]['ValorUnitario'] = '0';
+    $datos['Comprobante']['Conceptos'][0]['Importe'] = '0';
     $datos['Comprobante']['Conceptos'][0]['ObjetoImp'] = '01';
 
     // NODO COMPLEMENTO
@@ -73,7 +75,7 @@ class ClaseGenerarRep20{
     $datos['Comprobante']['Complemento'][0]['Pagos20']['Totales']["TotalTrasladosImpuestoIVA16"] =  $datosdefactura['totalimpuesto'];
     $datos['Comprobante']['Complemento'][0]['Pagos20']['Totales']["MontoTotalPagos"] =  $datosdefactura['totalrecibo'];
 
-    $datos['Comprobante']['Complemento'][0]['Pagos20']["Pago"][0]['FechaPago'] =  $datosdefactura['fechapago'];
+    $datos['Comprobante']['Complemento'][0]['Pagos20']["Pago"][0]['FechaPago'] =  $fechapago;
     $datos['Comprobante']['Complemento'][0]['Pagos20']["Pago"][0]["FormaDePagoP"] =  $datosdefactura['idformapagorep'];
     $datos['Comprobante']['Complemento'][0]['Pagos20']["Pago"][0]["MonedaP"] =  "MXN";   //Modificar
     $datos['Comprobante']['Complemento'][0]['Pagos20']["Pago"][0]["TipoCambioP"] =  "1";   //Modificar
@@ -103,15 +105,22 @@ class ClaseGenerarRep20{
         $datos['Comprobante']['Complemento'][0]['Pagos20']["Pago"][0]["ImpuestosP"]["TrasladosP"][0]["ImpuestoP"] = $datosdefactura['idimpuesto'];
         $datos['Comprobante']['Complemento'][0]['Pagos20']["Pago"][0]["ImpuestosP"]["TrasladosP"][0]["TipoFactorP"] = 'Tasa';
         $datos['Comprobante']['Complemento'][0]['Pagos20']["Pago"][0]["ImpuestosP"]["TrasladosP"][0]["TasaOCuotaP"] = $datosdefactura['tasa'];
-        $datos['Comprobante']['Complemento'][0]['Pagos20']["Pago"][0]["ImpuestosP"]["TrasladosP"][0]["ImporteP"] = $datosdefactura['totalrecibo'];
+        $datos['Comprobante']['Complemento'][0]['Pagos20']["Pago"][0]["ImpuestosP"]["TrasladosP"][0]["ImporteP"] = $datosdefactura['totalimpuesto'];
 
 
     $invoice_json = json_encode($datos, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
-    $bytes = file_put_contents("../archivos/filesinvoices/REP-P".$foliorep.".json", $invoice_json); 
+    $bytes = file_put_contents("../archivos/filesinvoices/".$datarfcemisor."-REP-".$datafolio.".json", $invoice_json); 
 
-    return intval($bytes);
+    if($bytes===false){
+        $resp = array('411' => 'Error al escribir archivo JSON.');	
+        return $resp;
+   }
 
-    }
+    $resp = array('200'=>'JSON Realizado', 'Folio' => $foliorep);
+
+    return $resp;
+
+}
 
   
 }  //FIN DE LA CLASE

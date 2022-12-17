@@ -23,8 +23,8 @@ class ClaseTimbrarRep20{
 /*========================================================= */
 // SE ENVIA ARCHIVO JSON PARA SELLAR Y TIMBRAR AL WS
 /*========================================================= */
-    static public function EnviarJsonRep20WS($tabla, $campo, $valor, $folio, $datarfcemisor){
-        $filename=dirname( __DIR__ ).'/archivos/filesinvoices/REP-P'.$folio.'.json';
+    static public function EnviarJsonRep20WS($tabla, $campo, $valor, $datafolio, $datarfcemisor){
+        $filename=dirname( __DIR__ ).'/archivos/filesinvoices/'.$datarfcemisor.'-REP-'.$datafolio.'.json';
         if (!file_exists($filename) || !is_readable($filename)) {
             //echo ("File $filename does not exists or is not readable");
             $resp=array('code'=>401,'message'=>"File:".$filename." does not exists or is not readable");
@@ -53,7 +53,6 @@ class ClaseTimbrarRep20{
         # CREDENCIAL
         $apikey = 'd2d1f88d95db4eb6b7a8c7105b1eb264';   //api key productivo
         //$apikey = '28bcba372e324116ac4332175ef8d441'; //api key dev
-        //$apikey = '4518afef427f487ba7b8942a29c8ea90';
 
         //OBTENER EL DIRECTORIO PRINCIPAL
         $dirpadre = dirname(__DIR__);
@@ -105,7 +104,6 @@ class ClaseTimbrarRep20{
 
         # RESPUESTA DEL SERVICIO
         $resp=array('code'=>$res['codigo'],'message'=>$res['mensaje']);
-
         /*
             200 - Solicitud procesada con éxito.
             307 - El CFDI contiene un timbre previo.
@@ -118,14 +116,13 @@ class ClaseTimbrarRep20{
             $dataOBJ = json_decode($res['datos'], false);
 
             //Creamos los archivos con la extension .xml y .pdf de la respuesta obtenida del parametro "data"
-            $bytes=file_put_contents('./rep20/'.$datarfcemisor."-P".$folio.'.xml', $dataOBJ->XML);
+            $bytes=file_put_contents('./rep20/'.$datarfcemisor."-P".$datafolio.'.xml', $dataOBJ->XML);
 
             file_put_contents('./rep20/archivo_xml.xml', $dataOBJ->XML);   //de esta forma extraemos la info del atributo XML o alguno de los atributos UUID, FechaTimbrado, NoCertificado, NoCertificadoSAT, CadenaOriginal, CadenaOriginalSAT, Sello, SelloSAT y CodigoQR.
             file_put_contents('./rep20/archivo_codigoqr.xml', $dataOBJ->CodigoQR);
             file_put_contents('./rep20/archivo_cadenaoriginal.xml', $dataOBJ->CadenaOriginal);
             file_put_contents('./rep20/archivo_cadenaoriginalSAT.xml', $dataOBJ->CadenaOriginalSAT);
-            //file_put_contents('./rep20/archivo_recibido.xml', $res['datos']);
-            //file_put_contents('./rep20/archivo.xml', $dataOBJ);
+            file_put_contents('./rep20/archivo_recibido.xml', $res['datos']);
         }else{
             return $resp;
         }
@@ -137,8 +134,9 @@ class ClaseTimbrarRep20{
        }
 
         //Falta validad si existe archivo, para borrarlo.
-        $file = 'datos'.$folio.'.txt';
+        $file = 'datos'.$datafolio.'.txt';
 
+        //DATOS DEL WS QUE SE GUARDARAN EN LA BASE DE DATOS
         $foliofiscal=       $dataOBJ->UUID;
         $noCertificado=     $dataOBJ->NoCertificado;
         $noCertificadoSAT=  $dataOBJ->NoCertificadoSAT;
@@ -148,6 +146,23 @@ class ClaseTimbrarRep20{
         $SelloSAT=          $dataOBJ->SelloSAT;
         $Sello=             $dataOBJ->Sello;
         $FechaTimbrado=     $dataOBJ->FechaTimbrado;
+
+        $foliofiscal .= PHP_EOL . PHP_EOL;
+        file_put_contents('./rep20/'.$file, $foliofiscal, FILE_APPEND | LOCK_EX);
+        $noCertificado .= PHP_EOL . PHP_EOL;
+        file_put_contents('./rep20/'.$file, $noCertificado, FILE_APPEND | LOCK_EX);
+        $noCertificadoSAT .= PHP_EOL . PHP_EOL;
+        file_put_contents('./rep20/'.$file, $noCertificadoSAT, FILE_APPEND | LOCK_EX);
+        $CodigoQR .= PHP_EOL . PHP_EOL;
+        file_put_contents('./rep20/'.$file, $CodigoQR, FILE_APPEND | LOCK_EX);
+        $CadenaOriginal .= PHP_EOL . PHP_EOL;
+        file_put_contents('./rep20/'.$file, $CadenaOriginal, FILE_APPEND | LOCK_EX);
+        $SelloSAT .= PHP_EOL . PHP_EOL;
+        file_put_contents('./rep20/'.$file, $SelloSAT, FILE_APPEND | LOCK_EX);
+        $Sello .= PHP_EOL . PHP_EOL;
+        file_put_contents('./rep20/'.$file, $Sello, FILE_APPEND | LOCK_EX);
+        $FechaTimbrado .= PHP_EOL . PHP_EOL;
+        file_put_contents('./rep20/'.$file, $FechaTimbrado, FILE_APPEND | LOCK_EX);
 
         try {    
             $sql="UPDATE $tabla SET foliofiscal=:foliofiscal, fechatimbradorep=:fechatimbradorep, numcertificado=:numcertificado, numcertificadosat=:numcertificadosat, sellodigitalcfdi=:sellodigitalcfdi, sellodigitalsat=:sellodigitalsat, cadenaoriginal=:cadenaoriginal, cadenaoriginalsat=:cadenaoriginalsat, codigoqr=:codigoqr, ultusuario=:ultusuario WHERE $campo=:$campo";
@@ -167,23 +182,6 @@ class ClaseTimbrarRep20{
                 $stmt->bindParam(":".$campo,            $valor, PDO::PARAM_INT);
 
             $stmt -> execute();
-            
-            $foliofiscal .= PHP_EOL . PHP_EOL;
-            file_put_contents('./rep20/'.$file, $foliofiscal, FILE_APPEND | LOCK_EX);
-            $noCertificado .= PHP_EOL . PHP_EOL;
-            file_put_contents('./rep20/'.$file, $noCertificado, FILE_APPEND | LOCK_EX);
-            $noCertificadoSAT .= PHP_EOL . PHP_EOL;
-            file_put_contents('./rep20/'.$file, $noCertificadoSAT, FILE_APPEND | LOCK_EX);
-            $CodigoQR .= PHP_EOL . PHP_EOL;
-            file_put_contents('./rep20/'.$file, $CodigoQR, FILE_APPEND | LOCK_EX);
-            $CadenaOriginal .= PHP_EOL . PHP_EOL;
-            file_put_contents('./rep20/'.$file, $CadenaOriginal, FILE_APPEND | LOCK_EX);
-            $SelloSAT .= PHP_EOL . PHP_EOL;
-            file_put_contents('./rep20/'.$file, $SelloSAT, FILE_APPEND | LOCK_EX);
-            $Sello .= PHP_EOL . PHP_EOL;
-            file_put_contents('./rep20/'.$file, $Sello, FILE_APPEND | LOCK_EX);
-            $FechaTimbrado .= PHP_EOL . PHP_EOL;
-            file_put_contents('./rep20/'.$file, $FechaTimbrado, FILE_APPEND | LOCK_EX);
             
             return $resp;
 

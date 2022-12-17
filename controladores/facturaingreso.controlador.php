@@ -135,6 +135,18 @@ static public function ctrGuardarRep($tabla, $complementodepago){
 }  
 /*=================FIN DE GUARDAR DATOS DE COMPLEMENTO DE PAGO ================================ */
 
+/*=============================================
+LISTAR REGISTROS PARA EL DATATABLE
+=============================================*/
+static public function ctrListarRep20($tblRep20, $year, $usuario, $todes){
+
+	$respuesta = ModeloFacturaIngreso::mdlListarRep20($tblRep20, $year, $usuario, $todes);
+
+	return $respuesta;
+
+}  
+
+
 
 }   //fin de la clase
 ?>

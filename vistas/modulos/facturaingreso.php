@@ -545,7 +545,8 @@ $fechaHoy = date("Y-m-d");
               <div class="form-row m-0">
                 <div class="form-group col-md-2">
                   <label class="control-label p-0 mt-0" for="usocfdicp"><i class="fa fa-check"></i> Uso CFDI:</label>
-                  <input type="text" class="form-control form-control-sm mt-0" name="usocfdicp" id="usocfdicp" value="CP01" title="Uso del CFDI de pago" readonly>
+                  <input type="text" class="form-control form-control-sm mt-0" name="usocfdi" title="Uso del CFDI de pago" placeholder="CP01-Pagos" readonly>
+                  <input type="hidden" name="idusocfdi">
                 </div>              
                 
                 <div class="form-group col-md-2">
@@ -625,6 +626,65 @@ $fechaHoy = date("Y-m-d");
 </div>
 <!-- ==============================================================================
                 FIN MODAL PARA CAPTURAR FACTURAS DE INGRESO
+==================================================================================== -->
+<!-- ==============================================================================
+              MODAL PARA SUBIR ARCHIVOS DE ENTRADA CARSO AL ALMACEN 
+==================================================================================== -->
+<div class="modal fade" id="modalGestionREP20" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-xlg">
+    <div class="modal-content">  <!-- modal-content -->
+        <!-- Modal Header -->
+        <div class="modal-header m-2 p-1" style="background-color:darkslategrey; color:floralwhite;">
+          <h6 class="modal-title"><i class="fa fa-plus-circle"></i> Administración de Complementos de Pago 2.0</h6>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body m-0">
+
+          <div class="card-body m-0 p-0">
+
+            <div class="dropdown-divider"></div>
+
+              <div class="wrapper">
+                <section class="invoice">
+                      <div class="col-12 col-sm-12">
+                        <table class="table table-bordered table-hover table-compact table-sm table-striped dt-responsive" id="tblComplementoPago20" cellspacing="0" width="100%" >
+                          <thead class="thead-dark" style="font-size:.8rem; height:1px">
+                            <tr translate="no" class="text-center" style="font-size:0.90em">
+                              <th translate="no">#</th>
+                              <th translate="no">Folio</th>
+                              <th translate="no">Fecha Elab.</th>
+                              <th translate="no">F. Timbrado</th>
+                              <th translate="no">RFC Emisor</th>
+                              <th translate="no">RFC Receptor</th>
+                              <th translate="no" class="text-center">Total Pag.</th>
+                              <th translate="no" class="text-center">Acciones</th>
+                            </tr>
+                          </thead>
+
+                            <tbody id="ListFilesRep20" style="font-size:0.90em">
+                            </tbody>
+
+                        </table>
+                      </div>   <!-- /.col -->
+                  </section>
+              </div>   <!-- ./wrapper -->  
+
+          </div> <!-- fin card-body -->
+
+        </div> <!-- fin Modal body -->
+
+        <!-- Modal footer -->
+        <div class="modal-footer m-1 p-1" style="background-color:darkslategrey; color:floralwhite;">
+          <button type="button" class="btn btn-sm btn-warning text-bold float-left py-0 px-3" data-dismiss="modal"><i class="fa fa-reply"></i> Salir</button>
+        </div>
+
+    </div> <!-- fin del modal-content -->
+  </div>
+</div>
+<!-- ==============================================================================
+                FIN MODAL PARA SUBIR ARCHIVOS DE ENTRADA CARSO AL ALMACEN 
 ==================================================================================== -->
 
 <script defer src="vistas/js/facturaingreso.js?v=031120221401"></script>

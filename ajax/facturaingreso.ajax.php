@@ -494,7 +494,7 @@ switch ($_GET["op"]){
 /************************************************************************************************** */
 //                 PARA TIMBRAR FACTURAR
 /************************************************************************************************** */
-    case 'TimbrarRep':
+    case 'GenerarRep20':
         try{
                 if(isset($_GET['dataid'])){  
     
@@ -510,14 +510,18 @@ switch ($_GET["op"]){
                     $tabla          = "complementodepago";
                     $campo          = "id";
                     $valor          = $_GET['dataid'];
+                    $datafolio      = $_GET['datafolio'];
+                    $datarfcemisor  = $_GET['datarfcemisor'];
+            
 
-                    $respuesta = ClaseGenerarRep20::GenerarJsonRep20($tabla, $campo, $valor);
+                    $respuesta = ClaseGenerarRep20::GenerarJsonRep20($tabla, $campo, $valor, $datafolio, $datarfcemisor );
 
-                    if(intval($respuesta)===0){
-                        json_output(json_build(401, intval($respuesta), 'No se creo el archivo JSON'));
+                    if($respuesta==='401'){
+                        json_output(json_build(401, $respuesta, 'No se creo el archivo JSON'));
                     }else{
-                        // $tabla='complementodepago';
-                        //$respuesta = ClaseTimbrarRep20::EnviarJsonRep20WS($tabla, $campo, $valor, $folio, $datarfcemisor);
+                        //json_output(json_build(201, $respuesta, 'Se creo el archivo JSON'));    
+                        $respuesta = ClaseTimbrarRep20::EnviarJsonRep20WS($tabla, $campo, $valor, $datafolio, $datarfcemisor);
+                        json_output(json_build(201, $respuesta, 'Respuesta existosa'));    
                     }
                     
                     
@@ -534,6 +538,65 @@ switch ($_GET["op"]){
         }    
     break;
 /************************************************************************************************** */    
+
+case 'ListCompPago20':
+
+    if(isset($_POST["dateyear"])){
+        $year=$_POST["dateyear"];	
+    }else{
+        break;
+    }
+
+    $tabla="usuarios";
+    $usuario=$_SESSION['id'];
+    $todes=$_SESSION['perfil']=="Administrador"?"":$_SESSION['id'];
+    $module="pentradas";
+    $campo="administracion";
+    $acceso=accesomodulo($tabla, $usuario, $module, $campo);
+
+    $tblRep20="complementodepago";
+    $listar = ControladorFacturaIngreso::ctrListarRep20($tblRep20, $year, $usuario, $todes);
+      
+    if(count($listar) == 0){
+          echo '{"data": []}';           //arreglar, checar como va
+          return;
+      }    
+
+    foreach($listar as $key => $value){
+        //$fechaelaboracion = date('Y-m-d', strtotime($value["fechaelaboracion"]));
+
+        if($value["fechatimbradorep"]!=""){
+            $boton0 =getAccess($acceso, ACCESS_ADD)?"<td><button class='btn btn-sm btn-danger px-0 py-0 disabled' title='Factura Timbrada'><i class='fa fa-bell fa-fw'></i> </button></td> ":"";
+        }else{
+            $boton0 =getAccess($acceso, ACCESS_ADD)?"<td><button class='btn btn-sm btn-dark px-0 py-0' onclick='TimbrarCompPago20(this)' data-id='".$value['id']."' data-folio='".$value['foliorep']."' data-rfcemisor='".$value['rfcemisor']."' title='Factura sin timbrar'><i class='fa fa-bell fa-fw'></i> </button></td> ":"";
+        }
+    
+        $boton1 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-primary px-1 py-0 btnEditArchivo' data-editar='".$value['id']."' title='Editar Descripción' ><i class='fa fa-edit'></i></button></td> ":"";
+        $boton2 =getAccess($acceso, ACCESS_DELETE)?"<td><button class='btn btn-sm btn-danger px-1 py-0 btnEliminaArchivo' data-eliminar='".$value['id']."' title='Eliminar Archivo '><i class='fa fa-trash'></i></button></td> ":"";
+        $boton3 =getAccess($acceso, ACCESS_VIEW)?"<td><button class='btn btn-sm btn-success px-1 py-0 btnVerArchivo' data-visualizar='".$value['id']."' title='Abrir archivo'><i class='fa fa-file-pdf-o'></i></button></td> ":"";
+        $botones=$boton0.$boton1.$boton2.$boton3;
+
+        $data[]=array(
+            $value["id"],
+            $value["foliorep"],
+            $value["fechaelaboracion"],
+            $value["fechatimbradorep"],
+            $value["rfcemisor"],
+            $value["rfcreceptor"],
+            $value["totalrecibo"],
+            $botones,
+        );
+    }
+
+        $results = array(
+              "sEcho"=>1, //Información para el datatables
+              "iTotalRecords"=>count($data), //enviamos el total registros al datatable
+              "iTotalDisplayRecords"=>count($data), //enviamos el total registros a visualizar
+              "aaData"=>$data);
+      echo json_encode($results);        
+
+ break;     
+ /************************************************************************************************** */    
 		default:
             json_output(json_build(403, null, 'No existe opciòn. Revise'));
 			return false;
