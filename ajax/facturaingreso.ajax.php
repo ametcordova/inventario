@@ -50,7 +50,9 @@ switch ($_GET["op"]){
             $folio=$value["folio"];
             $rfcemisor=$value["rfcemisor"];
             $file=$rfcemisor.'-'.$serie.$folio.'.xml';
-
+            $numcomppago="<td><button class='btn btn-sm btn-warning px-1 py-1' data-numrep='".trim($value['numcomppago'])."' title='Comp. de Pago timbrada'>".trim($value['numcomppago'])."</button></td>";
+            //$numcomppago=trim($value['numcomppago']);
+            
             $status="Timbrado";
             //if($folio%2==0){        //si ya tiene complemento de pago
                 //$chek="<input type='checkbox' name='ids[]' value='".$value["id"]."'>";
@@ -67,7 +69,7 @@ switch ($_GET["op"]){
                     $chek="<input type='checkbox' value=''>";
                 }
 
-                $boton1 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-warning px-1 py-1' title='Comp. de Pago timbrada'>".'P'.$value["id"]."</button></td> ":"";
+                //$boton1 =getAccess($acceso, ACCESS_EDIT)?$numcomppago:"";
 
                 $boton3 =getAccess($acceso, ACCESS_PRINTER)?"<a href='vistas/modulos/download.php?filename=$file&ruta=1&mime=xml' title='Descargar XML' class='btn btn-sm btn-info px-1 py-1'><i class='fa fa-file-code-o'></i></a> ":"";
                 $boton4 ='';
@@ -76,8 +78,6 @@ switch ($_GET["op"]){
             }else{
                 $boton0 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-danger px-1 py-1' onclick='getIdFactura(this)' title='Factura sin timbrar' data-idfactura='".$value['id']."' data-folio='".$value['folio']."' data-fechaelabora='".$value['fechaelaboracion']."' data-idempresa='".$value['id_empresa']."' data-serie='".$value['serie']."' data-rfcemisor='".$value['rfcemisor']."' ><i class='fa fa-bell-slash fa-fw'></i> </button></td> ":"";
 
-                $boton1 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-default px-1 py-1' title='Comp. de Pago timbrada'>".'SR'."</button></td> ":"";
-
                 $boton3 ='';
 
                 $boton4 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-primary btn-sm px-1 py-1' data-editfact='".$value['id']."' title='Editar Factura' data-toggle='modal' data-target='#modalEditarEntradasAlmacen'><i class='fa fa-edit'></i></button></td> ":"";
@@ -85,6 +85,9 @@ switch ($_GET["op"]){
                 $boton5 =getAccess($acceso, ACCESS_DELETE)?"<td><button class='btn btn-warning btn-sm px-1 py-1 checabox btnCancelFact' data-idfact='".$value['id']."' data-folio='".$value['folio']."' data-idempresa='".$value['id_empresa']."' data-serie='".$value['serie']."' data-rfcemisor='".$value['rfcemisor']."' data-importe='".$value['totalfactura']."' title='Eliminar Factura '><i class='fa fa-trash'></i></button></td> ":"";
 
             };
+
+            //$boton1 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-default px-1 py-1' title='Comp. de Pago timbrada'>SR</button></td> ":"";
+            $boton1 =getAccess($acceso, ACCESS_EDIT)?$numcomppago:"";
 
             $boton2 =getAccess($acceso, ACCESS_PRINTER)?"<td><button class='btn btn-success btn-sm px-1 py-1 btnPrintPdf' data-id='".$value['id']."' data-folio='".$value['folio']."' title='Generar y descargar PDF '><i class='fa fa-file-pdf-o'></i></button></td> ":"";
            
@@ -566,15 +569,22 @@ case 'ListCompPago20':
         //$fechaelaboracion = date('Y-m-d', strtotime($value["fechaelaboracion"]));
 
         if($value["fechatimbradorep"]!=""){
-            $boton0 =getAccess($acceso, ACCESS_ADD)?"<td><button class='btn btn-sm btn-danger px-0 py-0 disabled' title='Factura Timbrada'><i class='fa fa-bell fa-fw'></i> </button></td> ":"";
+            $boton0 =getAccess($acceso, ACCESS_ADD)?"<td><button class='btn btn-sm btn-dark px-0 py-0' title='Factura Timbrada'><i class='fa fa-bell fa-fw'></i> </button></td> ":"";
+
+            $boton1 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-info px-1 py-0 ' data-upxml='".$value['id']."' title='Descargar XML' ><i class='fa fa-file-code-o'></i></button></td> ":"";
+
         }else{
-            $boton0 =getAccess($acceso, ACCESS_ADD)?"<td><button class='btn btn-sm btn-dark px-0 py-0' onclick='TimbrarCompPago20(this)' data-id='".$value['id']."' data-folio='".$value['foliorep']."' data-rfcemisor='".$value['rfcemisor']."' title='Factura sin timbrar'><i class='fa fa-bell fa-fw'></i> </button></td> ":"";
+            $boton0 =getAccess($acceso, ACCESS_ADD)?"<td><button class='btn btn-sm btn-danger px-0 py-0' onclick='TimbrarCompPago20(this)' data-id='".$value['id']."' data-folio='".$value['foliorep']."' data-rfcemisor='".$value['rfcemisor']."' title='Factura sin timbrar'><i class='fa fa-bell fa-fw'></i> </button></td> ":"";
+
+            $boton1 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-primary px-1 py-0 ' data-editar='".$value['id']."' title='Editar REP' ><i class='fa fa-file-edit'></i></button></td> ":"";
+
         }
     
-        $boton1 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-primary px-1 py-0 btnEditArchivo' data-editar='".$value['id']."' title='Editar Descripción' ><i class='fa fa-edit'></i></button></td> ":"";
-        $boton2 =getAccess($acceso, ACCESS_DELETE)?"<td><button class='btn btn-sm btn-danger px-1 py-0 btnEliminaArchivo' data-eliminar='".$value['id']."' title='Eliminar Archivo '><i class='fa fa-trash'></i></button></td> ":"";
-        $boton3 =getAccess($acceso, ACCESS_VIEW)?"<td><button class='btn btn-sm btn-success px-1 py-0 btnVerArchivo' data-visualizar='".$value['id']."' title='Abrir archivo'><i class='fa fa-file-pdf-o'></i></button></td> ":"";
-        $botones=$boton0.$boton1.$boton2.$boton3;
+        $boton2 =getAccess($acceso, ACCESS_DELETE)?"<td><button class='btn btn-sm btn-danger px-1 py-0 ' data-eliminar='".$value['id']."' title='Eliminar registro'><i class='fa fa-trash'></i></button></td> ":"";
+        $boton3 =getAccess($acceso, ACCESS_VIEW)?"<td><button class='btn btn-sm btn-success px-1 py-0 printPdfRep' data-pdf='".$value['id']."' title='Generar e imprimir PDF'><i class='fa fa-file-pdf-o'></i></button></td> ":"";
+
+        //MOSTRAR LOS BOTONES
+        $botones=$boton0.$boton3.$boton1.$boton2;
 
         $data[]=array(
             $value["id"],

@@ -59,7 +59,7 @@ function dt_ListarFacturasIngreso(){
 	{
 		"aProcessing": true,//Activamos el procesamiento del datatables
 	  "aServerSide": true,//Paginación y filtrado realizados por el servidor
-    "lengthMenu": [ [10, 25, 50,100, -1], [10, 25, 50, 100, "Todos"] ],
+    "lengthMenu": [ [10, 15, 25, 50,100, -1], [10, 15, 25, 50, 100, "Todos"] ],
     "language": {
       "url": "extensiones/espanol.json",
     },    
@@ -155,7 +155,7 @@ function dt_ListarFacturasIngreso(){
 					}
 				},
 		"bDestroy": true,
-		"iDisplayLength": 10,//Paginación
+		"iDisplayLength": 15,//Paginación
 	    "order": [[ 1, "desc" ]]//Ordenar (columna,orden)
 	}).DataTable();    
 } 
@@ -1068,7 +1068,7 @@ function getIdFactura(elem){
 /************************************************************/
 
 /*===================================================
-ENVIA REPORTE DE ENTRADA AL ALMACEN DESDE EL DATATABLE
+GENERA PDF DE FACTURA DESDE EL DATATABLE
 ===================================================*/
 $("#dt-FacturaIngreso tbody").on("click", "button.btnPrintPdf", function(){
   let idPrintPdf = $(this).attr("data-id");
@@ -1079,6 +1079,17 @@ $("#dt-FacturaIngreso tbody").on("click", "button.btnPrintPdf", function(){
 })
 /*===================================================*/
 
+/*===================================================
+GENERA PDF DE FACTURA DESDE EL DATATABLE
+===================================================*/
+$("#tblComplementoPago20 tbody").on("click", "button.printPdfRep", function(){
+  let idPrintPdf = $(this).attr("data-pdf");
+  console.log(idPrintPdf)
+    if(idPrintPdf.length > 0){
+     window.open("extensiones/fpdf/reportes/reptimbrada.php?codigo="+idPrintPdf, "_blank");
+    }
+})
+/*===================================================*/
 /*===================================================
 DESCARGAR XML DESDE EL DATATABLE
 ===================================================*/

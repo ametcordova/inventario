@@ -17,14 +17,13 @@ ob_start(); // it starts buffering
         function Header()
         {
             $uuid=$GLOBALS['uuid'];
-            $serfolfactura=$GLOBALS['serie'].'-'.$GLOBALS['folio'];
-            $idexportacion=$GLOBALS['idexportacion'];
+            //$serfolfactura=$GLOBALS['serie'].'-'.$GLOBALS['folio'];
+            $folio=$GLOBALS['folio'];
             $fechaelaboracion=$GLOBALS['fechaelaboracion'];
             $fechatimbrado=$GLOBALS['fechatimbrado'];
             $idlugarexpedicion=$GLOBALS['idlugarexpedicion'];
             $numerocertificado=$GLOBALS['numerocertificado'];
             $descriptipocomprobante=$GLOBALS['descriptipocomprobante'];
-            $descripciontipoexporta=$GLOBALS['descripciontipoexporta'];
             
             $img="images/logo_nuno.png"; 
             // Logo
@@ -34,7 +33,7 @@ ob_start(); // it starts buffering
             // Movernos a la derecha
             //Cell(float w [, float h [, string txt [, mixed border [, int ln [, string align [, boolean fill [, mixed link]]]]]]])
             $this->Cell(122);    // w-ancho h-alto txt-texto 0,1 ó LTRB-border 0,1,2-Posicion actual L,C,R-Alineacion true,false-fondo
-            $this->Cell(30,4,utf8_decode('FACTURA No. '.$serfolfactura),0,0,'C');
+            $this->Cell(30,4,utf8_decode('RECIBO DE PAGO No. '.$folio),0,0,'C');
             $this->Ln(4.5);
             $this->SetFont('Arial','B',10);
             $this->SetTextColor(0,0,0);
@@ -66,6 +65,13 @@ ob_start(); // it starts buffering
             $this->Cell(0,6,utf8_decode('Lugar de expedición:'),0,0,'L',false);
             $this->SetFont('Arial','',10);
             $this->Cell(-65,6,utf8_decode($idlugarexpedicion),0,0,'R',false);
+            $this->SetFont('Arial','B',10);
+            $this->Cell(10);
+            $this->Cell(38,6,utf8_decode('Tipo de comprobante: '),0,0,1,false);
+            $this->SetFont('Arial','',10);
+            $this->Cell(0,6,$GLOBALS["tipodecomprobante"].' - '.utf8_decode($descriptipocomprobante),0,0,1,false);
+            $this->SetFont('Arial','B',10);
+
             $this->Ln(4);
             $this->Cell(82);
             $this->SetFont('Arial','B',10);
@@ -75,13 +81,14 @@ ob_start(); // it starts buffering
             $this->Ln(4);
             $this->Cell(82);
             $this->SetFont('Arial','B',10);
-            $this->Cell(38,6,utf8_decode('Tipo de comprobante: '),0,0,1,false);
+            $this->Cell(16,6,utf8_decode('Moneda: '),0,0,1,false);
             $this->SetFont('Arial','',10);
-            $this->Cell(30,6,$GLOBALS["idtipocomprobante"].' - '.utf8_decode($descriptipocomprobante),0,0,1,false);
+            $this->Cell(14,6,'XXX',0,0,1,false);
+            $this->Cell(30);
             $this->SetFont('Arial','B',10);
-            $this->Cell(22,6,utf8_decode('Exportación: '),0,0,1,false);
+            $this->Cell(46,6,utf8_decode('Versión del complemento: '),0,0,1,false);
             $this->SetFont('Arial','',10);
-            $this->Cell(0,6, $idexportacion.' - '.$descripciontipoexporta,0,0,1,false);
+            $this->Cell(0,6, '2.0',0,0,1,false);
             $this->Ln(6);
 
             $this->SetDrawColor(0,0,0);
@@ -111,10 +118,10 @@ ob_start(); // it starts buffering
     public function printFactura(){
         
         //TRAEMOS LA INFORMACIÓN 
-        $tabla="facturaingreso";
+        $tabla="complementodepago";
         $campo = "id";
         $codigo = $_GET["codigo"];
-        $tipo='I';
+        $tipo='P';
         // Quitamos los caracteres ilegales de la variable
         $valor = filter_var($codigo, FILTER_SANITIZE_NUMBER_INT);
 
@@ -127,17 +134,14 @@ ob_start(); // it starts buffering
         $resp = ControladorFacturaIngreso::ctrObtenerDatosFactura($tabla, $campo, $valor, $tipo);
         
         if($resp){
-            $GLOBALS["idtipocomprobante"] = $resp['idtipocomprobante'];
-            $GLOBALS["idexportacion"] = $resp['idexportacion'];
-            $GLOBALS["serie"] = $resp['serie'];
-            $GLOBALS["folio"] = $resp['folio'];
-            $GLOBALS["uuid"] = $resp['uuid'];
+            $GLOBALS["tipodecomprobante"] = $resp['tipodecomprobante'];
+            $GLOBALS["folio"] = $resp['foliorep'];
+            $GLOBALS["uuid"] = $resp['foliofiscal'];
             $GLOBALS["fechaelaboracion"] = $resp['fechaelaboracion'];
-            $GLOBALS["fechatimbrado"] = $resp['fechatimbrado'];
-            $GLOBALS["idlugarexpedicion"] = $resp['idlugarexpedicion'];
+            $GLOBALS["fechatimbrado"] = $resp['fechatimbradorep'];
+            $GLOBALS["idlugarexpedicion"] = $resp['cpemisor'];
             $GLOBALS["numerocertificado"] = $resp['numerocertificado'];
             $GLOBALS["descriptipocomprobante"] = $resp['descriptipocomprobante'];
-            $GLOBALS["descripciontipoexporta"] = $resp['descripciontipoexporta'];
             // Creación del objeto de la clase heredada
 // --------------------- CONFIGURAR DATOS DEL REPORTE ------------------------------------------------------  
             //$pdf = new PDF();
@@ -169,7 +173,7 @@ ob_start(); // it starts buffering
             $pdf->SetFont('Arial','B',9);
             $pdf->Cell(10,4,'RFC: ',0,0,'R',true);
             $pdf->SetFont('Arial','',9);
-            $pdf->Cell(34,4,$resp['rfcemisor'],0,0,'L',true);
+            $pdf->Cell(34,4,$resp['idrfcemisor'],0,0,'L',true);
             $pdf->Ln();
             $pdf->SetFont('Arial','B',9);
             $pdf->Cell(26,4,utf8_decode('Dirección: '),0,0,'L',true);
@@ -188,7 +192,7 @@ ob_start(); // it starts buffering
             $pdf->SetFont('Arial','B',9);
             $pdf->Cell(26,4,utf8_decode('Régimen Fiscal: '),0,0,'L',true);
             $pdf->SetFont('Arial','',9);
-            $pdf->Cell(126,4,$resp['idregimenfiscalemisor'].'-'.utf8_decode($resp['regimenfiscalemisor']),0,0,'L',true);
+            $pdf->Cell(126,4,$resp['regimenfiscalemisor'].'-'.utf8_decode($resp['regimenfiscalemisor']),0,0,'L',true);
             $pdf->SetFont('Arial','B',9);
             $pdf->Cell(10,4,'C.P.: ',0,0,'L',true);
             $pdf->SetFont('Arial','',9);
@@ -247,134 +251,134 @@ ob_start(); // it starts buffering
             $pdf->SetTextColor(0,0,0);
             $pdf->Ln(4);
 // -----------------------------------------------------------------------------------------        
-            $pdf->SetDrawColor(51,116,255);
-            $pdf->SetFillColor(51,116,255);
-            $pdf->SetTextColor(255,255,255);
-            $pdf->SetFont('Arial','B',8);
-            $pdf->Cell(0,3.5,'DATOS GENERALES DEL COMPROBANTE',1,0,'C',true);
-            $pdf->Ln(4);
-            $pdf->SetDrawColor(0,0,0);
-            $pdf->SetFillColor(255,255,255);
-            $pdf->SetTextColor(0,0,0);
+             $pdf->SetDrawColor(51,116,255);
+             $pdf->SetFillColor(51,116,255);
+             $pdf->SetTextColor(255,255,255);
+             $pdf->SetFont('Arial','B',8);
+             $pdf->Cell(0,3.5,'DATOS GENERALES DEL COMPROBANTE',1,0,'C',true);
+             $pdf->Ln(4);
+             $pdf->SetDrawColor(0,0,0);
+             $pdf->SetFillColor(255,255,255);
+             $pdf->SetTextColor(0,0,0);
 
-            $pdf->SetFont('Arial','B',9);
-            $pdf->Cell(28,4,'Forma Pago: ',0,0,'L',true);
-            $pdf->SetFont('Arial','',9);
-            $pdf->Cell(76,4,utf8_decode($resp['idformapago'].' - '.$resp['descripcionformapago']),0,0,'L',true);
-            $pdf->SetFont('Arial','B',9);
-            $pdf->Cell(28,4,'Metodo Pago: ',0,0,'L',true);
-            $pdf->SetFont('Arial','',9);
-            $pdf->Cell(64,4,utf8_decode($resp['idmetodopago'].' - '.$resp['descripcionmp']),0,0,'L',true);
-            $pdf->Ln();
-            $pdf->SetFont('Arial','B',9);
-            $pdf->Cell(28,4,'Moneda: ',0,0,'L',true);
-            $pdf->SetFont('Arial','',9);
-            $pdf->Cell(76,4,$resp['idmoneda'].' - '.$resp['id_moneda'].' - '.utf8_decode($resp['moneda']),0,0,'L',true);
-            $pdf->SetFont('Arial','B',9);
-            $pdf->Cell(28,4,'Tipo de cambio: ',0,0,'L',true);
-            $pdf->SetFont('Arial','',9);
-            $pdf->Cell(64,4,'',0,0,'L',true);
-            $pdf->Ln();
-            $pdf->SetFont('Arial','B',8.5);
-            $pdf->Cell(28,4,'Condiciones Pago',0,0,'L',true);
-            $pdf->SetFont('Arial','',9);
-            $pdf->Cell(168,4,'',0,0,'L',true);
-            $pdf->Ln(4);            
-// -----------------------------------------------------------------------------------------
-            $pdf->SetDrawColor(51,116,255);
-            $pdf->SetFillColor(51,116,255);
-            $pdf->SetTextColor(255,255,255);
-            $pdf->SetFont('Arial','B',8);
-            $pdf->Cell(0,3.5,'DATOS DE LOS CONCEPTOS A FACTURAR',1,0,'C',true);
-            $pdf->Ln(4);
-            $pdf->SetDrawColor(0,0,0);
-            $pdf->SetFillColor(255,255,255);
-            $pdf->SetTextColor(0,0,0);
+//             $pdf->SetFont('Arial','B',9);
+//             $pdf->Cell(28,4,'Forma Pago: ',0,0,'L',true);
+//             $pdf->SetFont('Arial','',9);
+//             $pdf->Cell(76,4,utf8_decode($resp['idformapago'].' - '.$resp['descripcionformapago']),0,0,'L',true);
+//             $pdf->SetFont('Arial','B',9);
+//             $pdf->Cell(28,4,'Metodo Pago: ',0,0,'L',true);
+//             $pdf->SetFont('Arial','',9);
+//             $pdf->Cell(64,4,utf8_decode($resp['idmetodopago'].' - '.$resp['descripcionmp']),0,0,'L',true);
+//             $pdf->Ln();
+//             $pdf->SetFont('Arial','B',9);
+//             $pdf->Cell(28,4,'Moneda: ',0,0,'L',true);
+//             $pdf->SetFont('Arial','',9);
+//             $pdf->Cell(76,4,$resp['idmoneda'].' - '.$resp['id_moneda'].' - '.utf8_decode($resp['moneda']),0,0,'L',true);
+//             $pdf->SetFont('Arial','B',9);
+//             $pdf->Cell(28,4,'Tipo de cambio: ',0,0,'L',true);
+//             $pdf->SetFont('Arial','',9);
+//             $pdf->Cell(64,4,'',0,0,'L',true);
+//             $pdf->Ln();
+//             $pdf->SetFont('Arial','B',8.5);
+//             $pdf->Cell(28,4,'Condiciones Pago',0,0,'L',true);
+//             $pdf->SetFont('Arial','',9);
+//             $pdf->Cell(168,4,'',0,0,'L',true);
+//             $pdf->Ln(4);            
+// // -----------------------------------------------------------------------------------------
+//             $pdf->SetDrawColor(51,116,255);
+//             $pdf->SetFillColor(51,116,255);
+//             $pdf->SetTextColor(255,255,255);
+//             $pdf->SetFont('Arial','B',8);
+//             $pdf->Cell(0,3.5,'DATOS DE LOS CONCEPTOS A FACTURAR',1,0,'C',true);
+//             $pdf->Ln(4);
+//             $pdf->SetDrawColor(0,0,0);
+//             $pdf->SetFillColor(255,255,255);
+//             $pdf->SetTextColor(0,0,0);
 
-            // Colors, line width and bold font
-            $pdf->SetDrawColor(255, 255, 255);
-            $pdf->SetFillColor(0, 95, 100, 0);
-            $pdf->SetTextColor(255, 255, 255);
-            $pdf->SetFont('', 'B',8);
+//             // Colors, line width and bold font
+//             $pdf->SetDrawColor(255, 255, 255);
+//             $pdf->SetFillColor(0, 95, 100, 0);
+//             $pdf->SetTextColor(255, 255, 255);
+//             $pdf->SetFont('', 'B',8);
             
-            // column titles
-            $header = array('Prod/Serv', 'Clave y Unidad','Descripción', 'Obj. Imp.', 'Cant', 'Valor Unit.', 'Importe');
-            $w = array(15, 32, 87, 14, 7, 20, 21);
-            $num_headers = count($header);
-            for($i = 0; $i < $num_headers; ++$i) {
-                $pdf->Cell($w[$i], 6, utf8_decode($header[$i]), 1, 0, 'C', 1);
-            };
-            $pdf->SetDrawColor(0,0,0);
-            $pdf->SetFillColor(255,255,255);
-            $pdf->SetTextColor(0,0,0);
-            $pdf->SetFont('', '',7.5);
-            $pdf->Ln(6.3);
+//             // column titles
+//             $header = array('Prod/Serv', 'Clave y Unidad','Descripción', 'Obj. Imp.', 'Cant', 'Valor Unit.', 'Importe');
+//             $w = array(15, 32, 87, 14, 7, 20, 21);
+//             $num_headers = count($header);
+//             for($i = 0; $i < $num_headers; ++$i) {
+//                 $pdf->Cell($w[$i], 6, utf8_decode($header[$i]), 1, 0, 'C', 1);
+//             };
+//             $pdf->SetDrawColor(0,0,0);
+//             $pdf->SetFillColor(255,255,255);
+//             $pdf->SetTextColor(0,0,0);
+//             $pdf->SetFont('', '',7.5);
+//             $pdf->Ln(6.3);
         
-// -------------------------IMPRIMIR LOS CONCEPTOS -----------------------------------------------
-$conceptos_json=json_decode($resp['conceptos'],TRUE);		//decodifica los conceptos que vienen en datos JSON
-$sumasubtotal = $sumaimpuesto = $sumatotal = $y2= 0;
-foreach ($conceptos_json as $row):
-$sumasubtotal+=$row["Importe"];
-//Save the current position 
-$x=$pdf->GetX();
-$y=$pdf->GetY();
-if($y2>0){
-    $y=$y2;
-    $pdf->SetY($y);
-}
+// // -------------------------IMPRIMIR LOS CONCEPTOS -----------------------------------------------
+// $conceptos_json=json_decode($resp['conceptos'],TRUE);		//decodifica los conceptos que vienen en datos JSON
+// $sumasubtotal = $sumaimpuesto = $sumatotal = $y2= 0;
+// foreach ($conceptos_json as $row):
+// $sumasubtotal+=$row["Importe"];
+// //Save the current position 
+// $x=$pdf->GetX();
+// $y=$pdf->GetY();
+// if($y2>0){
+//     $y=$y2;
+//     $pdf->SetY($y);
+// }
     
- if ($row === reset($conceptos_json)) {     // Si es el primer elemento del array
-    $sinlinea=" ";
- }else{
-    $sinlinea="T";
- }
+//  if ($row === reset($conceptos_json)) {     // Si es el primer elemento del array
+//     $sinlinea=" ";
+//  }else{
+//     $sinlinea="T";
+//  }
 
-$pdf->MultiCell(15, 4, $row["ClaveProdServ"], $sinlinea, 'C');
+// $pdf->MultiCell(15, 4, $row["ClaveProdServ"], $sinlinea, 'C');
 
-$pdf->SetXY($x+15,$y);
-$pdf->MultiCell(32, 4, $row["ClaveUnidad"].'-'.$row["Unidad"],  $sinlinea, 'C', 1);
+// $pdf->SetXY($x+15,$y);
+// $pdf->MultiCell(32, 4, $row["ClaveUnidad"].'-'.$row["Unidad"],  $sinlinea, 'C', 1);
 
-$pdf->SetXY($x+47,$y);
-$pdf->MultiCell(87,3.5,utf8_decode($row["Descripcion"]), $sinlinea,'FJ',1);
+// $pdf->SetXY($x+47,$y);
+// $pdf->MultiCell(87,3.5,utf8_decode($row["Descripcion"]), $sinlinea,'FJ',1);
 
-$y2=$pdf->GetY();
-$pdf->SetXY($x+134,$y);
-$pdf->MultiCell(14, 5, $row["ObjetoImp"],  $sinlinea, 'C', 1);
+// $y2=$pdf->GetY();
+// $pdf->SetXY($x+134,$y);
+// $pdf->MultiCell(14, 5, $row["ObjetoImp"],  $sinlinea, 'C', 1);
 
-$pdf->SetXY($x+148,$y);
-$pdf->MultiCell(7, 5, $row["Cantidad"],  $sinlinea, 'C', 1);
+// $pdf->SetXY($x+148,$y);
+// $pdf->MultiCell(7, 5, $row["Cantidad"],  $sinlinea, 'C', 1);
 
-$pdf->SetXY($x+155,$y);
-$pdf->MultiCell(20,5, '$'.number_format($row["ValorUnitario"],4, '.',','),  $sinlinea, 0, 'R', 1);
+// $pdf->SetXY($x+155,$y);
+// $pdf->MultiCell(20,5, '$'.number_format($row["ValorUnitario"],4, '.',','),  $sinlinea, 0, 'R', 1);
 
-$pdf->SetXY($x+175,$y);
-$pdf->MultiCell(21,5, '$'.number_format($row["Importe"],2, '.',','),  $sinlinea, 0, 'R', 1);
+// $pdf->SetXY($x+175,$y);
+// $pdf->MultiCell(21,5, '$'.number_format($row["Importe"],2, '.',','),  $sinlinea, 0, 'R', 1);
 
-if ($row != end($conceptos_json)) $pdf->Ln(5.5);    //si no es el Ùltimo elemento del array, interlineado de 5.5
+// if ($row != end($conceptos_json)) $pdf->Ln(5.5);    //si no es el Ùltimo elemento del array, interlineado de 5.5
 
-//break;
-endforeach;
-// ----------------------------------------FIN DE CONCEPTOS ---------------------------------------
+// //break;
+// endforeach;
+// // ----------------------------------------FIN DE CONCEPTOS ---------------------------------------
 
-// --------------------------- LINEA DE SEPARACION ----------------------------------------------
-$pdf->Ln(6);
-$y1=$pdf->GetY();
-$pdf->SetLineWidth(0.5);
-$pdf->SetDrawColor(0,0,0);
-$pdf->Line(10,$y1,206,$y1);
-$pdf->Ln(1);
-// --------------------------- IMPORTES TOTALES ------------------------------------------------------
-$sumaimpuesto=($sumasubtotal*16)/100;
-$sumatotal = $sumasubtotal+$sumaimpuesto;
-$pdf->SetFont('Arial','B',10);
-$pdf->Cell(17,5,'Subtotal: ',0,0,'L',true);
-$pdf->Cell(24,5,'$'.number_format($sumasubtotal,2, '.',','),0,0,'L',true);
-$pdf->Cell(21,5,'Descuento: ',0,0,'L',true);
-$pdf->Cell(22,5,'$0.00',0,0,'L',true);
-$pdf->Cell(51,5,'Total Impuestos Trasladados: ',0,0,'L',true);
-$pdf->Cell(20,5,'$'.number_format($sumaimpuesto,2, '.',','),0,0,'L',true);
-$pdf->Cell(15,5,'Total: ',0,0,'R',true);
-$pdf->Cell(26,5,'$'.number_format($sumatotal,2, '.',','),0,0,'L',true);
+// // --------------------------- LINEA DE SEPARACION ----------------------------------------------
+// $pdf->Ln(6);
+// $y1=$pdf->GetY();
+// $pdf->SetLineWidth(0.5);
+// $pdf->SetDrawColor(0,0,0);
+// $pdf->Line(10,$y1,206,$y1);
+// $pdf->Ln(1);
+// // --------------------------- IMPORTES TOTALES ------------------------------------------------------
+// $sumaimpuesto=($sumasubtotal*16)/100;
+// $sumatotal = $sumasubtotal+$sumaimpuesto;
+// $pdf->SetFont('Arial','B',10);
+// $pdf->Cell(17,5,'Subtotal: ',0,0,'L',true);
+// $pdf->Cell(24,5,'$'.number_format($sumasubtotal,2, '.',','),0,0,'L',true);
+// $pdf->Cell(21,5,'Descuento: ',0,0,'L',true);
+// $pdf->Cell(22,5,'$0.00',0,0,'L',true);
+// $pdf->Cell(51,5,'Total Impuestos Trasladados: ',0,0,'L',true);
+// $pdf->Cell(20,5,'$'.number_format($sumaimpuesto,2, '.',','),0,0,'L',true);
+// $pdf->Cell(15,5,'Total: ',0,0,'R',true);
+// $pdf->Cell(26,5,'$'.number_format($sumatotal,2, '.',','),0,0,'L',true);
 
 // --------------------------- LINEA DE SEPARACION ----------------------------------------------
 $pdf->Ln(5.5);
@@ -386,18 +390,18 @@ if($y3>240){
     $pdf->AddPage();
 }
 // --------------------- TRAEMOS DATOS DE FACTURA TIMBRADA ---------------------------------------
-$tabla="datosfacturatimbre";
-//$campo = "folio";
-$campo = "id";
-$valor = $_GET["codigo"];
-//$valor = 370;
+// $tabla="datosfacturatimbre";
+// //$campo = "folio";
+// $campo = "id";
+// $valor = $_GET["codigo"];
+// //$valor = 370;
     
-$response = ControladorFacturaIngreso::ctrObtenerDatosTimbre($tabla, $campo, $valor);
+// $response = ControladorFacturaIngreso::ctrObtenerDatosTimbre($tabla, $campo, $valor);
     
-if($response){
+// if($response){
 
 // ------------------------------ ** SELLOS ** -----------------------------------------------------------
-    $codeqr=$response["codigoqr"];
+    $codeqr=$resp["codigoqr"];
 
     // TAMBIEN FUNCIONA
     // $dataURI = "data:image/png;base64,".$codeqr;
@@ -426,7 +430,7 @@ if($response){
     $pdf->MultiCell(0, 3.8, utf8_decode('Sello Digítal del CFDI: '),'LRT','FJ',1);
     $pdf->SetFont('Arial', '', 6);
     $pdf->SetX($x);
-    $pdf->MultiCell(0, 3.5, utf8_decode($response['sellodigitalcfdi']),'LRB','FJ',1);
+    $pdf->MultiCell(0, 3.5, utf8_decode($resp['sellodigitalcfdi']),'LRB','FJ',1);
     $pdf->Ln(1.7);
 
     $x = $pdf->GetX();
@@ -435,14 +439,14 @@ if($response){
     $pdf->MultiCell(0, 3.8, utf8_decode('Sello Digítal del SAT: '),'LRT','FJ',1);
     $pdf->SetX($x+45.7);
     $pdf->SetFont('Arial', '', 6);
-    $pdf->MultiCell(0, 3.5, utf8_decode($response['sellodigitalsat']),'LRB','FJ',1);
+    $pdf->MultiCell(0, 3.5, utf8_decode($resp['sellodigitalsat']),'LRB','FJ',1);
     $pdf->Ln(2);
-    if(IS_NULL($response['cadenaoriginalsat'])){
+    if(IS_NULL($resp['cadenaoriginalsat'])){
         $pdf->SetFont('Arial', 'B', 6.5);
         $pdf->MultiCell(0, 3.5, utf8_decode('Cadena Original: '),'LRT','FJ',1);
         $pdf->SetX($x);
         $pdf->SetFont('Arial', '', 6);
-        $pdf->MultiCell(0, 3.5, trim($response['cadenaoriginal']),'LRB','FJ',1);
+        $pdf->MultiCell(0, 3.5, trim($resp['cadenaoriginal']),'LRB','FJ',1);
         $pdf->SetFont('Arial', '', 6.5);
         $pdf->Ln(1);
     }else{
@@ -450,7 +454,7 @@ if($response){
         $pdf->MultiCell(0, 3.5, utf8_decode('Cadena Original SAT: '),'LRT','FJ',1);
         $pdf->SetX($x);
         $pdf->SetFont('Arial', '', 6);
-        $pdf->MultiCell(0, 3.5, trim($response['cadenaoriginalsat']),'LRB','FJ',1);
+        $pdf->MultiCell(0, 3.5, trim($resp['cadenaoriginalsat']),'LRB','FJ',1);
         $pdf->SetFont('Arial', '', 6.5);
         $pdf->Ln(1);
     }
@@ -473,13 +477,14 @@ if($response){
  
 
 // ------------------------------------------------------------------------------------------------      
-    $nombrearchivo=$resp['rfcemisor'].'-'.$GLOBALS['serie'].$GLOBALS['folio'];
+    //$nombrearchivo=$resp['idrfcemisor'].'-'.$GLOBALS['folio'];
+    $nombrearchivo='rep140';
     $pdf->Output('I',$nombrearchivo.'.pdf');
     ob_end_flush(); // It's printed here, because ob_end_flush "prints" what's in the buffer, rather than returning it (unlike the ob_get_* functions)        
-    }else{
+    //}else{
         //include '../../../vistas/plantilla.php'; <td style="width:65px"><img src="../../../config/logotipo.png"></td>
-        echo "No hay datos para imprimir.";
-    }
+        //echo "No hay datos para imprimir.";
+    //}
   }
 
   }   //fin de la clase
