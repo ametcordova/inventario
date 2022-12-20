@@ -116,7 +116,7 @@ class ClaseTimbrarRep20{
             $dataOBJ = json_decode($res['datos'], false);
 
             //Creamos los archivos con la extension .xml y .pdf de la respuesta obtenida del parametro "data"
-            $bytes=file_put_contents('./rep20/'.$datarfcemisor."-P".$datafolio.'.xml', $dataOBJ->XML);
+            $bytes=file_put_contents('./rep20/'.$datarfcemisor."-".$datafolio.'.xml', $dataOBJ->XML);
 
             file_put_contents('./rep20/archivo_xml.xml', $dataOBJ->XML);   //de esta forma extraemos la info del atributo XML o alguno de los atributos UUID, FechaTimbrado, NoCertificado, NoCertificadoSAT, CadenaOriginal, CadenaOriginalSAT, Sello, SelloSAT y CodigoQR.
             file_put_contents('./rep20/archivo_codigoqr.xml', $dataOBJ->CodigoQR);
@@ -182,7 +182,35 @@ class ClaseTimbrarRep20{
                 $stmt->bindParam(":".$campo,            $valor, PDO::PARAM_INT);
 
             $stmt -> execute();
-            
+
+            if($stmt){
+                //BUSCAR LOS FOLIOS QUE ABARCA EL COMPLEMENTO DE PAGO
+                $query="SELECT doctosrelacionados FROM $tabla WHERE $campo=:$campo";
+                $stmt = Conexion::conectar()->prepare($query);
+                $stmt->bindParam(":".$campo, $valor, PDO::PARAM_INT);
+                $stmt -> execute();
+                $aswer = $stmt->fetch(PDO::FETCH_ASSOC);
+                if($stmt){
+                    
+                    //CONVIERTE EL JSON A ARRAY Y SACA SOLO LOS FOLIOS DE LAS FACTS.
+                    $folios=[];
+                    $data = json_decode($aswer['doctosrelacionados'], true);
+                    foreach ($data as $value) {
+                         array_push($folios, $value['Folio']);
+                    }
+
+                    if(count($folios)>0){
+                        //CONVIERTE EL ARRAY A STRING PARA LA CONSULTA
+                        $fol=implode(",",$folios);
+                        //ACTUALIZA LA TABLA DE FACTURAINGRESO CON EL NUM DEL REP
+                        $sql="UPDATE facturaingreso SET numcomppago='$datafolio' WHERE folio IN ($fol)";
+                        $stmt = Conexion::conectar()->prepare($sql);
+                        $stmt -> execute();
+                    }
+                    
+                }
+            }
+
             return $resp;
 
         } catch (Exception $e) {
@@ -193,4 +221,8 @@ class ClaseTimbrarRep20{
     
 }  //FIN DE LA CLASE
 /*========================================================= */
-?>
+// $data = json_decode($dato, true);
+// foreach ($data as $key=>$value) {
+//     //echo $key, " : ";
+//     echo $value['Folio'], "\n";
+// }

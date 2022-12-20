@@ -173,7 +173,7 @@ ob_start(); // it starts buffering
             $pdf->SetFont('Arial','B',9);
             $pdf->Cell(10,4,'RFC: ',0,0,'R',true);
             $pdf->SetFont('Arial','',9);
-            $pdf->Cell(34,4,$resp['idrfcemisor'],0,0,'L',true);
+            $pdf->Cell(34,4,$resp['rfcemisor'],0,0,'L',true);
             $pdf->Ln();
             $pdf->SetFont('Arial','B',9);
             $pdf->Cell(26,4,utf8_decode('Dirección: '),0,0,'L',true);
@@ -192,7 +192,7 @@ ob_start(); // it starts buffering
             $pdf->SetFont('Arial','B',9);
             $pdf->Cell(26,4,utf8_decode('Régimen Fiscal: '),0,0,'L',true);
             $pdf->SetFont('Arial','',9);
-            $pdf->Cell(126,4,$resp['regimenfiscalemisor'].'-'.utf8_decode($resp['regimenfiscalemisor']),0,0,'L',true);
+            $pdf->Cell(126,4,$resp['regimenfiscalemisor'].'-'.utf8_decode($resp['descregimenfiscalemisor']),0,0,'L',true);
             $pdf->SetFont('Arial','B',9);
             $pdf->Cell(10,4,'C.P.: ',0,0,'L',true);
             $pdf->SetFont('Arial','',9);
@@ -261,127 +261,125 @@ ob_start(); // it starts buffering
              $pdf->SetFillColor(255,255,255);
              $pdf->SetTextColor(0,0,0);
 
-//             $pdf->SetFont('Arial','B',9);
-//             $pdf->Cell(28,4,'Forma Pago: ',0,0,'L',true);
-//             $pdf->SetFont('Arial','',9);
-//             $pdf->Cell(76,4,utf8_decode($resp['idformapago'].' - '.$resp['descripcionformapago']),0,0,'L',true);
-//             $pdf->SetFont('Arial','B',9);
-//             $pdf->Cell(28,4,'Metodo Pago: ',0,0,'L',true);
-//             $pdf->SetFont('Arial','',9);
-//             $pdf->Cell(64,4,utf8_decode($resp['idmetodopago'].' - '.$resp['descripcionmp']),0,0,'L',true);
-//             $pdf->Ln();
-//             $pdf->SetFont('Arial','B',9);
-//             $pdf->Cell(28,4,'Moneda: ',0,0,'L',true);
-//             $pdf->SetFont('Arial','',9);
-//             $pdf->Cell(76,4,$resp['idmoneda'].' - '.$resp['id_moneda'].' - '.utf8_decode($resp['moneda']),0,0,'L',true);
-//             $pdf->SetFont('Arial','B',9);
-//             $pdf->Cell(28,4,'Tipo de cambio: ',0,0,'L',true);
-//             $pdf->SetFont('Arial','',9);
-//             $pdf->Cell(64,4,'',0,0,'L',true);
-//             $pdf->Ln();
-//             $pdf->SetFont('Arial','B',8.5);
-//             $pdf->Cell(28,4,'Condiciones Pago',0,0,'L',true);
-//             $pdf->SetFont('Arial','',9);
-//             $pdf->Cell(168,4,'',0,0,'L',true);
-//             $pdf->Ln(4);            
-// // -----------------------------------------------------------------------------------------
-//             $pdf->SetDrawColor(51,116,255);
-//             $pdf->SetFillColor(51,116,255);
-//             $pdf->SetTextColor(255,255,255);
-//             $pdf->SetFont('Arial','B',8);
-//             $pdf->Cell(0,3.5,'DATOS DE LOS CONCEPTOS A FACTURAR',1,0,'C',true);
-//             $pdf->Ln(4);
-//             $pdf->SetDrawColor(0,0,0);
-//             $pdf->SetFillColor(255,255,255);
-//             $pdf->SetTextColor(0,0,0);
+             $pdf->SetFont('Arial','B',9);
+             $pdf->Cell(24.5,4,'Fecha de Pago: ',0,0,'L',true);
+             $pdf->SetFont('Arial','',9);
+             $pdf->Cell(32,4,utf8_decode($resp['fechapago']),0,0,'L',true);
+             $pdf->SetFont('Arial','B',9);
+             $pdf->Cell(25,4,'Forma de Pago: ',0,0,'L',true);
+             $pdf->SetFont('Arial','',9);
+             $pdf->Cell(60,4,utf8_decode($resp['idformapagorep'].' - '.$resp['descripcionformapago']),0,0,'L',true);
+             $pdf->SetFont('Arial','B',9);
+             $pdf->Cell(14,4,'Moneda: ',0,0,'L',true);
+             $pdf->SetFont('Arial','',9);
+             $pdf->Cell(50,4,$resp['idmoneda'].' - '.$resp['id_moneda'].' - '.utf8_decode($resp['moneda']),0,0,'L',true);
+             $pdf->Ln(4);            
 
-//             // Colors, line width and bold font
-//             $pdf->SetDrawColor(255, 255, 255);
-//             $pdf->SetFillColor(0, 95, 100, 0);
-//             $pdf->SetTextColor(255, 255, 255);
-//             $pdf->SetFont('', 'B',8);
+             $pdf->SetFont('Arial','B',9);
+             $pdf->Cell(28,4,utf8_decode('No. de Operación: '),0,0,'L',true);
+             $pdf->SetFont('Arial','',9);
+             $pdf->Cell(29.5,4,utf8_decode($resp['numoperacion']),0,0,'L',true);
+             $pdf->SetFont('Arial','B',9);
+             $pdf->Cell(25.5,4,'Cuenta Origen: ',0,0,'L',true);
+             $pdf->SetFont('Arial','',9);
+             $pdf->Cell(47,4,$resp['cuentaordenante'],0,0,'L',true);
+             $pdf->SetFont('Arial','B',9);
+             $pdf->Cell(26,4,'Cuenta Destino: ',0,0,'L',true);
+             $pdf->SetFont('Arial','',9);
+             $pdf->Cell(45,4,$resp['cuentabeneficiario'],0,0,'L',true);
+             $pdf->Ln(4);            
+
+             $pdf->SetFont('Arial','B',9);
+             $pdf->Cell(15,4,utf8_decode('Subtotal: '),0,0,'L',true);
+             $pdf->SetFont('Arial','',9);
+             $pdf->Cell(41.5,4,'$'.number_format($resp['subtotal'],2, '.',','),0,0,'L',true);
+             $pdf->SetFont('Arial','B',9);
+             $pdf->Cell(25,4,'Total Impuesto: ',0,0,'L',true);
+             $pdf->SetFont('Arial','',9);
+             $pdf->Cell(55.5,4,'$'.number_format($resp['totalimpuesto'],2, '.',','),0,0,'L',true);
+             $pdf->SetFont('Arial','B',9);
+             $pdf->Cell(19,4,'Total Pago: ',0,0,'L',true);
+             $pdf->SetFont('Arial','',9);
+             $pdf->Cell(25,4,'$'.number_format($resp['totalrecibo'],2, '.',','),0,0,'L',true);
+             $pdf->Ln(4.5);            
+             // -----------------------------------------------------------------------------------------
+             $pdf->SetDrawColor(51,116,255);
+             $pdf->SetFillColor(51,116,255);
+             $pdf->SetTextColor(255,255,255);
+             $pdf->SetFont('Arial','B',8);
+             $pdf->Cell(0,3.5,'CONCEPTO A FACTURAR ',1,0,'C',true);
+             $pdf->Ln(4);
+             $pdf->SetDrawColor(0,0,0);
+             $pdf->SetFillColor(255,255,255);
+             $pdf->SetTextColor(0,0,0);
+
+            // Colors, line width and bold font
+            $pdf->SetDrawColor(255, 255, 255);
+            $pdf->SetFillColor(0, 95, 100, 0);
+            $pdf->SetTextColor(255, 255, 255);
+            $pdf->SetFont('', 'B',8);
             
-//             // column titles
-//             $header = array('Prod/Serv', 'Clave y Unidad','Descripción', 'Obj. Imp.', 'Cant', 'Valor Unit.', 'Importe');
-//             $w = array(15, 32, 87, 14, 7, 20, 21);
-//             $num_headers = count($header);
-//             for($i = 0; $i < $num_headers; ++$i) {
-//                 $pdf->Cell($w[$i], 6, utf8_decode($header[$i]), 1, 0, 'C', 1);
-//             };
-//             $pdf->SetDrawColor(0,0,0);
-//             $pdf->SetFillColor(255,255,255);
-//             $pdf->SetTextColor(0,0,0);
-//             $pdf->SetFont('', '',7.5);
-//             $pdf->Ln(6.3);
-        
-// // -------------------------IMPRIMIR LOS CONCEPTOS -----------------------------------------------
-// $conceptos_json=json_decode($resp['conceptos'],TRUE);		//decodifica los conceptos que vienen en datos JSON
-// $sumasubtotal = $sumaimpuesto = $sumatotal = $y2= 0;
-// foreach ($conceptos_json as $row):
-// $sumasubtotal+=$row["Importe"];
-// //Save the current position 
-// $x=$pdf->GetX();
-// $y=$pdf->GetY();
-// if($y2>0){
-//     $y=$y2;
-//     $pdf->SetY($y);
-// }
-    
-//  if ($row === reset($conceptos_json)) {     // Si es el primer elemento del array
-//     $sinlinea=" ";
-//  }else{
-//     $sinlinea="T";
-//  }
+            // column titles
+            $header = array('Prod/Serv', 'Clave y Unidad','Descripción', 'Obj. Imp.', 'Cant', 'Valor Unit.', 'Importe');
+            $w = array(15, 32, 65, 35, 7, 20, 21);
+            $num_headers = count($header);
+            for($i = 0; $i < $num_headers; ++$i) {
+                $pdf->Cell($w[$i], 6, utf8_decode($header[$i]), 1, 0, 'C', 1);
+            };
+            
+            $pdf->SetDrawColor(0,0,0);
+            $pdf->SetFillColor(255,255,255);
+            $pdf->SetTextColor(0,0,0);
+            $pdf->SetFont('', '',7.5);
+            $pdf->Ln(6.3);
+            $pdf->Cell(15,4,'84111506',0,0,'L',true);
+            $pdf->Cell(15,4,'ACT-Actividad',0,0,'L',true);
+            $pdf->cell(47);
+            $pdf->Cell(12,4,'Pago',0,0,'L',true);
+            $pdf->cell(23);
+            $pdf->Cell(14,4,'01-No objeto de Impuesto',0,0,'L',true);
+            $pdf->cell(22.5);
+            $pdf->Cell(4,4,'1',0,0,'L',true);
+            $pdf->cell(12);
+            $pdf->Cell(4,4,'$0.00',0,0,'L',true);
+            $pdf->cell(17);
+            $pdf->Cell(4,4,'$0.00',0,0,'L',true);
+             // -----------------------------------------------------------------------------------------
+             $pdf->Ln(4);
+             $pdf->SetDrawColor(51,116,255);
+             $pdf->SetFillColor(51,116,255);
+             $pdf->SetTextColor(255,255,255);
+             $pdf->SetFont('Arial','B',8);
+             $pdf->Cell(0,3.5,'DOCUMENTO(S) RELACIONADO(S)',1,0,'C',true);
+             $pdf->Ln(4);
+             $pdf->SetDrawColor(0,0,0);
+             $pdf->SetFillColor(255,255,255);
+             $pdf->SetTextColor(0,0,0);
 
-// $pdf->MultiCell(15, 4, $row["ClaveProdServ"], $sinlinea, 'C');
+// -------------------------IMPRIMIR LOS CONCEPTOS -----------------------------------------------
+            // column titles
+            $header = array('UUID', 'Ser.','Folio', 'Mon.','Obj. Imp.', 'Parcial', 'Saldo Ant.', 'Pagado', 'Saldo Ins.', 'Impuestos');
+            $w = array(63, 6, 8, 9, 28, 10, 17, 17, 14, 23);
+            $num_headers = count($header);
+            for($i = 0; $i < $num_headers; ++$i) {
+                $pdf->Cell($w[$i], 6, utf8_decode($header[$i]), 1, 0, 'C', 1);
+            };
+            $pdf->Ln();
 
-// $pdf->SetXY($x+15,$y);
-// $pdf->MultiCell(32, 4, $row["ClaveUnidad"].'-'.$row["Unidad"],  $sinlinea, 'C', 1);
+            $conceptos_json=json_decode($resp['doctosrelacionados'],TRUE);		//decodifica los conceptos que vienen en datos JSON
+            foreach ($conceptos_json as $row):
+                $data = array($row["idDocumento"], $row["Serie"],$row["Folio"], 'MXN.','02-Obj.de Impuesto', '1', '$'.number_format($row["ImpSaldoAnt"],2, '.',','), '$'.number_format($row["ImpPagado"],2, '.',','), '$'.number_format($row["ImpSaldoInsoluto"],2, '.',','), '16% - '.'$'.number_format($row["ImporteDR"],2, '.',','));
+                $w = array(63, 6, 8, 9, 28, 10, 17, 17, 14, 23);
+                $num_headers = count($data);
+                for($i = 0; $i < $num_headers; ++$i) {
+                    $pdf->Cell($w[$i], 6, utf8_decode($data[$i]), 1, 0, 'C', 1);
+                };
+                $pdf->Ln();
+            endforeach;                
 
-// $pdf->SetXY($x+47,$y);
-// $pdf->MultiCell(87,3.5,utf8_decode($row["Descripcion"]), $sinlinea,'FJ',1);
-
-// $y2=$pdf->GetY();
-// $pdf->SetXY($x+134,$y);
-// $pdf->MultiCell(14, 5, $row["ObjetoImp"],  $sinlinea, 'C', 1);
-
-// $pdf->SetXY($x+148,$y);
-// $pdf->MultiCell(7, 5, $row["Cantidad"],  $sinlinea, 'C', 1);
-
-// $pdf->SetXY($x+155,$y);
-// $pdf->MultiCell(20,5, '$'.number_format($row["ValorUnitario"],4, '.',','),  $sinlinea, 0, 'R', 1);
-
-// $pdf->SetXY($x+175,$y);
-// $pdf->MultiCell(21,5, '$'.number_format($row["Importe"],2, '.',','),  $sinlinea, 0, 'R', 1);
-
-// if ($row != end($conceptos_json)) $pdf->Ln(5.5);    //si no es el Ùltimo elemento del array, interlineado de 5.5
-
-// //break;
-// endforeach;
-// // ----------------------------------------FIN DE CONCEPTOS ---------------------------------------
-
-// // --------------------------- LINEA DE SEPARACION ----------------------------------------------
-// $pdf->Ln(6);
-// $y1=$pdf->GetY();
-// $pdf->SetLineWidth(0.5);
-// $pdf->SetDrawColor(0,0,0);
-// $pdf->Line(10,$y1,206,$y1);
-// $pdf->Ln(1);
-// // --------------------------- IMPORTES TOTALES ------------------------------------------------------
-// $sumaimpuesto=($sumasubtotal*16)/100;
-// $sumatotal = $sumasubtotal+$sumaimpuesto;
-// $pdf->SetFont('Arial','B',10);
-// $pdf->Cell(17,5,'Subtotal: ',0,0,'L',true);
-// $pdf->Cell(24,5,'$'.number_format($sumasubtotal,2, '.',','),0,0,'L',true);
-// $pdf->Cell(21,5,'Descuento: ',0,0,'L',true);
-// $pdf->Cell(22,5,'$0.00',0,0,'L',true);
-// $pdf->Cell(51,5,'Total Impuestos Trasladados: ',0,0,'L',true);
-// $pdf->Cell(20,5,'$'.number_format($sumaimpuesto,2, '.',','),0,0,'L',true);
-// $pdf->Cell(15,5,'Total: ',0,0,'R',true);
-// $pdf->Cell(26,5,'$'.number_format($sumatotal,2, '.',','),0,0,'L',true);
 
 // --------------------------- LINEA DE SEPARACION ----------------------------------------------
-$pdf->Ln(5.5);
+$pdf->Ln(1.5);
 $y1=$pdf->GetY();
 $pdf->Line(10,$y1,206,$y1);
 $pdf->Ln(3.5);
@@ -389,16 +387,6 @@ $y3=$pdf->GetY();
 if($y3>240){
     $pdf->AddPage();
 }
-// --------------------- TRAEMOS DATOS DE FACTURA TIMBRADA ---------------------------------------
-// $tabla="datosfacturatimbre";
-// //$campo = "folio";
-// $campo = "id";
-// $valor = $_GET["codigo"];
-// //$valor = 370;
-    
-// $response = ControladorFacturaIngreso::ctrObtenerDatosTimbre($tabla, $campo, $valor);
-    
-// if($response){
 
 // ------------------------------ ** SELLOS ** -----------------------------------------------------------
     $codeqr=$resp["codigoqr"];
@@ -430,7 +418,7 @@ if($y3>240){
     $pdf->MultiCell(0, 3.8, utf8_decode('Sello Digítal del CFDI: '),'LRT','FJ',1);
     $pdf->SetFont('Arial', '', 6);
     $pdf->SetX($x);
-    $pdf->MultiCell(0, 3.5, utf8_decode($resp['sellodigitalcfdi']),'LRB','FJ',1);
+    $pdf->MultiCell(0, 3.5, utf8_decode(trim($resp['sellodigitalcfdi'])),'LRB','FJ',1);
     $pdf->Ln(1.7);
 
     $x = $pdf->GetX();
@@ -439,7 +427,7 @@ if($y3>240){
     $pdf->MultiCell(0, 3.8, utf8_decode('Sello Digítal del SAT: '),'LRT','FJ',1);
     $pdf->SetX($x+45.7);
     $pdf->SetFont('Arial', '', 6);
-    $pdf->MultiCell(0, 3.5, utf8_decode($resp['sellodigitalsat']),'LRB','FJ',1);
+    $pdf->MultiCell(0, 3.5, utf8_decode(trim($resp['sellodigitalsat'])),'LRB','FJ',1);
     $pdf->Ln(2);
     if(IS_NULL($resp['cadenaoriginalsat'])){
         $pdf->SetFont('Arial', 'B', 6.5);
