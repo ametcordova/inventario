@@ -576,7 +576,7 @@ case 'ListCompPago20':
         }else{
             $boton0 =getAccess($acceso, ACCESS_ADD)?"<td><button class='btn btn-sm btn-danger px-0 py-0' onclick='TimbrarCompPago20(this)' data-id='".$value['id']."' data-folio='".$value['foliorep']."' data-rfcemisor='".$value['rfcemisor']."' title='Factura sin timbrar'><i class='fa fa-bell fa-fw'></i> </button></td> ":"";
 
-            $boton1 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-primary px-1 py-0 ' data-editar='".$value['id']."' title='Editar REP' ><i class='fa fa-file-edit'></i></button></td> ":"";
+            $boton1 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-primary px-1 py-0' data-editar='".$value['id']."' title='Editar REP' ><i class='fa fa-file-edit'></i></button></td>":"";
 
         }
     

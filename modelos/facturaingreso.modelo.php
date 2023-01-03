@@ -16,7 +16,7 @@ try {
     }
 	$where.=' ORDER BY tb1.id DESC';
   
-	$sql="SELECT tb1.*,tb2.nombre AS nombrereceptor, tb2.rfc AS rfcreceptor
+	$sql="SELECT tb1.id, tb1.id_empresa, tb1.serie, tb1.folio, tb1.uuid, tb1.fechaelaboracion, tb1.fechatimbrado, tb1.fechacancelado, tb1.rfcemisor, tb1.idreceptor, tb1.idtipocomprobante, tb1.totalfactura, tb1.numcomppago, tb2.nombre AS nombrereceptor, tb2.rfc AS rfcreceptor
     FROM $tabla tb1 
     INNER JOIN clientes tb2 ON tb1.idreceptor=tb2.id
     WHERE ".$where;
@@ -252,7 +252,7 @@ static public function mdlObtenerDatosFactura($tabla, $campo, $valor, $tipo){
             INNER JOIN c_metodopago mp ON mp.id=tb1.idmetodopagorep
             INNER JOIN c_moneda mn ON mn.id=tb1.idmoneda
             INNER JOIN c_tiposdecomprobantes tc ON tc.idtipodecomprobante=tb1.tipodecomprobante
-            WHERE tb1.id=1");
+            WHERE tb1.$campo= :$campo");
             //WHERE tb1.$campo= :$campo");
             
             $stmt->bindParam(":".$campo, $valor, PDO::PARAM_INT);
@@ -269,7 +269,7 @@ static public function mdlObtenerDatosFactura($tabla, $campo, $valor, $tipo){
 }
 
 /*=============================================
-OBTENER DATOS PARA ELABOR COMPLEMENTO DE PAGO
+OBTENER DATOS PARA ELABORAR COMPLEMENTO DE PAGO
 =============================================*/
 static public function mdlGetDatosFact($tabla, $campo, $valor){
     try {    
@@ -393,7 +393,7 @@ static public function mdlGetTasaImpuesto($tabla){
 }
 
 /*=============================================
-	GUARDAR FACTURA DE INGRESO
+	GUARDAR FACTURA DE COMPLEMENTO DE PAGO
 =============================================*/
 static public function mdlGuardarRep($tabla, $complementodepago){
 	try {      
@@ -473,7 +473,7 @@ static public function mdlListarRep20($tblRep20, $year, $usuario, $todes){
         }
         $where.=' ORDER BY tbl.id DESC';
       
-        $sql="SELECT tbl.*, emp.rfc AS rfcemisor, cli.rfc AS rfcreceptor FROM $tblRep20 tbl
+        $sql="SELECT tbl.id, tbl.foliorep, tbl.fechaelaboracion, tbl.fechatimbradorep, tbl.fechapago, tbl.totalrecibo, emp.rfc AS rfcemisor, cli.rfc AS rfcreceptor FROM $tblRep20 tbl
         INNER JOIN empresa emp ON emp.id=tbl.idrfcemisor
         INNER JOIN clientes cli ON cli.id=tbl.idrfcreceptor
         WHERE ".$where;

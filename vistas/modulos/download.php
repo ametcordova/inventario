@@ -87,9 +87,13 @@ if ($file = fopen($file, 'r')){
     die();
 }
 
-//set_time_limit(0);
+set_time_limit(0);
 if(isset($_REQUEST['ruta'])){
-    $file_path='../../ajax/salida/'.$_REQUEST['filename'];
+    if($_REQUEST['ruta']==1){
+        $file_path='../../ajax/salida/'.$_REQUEST['filename'];
+    }else{
+        $file_path='../../ajax/rep20/'.$_REQUEST['filename'];
+    }
 }else{
     $file_path='../entradascarso/'.$_REQUEST['filename'];
 }

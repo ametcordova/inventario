@@ -8,11 +8,14 @@ error_reporting(E_ALL);
 /*********************************************/
 require_once dirname( __DIR__ ).'/modelos/conexion.php';
 
+//CLASE PARA LA CONEXION AL WS
 $exist=file_exists(__DIR__ . '/class.conexion.php');
 
     if($exist){
         require_once __DIR__ . '/class.conexion.php';
     }else{
+        $resp=array('code'=>401,'message'=>"File CONNECTION does not exists or is not readable");
+        return $resp;
         exit;
      };
 
@@ -26,7 +29,6 @@ class ClaseTimbrarRep20{
     static public function EnviarJsonRep20WS($tabla, $campo, $valor, $datafolio, $datarfcemisor){
         $filename=dirname( __DIR__ ).'/archivos/filesinvoices/'.$datarfcemisor.'-REP-'.$datafolio.'.json';
         if (!file_exists($filename) || !is_readable($filename)) {
-            //echo ("File $filename does not exists or is not readable");
             $resp=array('code'=>401,'message'=>"File:".$filename." does not exists or is not readable");
             return $resp;
             exit;
@@ -44,7 +46,7 @@ class ClaseTimbrarRep20{
     
         # OBJETO DEL API DE CONEXION
         $url = 'https://app.facturaloplus.com/ws/servicio.do?wsdl';    //endpoint productivo
-        //$url = 'https://dev.facturaloplus.com/ws/servicio.do?wsdl';
+        //$url = 'https://dev.facturaloplus.com/ws/servicio.do?wsdl';  //endpoint DEV
 
         $objConexion = new ConexionWS($url);
 
@@ -97,12 +99,13 @@ class ClaseTimbrarRep20{
         $cerPEM     = file_get_contents($dirpadre.'/config/Certificados/00001000000515088380.cer.pem');
         $logoB64    = base64_encode( file_get_contents($dirpadre.'/config/logotipo.png') );
 
+        //ENVIAR JSON PARA TIMBRAR Y REGRESAR XML
         $response   = $objConexion->operacion_timbrarJSON3($apikey, $jsonB64, $keyPEM, $cerPEM, $logoB64);
 
+        # DECODIFICAR RESPUESTA DEL WEBSERVICES
         $res=json_decode($response,true);
 
-
-        # RESPUESTA DEL SERVICIO
+        # CODIGOS DE RESPUESTA DEL SERVICIO
         $resp=array('code'=>$res['codigo'],'message'=>$res['mensaje']);
         /*
             200 - Solicitud procesada con éxito.
@@ -186,13 +189,13 @@ class ClaseTimbrarRep20{
             if($stmt){
                 //BUSCAR LOS FOLIOS QUE ABARCA EL COMPLEMENTO DE PAGO
                 $query="SELECT doctosrelacionados FROM $tabla WHERE $campo=:$campo";
-                $stmt = Conexion::conectar()->prepare($query);
-                $stmt->bindParam(":".$campo, $valor, PDO::PARAM_INT);
-                $stmt -> execute();
-                $aswer = $stmt->fetch(PDO::FETCH_ASSOC);
-                if($stmt){
+                $stmt1 = Conexion::conectar()->prepare($query);
+                $stmt1->bindParam(":".$campo, $valor, PDO::PARAM_INT);
+                $stmt1 -> execute();
+                $aswer = $stmt1->fetch(PDO::FETCH_ASSOC);
+                if($stmt1){
                     
-                    //CONVIERTE EL JSON A ARRAY Y SACA SOLO LOS FOLIOS DE LAS FACTS.
+                    //CONVIERTE EL JSON A ARRAY Y SACA SOLO LOS NUMEROS DE LOS FOLIOS DE LAS FACTS.
                     $folios=[];
                     $data = json_decode($aswer['doctosrelacionados'], true);
                     foreach ($data as $value) {
@@ -200,9 +203,9 @@ class ClaseTimbrarRep20{
                     }
 
                     if(count($folios)>0){
-                        //CONVIERTE EL ARRAY A STRING PARA LA CONSULTA
+                        //CONVIERTE EL ARRAY A STRING PARA LA CONSULTA DE ACTUALIZACION
                         $fol=implode(",",$folios);
-                        //ACTUALIZA LA TABLA DE FACTURAINGRESO CON EL NUM DEL REP
+                        //ACTUALIZA LOS FOLIOS DE LAS FACT EN LA TABLA DE FACTURAINGRESO CON EL NUM DEL R.E.P.
                         $sql="UPDATE facturaingreso SET numcomppago='$datafolio' WHERE folio IN ($fol)";
                         $stmt = Conexion::conectar()->prepare($sql);
                         $stmt -> execute();

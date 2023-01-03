@@ -122,10 +122,9 @@ function dt_ListarFacturasIngreso(){
           {"width:":"20px", "className": "dt-center", "targets": [3]},
           {"width:":"20px", "className": "dt-center", "targets": [4]},
           {"width:":"20px", "className": "dt-center", "targets": [5]},
-          {"width:":"10px", "className": "dt-center", "targets": [8]},
-          {"className": "dt-left", "targets": [7]},
-          {"className": "dt-right", "targets": [9]},
-          {"className": "dt-center", "targets": [6,10,11]},				//"_all" para todas las columnas
+          {"className": "dt-left", "targets": [8]},
+          {"className": "dt-right", "targets": [10]},
+          {"className": "dt-center", "targets": [6,7,9,11,12]},				//"_all" para todas las columnas
           // {
           //   "className": "dt-center",
           //   "targets": 10,
@@ -1080,7 +1079,7 @@ $("#dt-FacturaIngreso tbody").on("click", "button.btnPrintPdf", function(){
 /*===================================================*/
 
 /*===================================================
-GENERA PDF DE FACTURA DESDE EL DATATABLE
+GENERA PDF DEL COMPLEMENTO DE PAGO DESDE EL DATATABLE
 ===================================================*/
 $("#tblComplementoPago20 tbody").on("click", "button.printPdfRep", function(){
   let idPrintPdf = $(this).attr("data-pdf");
@@ -1091,47 +1090,47 @@ $("#tblComplementoPago20 tbody").on("click", "button.printPdfRep", function(){
 })
 /*===================================================*/
 /*===================================================
-DESCARGAR XML DESDE EL DATATABLE
+DESCARGAR XML DE FACTURA DESDE EL DATATABLE
 ===================================================*/
-$("#dt-FacturaIngreso tbody").on("click", "button.downloadXML", ()=>{
-  let userdata=$(".downloadXML").data();
-  let dataid = userdata.id;
-  let datafolio = userdata.folio;
-  let dataserie = userdata.serie;
-  let datarfcemisor = userdata.rfcemisor;
+// $("#dt-FacturaIngreso tbody").on("click", "button.downloadXML", ()=>{
+//   let userdata=$(".downloadXML").data();
+//   let dataid = userdata.id;
+//   let datafolio = userdata.folio;
+//   let dataserie = userdata.serie;
+//   let datarfcemisor = userdata.rfcemisor;
 
-  (async () => {
-    await axios.get('ajax/facturaingreso.ajax.php?op=downloadXML', {
-      params: {
-        dataid: dataid,
-        datafolio: datafolio,
-        dataserie: dataserie,
-        datarfcemisor: datarfcemisor
-      }
-    })
+//   (async () => {
+//     await axios.get('ajax/facturaingreso.ajax.php?op=downloadXML', {
+//       params: {
+//         dataid: dataid,
+//         datafolio: datafolio,
+//         dataserie: dataserie,
+//         datarfcemisor: datarfcemisor
+//       }
+//     })
 
-    .then((res)=>{ 
-      if(res.status==200) {
-        console.log(res.data)
+//     .then((res)=>{ 
+//       if(res.status==200) {
+//         console.log(res.data)
         
-        if(res.data==false){
-          swal({
-            title: "No se pudo descargar XML",
-            text: `Mensaje .${res.data}!!`,
-            icon: "error",
-            buttons: false,
-            timer: 2000
-          })  //fin swal
+//         if(res.data==false){
+//           swal({
+//             title: "No se pudo descargar XML",
+//             text: `Mensaje .${res.data}!!`,
+//             icon: "error",
+//             buttons: false,
+//             timer: 2000
+//           })  //fin swal
           
-        }
-      }          
-    }) 
+//         }
+//       }          
+//     }) 
 
-    .catch((err) => {throw err}); 
+//     .catch((err) => {throw err}); 
   
-  })();  //fin del async
+//   })();  //fin del async
   
-})
+// })
 /*===================================================*/
 
 /*===================================================
@@ -1222,14 +1221,15 @@ function abrirDatatable(){
       },    
       "bAutoWidth": false,
       "columnDefs": [
-        { "width": "5px", targets: 0 },    //id
-        { "width": "5px", targets: 1 },    //folio
-        { "width": "65px", targets: 2 },   //fecha
-        { "width": "65px", targets: 3 },   //fecha timbrado
-        { "width": "70px", targets: 4 },    //rfc emisor
-        { "width": "70px", targets: 5 },    //rfc receptor
-        { "width": "30px", "className": "dt-right", "targets": [6], render: $.fn.dataTable.render.number( ',','.',2,'$') },    //total pagado
-        { "width": "47px", "className": "dt-center", "targets": [7] }    //acciones
+        { width: "10px", targets: 0 },    //id
+        { width: "1px", targets: 1 },    //folio
+        { width: "45px", targets: 2 },   //fecha
+        { width: "85px", targets: 3 },   //fecha timbrado
+        { width: "85px", targets: 4 },   //fecha pago
+        { width: "30px", targets: 5 },    //rfc emisor
+        { width: "30px", targets: 6 },    //rfc receptor
+        { width: "30px", "className": "dt-right", "targets": [7], render: $.fn.dataTable.render.number( ',','.',2,'$') },    //total pagado
+        { width: "65px", "className": "dt-center", "targets": [8] }    //acciones
       ],
       "ajax":
           {
@@ -1255,9 +1255,9 @@ function TimbrarCompPago20(elem){
   let datarfcemisor = elem.dataset.rfcemisor;
   //console.log('id:',dataid, datafolio, datarfcemisor);
 
-  $('#container').waitMe({
+  $('#modalGestionREP20').waitMe({
     effect : 'timer',
-    text : 'Espere por favor.',
+    text : 'Espere por favor...',
     bg : 'rgba(255,255,255,0.7)',
     color : '#000',
     maxSize : '50',
@@ -1275,21 +1275,23 @@ function TimbrarCompPago20(elem){
     })
 
     .then((res)=>{ 
-      console.log(res.data)
-      if(res.data.status==201) {
+      //console.log(res.data)
+      if(res.data.status==200 || res.data.status==201) {
+        $('#dt-FacturaIngreso').DataTable().ajax.reload(null, false);
         $('#tblComplementoPago20').DataTable().ajax.reload(null, false);
-        $('#container').waitMe("hide");
+        $('#modalGestionREP20').waitMe("hide");
         swal({
           title: "¡Complemento de Pago Timbrado!",
           text: `${res.data.msg}`,
           icon: "success",
           button: "Cerrar",
           timer:3000
-        })  //fin swal
+        })  //fin swal El valor del atributo DomicilioFiscalReceptor [] no corresponde a un registro del catálogo CatCodigosPostales
   
       }else{
         //console.log(res.data, res.status)
-        $('#container').waitMe("hide");
+        $('#tblComplementoPago20').DataTable().ajax.reload(null, false);
+        $('#modalGestionREP20').waitMe("hide");
         swal({
           title: "¡Lo sentimos mucho!!",
           text: `No fue posible realizar timbrado. ${res.data.msg}!!`,

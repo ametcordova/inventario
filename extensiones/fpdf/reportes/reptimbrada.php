@@ -121,10 +121,9 @@ ob_start(); // it starts buffering
         $tabla="complementodepago";
         $campo = "id";
         $codigo = $_GET["codigo"];
-        $tipo='P';
         // Quitamos los caracteres ilegales de la variable
         $valor = filter_var($codigo, FILTER_SANITIZE_NUMBER_INT);
-
+        $tipo='P';
         // Validamos la variable filtrada
         if(!filter_var($valor, FILTER_VALIDATE_INT)){
           return;
@@ -280,9 +279,9 @@ ob_start(); // it starts buffering
              $pdf->SetFont('Arial','',9);
              $pdf->Cell(29.5,4,utf8_decode($resp['numoperacion']),0,0,'L',true);
              $pdf->SetFont('Arial','B',9);
-             $pdf->Cell(25.5,4,'Cuenta Origen: ',0,0,'L',true);
+             $pdf->Cell(24.5,4,'Cuenta Origen: ',0,0,'L',true);
              $pdf->SetFont('Arial','',9);
-             $pdf->Cell(47,4,$resp['cuentaordenante'],0,0,'L',true);
+             $pdf->Cell(48,4,$resp['cuentaordenante'],0,0,'L',true);
              $pdf->SetFont('Arial','B',9);
              $pdf->Cell(26,4,'Cuenta Destino: ',0,0,'L',true);
              $pdf->SetFont('Arial','',9);
@@ -321,7 +320,7 @@ ob_start(); // it starts buffering
             
             // column titles
             $header = array('Prod/Serv', 'Clave y Unidad','Descripción', 'Obj. Imp.', 'Cant', 'Valor Unit.', 'Importe');
-            $w = array(15, 32, 65, 35, 7, 20, 21);
+            $w = array(15, 32, 65, 35, 8, 20, 21);
             $num_headers = count($header);
             for($i = 0; $i < $num_headers; ++$i) {
                 $pdf->Cell($w[$i], 6, utf8_decode($header[$i]), 1, 0, 'C', 1);
@@ -338,65 +337,72 @@ ob_start(); // it starts buffering
             $pdf->Cell(12,4,'Pago',0,0,'L',true);
             $pdf->cell(23);
             $pdf->Cell(14,4,'01-No objeto de Impuesto',0,0,'L',true);
-            $pdf->cell(22.5);
+            $pdf->cell(23.5);
             $pdf->Cell(4,4,'1',0,0,'L',true);
             $pdf->cell(12);
             $pdf->Cell(4,4,'$0.00',0,0,'L',true);
             $pdf->cell(17);
             $pdf->Cell(4,4,'$0.00',0,0,'L',true);
              // -----------------------------------------------------------------------------------------
-             $pdf->Ln(4);
+             $pdf->Ln(4.5);
              $pdf->SetDrawColor(51,116,255);
              $pdf->SetFillColor(51,116,255);
              $pdf->SetTextColor(255,255,255);
              $pdf->SetFont('Arial','B',8);
              $pdf->Cell(0,3.5,'DOCUMENTO(S) RELACIONADO(S)',1,0,'C',true);
-             $pdf->Ln(4);
+             $pdf->Ln(4.5);
              $pdf->SetDrawColor(0,0,0);
              $pdf->SetFillColor(255,255,255);
              $pdf->SetTextColor(0,0,0);
 
 // -------------------------IMPRIMIR LOS CONCEPTOS -----------------------------------------------
+            // Colors, line width and bold font
+            $pdf->SetDrawColor(255, 255, 255);
+            $pdf->SetFillColor(0, 95, 100, 0);
+            $pdf->SetTextColor(255, 255, 255);
+            $pdf->SetFont('', 'B',8);
+
             // column titles
             $header = array('UUID', 'Ser.','Folio', 'Mon.','Obj. Imp.', 'Parcial', 'Saldo Ant.', 'Pagado', 'Saldo Ins.', 'Impuestos');
-            $w = array(63, 6, 8, 9, 28, 10, 17, 17, 14, 23);
+            $w = array(63, 6, 8, 9, 28, 10, 17, 17, 14, 24);
             $num_headers = count($header);
             for($i = 0; $i < $num_headers; ++$i) {
                 $pdf->Cell($w[$i], 6, utf8_decode($header[$i]), 1, 0, 'C', 1);
             };
-            $pdf->Ln();
+            $pdf->Ln(6.5);
 
+            $pdf->SetDrawColor(0,0,0);
+            $pdf->SetFillColor(255,255,255);
+            $pdf->SetTextColor(0,0,0);
+            $pdf->SetFont('', '',8);
+            
             $conceptos_json=json_decode($resp['doctosrelacionados'],TRUE);		//decodifica los conceptos que vienen en datos JSON
+            $iva=$resp['tasa']*100;
+            $w = array(63, 6, 8, 9, 28, 10, 17, 17, 14, 24);
+            $alin=array("", "C", "C", "C", "C", "C", "L", "R", "R", "R");
             foreach ($conceptos_json as $row):
-                $data = array($row["idDocumento"], $row["Serie"],$row["Folio"], 'MXN.','02-Obj.de Impuesto', '1', '$'.number_format($row["ImpSaldoAnt"],2, '.',','), '$'.number_format($row["ImpPagado"],2, '.',','), '$'.number_format($row["ImpSaldoInsoluto"],2, '.',','), '16% - '.'$'.number_format($row["ImporteDR"],2, '.',','));
-                $w = array(63, 6, 8, 9, 28, 10, 17, 17, 14, 23);
+                $data = array($row["idDocumento"], $row["Serie"],$row["Folio"], 'MXN.','02-Obj.de Impuesto', '1', '$'.number_format($row["ImpSaldoAnt"],2, '.',','), '$'.number_format($row["ImpPagado"],2, '.',','), '$'.number_format($row["ImpSaldoInsoluto"],2, '.',','), $iva.'% - '.'$'.number_format($row["ImporteDR"],2, '.',','));
                 $num_headers = count($data);
                 for($i = 0; $i < $num_headers; ++$i) {
-                    $pdf->Cell($w[$i], 6, utf8_decode($data[$i]), 1, 0, 'C', 1);
+                    $pdf->Cell($w[$i], 6, utf8_decode($data[$i]), 1, 0, $alin[$i], 1);
                 };
-                $pdf->Ln();
+                $pdf->Ln(6);
             endforeach;                
 
 
 // --------------------------- LINEA DE SEPARACION ----------------------------------------------
 $pdf->Ln(1.5);
 $y1=$pdf->GetY();
+$pdf->SetDrawColor(0,0,255);
 $pdf->Line(10,$y1,206,$y1);
 $pdf->Ln(3.5);
 $y3=$pdf->GetY();
+$pdf->SetDrawColor(0,0,0);
 if($y3>240){
     $pdf->AddPage();
 }
-
 // ------------------------------ ** SELLOS ** -----------------------------------------------------------
-    $codeqr=$resp["codigoqr"];
-
-    // TAMBIEN FUNCIONA
-    // $dataURI = "data:image/png;base64,".$codeqr;
-    // $img = explode(',',$dataURI,2)[1];
-    // $pic = 'data://text/plain;base64,'.$img;
-    // $info = getimagesize($pic);
-    //$pdf->Image("data:image/png;base64,".$codeqr, $x, $y, $w, $h, "png");
+    $codeqr=$resp["codigoqr"];      //GUARDAMOS EN UNA VARIABLE EL CODIGO QR.
 
     $pdf->SetLineWidth(0.2);
     $x = $pdf->GetX();      //horizontal
@@ -408,7 +414,6 @@ if($y3>240){
 
     $pdf->Image("data:image/png;base64,".$codeqr, $x1, $y-2, $w, $h, "png");
 
-    //$pdf->SetFont('Arial', '', 6);
     $pdf->SetFillColor(255,255,255);
     $pdf->SetFont('Arial', 'B', 6.5);
     $x = $pdf->GetX();
@@ -428,7 +433,7 @@ if($y3>240){
     $pdf->SetX($x+45.7);
     $pdf->SetFont('Arial', '', 6);
     $pdf->MultiCell(0, 3.5, utf8_decode(trim($resp['sellodigitalsat'])),'LRB','FJ',1);
-    $pdf->Ln(2);
+    $pdf->Ln(1.7);
     if(IS_NULL($resp['cadenaoriginalsat'])){
         $pdf->SetFont('Arial', 'B', 6.5);
         $pdf->MultiCell(0, 3.5, utf8_decode('Cadena Original: '),'LRT','FJ',1);
@@ -465,8 +470,8 @@ if($y3>240){
  
 
 // ------------------------------------------------------------------------------------------------      
-    //$nombrearchivo=$resp['idrfcemisor'].'-'.$GLOBALS['folio'];
-    $nombrearchivo='rep140';
+    $nombrearchivo=$resp['rfcemisor'].'-'.$GLOBALS['folio'];
+    
     $pdf->Output('I',$nombrearchivo.'.pdf');
     ob_end_flush(); // It's printed here, because ob_end_flush "prints" what's in the buffer, rather than returning it (unlike the ob_get_* functions)        
     //}else{

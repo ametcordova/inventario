@@ -111,14 +111,15 @@ $fechaHoy = date("Y-m-d");
               <thead class="thead-dark" style="font-size:.8rem; height:1px">
                 <tr style="font-size:0.90em">
                   <th class="text-center"> &nbsp&nbsp&nbsp<input type="checkbox" name="select_all" value="1" id="select-all"></th>
-                  <th class="text-center">#</th>
+                  <th class="text-center" title="ID">#</th>
                   <th class="text-center">Serie</th>
                   <th class="text-center">Folio</th>
                   <th>Emisor</th>
                   <th class="text-center">Fech. Elab.</th>
                   <th class="text-center">Fech. Timb.</th>
+                  <th class="text-center" title="Últimos 12 Dig. del folio fiscal">UUID</th>
                   <th>Receptor</th>
-                  <th class="text-center">Tipo Comp.</th>
+                  <th class="text-center" title="Tipo de Comprobante">TC</th>
                   <th class="text-center">Total</th>  
                   <th>Status</th>
                   <th>Acción</th>
@@ -656,6 +657,7 @@ $fechaHoy = date("Y-m-d");
                               <th translate="no">Folio</th>
                               <th translate="no">Fecha Elab.</th>
                               <th translate="no">F. Timbrado</th>
+                              <th translate="no">Fecha Pago</th>
                               <th translate="no">RFC Emisor</th>
                               <th translate="no">RFC Receptor</th>
                               <th translate="no" class="text-center">Total Pag.</th>
@@ -687,4 +689,4 @@ $fechaHoy = date("Y-m-d");
                 FIN MODAL PARA SUBIR ARCHIVOS DE ENTRADA CARSO AL ALMACEN 
 ==================================================================================== -->
 
-<script defer src="vistas/js/facturaingreso.js?v=031120221401"></script>
+<script defer src="vistas/js/facturaingreso.js?v=131220221401"></script>

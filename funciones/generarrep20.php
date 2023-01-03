@@ -48,12 +48,12 @@ class ClaseGenerarRep20{
     $datos['Comprobante']['Exportacion'] = $datosdefactura['id_exportacion'];
     $datos['Comprobante']['LugarExpedicion'] = $datosdefactura['cpemisor'];
 
-    // Datos del Emisor CAMBIAR EN PRODUCCION
+    // Datos del Emisor 
     $datos['Comprobante']['Emisor']['Rfc'] = $datosdefactura['rfc']; //RFC DE PRUEBA
     $datos['Comprobante']['Emisor']['Nombre'] = $datosdefactura['nombreemisor'];  // EMPRESA DE PRUEBA
     $datos['Comprobante']['Emisor']['RegimenFiscal'] = $datosdefactura['regimenfiscalemisor'];      
 
-    // Datos del receptor CAMBIAR EN PRODUCCION
+    // Datos del receptor
     $datos['Comprobante']['Receptor']['Rfc'] = $datosdefactura['rfcreceptor'];
     $datos['Comprobante']['Receptor']['Nombre'] = $datosdefactura['nombrereceptor'];
     $datos['Comprobante']['Receptor']['DomicilioFiscalReceptor'] = $datosdefactura['cpreceptor'];
@@ -82,6 +82,7 @@ class ClaseGenerarRep20{
     $datos['Comprobante']['Complemento'][0]['Pagos20']["Pago"][0]["NumOperacion"] = $datosdefactura['numoperacion'];
     $datos['Comprobante']['Complemento'][0]['Pagos20']["Pago"][0]["Monto"] = $datosdefactura['totalrecibo'];
 
+    // NODO DOCTOS RELACIONADOS
     foreach ($doctosrelacionados as $key => $value) {
         $datos['Comprobante']['Complemento'][0]['Pagos20']["Pago"][0]["DoctoRelacionado"][$key]["IdDocumento"] = $value['idDocumento'];
         $datos['Comprobante']['Complemento'][0]['Pagos20']["Pago"][0]["DoctoRelacionado"][$key]["Serie"] = $value['Serie'];
@@ -100,14 +101,14 @@ class ClaseGenerarRep20{
         $datos['Comprobante']['Complemento'][0]['Pagos20']["Pago"][0]["DoctoRelacionado"][$key]["ImpuestosDR"]["TrasladosDR"][0]["TasaOCuotaDR"] = $datosdefactura['tasa'];
         $datos['Comprobante']['Complemento'][0]['Pagos20']["Pago"][0]["DoctoRelacionado"][$key]["ImpuestosDR"]["TrasladosDR"][0]["ImporteDR"] = $value['ImporteDR'];
     }
-
+        // NODO IMPUESTOS
         $datos['Comprobante']['Complemento'][0]['Pagos20']["Pago"][0]["ImpuestosP"]["TrasladosP"][0]["BaseP"] = $datosdefactura['subtotal'];
         $datos['Comprobante']['Complemento'][0]['Pagos20']["Pago"][0]["ImpuestosP"]["TrasladosP"][0]["ImpuestoP"] = $datosdefactura['idimpuesto'];
         $datos['Comprobante']['Complemento'][0]['Pagos20']["Pago"][0]["ImpuestosP"]["TrasladosP"][0]["TipoFactorP"] = 'Tasa';
         $datos['Comprobante']['Complemento'][0]['Pagos20']["Pago"][0]["ImpuestosP"]["TrasladosP"][0]["TasaOCuotaP"] = $datosdefactura['tasa'];
         $datos['Comprobante']['Complemento'][0]['Pagos20']["Pago"][0]["ImpuestosP"]["TrasladosP"][0]["ImporteP"] = $datosdefactura['totalimpuesto'];
 
-
+    // CONVIERTE ARRAY A JSON
     $invoice_json = json_encode($datos, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
     $bytes = file_put_contents("../archivos/filesinvoices/".$datarfcemisor."-REP-".$datafolio.".json", $invoice_json); 
 

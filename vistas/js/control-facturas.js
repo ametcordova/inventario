@@ -271,7 +271,7 @@ function ajaxPositiva(response) {
       text: "Registro Guardado correctamente",
 	  icon: "success",
       button: "Cerrar",
-	  timer: 3000
+	  timer: 2500
       })  //fin swal
       .then(function(result){
         if (result) {
@@ -654,7 +654,6 @@ $('a.toggle-vis').on('click',function(e){
   columna.visible(!columna.visible());
 })
 /**************************************************/
-
 //añadir un INPUT en la columna de No. de Fact
 $('#TablaFacturas tfoot th').each( function () {
   var title=$(this).text();
@@ -688,7 +687,6 @@ $('#myInputO').on( 'keyup change clear', function () {
 $('#TablaFacturas tbody').on( 'dblclick', 'td', function () {
   if(tabla.cell( this ).index().columnVisible==11){
     //console.log(tabla.row( this ).data()[0]);
-    //console.log(tabla.row(this).data());
     let numerodefactura=tabla.row( this ).data()[0];
     $('#numerodefactura').html("");
     $('#numerodefactura').html('<i class="fa fa-calendar"></i>'+' Capturar fecha pago de factura: #'+numerodefactura);
