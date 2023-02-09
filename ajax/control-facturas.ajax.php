@@ -226,51 +226,54 @@ switch ($_GET["op"]){
 		  	return;
   		}    
 
-           foreach($facturas as $key => $value){
-		    $conter++;
-            $fechaFactura = date('d-m-Y', strtotime($value["fechafactura"]));
-            $fechaEntregado = $value["fechaentregado"]==null?"":date('d-m-Y', strtotime($value["fechaentregado"]));
-            $fechaPagado =$value["fechapagado"]==null?" ":date('d-m-Y', strtotime($value["fechapagado"]));
-            $importeFact=number_format($value['importe'], 2, '.',',');
-			
-			//." <button class='btn btn-primary btn-sm px-1 py-1 btnAgregaGastos' idFactura='".$value['id']."' numFactura='".$value['numfact']."' idEstado='".$value['status']."' data-toggle='modal' data-target='#modalAgregarGastos' title=''><i class='fa fa-plus-circle'></i></button>"
+			foreach($facturas as $key => $value){
+				$conter++;
+				$fechaFactura = date('d-m-Y', strtotime($value["fechafactura"]));
+				$fechaEntregado = $value["fechaentregado"]==null?"":date('d-m-Y', strtotime($value["fechaentregado"]));
+				$fechaPagado =$value["fechapagado"]==null?" ":date('d-m-Y', strtotime($value["fechapagado"]));
+				$importeFact=number_format($value['importe'], 2, '.',',');
+				$odc=str_replace(' ', '',$value["numorden"])==''?'S/O':str_replace(' ', '',$value["numorden"]);
+				$ob=str_replace(' ', '',$value["observaciones"])==''?'S/P':str_replace(' ', '',$value["observaciones"]);
+				
+				//." <button class='btn btn-primary btn-sm px-1 py-1 btnAgregaGastos' idFactura='".$value['id']."' numFactura='".$value['numfact']."' idEstado='".$value['status']."' data-toggle='modal' data-target='#modalAgregarGastos' title=''><i class='fa fa-plus-circle'></i></button>"
 
-			if(getAccess($acceso, ACCESS_SELECT)){
-				$botonLock=$value["status"]==0?"<button class='btn btn-warning btn-sm px-1 py-1 btnPagarFactura' dFechaPago='".$value['fechapagado']."' idFactura='".$value['id']."' numfactura='".$value['numfact']."' data-toggle='modal' data-target='#modalPagarFactura' title='Cap. Fecha Pago'><i class='fa fa-unlock'></i></button>":
-				"<button class='btn btn-success py-1 btn-sm' idEstado='".$value['status']."' title='Cerrado'><i class='fa fa-lock'></i></button>";
-			}else{
-				$botonLock=$value["status"]==0?"<button class='btn btn-warning btn-sm px-1 py-1 disabled' title='Cap. Fecha Pago'><i class='fa fa-unlock'></i></button>":
-				"<button class='btn btn-success py-1 btn-sm disabled' title='Cerrado'><i class='fa fa-lock'></i></button>";				
+				if(getAccess($acceso, ACCESS_SELECT)){
+					$botonLock=$value["status"]==0?"<button class='btn btn-warning btn-sm px-1 py-1 btnPagarFactura' dFechaPago='".$value['fechapagado']."' idFactura='".$value['id']."' numfactura='".$value['numfact']."' data-toggle='modal' data-target='#modalPagarFactura' title='Cap. Fecha Pago'><i class='fa fa-unlock'></i></button>":
+					"<button class='btn btn-success py-1 btn-sm' idEstado='".$value['status']."' title='Cerrado'><i class='fa fa-lock'></i></button>";
+				}else{
+					$botonLock=$value["status"]==0?"<button class='btn btn-warning btn-sm px-1 py-1 disabled' title='Cap. Fecha Pago'><i class='fa fa-unlock'></i></button>":
+					"<button class='btn btn-success py-1 btn-sm disabled' title='Cerrado'><i class='fa fa-lock'></i></button>";				
+				}
+
+				$boton1=getAccess($acceso, ACCESS_EDIT)?"<button class='btn btn-primary btn-sm px-1 btnEditarFactura' idFactura='".$value['id']."' numFactura='".$value['numfact']."' idEstado='".$value['status']."' idBorrado='".$value['borrado']."' data-toggle='modal' data-target='#modalEditarFactura' title='Editar Factura'><i class='fa fa-pencil'></i></button> ":"";
+				$boton2=getAccess($acceso, ACCESS_PRINTER)?"<button class='btn btn-info btn-sm px-1 btnVerFactura' id=fila".$conter." idFactura='".$value['id']."' numFactura='".$value['numfact']."' idEstado='".$value['status']."' idBorrado='".$value['borrado']."' title='Ver Expediente'><i class='fa fa-eye'></i></button> ":"";
+				if($value["borrado"]==0){
+					$boton3=getAccess($acceso, ACCESS_DELETE)?"<button class='btn btn-danger btn-sm px-1 btnBorrarFactura' title='Borrar Factura' idFactura='".$value['id']."' numFactura='".$value['numfact']."' subtotalFactura='".$value['subtotal']."' idEstado='".$value['status']."' idBorrado='".$value['borrado']."'><i class='fa fa-times'></i></button>":"";
+				}else{
+					$boton3=getAccess($acceso, ACCESS_DELETE)?"<button class='btn btn-danger btn-sm px-1 disabled' title='Borrar Factura' ><i class='fa fa-times'></i></button>":"";
+				}
+				$botones = $boton1.$boton2.$boton3;
+
+				$data[]=array(
+					$value["numfact"],
+					$value["serie"],
+					substr($value["cliente"],0,30),
+					substr($value["tipotrabajo"],0,30),
+					substr($odc,0,10),
+					substr($ob,0,10),
+					$fechaFactura,
+					number_format($value["subtotal"], 2, '.',','),
+					number_format($value["iva"], 2, '.',','),
+					number_format($value["imp_retenido"], 2, '.',','),
+					$importeFact,
+					$fechaEntregado,
+					$fechaPagado,
+					$value["numcomplemento"],
+					$botonLock,
+					$botones,
+					$saldodisponible
+				);
 			}
-
-			$boton1=getAccess($acceso, ACCESS_EDIT)?"<button class='btn btn-primary btn-sm px-1 btnEditarFactura' idFactura='".$value['id']."' numFactura='".$value['numfact']."' idEstado='".$value['status']."' idBorrado='".$value['borrado']."' data-toggle='modal' data-target='#modalEditarFactura' title='Editar Factura'><i class='fa fa-pencil'></i></button> ":"";
-			$boton2=getAccess($acceso, ACCESS_PRINTER)?"<button class='btn btn-info btn-sm px-1 btnVerFactura' id=fila".$conter." idFactura='".$value['id']."' numFactura='".$value['numfact']."' idEstado='".$value['status']."' idBorrado='".$value['borrado']."' title='Ver Expediente'><i class='fa fa-eye'></i></button> ":"";
-			if($value["borrado"]==0){
-			  	$boton3=getAccess($acceso, ACCESS_DELETE)?"<button class='btn btn-danger btn-sm px-1 btnBorrarFactura' title='Borrar Factura' idFactura='".$value['id']."' numFactura='".$value['numfact']."' subtotalFactura='".$value['subtotal']."' idEstado='".$value['status']."' idBorrado='".$value['borrado']."'><i class='fa fa-times'></i></button>":"";
-			}else{
-				$boton3=getAccess($acceso, ACCESS_DELETE)?"<button class='btn btn-danger btn-sm px-1 disabled' title='Borrar Factura' ><i class='fa fa-times'></i></button>":"";
-			}
-			$botones = $boton1.$boton2.$boton3;
-
-		  	$data[]=array(
-                  $value["numfact"],
-                  $value["serie"],
-                  substr($value["cliente"],0,30),
-				  substr($value["tipotrabajo"],0,28),
-				  $value["numorden"],
-                  $fechaFactura,
-			      number_format($value["subtotal"], 2, '.',','),
-			      number_format($value["iva"], 2, '.',','),
-			      number_format($value["imp_retenido"], 2, '.',','),
-			      $importeFact,
-                  $fechaEntregado,
-				  $fechaPagado,
-				  $value["numcomplemento"],
-                  $botonLock,
-                  $botones,
-				  $saldodisponible
-           );
-        }
     
         $results = array(
 					"sEcho"=>1, //Información para el datatables

@@ -88,7 +88,7 @@ $fechaHoy = date("Y-m-d");
         <?php } ?>
 
         <div class="card-tools">
-        <button type="button" class="btn btn-tool" title="Refresh" onclick="location.reload()">
+          <button type="button" class="btn btn-tool" title="Refresh" onclick="location.reload()">
             <i class="fa fa-refresh"></i>
           </button>
           <button type="button" class="btn btn-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse">
@@ -291,7 +291,7 @@ $fechaHoy = date("Y-m-d");
 
             <div class="form-row">
               <div class="form-group col-md-12">
-                <input type="text" class="form-control form-control-sm" name="nvaObserva" id="nvaObserva" value="" placeholder="Condiciones de Pago" title="Observación:" tabindex="9">
+                <input type="text" class="form-control form-control-sm" name="nvaCondicionesPago" id="nvaCondicionesPago" value="" placeholder="Condiciones de Pago" title="Condiciones de pago" tabindex="9">
               </div>
             </div>
 
@@ -345,13 +345,13 @@ $fechaHoy = date("Y-m-d");
 
                       <thead class="thead-dark" style="font-size:.8rem; height:1px">
                         <tr translate="no" class="text-center">
-                          <th translate="no" class="text-center" style="width:5.2rem">Acción</th>
-                          <th translate="no" style="width:2.5rem">#</th>
-                          <th translate="no" style="width:6rem">Clave</th>
-                          <th translate="no">Descripción Producto</th>
-                          <th translate="no" style="width:4rem">Cant</th>
-                          <th translate="no" style="width:6rem">P.U.</th>
-                          <th translate="no" style="width:6rem">Precio Tot.</th>
+                          <th translate="no" class="text-center" style="width:6em">Acción</th>
+                          <th translate="no" style="width:2.5em">#</th>
+                          <th translate="no" style="width:6em">Clave</th>
+                          <th translate="no" style="width:38em">Descripción Producto</th>
+                          <th translate="no" style="width:3.5em">Cant</th>
+                          <th translate="no" style="width:4.5em">P.U.</th>
+                          <th translate="no" style="width:6em">Precio Tot.</th>
                         </tr>
                       </thead>
                         <tbody id="tabladedetalles">
@@ -689,4 +689,4 @@ $fechaHoy = date("Y-m-d");
                 FIN MODAL PARA SUBIR ARCHIVOS DE ENTRADA CARSO AL ALMACEN 
 ==================================================================================== -->
 
-<script defer src="vistas/js/facturaingreso.js?v=131220221401"></script>
+<script defer src="vistas/js/facturaingreso.js?v=300120231635"></script>

@@ -54,8 +54,8 @@ switch ($_GET["op"]){
 			$capturo='<h6><span class="badge badge-info" title="'.$value["capturo"].'">'.$value["ultusuario"].'</span></h6>';
 			
 			//$tri = '<tr class="table-success"><td>'.($value["id"]).'</td>';
-            $botonestado=$value["estatus"]==0?"<button class='btn btn-dark btn-sm px-1 py-1 btnEstado' data-id='".$value['id']."' data-estado=".$value['estatus']." title='Fact. $fact' style='font-size:.7rem;'> <i class='fa fa-folder-o'></i> Facturado</button>":
-			"<button class='btn btn-success px-1 py-1 btn-sm btnEstado' data-id='".$value['id']."' data-estado=".$value['estatus']." title='Activo'  style='font-size:.7rem;'> <i class='fa fa-check-circle-o'></i> Por Facturar</button>"; 
+            $botonestado=$value["estatus"]==0?"<button class='btn btn-sm btn-dark px-1 py-1 btnEstado' data-id='".$value['id']."' data-estado=".$value['estatus']." title='Fact. $fact' style='font-size:.7rem;'> <i class='fa fa-folder-o'></i> Facturado</button>":
+			"<button class='btn btn-sm btn-success px-1 py-1 btnEstado' data-id='".$value['id']."' data-estado=".$value['estatus']." title='Activo'  style='font-size:.7rem;'> <i class='fa fa-check-circle-o'></i> Por Facturar</button>"; 
 
 			if(getAccess($acceso, ACCESS_ACTIVAR)){
 			$botones='<td>

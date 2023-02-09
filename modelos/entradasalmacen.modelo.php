@@ -96,6 +96,7 @@ static public function MdlAjaxProductos($tabla, $campo, $valor){
         
         //$stmt->bindParam(":".$campo, $valor, PDO::PARAM_STR);
         //$stmt->bindParam(":estado", $estado, PDO::PARAM_INT);
+        
 
         $stmt -> execute();
 
@@ -111,15 +112,16 @@ static public function MdlAjaxProductos($tabla, $campo, $valor){
 /*==========================================================*/
 static Public function mdlConsultaExistenciaProd($tabla, $campo, $valor){
     try {        
-        $stmt = Conexion::conectar()->prepare("SELECT a.cant , m.medida, p.codigointerno, p.sku 
+        $stmt = Conexion::conectar()->prepare("SELECT p.id, a.cant , m.medida, p.codigointerno, p.sku 
         FROM $tabla a 
-        INNER JOIN productos p ON a.id_producto=p.id
+        RIGHT JOIN productos p ON p.id=a.id_producto
         INNER JOIN medidas m ON p.id_medida=m.id
-        WHERE $campo = :$campo");
+        WHERE p.$campo = :$campo");
 
-        $stmt -> bindParam(":$campo", $valor, PDO::PARAM_STR);
+        $stmt -> bindParam(":$campo",       $valor, PDO::PARAM_STR);
+        //$stmt -> bindParam(":id",           $valor, PDO::PARAM_INT);
         $stmt -> execute();
-        return $stmt -> fetch();      
+        return $stmt -> fetch(PDO::FETCH_ASSOC);      
         $stmt=null;
     } catch (Exception $e) {
         echo "Failed: " . $e->getMessage();

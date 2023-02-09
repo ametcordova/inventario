@@ -260,7 +260,7 @@ $jsonpermisos4=($jsonpermisos4==NULL)?$jsonpermisos4=["SINDATO"=>0]:$jsonpermiso
               <li class="nav-item">
                 <a href="crear-almacen" class="nav-link">
                   <i class="fa fa-building-o nav-icon"></i>
-                  <p>Crear Almacen</p>
+                  <p>Almacenes</p>
                 </a>
               </li>
             <?php } ?>

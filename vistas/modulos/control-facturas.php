@@ -137,13 +137,14 @@
 
               <table class="table table-bordered compact table-hover table-striped dt-responsive" cellspacing="0" id="TablaFacturas" width="100%">
                 <thead class="thead-dark">
-                <tr style="font-size:0.80em"> 
+                <tr style="font-size:0.75em">
 					<!-- <th style="width:2%;"><input name="select_all" value="1" id="example-select-all" type="checkbox" /></th>-->
                     <th translate="no" style="width:3%;">#Fact</th>
                     <th translate="no" style="width:3%;">Ser</th>
                     <th translate="no" style="width:15%;">Nombre</th>
                     <th translate="no" style="width:14%;">Tipo de Trab.</th>
-                    <th translate="no" style="width:6%;">#ODC</th>
+                    <th translate="no" style="width:5%;">#ODC</th>
+                    <th translate="no" style="width:5%;">Proy</th>
                     <th translate="no" style="width:7%;">F. Fact.</th>
                     <th translate="no" style="width:7%;">Subtotal</th>
                     <th translate="no" style="width:6%;">iva</th>
@@ -160,11 +161,12 @@
                 
                 </tbody>
                 <tfoot class="thead-dark">
-                <tr style="font-size:0.80em">
+                <tr style="font-size:0.75em">
                     <th>No.</th>
                     <th colspan="2"></th>
                     <th></th>
                     <th>ODC</th>
+                    <th>Proy</th>
                     <th></th>
                     <th></th>
                     <th></th>
@@ -204,9 +206,9 @@
     <div class="modal-content">
     <form role="form" name="formularioAgregarFactura" id="formularioAgregarFactura" method="POST">
       <!-- Modal Header -->
-      <div class="modal-header colorbackModal p-2">
+      <div class="modal-header colorbackModal px-2 py-1">
    
-            <h4 class="modal-title">Agregar Factura</h4>
+            <h5 class="modal-title">Agregar Factura</h5>
         
             <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
@@ -234,14 +236,14 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fa fa-hashtag"></i></span>
                 </div>
-                <input type="text" class="form-control form-control-sm text-center" placeholder="Serie" name="nuevaSerie" id="nuevaSerie" value="A" title=" Serie Fact." tabindex="">
+                <input type="text" class="form-control form-control-sm text-center" placeholder="Serie" name="nuevaSerie" id="nuevaSerie" value="A" title=" Serie Fact." tabindex="2">
               </div>
 
               <div class="input-group mb-3 col-md-4">
                 <div class="input-group-prepend">
                         <span class="input-group-text"><i class="fa fa-sort-numeric-asc"></i></span>
                 </div>
-                <input type="number" class="form-control form-control-sm" placeholder="No. Factura" name="nuevaFactura" id="nuevaFactura" value="" data-toggle="tooltip" title="Número de Factura" required tabindex="2" >
+                <input type="number" class="form-control form-control-sm" placeholder="No. Factura" name="nuevaFactura" id="nuevaFactura" value="" data-toggle="tooltip" title="Número de Factura" required tabindex="3" >
                 <input type="hidden"  name="idDeUsuario" value="<?php echo $_SESSION['id'];?>">
               </div>
 
@@ -250,7 +252,7 @@
                 <div class="input-group-prepend">
                         <span class="input-group-text"><i class="fa fa-sticky-note"></i></span>
                 </div>
-                <input type="text" class="form-control form-control-sm" placeholder="No. de orden" name="nuevaOrden" id="nuevaOrden" value="" title="No. de orden" tabindex="3">
+                <input type="text" class="form-control form-control-sm" placeholder="No. de orden" name="nuevaOrden" id="nuevaOrden" value="" title="No. de orden" tabindex="4">
               </div>
 
             </div>
@@ -262,14 +264,14 @@
               <div class="input-group-prepend">
                       <span class="input-group-text"><i class="fa fa-calendar"></i></span>
               </div>
-              <input type="date" class="form-control form-control-sm" placeholder="Fecha Fact." name="nvaFechaFactura" id="nvaFechaFactura"  value="<?= $fechaHoy?>" data-toggle="tooltip" title="Fecha Factura"  required tabindex="4" >
+              <input type="date" class="form-control form-control-sm" placeholder="Fecha Fact." name="nvaFechaFactura" id="nvaFechaFactura"  value="<?= $fechaHoy?>" data-toggle="tooltip" title="Fecha Factura"  required tabindex="5" >
             </div>
 
             <div class="input-group mb-3 col-md-6">
               <div class="input-group-prepend">
                       <span class="input-group-text"><i class="fa fa-calendar"></i></span>
               </div>
-              <input type="date" class="form-control form-control-sm" placeholder="" name="nvaFechaEntregado" id="nvaFechaEntrega" value="<?= $fechaHoy?>" data-toggle="tooltip" title="Fecha Entregado" tabindex="5">
+              <input type="date" class="form-control form-control-sm" placeholder="" name="nvaFechaEntregado" id="nvaFechaEntrega" value="<?= $fechaHoy?>" data-toggle="tooltip" title="Fecha Entregado" tabindex="6">
             </div>
 
           </div>
@@ -278,7 +280,7 @@
               <div class="input-group-prepend">
                       <span class="input-group-text"><i class="fa fa-align-justify"></i></span>
               </div>
-				<textarea class="form-control form-control-sm" name="nvoTipoTrabajo" id="nvoTipoTrabajo" value="" onkeyUp="mayuscula(this);" placeholder="Descripción Factura"  data-toggle="tooltip" title="Tipo de Trabajo" tabindex="6" cols="80" rows="2"></textarea>
+				<textarea class="form-control form-control-sm" name="nvoTipoTrabajo" id="nvoTipoTrabajo" value="" onkeyUp="mayuscula(this);" placeholder="Descripción Factura"  data-toggle="tooltip" title="Tipo de Trabajo" tabindex="7" cols="80" rows="2"></textarea>
             </div>
 
         <div class="form-row">			
@@ -287,14 +289,14 @@
               <div class="input-group-prepend">
                       <span class="input-group-text"><i class="fa fa-plus"></i></span>
               </div>
-              <input type="number" class="form-control form-control-sm" placeholder="Subtotal" name="nvoSubtotal" id="nvoSubtotal" value="" step="any" data-toggle="tooltip" data-placement="top" title="Subtotal" tabindex="7" required>
+              <input type="number" class="form-control form-control-sm" placeholder="Subtotal" name="nvoSubtotal" id="nvoSubtotal" value="" step="any" data-toggle="tooltip" data-placement="top" title="Subtotal" tabindex="8" required>
             </div>
 
             <div class="input-group mb-3 col-md-6">
               <div class="input-group-prepend">
                       <span class="input-group-text"><i class="fa fa-percent"></i></span>
               </div>
-              <input type="number" class="form-control form-control-sm" placeholder="Iva" name="nvoIva" id="nvoIva" value="" step="any" data-toggle="tooltip" data-placement="top" title="Iva" tabindex="8" required>
+              <input type="number" class="form-control form-control-sm" placeholder="Iva" name="nvoIva" id="nvoIva" value="" step="any" data-toggle="tooltip" data-placement="top" title="Iva" tabindex="9" required>
             </div>
 
         </div>			
@@ -305,14 +307,14 @@
               <div class="input-group-prepend">
                       <span class="input-group-text"><i class="fa fa-usd"></i></span>
               </div>
-              <input type="number" class="form-control form-control-sm" placeholder="Retención" name="nvaRetencion" id="nvaRetencion" value="" step="any" data-toggle="tooltip" data-placement="top" title="Retención" tabindex="9" required>
+              <input type="number" class="form-control form-control-sm" placeholder="Retención" name="nvaRetencion" id="nvaRetencion" value="" step="any" data-toggle="tooltip" data-placement="top" title="Retención" tabindex="10" required>
             </div>
 
             <div class="input-group mb-3 col-md-6">
               <div class="input-group-prepend">
                       <span class="input-group-text"><i class="fa fa-money"></i></span>
               </div>
-              <input type="number" class="form-control form-control-sm" placeholder="Importe Fact" name="nvoImporteFactura" id="nvoImporteFactura" step="any" data-toggle="tooltip" data-placement="top" title="Importe factura" tabindex="10" required>
+              <input type="number" class="form-control form-control-sm" placeholder="Importe Fact" name="nvoImporteFactura" id="nvoImporteFactura" step="any" data-toggle="tooltip" data-placement="top" title="Importe factura" tabindex="11" required>
             </div>
 			
         </div>			
@@ -322,14 +324,14 @@
               <div class="input-group-prepend">
                       <span class="input-group-text"><i class="fa fa-file-text"></i></span>
               </div>
-              <input type="text" class="form-control form-control-sm" placeholder="Observaciones" name="nvaObservacion" id="nvaObservacion" value="" onkeyUp="mayuscula(this);" placeholder="Observación" data-toggle="tooltip" title="Observación" tabindex="11">
+              <input type="text" class="form-control form-control-sm" placeholder="Observaciones" name="nvaObservacion" id="nvaObservacion" value="" onkeyUp="mayuscula(this);" placeholder="Observación" data-toggle="tooltip" title="Observación" tabindex="12">
             </div>
 
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                       <span class="input-group-text"><i class="fa fa-unlock-alt"></i></span>
               </div>
-                <select class="form-control form-control-sm" name="nvoStatusFactura" id="nvoStatusFactura" required tabindex="12" placeholder="" data-toggle="tooltip" title="Estatus" >
+                <select class="form-control form-control-sm" name="nvoStatusFactura" id="nvoStatusFactura" required tabindex="13" placeholder="" data-toggle="tooltip" title="Estatus" >
                 <option value="" selected>Seleccione</option>
                 <option value="1">Pagado</option>
                 <option value="0">Sin pagar</option>
@@ -351,12 +353,12 @@
       </div>    <!-- fin del modal-body -->
 
       <!-- Modal footer -->
-      <div class="modal-footer colorbackModal p-2">
+      <div class="modal-footer colorbackModal px-2 py-1">
        
-        <button type="button" class="btn btn-primary btn-sm float-left salirfrm" data-dismiss="modal" tabindex="12"><i class="fa fa-reply"></i> 
+        <button type="button" class="btn btn-primary btn-sm float-left salirfrm" data-dismiss="modal" tabindex="15"><i class="fa fa-reply"></i> 
         Salir
         </button>
-        <button type="submit" class="btn btn-success btn-sm enviarfrm" tabindex="13"><i class="fa fa-save"></i> Guardar</button>
+        <button type="submit" class="btn btn-success btn-sm enviarfrm" tabindex="14"><i class="fa fa-save"></i> Guardar</button>
         <div class="spin">
             <button type="button" class="btn btn-sm btn-warning"> Espere... <i class="fa fa-spinner fa-pulse fa-1x fa-fw"></i></button>
         </div>
@@ -398,7 +400,7 @@
               <div class="input-group-prepend">
                       <span class="input-group-text"><i class="fa fa-building-o"></i></span>
               </div>
-              <input type="text" class="form-control form-control-sm" placeholder="Nombre Cliente" name="editaCliente" id="editaCliente" value="" data-toggle="tooltip" data-placement="top" title="Nombre Cliente" tabindex="2">
+              <input type="text" class="form-control form-control-sm" placeholder="Nombre Cliente" name="editaCliente" id="editaCliente" value="" data-toggle="tooltip" data-placement="top" title="Nombre Cliente" tabindex="1">
             </div>
 
             <div class="form-row">            
@@ -407,14 +409,14 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fa fa-hashtag"></i></span>
                 </div>
-                <input type="text" class="form-control form-control-sm text-center" placeholder="Serie" name="editaSerie" id="editaSerie" value="A" title=" Serie Fact." tabindex="">
+                <input type="text" class="form-control form-control-sm text-center" placeholder="Serie" name="editaSerie" id="editaSerie" value="" title=" Serie Fact." tabindex="2">
               </div>
 
               <div class="input-group mb-3 col-md-4">
                 <div class="input-group-prepend">
                   <span class="input-group-text"><i class="fa fa-sort-numeric-asc"></i></span>
                 </div>
-                <input type="number" class="form-control form-control-sm" placeholder="Número de Factura" name="editaFactura" id="editaFactura" value="" required tabindex="1" data-toggle="tooltip" title="Número de Factura" readonly>
+                <input type="number" class="form-control form-control-sm" placeholder="Número de Factura" name="editaFactura" id="editaFactura" value="" required tabindex="4" data-toggle="tooltip" title="Número de Factura" readonly>
                 <input type="hidden"  name="idDeUsuario" value="<?php echo $_SESSION['id'];?>">
                 <input type="hidden"  name="idregistro" value="">
               </div>
@@ -423,7 +425,7 @@
                 <div class="input-group-prepend">
                         <span class="input-group-text"><i class="fa fa-sticky-note"></i></span>
                 </div>
-                <input type="text" class="form-control form-control-sm" placeholder="No. de orden" name="editaOrden" id="editaOrden" value="" title="No. de orden" tabindex="3">
+                <input type="text" class="form-control form-control-sm" placeholder="No. de orden" name="editaOrden" id="editaOrden" value="" title="No. de orden" tabindex="5">
               </div>
             </div>
 
@@ -434,14 +436,14 @@
               <div class="input-group-prepend">
                       <span class="input-group-text"><i class="fa fa-calendar"></i></span>
               </div>
-              <input type="date" class="form-control form-control-sm" placeholder="Fecha Factura Factura" name="editaFechaFactura" value="" data-toggle="tooltip" title="Fecha Factura"  required tabindex="4" >
+              <input type="date" class="form-control form-control-sm" placeholder="Fecha Factura Factura" name="editaFechaFactura" value="" data-toggle="tooltip" title="Fecha Factura"  required tabindex="5" >
             </div>
 
             <div class="input-group mb-3 col-md-6">
               <div class="input-group-prepend">
                       <span class="input-group-text"><i class="fa fa-calendar"></i></span>
               </div>
-              <input type="date" class="form-control form-control-sm" placeholder="" name="editaFechaEntregado" value="" data-toggle="tooltip" title="Fecha Entregado" tabindex="5">
+              <input type="date" class="form-control form-control-sm" placeholder="" name="editaFechaEntregado" value="" data-toggle="tooltip" title="Fecha Entregado" tabindex="6">
             </div>
 
           </div>
@@ -450,7 +452,7 @@
               <div class="input-group-prepend">
                       <span class="input-group-text"><i class="fa fa-align-justify"></i></span>
               </div>
-			  <textarea class="form-control form-control-sm" name="editaTipoTrabajo" id="editaTipoTrabajo" onkeyUp="mayuscula(this);" placeholder="Descripción Factura"  data-toggle="tooltip" title="Tipo de Trabajo" tabindex="6" cols="80" rows="2"></textarea>
+			  <textarea class="form-control form-control-sm" name="editaTipoTrabajo" id="editaTipoTrabajo" onkeyUp="mayuscula(this);" placeholder="Descripción Factura"  data-toggle="tooltip" title="Tipo de Trabajo" tabindex="7" cols="80" rows="2"></textarea>
               <!-- <input type="text" class="form-control form-control-sm" name="editaTipoTrabajo" id="editaTipoTrabajo" value="" onkeyUp="mayuscula(this);" data-toggle="tooltip" title="Tipo de Trabajo" tabindex="5">-->
             </div>
 
@@ -460,7 +462,7 @@
               <div class="input-group-prepend">
                       <span class="input-group-text"><i class="fa fa-plus"></i></span>
               </div>
-              <input type="number" class="form-control form-control-sm" placeholder="Subtotal" name="editaSubtotal" id="editaSubtotal" step="any" data-toggle="tooltip" data-placement="top" title="Subtotal" tabindex="7" required>
+              <input type="number" class="form-control form-control-sm" placeholder="Subtotal" name="editaSubtotal" id="editaSubtotal" step="any" data-toggle="tooltip" data-placement="top" title="Subtotal" tabindex="8" required>
               <input type="hidden" name="subtotalanterior" id="subtotalanterior">
             </div>
 
@@ -468,7 +470,7 @@
               <div class="input-group-prepend">
                       <span class="input-group-text"><i class="fa fa-percent"></i></span>
               </div>
-              <input type="number" class="form-control form-control-sm" placeholder="Iva" name="editaIva" id="editaIva" value="" step="any" data-toggle="tooltip" data-placement="top" title="Iva" tabindex="8" required>
+              <input type="number" class="form-control form-control-sm" placeholder="Iva" name="editaIva" id="editaIva" value="" step="any" data-toggle="tooltip" data-placement="top" title="Iva" tabindex="9" required>
             </div>
 
           </div>				
@@ -478,14 +480,14 @@
                 <div class="input-group-prepend">
                         <span class="input-group-text"><i class="fa fa-usd"></i></span>
                 </div>
-                <input type="number" class="form-control form-control-sm" placeholder="Retención" name="editaRetencion" id="editaRetencion" value="" step="any" data-toggle="tooltip" data-placement="top" title="Retención" tabindex="9" required>
+                <input type="number" class="form-control form-control-sm" placeholder="Retención" name="editaRetencion" id="editaRetencion" value="" step="any" data-toggle="tooltip" data-placement="top" title="Retención" tabindex="10" required>
               </div>
 
               <div class="input-group mb-3 col-md-6">
                 <div class="input-group-prepend">
                         <span class="input-group-text"><i class="fa fa fa-money"></i></span>
                 </div>
-                <input type="number" class="form-control form-control-sm" placeholder="Importe Factura" name="editaImporteFactura" id="editaImporteFactura" value="" step="any" data-toggle="tooltip" data-placement="top" title="Importe factura" tabindex="10" required>
+                <input type="number" class="form-control form-control-sm" placeholder="Importe Factura" name="editaImporteFactura" id="editaImporteFactura" value="" step="any" data-toggle="tooltip" data-placement="top" title="Importe factura" tabindex="11" required>
           </div>
         </div>				
 
@@ -493,7 +495,7 @@
               <div class="input-group-prepend">
                       <span class="input-group-text"><i class="fa fa-file-text"></i></span>
               </div>
-			 <textarea class="form-control form-control-sm" name="editaObservacion" id="editaObservacion" onkeyUp="mayuscula(this);" placeholder="Observación" data-toggle="tooltip" title="Observación"  tabindex="11" rows="1"></textarea>
+			 <textarea class="form-control form-control-sm" name="editaObservacion" id="editaObservacion" onkeyUp="mayuscula(this);" placeholder="Observación" data-toggle="tooltip" title="Observación"  tabindex="12" rows="1"></textarea>
              <!-- <input type="text" class="form-control form-control-sm" placeholder="Observaciones" name="editaObservacion" id="editaObservacion" value="" onkeyUp="mayuscula(this);" placeholder="Observación" data-toggle="tooltip" title="Observación"  tabindex="7" >-->
             </div>
 
@@ -503,14 +505,14 @@
               <div class="input-group-prepend">
                       <span class="input-group-text"><i class="fa fa-calendar-check-o"></i></span>
               </div>
-              <input type="date" class="form-control form-control-sm" placeholder="Fecha pagado" name="editaFechaPagado" value="" data-toggle="tooltip" title="Fecha Pagado" tabindex="12">
+              <input type="date" class="form-control form-control-sm" placeholder="Fecha pagado" name="editaFechaPagado" value="" data-toggle="tooltip" title="Fecha Pagado" tabindex="13">
             </div>
 
             <div class="input-group mb-3 col-md-6">
               <div class="input-group-prepend">
                       <span class="input-group-text"><i class="fa fa-unlock-alt"></i></span>
               </div>
-                <select class="form-control form-control-sm" name="editaStatusFactura" id="editaStatusFactura" required tabindex="13" placeholder="" data-toggle="tooltip" title="Estatus" >
+                <select class="form-control form-control-sm" name="editaStatusFactura" id="editaStatusFactura" required tabindex="14" placeholder="" data-toggle="tooltip" title="Estatus" >
                 <option value="" selected>Seleccione</option>
                 <option value="1">Pagado</option>
                 <option value="0">Sin pagar</option>
@@ -524,7 +526,7 @@
                 <label for="exampleInputFile">Subir PDF:&nbsp</label>
                 <p class="help-block m-0 p-0">Peso máximo 2mb.</p>
                 <div class="input-group">
-                     <input type="file" class="nuevoPdf" id="editarPdf" name="editarPdf" accept="application/pdf">
+                     <input type="file" class="nuevoPdf" id="editarPdf" name="editarPdf" accept="application/pdf" tabindex="15">
                 </div>
 
               <div class="input-group mt-2 mb-0" id="downfile">
@@ -544,8 +546,8 @@
       <!-- Modal footer -->
       <div class="modal-footer colorbackModal p-2">
        
-        <button type="button" class="btn btn-sm btn-primary float-left salirfrm" data-dismiss="modal"><i class="fa fa-reply"></i> Salir</button>
-        <button type="submit" class="btn btn-sm btn-success enviarfrm"><i class="fa fa-save"></i> Guardar Cambios</button>
+        <button type="button" class="btn btn-sm btn-primary float-left salirfrm" tabindex="17" data-dismiss="modal"><i class="fa fa-reply"></i> Salir</button>
+        <button type="submit" class="btn btn-sm btn-success enviarfrm" tabindex="16"><i class="fa fa-save"></i> Guardar Cambios</button>
         <div class="spin">
             <button type="button" class="btn btn-sm btn-warning"> Espere... <i class="fa fa-spinner fa-pulse fa-1x fa-fw"></i></button>
         </div>
@@ -700,7 +702,7 @@
     </div>
   </div>
 </div>
-<script defer src="vistas/js/control-facturas.js?v=101120221343"></script>
+<script defer src="vistas/js/control-facturas.js?v=020220231411"></script>
 <!--===========================================================================================-->
 
 <!--================================= MODAL VER EXPEDIENTE DE FACTURA =======================================-->

@@ -30,7 +30,6 @@ if(localStorage.getItem("capturarRango") != null){
 
 }
 
-
 /*  =====  QUITAR AL ESTAR EN PRODUCCION  ======*/
 //$('#selecProductoDev').val('1').trigger('change.select2');
 //$("#nuevaDevolucionAlmacen").prop("selectedIndex", 1); 
@@ -49,13 +48,18 @@ $("#selecProductoDev").change(function(event){
 let mostrarprod;
 
 event.preventDefault();
- var almacen=$( "#nuevaDevolucionAlmacen option:selected" ).text();
+  var almacen=$( "#nuevaDevolucionAlmacen option:selected" ).text();
   var idProducto=$("#selecProductoDev").val();
+  var idtecnico=$("#TecnicoDev").val();
+
+  if(idProducto==''){
+    return
+  }
   
     $.get('ajax/devolucion-tecnicos.ajax.php', 
-		{op:'mostrarprod', almacen:almacen, idProducto:idProducto}, 
+		{op:'mostrarprod', almacen:almacen, idProducto:idProducto, idtecnico:idtecnico}, 
 		function(response,status){
-		//console.log(status,response)
+		console.log(status,response, almacen, idProducto, idtecnico)
 		var contenido = JSON.parse(response);
 	
 		udeMedida=contenido["medida"];
@@ -83,19 +87,19 @@ var idProducto=$("#selecProductoDev").val();
 let duplicado=buscaProdDuplicado(idProducto);
 
 if(duplicado){
-     $("#cantSalidaDev").val(0);
-	 $('#mensajerror').text('Producto ya capturado. Revise!!');
-     $("#mensajerror").removeClass("d-none");
-	 setTimeout(function(){$("#mensajerror").addClass("d-none")}, 3500);
+  $("#cantSalidaDev").val(0);
+	$('#mensajerror').text('Producto ya capturado. Revise!!');
+  $("#mensajerror").removeClass("d-none");
+	setTimeout(function(){$("#mensajerror").addClass("d-none")}, 3500);
 	return true;
 };
 
-var producto=$("#selecProductoDev option:selected" ).text();       //obtener el texto del valor seleccionado
-var almacen=$( "#nuevaDevolucionAlmacen option:selected" ).text();
+var producto=$("#selecProductoDev option:selected").text();       //obtener el texto del valor seleccionado
+var almacen=$( "#nuevaDevolucionAlmacen option:selected").text();
 var cantcap=$("#cantSalidaDev").val();
 
-var codigoalma= almacen.substr(0, almacen.indexOf('-'));
-console.log("# Alma",codigoalma)
+let codigoalma=almacen.substr(0, almacen.indexOf('-'));
+//console.log("#Almacen:",codigoalma)
     
     idProducto=parseInt(idProducto);
     cantidad=parseFloat(cantcap);
@@ -146,8 +150,8 @@ console.log("# Alma",codigoalma)
         //console.log("cont:",cont, "detalles:",detalles);
     
    //DESPUES DE AÑADIR, SE INICIALIZAN SELECT E INPUT
-	$('#selecProductoDev').val(null).trigger('change');	
-	$("#cantSalidaDev").val(0);
+    $('#selecProductoDev').val(null).trigger('change');
+    $("#cantSalidaDev").val(0);
 })
 
 //FUNCION QUE SUMA CANTIDADES DE DEV.
@@ -191,7 +195,7 @@ event.stopPropagation();
     .then((aceptado) => {
       if (aceptado) {
         let formData = new FormData($("#formularioDevolucion")[0]);
-        for (var pair of formData.entries()){console.log(pair[0]+ ', ' + pair[1]);}
+        //for (var pair of formData.entries()){console.log(pair[0]+ ', ' + pair[1]);}
         //CODIFICAR INSERTAR EN BD
 
 		fetch('ajax/devolucion-tecnicos.ajax.php?op=guardarDev', {
@@ -200,7 +204,6 @@ event.stopPropagation();
 		})
 		  .then(ajaxRespPositiva)
 		  .catch(muestroError); 		
-		
       }else{
 		  return false;
 	  }
@@ -259,8 +262,6 @@ lDuplicado=false;
 return lDuplicado	
 }
 /* ==== FIN DE LA FUNCION =========== */
- 
- 
 //QUITA ELEMENTO 
  function eliminarDetalleDev(indice){
   	$("#fila" + indice).remove();
@@ -314,7 +315,6 @@ $(".daterangepicker.opensright .ranges li").on("click", function(){
 	//var textoHoy = $(this).attr("data-range-key");
 	var textoHoy = $(this).html();
     
-
 	if(textoHoy == "Hoy"){
      
     var d = new Date();
@@ -347,7 +347,7 @@ $(".daterangepicker.opensright .ranges li").on("click", function(){
 
     } 
         $("#daterange-btn1 span").html(fechaInicial+' - '+fechaFinal);
-        console.log(fechaInicial+' - '+fechaFinal);
+        //console.log(fechaInicial+' - '+fechaFinal);
     	localStorage.setItem("capturarRango", fechaInicial+' - '+fechaFinal);
 
     	//window.location = "index.php?ruta=reportes&fechaInicial="+fechaInicial+"&fechaFinal="+fechaFinal;
@@ -507,5 +507,8 @@ function listarDevTec(){
     
 } 
 
+$('#modalAgregarDevolucion').on('show.bs.modal', function (e) {
+	$('#selecProductoDev').val(null).trigger('change');
+})
 
 init();

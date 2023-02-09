@@ -101,7 +101,7 @@ function dt_ListarSalidasAlmacen(){
             autoPrint: false            //TRUE para abrir la impresora
         },
         {
-          text: 'My button',
+          text: 'Reload',
           className: 'orange',
           action: function ( e, dt, node, config ) {
               dt_ListarSalidasAlmacen();
@@ -113,7 +113,13 @@ function dt_ListarSalidasAlmacen(){
           var btns = $('.dt-button');
           btns.removeClass('dt-button');
           btns.addClass('btn btn-success btn-sm');
-        },
+        },  
+        "columnDefs": [
+          {"className": "dt-center", "targets": [0,1,6]},
+          //{"className": "dt-right", "targets": [3,4]}				//"_all" para todas las columnas
+          ],    
+          select: false,     //se puso a false para poder seleccionar varios filas. true=1 fila
+          scrollX: true,
 		"ajax":
 				{
           url: 'ajax/salidasalmacen.ajax.php?op=listar',
@@ -169,7 +175,7 @@ $("#selProdSalAlm").change(function(event){
   almacen=almacen.toLowerCase();
   //console.log("entra1: ", idalmacen, almacen, idProducto);
   
-  //HACER UN FETCH SI EXIST PROD Y SU EXISTENCIA
+  //HACER UN FETCH SI EXIST PROD Y TRAE EXISTENCIA
   let data = new FormData();
   data.append('almacen', almacen);
   data.append('idProducto', idProducto);
@@ -180,7 +186,7 @@ $("#selProdSalAlm").change(function(event){
    })
   .then(response => response.json())
   .then(data => {
-   console.log(data)
+   //console.log(data)
    if(data===false){
      //console.log("No existe Art");
      $("#cantExisteAlmacen").val(0);
@@ -315,19 +321,23 @@ function evaluarElementos(){
   }
 }
 /*======================================================================*/
-//ENVIAR FORMULARIO PARA GUARDAR DATOS DE ENTRADA
+//ENVIAR FORMULARIO PARA GUARDAR DATOS DE SALIDA DE ALMACEN
 /*======================================================================*/
 $("body").on("submit", "#form_salidasalmacen", function( event ) {	
     event.preventDefault();
     event.stopPropagation();
+    let tecnique=$( "#idTecnicoRecibe option:selected" ).text();
+    let fechaSalidaAlmacen=$("input[name='nvaFechaSalidaAlmacen']").val();
     let formData = new FormData($("#form_salidasalmacen")[0]);   
-    for (var pair of formData.entries()){console.log(pair[0]+ ', ' + pair[1]);} 
+    // Se listan los pares clave/valor
+    //for(let [name, value] of formData) {console.log(`${name} = ${value}`); }
+
     swal({
-      title: "¿Está seguro de guardar salida?",
+      title: `¿Estas SEGURO de guardar salida a nombre de ${tecnique} con fecha ${fechaSalidaAlmacen} ?`, 
       text: "¡Si no lo está pulse Cancelar",
       icon: "warning",
       buttons: ["Cancelar", "Sí, Guardar"],
-      dangerMode: false,
+      dangerMode: true,
     })
     .then((aceptado) => {
     if (aceptado) {

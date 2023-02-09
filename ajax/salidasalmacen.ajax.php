@@ -289,7 +289,7 @@ switch ($_GET["op"]){
                 $fechasalida,
                 $value["nombrealmacen"],
                 $value["nombretecnico"],
-                substr($value["motivo"],0,35).' ...',
+                substr($value["motivo"],0,41).' ...',
                 $value["usuario"],
                 $botones,
             );

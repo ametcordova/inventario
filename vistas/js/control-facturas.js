@@ -84,7 +84,7 @@ async function verpdf(idFactura,numFactura,idEstatus, idBorrado){
 	})
      .then(respuesta=>respuesta.json())
      .then(datos=>{
-		  console.log(datos.rutaexpediente);
+		  //console.log(datos.rutaexpediente);
 		  filePdf=datos.rutaexpediente;
      }) 
 
@@ -115,10 +115,6 @@ $("#modalVerFactura").on('hidden.bs.modal', ()=> {
 	$("#target #seepdf").empty();
 })
 
-$('#modalVerFactura').on('show.bs.modal', function (e) {
-	
-})
-
 $("#modalEditarFactura").on('show.bs.modal', ()=> {
   $("#downfile").removeClass("d-none");
   $(".spin").hide();
@@ -132,7 +128,7 @@ SUBIENDO LA FOTO DEL PRODUCTO
 $(".nuevoPdf").change(function(){
 
 	var imagen = this.files[0];
-	console.log(imagen);
+	//sconsole.log(imagen);
 	
 	/*=============================================
   	VALIDAMOS EL FORMATO DE LA IMAGEN SEA PDF
@@ -287,7 +283,7 @@ function ajaxPositiva(response) {
 }
 
 function showResult(txt) {
-  console.log('muestro respuesta: ', txt);
+  //console.log('muestro respuesta: ', txt);
 }
 
 function showError1(err) { 
@@ -408,6 +404,7 @@ $("#TablaFacturas").on("click", ".btnEditarFactura", function(){
 function mostrardatos(datos){
 
   $( "input[name='idregistro']").val(datos.id);
+  $( "input[name='nuevaSerie']").val(datos.serie);
   $( "input[name='editaFactura']").val(datos.numfact);
   $("#editaFactura").val(datos.numfact);
   $( "input[name='editaCliente']").val(datos.cliente);
@@ -478,7 +475,7 @@ $('#factpagadas').on('ifUnchecked', function (event) {
 
  //console.log(valoryear, valorradio, valormonth);
   if(valorradio!==undefined){
-    var saldo;
+    var saldo=0;
     tabla=$('#TablaFacturas').DataTable(
     {
       "aProcessing": true,//Activamos el procesamiento del datatables
@@ -534,7 +531,7 @@ $('#factpagadas').on('ifUnchecked', function (event) {
             text: 'IVA Ret.',
             className: 'btn btn-dark btn-sm',
             action: function ( e, dt, node, config ) {
-              let colum=7;    //columna IVA Ret.
+              let colum=8;    //columna IVA Ret.
               ocultar(e, colum);
             }
           },
@@ -542,7 +539,7 @@ $('#factpagadas').on('ifUnchecked', function (event) {
             text: 'Print Selec.',
             className: 'btn btn-warning btn-sm',
             action: function ( e, dt, node, config ) {
-              let colum=7;    //columna IVA Ret.
+              let colum=8;    //columna IVA Ret.
               printselec();
             }
           }        
@@ -568,49 +565,55 @@ $('#factpagadas').on('ifUnchecked', function (event) {
             btns.addClass('btn btn-success btn-sm');
           },  
       "columnDefs": [
-        {"className": "dt-center", "targets": [0,1,4,5,9,10,11,12,13,14]},
-        {"className": "dt-right", "targets": [6,7,8]}				//"_all" para todas las columnas
+        {className: "dt-center", targets: [0,1,6,11,12,13,14,15]},
+        {width: "60px", className: "dt-center", targets: [4]},
+        {width: "60px", className: "dt-center", targets: [5]},
+        {className: "dt-right", targets: [7,8,9,10]}				//"_all" para todas las columnas
         ],
       "footerCallback": function ( row, data, start, end, display ) {
         var api = this.api();
 
       // Total over this page subtotal
-      var pageSubTot = api.column(6, {page:'current'}).data().sum();
+      var pageSubTot = api.column(7, {page:'current'}).data().sum();
       pageSubTot=new Intl.NumberFormat('en', {style: 'currency',currency: 'USD',currencySign: 'accounting',}).format(pageSubTot);
 
       // Total over this page iva
-      var pageTotiva = api.column(7, {page:'current'}).data().sum();
+      var pageTotiva = api.column(8, {page:'current'}).data().sum();
       pageTotiva=new Intl.NumberFormat('en', {style: 'currency',currency: 'USD',currencySign: 'accounting',}).format(pageTotiva);
       
       // Total ret over this page total
-      var pageTotRet = api.column(8, {page:'current'}).data().sum();
+      var pageTotRet = api.column(9, {page:'current'}).data().sum();
       pageTotRet=new Intl.NumberFormat('en', {style: 'currency',currency: 'USD',currencySign: 'accounting',}).format(pageTotRet);
       
       // Total over this page total
-      var pageTotal = api.column(9, {page:'current'}).data().sum();
+      var pageTotal = api.column(10, {page:'current'}).data().sum();
       pageTotal=new Intl.NumberFormat('en', {style: 'currency',currency: 'USD',currencySign: 'accounting',}).format(pageTotal);
       //console.log(pageTotal);
 
       // Total over all pages
-      var total = api.column(9).data().sum();
+      var total = api.column(10).data().sum();
       total=new Intl.NumberFormat('en', {style: 'currency',currency: 'USD',currencySign: 'accounting',}).format(total);
-      //console.log(total);
-      saldo=new Intl.NumberFormat('en', {style: 'currency',currency: 'USD',currencySign: 'accounting',}).format(saldo);
+      //console.log(saldo);
+      if(saldo!=0){
+        saldo=new Intl.NumberFormat('en', {style: 'currency',currency: 'USD',currencySign: 'accounting',}).format(saldo);
+      }
 
       $(api.column(1).footer()).html(`<label class='float-right'>Saldo Disponible:</label>`);
       $(api.column(3).footer()).html(saldo);
-      $(api.column(5).footer()).html(`<label class='float-right'>Totales:</label>`);
-      $(api.column(6).footer()).html(pageSubTot);
-      $(api.column(7).footer()).html(pageTotiva);
-      $(api.column(8).footer()).html(pageTotRet);
-      $(api.column(9).footer()).html(pageTotal);
-      $(api.column(10).footer()).html(total);
+      $(api.column(6).footer()).html(`<label class='float-right'>Totales:</label>`);
+      $(api.column(7).footer()).html(pageSubTot);
+      $(api.column(8).footer()).html(pageTotiva);
+      $(api.column(9).footer()).html(pageTotRet);
+      $(api.column(10).footer()).html(pageTotal);
+      $(api.column(11).footer()).html(total);
     },
     "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {		//cambiar el tamaño de la fuente
       if ( true ){ // your logic here
-        $(nRow).addClass( 'customFont' );
-        //console.log(aData[14]);
-        saldo=aData[15];
+         $(nRow).addClass( 'customFont' );
+         console.log(aData[16]);
+         if(aData[16]!=0){
+           saldo=aData[16];
+         }
         
       }
       if(valorradio=="cancelado" || aData[4] == "CANCELADO" || aData[4] == "cancelado"){
@@ -631,7 +634,7 @@ $('#factpagadas').on('ifUnchecked', function (event) {
           },
       "bDestroy": true,
       "iDisplayLength": 15,//Paginación
-      "order": [[ 0, "asc" ]]//Ordenar (columna,orden)
+      "order": [[ 0, "desc" ]]//Ordenar (columna,orden)
     });    
   }    
 } 
@@ -656,13 +659,16 @@ $('a.toggle-vis').on('click',function(e){
 /**************************************************/
 //añadir un INPUT en la columna de No. de Fact
 $('#TablaFacturas tfoot th').each( function () {
-  var title=$(this).text();
-  //console.log(title);
+  let title=$(this).text();
+
     if(title=="No."){
       $(this).html('<input type="text" id="myInputF" style="width:40px; height:20px;" placeholder="'+title+'"/>');
     }
     if(title=="ODC"){
-      $(this).html('<input type="text" id="myInputO" style="width:55%; height:22px;" placeholder="'+title+'"/>');
+      $(this).html('<input type="text" id="myInputO" style="width:60%; height:22px;" placeholder="'+title+'"/>');
+    }
+    if(title=="Proy"){
+      $(this).html('<input type="text" id="myInputP" style="width:57%; height:22px;" placeholder="'+title+'"/>');
     }
 });
 
@@ -682,11 +688,18 @@ $('#myInputO').on( 'keyup change clear', function () {
   };
 } );
 
+//Hacer busqueda por la columna de No. de Proy. segun el dato del INPUT
+$('#myInputP').on( 'keyup change clear', function () {
+  if(tabla.column(5)){
+     //console.log(tableron.column())
+     tabla.column(5).search(this.value).draw();
+  };
+} );
+
 /************************************************************* */
 //
 $('#TablaFacturas tbody').on( 'dblclick', 'td', function () {
-  if(tabla.cell( this ).index().columnVisible==11){
-    //console.log(tabla.row( this ).data()[0]);
+  if(tabla.cell( this ).index().columnVisible==12){
     let numerodefactura=tabla.row( this ).data()[0];
     $('#numerodefactura').html("");
     $('#numerodefactura').html('<i class="fa fa-calendar"></i>'+' Capturar fecha pago de factura: #'+numerodefactura);
@@ -698,7 +711,6 @@ $('#TablaFacturas tbody').on( 'dblclick', 'td', function () {
 //click para seleccionar y sumar importes
 $('#TablaFacturas tbody').on( 'click', 'tr', function () {
   $(this).toggleClass('selected');
-  //$("#sumaseleccionados").addClass("d-none");
   $(".sumaseleccion").html('');
   let price1=price2=sumaselec1=sumaselec2=0;
   let x=(tabla.rows('.selected').data().length);
@@ -708,20 +720,17 @@ $('#TablaFacturas tbody').on( 'click', 'tr', function () {
     idfactura.push(tabla.rows('.selected').data()[i][0]);
 
     //console.log( tabla.rows('.selected').data()[i][5]);
-    price1=tabla.rows('.selected').data()[i][6];
-    price2=tabla.rows('.selected').data()[i][9];
+    price1=tabla.rows('.selected').data()[i][7];
+    price2=tabla.rows('.selected').data()[i][10];
     strEx1 = price1.replace(",","");		//quitar la coma de los miles
     strEx2 = price2.replace(",","");		//quitar la coma de los miles
     price1 = parseFloat(strEx1)		//convierte en numero
     price2 = parseFloat(strEx2)		//convierte en numero
     sumaselec1+=price1;
     sumaselec2+=price2;
-    //console.log(pricesell);
-    //console.log(sumaselec);
     sumaseleccion1=new Intl.NumberFormat('en', {style: 'currency',currency: 'USD',currencySign: 'accounting',}).format(sumaselec1);
     sumaseleccion2=new Intl.NumberFormat('en', {style: 'currency',currency: 'USD',currencySign: 'accounting',}).format(sumaselec2);
-      //$("#sumaseleccionados").removeClass("d-none");
-      $(".sumaseleccion").html(sumaseleccion1 + " -/- "+sumaseleccion2);
+    $(".sumaseleccion").html(sumaseleccion1 + " -/- "+sumaseleccion2);
   };
 });
 
@@ -784,7 +793,6 @@ $("#modal_fecha_pago").on('hidden.bs.modal', ()=> {
 
 
 function printselec(){
-  console.log(idfactura);
   let datos=new FormData();
   datos.append("idfactura", idfactura);
   fetch('ajax/adminoservicio.ajax.php?op=printselect', {

@@ -116,9 +116,10 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
-  
- <!-- === MODAL AGREGAR DEVOLUCION ==-->
- 
+
+<!-- *****************************************************-->
+<!-- ============== MODAL AGREGAR DEVOLUCION =============-->
+<!-- *****************************************************-->
 <div class="modal fade" id="modalAgregarDevolucion" data-backdrop="static" data-keyboard="false" >
 
   <div class="modal-dialog modal-lg">
@@ -142,10 +143,9 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
 
                 <div class="form-row">
                     <div class="form-group col-md-4">
-                    <input type="hidden"  name="idDeUsuario" value="<?php echo $_SESSION['id'];?>">
                       <label><i class="fa fa-tty"></i> Técnico</label>
                       <select class="form-control form-control-sm" name="TecnicoDev" id="TecnicoDev" style="width: 100%;" required>
-                      <option selected value="">Selecione Técnico</option>
+                      <option value="">Seleccione Técnico...</option>
                       <?php
                         $item=null;
                         $valor=null;
@@ -153,8 +153,9 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                         foreach($tecnicos as $key=>$value){
                               echo '<option value="'.$value["id"].'">'.$value["nombre"].'</option>';
                         }
-                      ?>				  
+                      ?>
                       </select>
+                      <input type="hidden"  name="idDeUsuario" value="<?php echo $_SESSION['id'];?>">
                     </div>
               
                     <!-- data-date-end-date=no puede seleccionar una fecha posterior a la actual -->
@@ -172,11 +173,12 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                     <div class="form-group col-md-3">
                       <label for="inputAlmacen"><i class="fa fa-hospital-o"></i> Almacen Ent.</label>
                       <select class="form-control form-control-sm" name="nuevaDevolucionAlmacen" id="nuevaDevolucionAlmacen"  required>
-                      <option value="" selected>Seleccione Almacen</option>
+                      <option value="">Seleccione Almacen</option>
                               <?php
                                   $item=null;
                                   $valor=null;
-                                  $almacenes=ControladorAlmacenes::ctrMostrarAlmacenes($item, $valor);
+                                  $estado=1;
+                                  $almacenes=ControladorAlmacenes::ctrMostrarAlmacenes($item, $valor, $estado);
                                   foreach($almacenes as $key=>$value){
                                       echo '<option value="'.$value["id"].'-'.$value["nombre"].'">'.$value["nombre"].'</option>';
                                   }
@@ -212,9 +214,12 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                             </select>
                     </div>
                   </div>
+                  <div class="col-md-1">
+                    <input type="number" class="form-control form-control-sm mb-1 text-center" name="cantExisteTec" id="cantExisteTec" value="" placeholder="" step="any" min="0"  title="cantidad existencia en tránsito">
+                  </div>
 
                   <div class="col-md-2">
-                    <input type="number" class="form-control form-control-sm mb-1" name="cantSalidaDev" id="cantSalidaDev" value="" placeholder="" step="any" min="0"  title="cantidad de Salida">
+                    <input type="number" class="form-control form-control-sm mb-1 text-center" name="cantSalidaDev" id="cantSalidaDev" value="" placeholder="" step="any" min="0"  title="cantidad de Salida">
                   </div>
                   <div class="col-md-1">
                     <button class="btn btn-primary btn-sm mb-1" data-toggle="modal" id="agregarProductosDev"><i class="fa fa-plus-circle"></i> Agregar</button>

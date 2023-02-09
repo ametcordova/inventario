@@ -4,11 +4,11 @@ require_once "conexion.php";
 
 class ModeloAlmacen{
 	
-static Public function MdlMostrarAlmacen($tabla, $campo, $valor){
+static Public function MdlMostrarAlmacen($tabla, $campo, $valor, $estado=null){
 try{
   if($valor != null){
 			//$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $campo = :$campo");
-			$stmt = Conexion::conectar()->prepare("SELECT a.*,p.id_medida,m.medida FROM $tabla a 
+			$stmt = Conexion::conectar()->prepare("SELECT a.*, p.id_medida,m.medida FROM $tabla a 
             INNER JOIN productos p ON a.id_producto=p.id
             INNER JOIN medidas m ON p.id_medida=m.id
             WHERE $campo = :$campo");
@@ -17,9 +17,10 @@ try{
 
 			$stmt -> execute();
 
-			return $stmt -> fetch();      
+			return $stmt -> fetch(PDO::FETCH_ASSOC);
+
   }else{
-	 $sql="SELECT a.id, a.id_producto, a.codigointerno, p.descripcion, p.id_medida, m.medida, a.cant,p.minimo, a.precio_compra,a.fecha_entrada FROM $tabla a INNER JOIN productos p ON a.id_producto=p.id INNER JOIN medidas m ON p.id_medida=m.id ";
+	 $sql="SELECT a.id, a.id_producto, a.codigointerno, p.descripcion, p.id_medida, m.medida, a.cant,p.minimo, a.precio_compra,a.fecha_entrada FROM $tabla a INNER JOIN productos p ON a.id_producto=p.id INNER JOIN medidas m ON p.id_medida=m.id WHERE a.estado=$estado";
 	 
         $stmt=Conexion::conectar()->prepare($sql);
 		
@@ -50,7 +51,7 @@ try{
       WHERE id_almacen=$tabla
       GROUP by `fechaentrada`,`numerodocto`,`id_almacen`,`id_proveedor`";
       
-    }else{                  // TODOS LOS ALMACENES
+    }else{                  //TODOS LOS ALMACENES
 
       $sql="SELECT h.`numerodocto`,h.`fechaentrada`, sum(h.`cantidad`) AS entro,h.`id_proveedor`,prov.nombre,h.`id_almacen`,alm.nombre as almacen FROM hist_entrada h
       INNER JOIN proveedores prov ON id_proveedor=prov.id

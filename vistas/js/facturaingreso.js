@@ -28,7 +28,7 @@ function init(){
 
 }
 
-// ========= LISTAR EN EL DATATABLE REGISTROS DE LA TABLA cajas================
+// ========= LISTAR EN EL DATATABLE REGISTROS DE LA TABLA FACTURAINGRESO================
 function dt_ListarFacturasIngreso(){
   let rangodeFecha = (localStorage.getItem("daterange-btn-factingreso"));
   $('#daterange-btn-factingreso span').html(rangodeFecha);
@@ -70,7 +70,6 @@ function dt_ListarFacturasIngreso(){
              extend: 'copy'
              },
             'excelHtml5',
-            'csvHtml5',
             {
                 extend: 'pdfHtml5',
                 orientation: 'landscape',
@@ -100,6 +99,14 @@ function dt_ListarFacturasIngreso(){
           GestionCompPago20();
           }
         },
+        {
+          text: 'Genera Excel ',
+          className: 'btn btn-sm btn-warning',
+          action: function ( e, dt, node, config ) {
+          RelacionExcel();
+          }
+        },
+
         ],
         initComplete: function () {
           var btns = $('.dt-button');
@@ -145,7 +152,7 @@ function dt_ListarFacturasIngreso(){
       // },                  
 		"ajax":
 				{
-          url: 'ajax/facturaingreso.ajax.php?op=listar',
+          url: 'ajax/facturaingreso.ajax.php?op=listarFacturas',
           data: {"FechDev1": FechDev1,  "FechDev2": FechDev2},     
 					type : "POST",
 					dataType : "json",						
@@ -384,18 +391,18 @@ subtotalcp=impuestocp=otroscp=totalcp=0;
 }
 
 /*======================================================================*/
-//ENVIAR FORMULARIO PARA GUARDAR DATOS DE FACTURA
+//ENVIAR FORMULARIO PARA GUARDAR DATOS DE COMPLEMENTO DE PAGO
 /*======================================================================*/
 $("body").on("submit", "#formularioComplementoPago", function( event ) {	
   event.preventDefault();
   event.stopPropagation();
   let formData = new FormData($("#formularioComplementoPago")[0]);   
-   for (let pair of formData.entries()){
-     console.table(pair[0]+ ', ' + pair[1]);
-   } 
+  //  for (let pair of formData.entries()){
+  //    console.table(pair[0]+ ', ' + pair[1]);
+  //  } 
 
    axios({ 
-    method  : 'post', 
+    method  : 'POST', 
     url : 'ajax/facturaingreso.ajax.php?op=GuardarREP', 
     data : formData, 
   }) 
@@ -513,13 +520,14 @@ async function UltimoNumIdFactura(){
   let respFolio=0;
   let response = await fetch("ajax/facturaingreso.ajax.php?op=obtenerUltimoNumero");
   let result = await response.json();
-  //console.log(result.id);
+  console.log(result.id);
   if(result.id===null){
     $("#numidfactura").val(1);
   }else{
     respId=parseInt(result.id)+1;
     $("#numidfactura").val(respId);
   }
+  console.log(result.folio);
   if(result.folio===null){
     $("#nvofolio").val(1);
   }else{
@@ -789,16 +797,16 @@ function addProductofactura(...argsProductos){
 
     <button type="button" class="btn btn-sm text-info px-0 py-1 m-0" onclick="duplicarconcepto(${argsProductos[0]}, ${argsProductos[1]}, '${argsProductos[4]}')" title="Duplicar concepto"><i class="fa fa-clone" aria-hidden="true"></i></button>
 
-    <button type="button" class="btn btn-sm text-warning px-0 py-1 m-0" onclick="editarConcepto(${renglonesfacturar}, ${argsProductos[0]}, ${argsProductos[1]}, '${argsProductos[4]}', ${argsProductos[5]})" title="Editar concepto"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+    <button type="button" class="btn btn-sm text-warning px-0 py-0 m-0" onclick="editarConcepto(${renglonesfacturar}, ${argsProductos[0]}, ${argsProductos[1]}, '${argsProductos[4]}', ${argsProductos[5]})" title="Editar concepto"><i class="fa fa-pencil" aria-hidden="true"></i></button>
     <input type="hidden" name="claveunidad[]" value="${argsProductos[2]}-${argsProductos[3]}"
     </td>
 
-    <td class='text-center'>${renglonesfacturar} <input type="hidden" name="objetodeimpuesto[]" value="${argsProductos[7]}" </td>
+    <td class='text-center'>${renglonesfacturar} <input type="hidden" name="objetodeimpuesto[]" value="${argsProductos[7]}"</td>
     <td class='text-center'>${argsProductos[0]} <input type="hidden" name="idproducto[]" value="${argsProductos[0]}" </td>
     <td class='text-left'><input class="form-control form-control-sm" type="text" name="descripcion[]" value="${argsProductos[4]}"</td>  
     <td class='text-center'>${argsProductos[1]} <input type="hidden" name="cantidad[]" value="${argsProductos[1]}"</td>
     <td class='text-right'>${argsProductos[5]} <input type="hidden" name="preciounitario[]" value="${argsProductos[5]}"</td>
-    <td class='text-right'>${argsProductos[6]} <input type="hidden" name="importe[]" value="${argsProductos[6]}"</td>
+    <td class='text-right'>${parseFloat(argsProductos[6]).toFixed(2)} <input type="hidden" name="importe[]" value="${argsProductos[6]}"</td>
     </tr>
   `;
     cantidadfacturar+=argsProductos[1];
@@ -820,7 +828,7 @@ function editarConcepto(renglon, cve, canti, producto, preciounit){
 }
 
 /*==================================================================
-ADICIONA PRODUCTOS AL TBODY
+ACTUALIZA REGISTRO AL TBODY
 ==================================================================*/
 function updProductofactura(...argsProductos){
   contenido=document.querySelector('#tabladedetalles');
@@ -1059,7 +1067,10 @@ function getIdFactura(elem){
       }          
     }) 
 
-    .catch((err) => {throw err}); 
+    .catch((err) => {
+      $('#container').waitMe("hide");
+      throw err
+    }); 
   
   })();  //fin del async
 
@@ -1221,15 +1232,15 @@ function abrirDatatable(){
       },    
       "bAutoWidth": false,
       "columnDefs": [
-        { width: "10px", targets: 0 },    //id
+        { width: "1px", targets: 0 },    //id
         { width: "1px", targets: 1 },    //folio
         { width: "45px", targets: 2 },   //fecha
-        { width: "85px", targets: 3 },   //fecha timbrado
-        { width: "85px", targets: 4 },   //fecha pago
-        { width: "30px", targets: 5 },    //rfc emisor
-        { width: "30px", targets: 6 },    //rfc receptor
-        { width: "30px", "className": "dt-right", "targets": [7], render: $.fn.dataTable.render.number( ',','.',2,'$') },    //total pagado
-        { width: "65px", "className": "dt-center", "targets": [8] }    //acciones
+        { width: "90px", targets: 3 },   //fecha timbrado
+        { width: "88px", targets: 4 },   //fecha pago
+        { width: "27px", targets: 5 },    //rfc emisor
+        { width: "27px", targets: 6 },    //rfc receptor
+        { width: "28px", "className": "dt-right", "targets": [7], render: $.fn.dataTable.render.number( ',','.',2,'$') },    //total pagado
+        { width: "75px", "className": "dt-center", "targets": [8] }    //acciones
       ],
       "ajax":
           {
@@ -1306,6 +1317,54 @@ function TimbrarCompPago20(elem){
 
 }
 
+/****************************************************************************** */
+//   FUNCIONES PARA EL CALCULO DEL COMPLEMENTO DE PAGO
+/****************************************************************************** */
+function RelacionExcel(){
+  ids=[];
+   // Iterate over all selected checkboxes
+   $.each(tblFacturaIngreso.$('input[type="checkbox"]'), function(index, rowId){
+     if(this.checked && parseInt(rowId.value)>0){
+       ids.push(parseInt(rowId.value));
+     }
+   });
+ 
+     if(ids.length==0){
+       return
+     }
+
+     (async () => {   
+       await axios.get('extensiones/vendor/relaciondefacturas.php', {
+         params: {
+           ids: ids,
+         }
+       })
+       .then((res)=>{ 
+          //console.log(res.data.mensaje,res.data.response );
+          if(res.data.response=='ok'){
+            /** CREA UNA ETIQUETA PARA DESCARGAR ARCHIVO **/
+            let $a = $("<a>");
+            $a.attr("href",res.data.file);
+            $("body").append($a);
+            $a.attr("download",res.data.namefile);
+            $a[0].click();
+            $a.remove();
+          }else{
+            swal({
+              title: `${res.data.mensaje}!!`,
+              text: `${res.data.response}!!`,
+              icon: "error",
+              buttons: false,
+              timer: 4000
+            })  //fin swal
+          }
+       }) 
+   
+       .catch((err) => {throw err}); 
+     
+     })();  //fin del async  
+   
+ }
 /**************************************************************** */
 //AL ABRIR EL MODAL TRAER EL ULTIMO NUMERO
 $('#modalCrearFactura').on('show.bs.modal', function (event) {
@@ -1317,7 +1376,6 @@ $('#modalCrearFactura').on('show.bs.modal', function (event) {
 /**************************************************************** */
 /*================ AL SALIR DEL MODAL RESETEAR FORMULARIO ==================*/
 $("#modalCrearFactura").on('hidden.bs.modal', ()=> {
-  //$("#agregaProdFactura").addClass("d-none");
   $('#formularioFactura')[0].reset();                //resetea el formulario
   $("#nvacantidad").val(0);                   //inicializa campo existencia
   $("#nvoFormaPago").val(0);                   //inicializa campo
@@ -1326,7 +1384,9 @@ $("#modalCrearFactura").on('hidden.bs.modal', ()=> {
   $("#tabladedetalles").empty();                   //vacia tbody
   $('#cveprodfactura').val(null).trigger('change');      //inicializa el select de productos
   arrayProductos["length"]=0;                      //inicializa array
+  sessionStorage.clear();   // Eliminar todas las claves de sesiones
   $("#renglonentradas, #totalitems, #subtotal, #impuesto, #total").html("");
+  renglonesfacturar=cantidadfacturar=cantidadimporte=sumasubtotal=sumatotal=0;
 });
 
 /*=============================================================*/

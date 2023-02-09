@@ -397,7 +397,7 @@ static Public function mdlTraerIdOs($tabla, $item, $valor){
 /************************************************************************************* */
 
 /*=============================================
-	REGISTRO ORDEN DE SERVICIO
+GUARDAR CUANDO SE AGREGA OS AL GRUPO PARA PAGO
 =============================================*/
 static public function mdlGuardarAgregaOS($tabla, $idregos, $fechaagrega, $nvaobservaos, $ultusuario){
 	

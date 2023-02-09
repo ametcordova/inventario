@@ -7,10 +7,10 @@ class ControladorAlmacen{
 	REPORTE DE ENTRADAS
 	============================================*/
 
-	static public function ctrMostrarAlmacen($tabla, $item, $valor){
+	static public function ctrMostrarAlmacen($tabla, $item, $valor, $estado=null){
 
 
-		$respuesta = ModeloAlmacen::MdlMostrarAlmacen($tabla, $item, $valor);
+		$respuesta = ModeloAlmacen::MdlMostrarAlmacen($tabla, $item, $valor, $estado);
 
 		return $respuesta;
 	

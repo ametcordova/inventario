@@ -262,7 +262,7 @@ $("#selProdEntAlm").change(function(event){
       return false;	
   }
 
-  //console.log(idprod, idalmacen, tbl_almacen)
+  //console.log(idprod, idalmacen, tbl_almacen);
   //$('#servicioSelecionado').html($("#selProdEntAlm option:selected").text());
   (async () => {   
     await axios.get('ajax/entradasalmacen.ajax.php?op=consultaExistenciaProd', {
@@ -274,15 +274,18 @@ $("#selProdEntAlm").change(function(event){
     .then((res)=>{ 
       if(res.status==200) {
         //console.log(res.data)
-        if(res.data==false){
+        if(res.data===false){
+          //$('#selProdEntAlm').val(null).trigger('change');
           $("#cantExistenciaAlmacen").val(0);
           $("#unidaddemedida").val('');
+          //codigointerno=res.data.codigointerno;
+          codigointerno='';
+
         }else{
+          codigointerno=res.data.codigointerno;
           $("#cantExistenciaAlmacen").val(res.data.cant);
           $("#unidaddemedida").val(res.data.medida);
           udeMedida=res.data.medida;
-          //codigosku=res.data.sku;
-          codigointerno=res.data.codigointerno;
         }
       }          
     }) 
@@ -309,18 +312,19 @@ $("#agregaEntradaProd").click(function(event){
       if(isNaN(idProducto) || isNaN(cantEntrada) || cantEntrada<1 ){
         return true;
       }  
-    
-    //SEPARA EL CODIGO DEL PROD. SELECCIONADO
-    codigosku= producto.substr(0, producto.indexOf('-'));
-    codigosku=codigosku.trim();
-    codigointerno=codigointerno.trim();
-      
+
     //SEPARA LA DESCRIPCION DEL PROD. SELECCIONADO        
     let descripcion= producto.substr(producto.lastIndexOf("-") + 1);
     descripcion.trim();
-         
-    //console.log("prod:",idProducto, "cant:",cantEntrada, "medida:",udeMedida, "codInt:",codigointerno, "descrip:",descripcion, 'codigo SKU:',codigosku);
-    
+      
+    //SEPARA EL CODIGO DEL PROD. SELECCIONADO
+    codigosku= producto.substr(0, producto.indexOf('-'));
+    codigosku=codigosku.trim();
+
+    //console.log("prod:",producto, "cant:",cantEntrada, "medida:",udeMedida, "codInt:",codigointerno, "descrip:",descripcion, 'codigo SKU:',codigosku);
+
+    codigointerno=codigointerno.trim();
+      
     //CHECA QUE PRODUCTO NO SE HAYA CAPTURADO
     let encontrado=arrayProductos.includes(idProducto)
       //console.log("encontrado:", encontrado)

@@ -85,7 +85,7 @@ class ControladorAlmacenes{
 
 		}else{
 				echo'<script>
-				console.log("No entra")
+				console.log("entra aqui")
 			  	</script>';			
 		}
 			
@@ -96,11 +96,11 @@ class ControladorAlmacenes{
 	MOSTRAR ALMACENES
 	=============================================*/
 
-	static public function ctrMostrarAlmacenes($item, $valor){
+	static public function ctrMostrarAlmacenes($item, $valor, $estado=null){
 	
 		$tabla = "almacenes";
 
-		$respuesta = ModeloAlmacenes::mdlMostrarAlmacenes($tabla, $item, $valor);
+		$respuesta = ModeloAlmacenes::mdlMostrarAlmacenes($tabla, $item, $valor, $estado);
 
 		return $respuesta;
 
@@ -124,13 +124,14 @@ class ControladorAlmacenes{
 			   	$tabla = "almacenes";
 
 				$vienede=isset($_POST["scriptSource"])? $_POST["scriptSource"]:"crear-almacen";    //SI VIENE DE CREAR-VENTA O DE CLIENTES
-                
-			   	$datos = array("id"=>$_POST["idAlmacen"],
-							   "ultusuario"=>$_POST["idDeUsuario"],
-					           "ubicacion"=>strtoupper($_POST["editarUbicacion"]),
-							   "responsable"=>strtoupper($_POST["editarResponsable"]),
-					           "email"=>$_POST["editarEmail"],
-					           "telefono"=>$_POST["editarTelefono"]);
+				
+			   	$datos = array("id"				=>$_POST["idAlmacen"],
+							   "ultusuario"		=>$_POST["idDeUsuario"],
+					           "ubicacion"		=>strtoupper($_POST["editarUbicacion"]),
+							   "responsable"	=>strtoupper($_POST["editarResponsable"]),
+					           "email"			=>$_POST["editarEmail"],
+					           "telefono"		=>$_POST["editarTelefono"],
+					           "estado"			=>$_POST["editStatusAlmacen"]);
 
 			   	$respuesta = ModeloAlmacenes::mdlEditarAlmacen($tabla, $datos);
 				
@@ -140,13 +141,12 @@ class ControladorAlmacenes{
 					var varjs="'.$vienede.'";		//convierte variable PHP a JS
 					swal({
 						  icon: "success",
-						  text: "El cliente ha sido cambiado correctamente",
-						  button: "Cerrar"
+						  text: "Almacen ha sido cambiado correctamente",
+						  button: "Cerrar",
+						  timer: 1500
 						  }).then((result)=>{
 									if (result) {
-
-										window.location = varjs;
-
+										$("#activarDTStore").DataTable().ajax.reload(null, false);
 									}
 								})
 
@@ -160,13 +160,11 @@ class ControladorAlmacenes{
 
 					swal({
 						  icon: "error",
-						  text: "¡El cliente no puede ir vacío o llevar caracteres especiales!",
+						  text: "¡Los datos no puede ir vacío o llevar caracteres especiales!",
 						  button: "Cerrar"
 						  }).then(function(result){
 							if (result) {
-
-								window.location = varjs;
-
+								$("#activarDTStore").DataTable().ajax.reload(null, false);
 							}
 						})
 
@@ -216,5 +214,5 @@ class ControladorAlmacenes{
 
 	}    
     
-} //fin de la clase
+} //fin de la clase  //window.location = varjs;
 

@@ -149,7 +149,7 @@ function verURL(){
     return $myurl." - IP: ".$ip;
 }
 
-/**
+/*
 200 OK
 201 Created
 300 Multiple Choices
@@ -219,6 +219,44 @@ function json_output($json) {
   exit();
 }
 
+function after ($thisa, $inthat){
+        if (!is_bool(strpos($inthat, $thisa)))
+        return substr($inthat, strpos($inthat,$thisa)+strlen($thisa));
+};
+
+    function after_last ($thisa, $inthat)
+    {
+        if (!is_bool(strrevpos($inthat, $thisa)))
+        return substr($inthat, strrevpos($inthat, $thisa)+strlen($thisa));
+    };
+
+    function before ($thisa, $inthat)
+    {
+        return substr($inthat, 0, strpos($inthat, $thisa));
+    };
+
+    function before_last ($thisa, $inthat)
+    {
+        return substr($inthat, 0, strrevpos($inthat, $thisa));
+    };
+
+    function between ($thisa, $that, $inthat)
+    {
+        return before ($that, after($thisa, $inthat));
+    };
+
+    function between_last ($thisa, $that, $inthat)
+    {
+     return after_last($thisa, before_last($that, $inthat));
+    };
+
+// use strrevpos function in case your php version does not include it
+function strrevpos($instr, $needle)
+{
+    $rev_pos = strpos (strrev($instr), strrev($needle));
+    if ($rev_pos===false) return false;
+    else return strlen($instr) - $rev_pos - strlen($needle);
+};
 
 // SELECT ctah.`nombrecuentahab`,ctah.`id_destino`, dest.nombre, ctah.`numerotarjeta`,ctah.`usodeposito`,ctah.`fechapago`, EXTRACT(DAY FROM ctah.fechapago) AS dia, EXTRACT(DAY FROM CURDATE()) as ahora 
 // FROM `cuentahabientes` ctah

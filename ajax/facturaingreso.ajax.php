@@ -9,14 +9,15 @@ require_once "../controladores/facturaingreso.controlador.php";
 require_once "../modelos/facturaingreso.modelo.php";
 require_once "../controladores/permisos.controlador.php";
 require_once "../modelos/permisos.modelo.php";
+require_once "../funciones/timbrarfactura.php";
 require_once "../funciones/generarrep20.php";
 require_once "../funciones/timbrarrep20.php";
 require_once '../funciones/funciones.php';
-include_once 'downloadxml.php';
+//include_once 'downloadxml.php';
 
 switch ($_GET["op"]){
 
-     case 'listar':
+     case 'listarFacturas':
 
 		if(isset($_POST["FechDev1"])){
 			$fechadev1=$_POST["FechDev1"];	
@@ -42,35 +43,31 @@ switch ($_GET["op"]){
   			echo '{"data": []}';           //arreglar, checar como va
 		  	return;
   		}    
-        $ruta='"/salida/"';
+
         foreach($listar as $key => $value){
+
             $fechaelaboracion = date('d-m-Y', strtotime($value["fechaelaboracion"]));
             $importeFact=number_format($value['totalfactura'], 2, '.',',');
             $serie=is_null($value["serie"])?'':trim($value["serie"]);
             $folio=$value["folio"];
             $rfcemisor=$value["rfcemisor"];
             $file=$rfcemisor.'-'.$serie.$folio.'.xml';
-            $numcomppago="<td><button class='btn btn-sm btn-warning px-1 py-1' data-numrep='".trim($value['numcomppago'])."' title='Comp. de Pago timbrada'>".trim($value['numcomppago'])."</button></td>";
-            //$numcomppago=trim($value['numcomppago']);
+            $numcomppago=trim($value['numcomppago'])==''?"<td><button class='btn btn-sm btn-default px-1 py-1' title='Sin Recibo de Pago'>SRP</button></td>":"<td><button class='btn btn-sm btn-warning px-1 py-1' data-numrep='".trim($value['numcomppago'])."' title='Comp. de Pago timbrada'>".trim($value['numcomppago'])."</button></td>";
             
-            $status="Timbrado";
-            //if($folio%2==0){        //si ya tiene complemento de pago
-                //$chek="<input type='checkbox' name='ids[]' value='".$value["id"]."'>";
-            // }else{
-            //     $chek="<input type='checkbox' name='ids[]' value='".$value["id"]."' disabled>";
-            // }
+            $cheka=true;
 
-            if($value["uuid"]!=""){
+            if($value["uuid"]!=""){     //Factura Timbrada
                 if($value["fechacancelado"]==''){
                     $boton0 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-dark px-1 py-1' title='Factura timbrada'><i class='fa fa-bell fa-fw'></i> </button></td> ":"";
-                    $chek="<input type='checkbox' name='ids[]' value='".$value["id"]."'>";
                 }else{
                     $boton0 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-dark px-1 py-1 disabled bg-danger text-white' title='Factura cancelada'><i class='fa fa-bell fa-fw'></i> </button></td> ":"";
-                    $chek="<input type='checkbox' value=''>";
+                    $cheka=false;
                 }
-
-                //$boton1 =getAccess($acceso, ACCESS_EDIT)?$numcomppago:"";
-
+                
+                if($value["numcomppago"]!=""){  //Si ya tiene complemento de pago
+                    $cheka=false;
+                }
+                
                 $boton3 =getAccess($acceso, ACCESS_PRINTER)?"<a href='vistas/modulos/download.php?filename=$file&ruta=1&mime=xml' title='Descargar XML' class='btn btn-sm btn-info px-1 py-1'><i class='fa fa-file-code-o'></i></a> ":"";
                 $boton4 ='';
                 $boton5 =getAccess($acceso, ACCESS_DELETE)?"<td><button class='btn btn-danger btn-sm px-1 py-1 btnCancelFact' data-idfact='".$value['id']."' data-rfcemisor='".$value['rfcemisor']."' data-rfcreceptor='".$value['rfcreceptor']."' data-uuid='".$value['uuid']."' data-importe='".$value['totalfactura']."' data-fechatimbrado='".$value['fechatimbrado']."' data-fechacancelado='".$value['fechacancelado']."' title='Cancelar Factura'><i class='fa fa-window-close'></i></button></td> ":"";
@@ -86,7 +83,8 @@ switch ($_GET["op"]){
 
             };
 
-            //$boton1 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-default px-1 py-1' title='Comp. de Pago timbrada'>SR</button></td> ":"";
+            $chek=$cheka?"<input type='checkbox' name='ids[]' value='".$value["id"]."'>":$chek="<input type='checkbox' value='' disabled>";
+
             $boton1 =getAccess($acceso, ACCESS_EDIT)?$numcomppago:"";
 
             $boton2 =getAccess($acceso, ACCESS_PRINTER)?"<td><button class='btn btn-success btn-sm px-1 py-1 btnPrintPdf' data-id='".$value['id']."' data-folio='".$value['folio']."' title='Generar y descargar PDF '><i class='fa fa-file-pdf-o'></i></button></td> ":"";
@@ -101,6 +99,7 @@ switch ($_GET["op"]){
                 $value["rfcemisor"],
                 $value["fechaelaboracion"],
                 $value["fechatimbrado"],
+                substr($value["uuid"],-12),
                 $value["nombrereceptor"],
                 $value["idtipocomprobante"],
                 $importeFact,
@@ -120,7 +119,7 @@ switch ($_GET["op"]){
 
     case 'obtenerUltimoNumero':
         $tabla = "facturaingreso";
-        $campo=null;
+        $campo='folio';
         $respuesta = ControladorfacturaIngreso::ctrObtenerUltimoNumero($tabla, $campo);
 
         echo json_encode($respuesta);
@@ -236,7 +235,8 @@ switch ($_GET["op"]){
                         'numctapago' => '',
                         'cfdirelacionados' => NULL,
                         'conceptos' => $datos_json,
-                        'observaciones' => $_POST["nvaObserva"],        //validar
+                        'observaciones' => "",        //validar
+                        'condicionesdepago' => htmlspecialchars(trim($_POST["nvaCondicionesPago"]),ENT_QUOTES, 'UTF-8'),        //validar
                         'subtotal' => $totalPU,
                         'tasaimpuesto' =>$tasaimpuesto,
                         'impuestos' => $totalimpuesto,
@@ -261,7 +261,7 @@ switch ($_GET["op"]){
         }    
         break;
 /************************************************************************************************** */
-//                 PARA TIMBRAR FACTURAR
+//                 PARA TIMBRAR FACTURA
 /************************************************************************************************** */
         case 'TimbrarFact':
             $fechaactual=new DateTime("now");
@@ -291,7 +291,7 @@ switch ($_GET["op"]){
             $folio          = $_GET['datafolio'];
             $dataidempresa  = $_GET['dataidempresa'];
             $dataserie      = $_GET['dataserie'];
-            $datarfcemisor = $_GET['datarfcemisor'];
+            $datarfcemisor  = $_GET['datarfcemisor'];
             
             $respuesta = ClaseFacturar::GenerarJsonFactura($tabla, $campo, $valor);
 
@@ -309,9 +309,8 @@ switch ($_GET["op"]){
 
         break;
 /************************************************************************************************** */
-
         case 'downloadXML':
-            $folio          = $_GET['datafolio'];
+            $folio      = $_GET['datafolio'];
             $serie      = $_GET['dataserie'];
             $rfcemisor  = $_GET['datarfcemisor'];
     
@@ -322,12 +321,8 @@ switch ($_GET["op"]){
             $file=$rfcemisor.'-'.$serie.$folio;
             $ruta="'../../ajax/salida/'";
 
-            //echo '<a href="descarga.php?file=archivoEjemplo.abc">Descargar</a>';
-            echo "<a href='../vistas/modulos/download.php?filename=$file&ruta=$ruta&mime=xml'class'btn btn-sm btn-info' </a>";
-            //<a href="#" class="btn btn-success">¿Soy un botón o un enlace?</a>
+            echo "<a href='../vistas/modulos/download.php?filename=$file&ruta=$ruta&mime=xml' class'btn btn-sm btn-info' </a>";
 
-            //descargar($folio, $serie, $rfcemisor);
-            
             //echo json_encode();
 
         break;
@@ -367,8 +362,8 @@ switch ($_GET["op"]){
     break;
 /************************************************************************************************** */
 
-    case 'downloadXML':
-        $folio          = $_GET['datafolio'];
+    case 'downloadXMLRep':
+        $folio      = $_GET['datafolio'];
         $serie      = $_GET['dataserie'];
         $rfcemisor  = $_GET['datarfcemisor'];
 
@@ -502,13 +497,13 @@ switch ($_GET["op"]){
                 if(isset($_GET['dataid'])){  
     
                     $fechaactual=new DateTime("now");
-                    // $fecha = new DateTime($_GET['datafecha']);
-                    // $diff = $fecha->diff($fechaactual);
+                    $fecha = new DateTime($_GET['datafecha']);
+                    $diff = $fecha->diff($fechaactual);
                     
-                    // if($diff->d>0){
-                    //     json_output(json_build(403, null, 'Mas de 1 dia.'));
-                    //     exit;
-                    // }
+                     if($diff->d>0){
+                         json_output(json_build(403, null, 'Mas de 1 dia.'));
+                         exit;
+                     }
 
                     $tabla          = "complementodepago";
                     $campo          = "id";
@@ -566,17 +561,18 @@ case 'ListCompPago20':
       }    
 
     foreach($listar as $key => $value){
-        //$fechaelaboracion = date('Y-m-d', strtotime($value["fechaelaboracion"]));
+        $fechaelaboracion = date('Y-m-d', strtotime($value["fechaelaboracion"]));
+        $file=$value["rfcemisor"].'-'.$value["foliorep"].'.xml';
 
         if($value["fechatimbradorep"]!=""){
             $boton0 =getAccess($acceso, ACCESS_ADD)?"<td><button class='btn btn-sm btn-dark px-0 py-0' title='Factura Timbrada'><i class='fa fa-bell fa-fw'></i> </button></td> ":"";
 
-            $boton1 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-info px-1 py-0 ' data-upxml='".$value['id']."' title='Descargar XML' ><i class='fa fa-file-code-o'></i></button></td> ":"";
+            $boton1 =getAccess($acceso, ACCESS_PRINTER)?"<a href='vistas/modulos/download.php?filename=$file&ruta=2&mime=xml' title='Descargar XML' class='btn btn-sm btn-info px-1 py-0'><i class='fa fa-file-code-o'></i></a> ":"";
 
         }else{
             $boton0 =getAccess($acceso, ACCESS_ADD)?"<td><button class='btn btn-sm btn-danger px-0 py-0' onclick='TimbrarCompPago20(this)' data-id='".$value['id']."' data-folio='".$value['foliorep']."' data-rfcemisor='".$value['rfcemisor']."' title='Factura sin timbrar'><i class='fa fa-bell fa-fw'></i> </button></td> ":"";
 
-            $boton1 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-primary px-1 py-0' data-editar='".$value['id']."' title='Editar REP' ><i class='fa fa-file-edit'></i></button></td>":"";
+            $boton1 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-primary px-1 py-0 ' data-editar='".$value['id']."' title='Editar REP' ><i class='fa fa-file-edit'></i></button></td> ":"";
 
         }
     
@@ -589,8 +585,9 @@ case 'ListCompPago20':
         $data[]=array(
             $value["id"],
             $value["foliorep"],
-            $value["fechaelaboracion"],
+            $fechaelaboracion,
             $value["fechatimbradorep"],
+            $value["fechapago"],
             $value["rfcemisor"],
             $value["rfcreceptor"],
             $value["totalrecibo"],

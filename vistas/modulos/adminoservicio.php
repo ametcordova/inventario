@@ -96,7 +96,7 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
           <!--<div class="card-header"></div>-->
           <!-- /.card-header -->
           <div class="card-body pt-0">
-            <table class="table table-bordered table-hover compact table-striped table-sm " id="DatatableOS" cellspacing="0" style="width:100%;">
+            <table class="table table-bordered table-hover compact table-striped table-sm" id="DatatableOS" cellspacing="0" style="width:100%;">
               <thead class="thead-dark">
                 <tr style="height:10px !important; font-size:0.80em !important;">
                   <th style="width:1em;">#</th>
@@ -200,7 +200,8 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                       <?php
                       $item = null;
                       $valor = null;
-                      $almacenes = ControladorAlmacenes::ctrMostrarAlmacenes($item, $valor);
+                      $estado=1;
+                      $almacenes = ControladorAlmacenes::ctrMostrarAlmacenes($item, $valor, $estado);
                       foreach ($almacenes as $key => $value) {
                         echo '<option value="' . $value["id"] . '-' . $value["nombre"] . '">' . $value["nombre"] . '</option>';
                       }
@@ -304,7 +305,7 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
 
               <div class="row form-group col-md-12">
                 <div class="col-md-3">
-                  <label class="control-label"><i class="fa fa-refresh"></i> Modem Retirado:<span class="text-danger">*</span></label>
+                  <label class="control-label">Modem Retirado:<span class="text-danger">*</span></label>
                 </div>
                 <div class="d-block mb-2 col-xs-12 col-md-4 mb-lg-0">
                   <input type="text" class="form-control form-control-sm" name="modemretirado" id="modemretirado" placeholder="Marca y Mod." tabindex="15" title="Modem retirado">
@@ -472,11 +473,12 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                 <div class="form-group col-md-3">
                   <label for=""><i class="fa fa-hospital-o"></i> Almacen <span class="text-danger">*</span> </label>
                   <select class="form-control form-control-sm" name="editAlmacenOS" id="editAlmacenOS" tabindex="2" required>
-                  <option value="">Selecione Almacen....</option>
+                  <option value=0 selected>Seleccione Almacen...</option>
                     <?php
                     $item = null;
                     $valor = null;
-                    $almacenes = ControladorAlmacenes::ctrMostrarAlmacenes($item, $valor);
+                    $estado=1;
+                    $almacenes = ControladorAlmacenes::ctrMostrarAlmacenes($item, $valor, $estado);
                     foreach ($almacenes as $key => $value) {
                       echo '<option value="' . $value["id"].'">' . $value["nombre"] . '</option>';
                     }
@@ -690,4 +692,52 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
     </div> <!-- fin del modal-content -->
   </div>
 </div>  <!-- fin del modal -->
+
+<!-- ====================================================
+            MODAL AGREGAR Factura
+ ============================= =======================-->
+ <div class="modal fade" id="modalCheckOS" data-backdrop="static" data-keyboard="false" tabindex="-1">
+  <div class="modal-dialog">
+   
+    <div class="modal-content">
+    <!-- <form role="form" name="formularioCheckOS" id="formularioCheckOS" method="POST" action="../inventario/controladores/procesar.controlador.php" enctype="multipart/form-data" target="_blank"> -->
+    <form role="form" name="formularioCheckOS" id="formularioCheckOS" method="POST" enctype="multipart/form-data">
+      <!-- Modal Header -->
+      <div class="modal-header colorbackModal px-2 py-1">
+   
+            <h5 class="modal-title">Checar O.S.</h5>
+        
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      
+
+      <!-- Modal body -->
+      <div class="modal-body">
+           
+            <div class="input-group mb-1">
+                <label class="form-label" for="filexls">Subir Archivo de Excel a escanear: &nbsp</label>
+                <p class="help-block m-0 p-0">Peso máximo 2mb.</p>
+                <div class="input-group">
+                     <input type="file" class="form-control"  id="filexls" name="file" accept=".xls, .xlsx">
+                </div>
+             </div>
+
+      </div>    <!-- fin del modal-body -->
+
+      <!-- Modal footer -->
+      <div class="modal-footer colorbackModal px-2 py-1">
+       
+        <button type="button" class="btn btn-primary btn-sm float-left salirfrm" data-dismiss="modal" tabindex="15"><i class="fa fa-reply"></i> 
+        Salir
+        </button>
+        <button type="submit" class="btn btn-success btn-sm" name="submit" tabindex="14"><i class="fa fa-cog"></i> Procesar</button>
+         <!--<div class="spin">
+            <button type="button" class="btn btn-sm btn-warning"> Espere... <i class="fa fa-cog fa-pulse fa-1x fa-fw"></i></button>
+        </div>  -->
+      </div>
+      
+     </form>
+    </div> <!-- fin del modal-content -->
+  </div>
+</div>  
 <!-- ==================================================================================== -->

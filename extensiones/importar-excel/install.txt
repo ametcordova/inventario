@@ -1,0 +1,10 @@
+Pasos para la instalación:
+
+1.- Descomprimir el fichero ZIP
+2.- Crear una base de datos en PHPMyAdmin u otro gestor
+3.- Importar el fichero "b_importar_excel.sql" en la base de datos que se desea trabajar. Sin embargo, el archivo se encuentra en la carpeta "sql/b_importar_excel.sql"
+4.- Editar el Fichero "DBClass.php", en este archivo se tiene que colocar las credenciales de MySQL.
+5.- En la carpeta "Ejemplo" hay un fichero de excel para hacer pruebas.
+
+
+Es todo y a disfrutar del Script.

@@ -150,7 +150,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 				include_once "modulos/".$_GET["ruta"].".php";
 
 			}else{
-				include "modulos/404.php";
+				include "modulos/405.php";
 			}
 		}else{
 			include_once "modulos/inicio.php";

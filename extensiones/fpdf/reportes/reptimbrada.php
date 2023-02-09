@@ -379,7 +379,7 @@ ob_start(); // it starts buffering
             $conceptos_json=json_decode($resp['doctosrelacionados'],TRUE);		//decodifica los conceptos que vienen en datos JSON
             $iva=$resp['tasa']*100;
             $w = array(63, 6, 8, 9, 28, 10, 17, 17, 14, 24);
-            $alin=array("", "C", "C", "C", "C", "C", "L", "R", "R", "R");
+            $alin=array("", "C", "C", "C", "C", "C", "R", "R", "R", "R");
             foreach ($conceptos_json as $row):
                 $data = array($row["idDocumento"], $row["Serie"],$row["Folio"], 'MXN.','02-Obj.de Impuesto', '1', '$'.number_format($row["ImpSaldoAnt"],2, '.',','), '$'.number_format($row["ImpPagado"],2, '.',','), '$'.number_format($row["ImpSaldoInsoluto"],2, '.',','), $iva.'% - '.'$'.number_format($row["ImporteDR"],2, '.',','));
                 $num_headers = count($data);
@@ -402,6 +402,7 @@ if($y3>240){
     $pdf->AddPage();
 }
 // ------------------------------ ** SELLOS ** -----------------------------------------------------------
+if(isset($resp["codigoqr"])){
     $codeqr=$resp["codigoqr"];      //GUARDAMOS EN UNA VARIABLE EL CODIGO QR.
 
     $pdf->SetLineWidth(0.2);
@@ -451,6 +452,7 @@ if($y3>240){
         $pdf->SetFont('Arial', '', 6.5);
         $pdf->Ln(1);
     }
+
     // --------------------------- LINEA DE SEPARACION ----------------------------------------------
     $y1=$pdf->GetY();
     $pdf->SetLineWidth(0.5);
@@ -461,6 +463,12 @@ if($y3>240){
     $pdf->SetFont('Arial','B',10);
     $pdf->MultiCell(0,0,utf8_decode('Este documento es una representación impresa de un CFDI Versión 4.0'),0,'C',1);
     // --------------------------- LINEA DE SEPARACION ----------------------------------------------
+}else{
+    // --------------------------- IMPORTES TOTALES ------------------------------------------------------
+    $pdf->SetFont('Arial','B',10);
+    $pdf->MultiCell(0,0,utf8_decode('Este documento NO tiene validez fiscal.'),0,'C',1);
+    // --------------------------- LINEA DE SEPARACION ----------------------------------------------
+}    
     $pdf->Ln(3);
     $y1=$pdf->GetY();
     $pdf->Line(10,$y1,206,$y1);

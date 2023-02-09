@@ -70,16 +70,17 @@ $fechaHoy = date("Y-m-d");
           </button>
         <?php } ?>
         <!--<h2 class="card-title">Control de Usuarios</h2> -->
-        <div class="card-tools">
-          <button type="button" class="btn btn-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse">
+        <div class="card-tools p-0">
+        <button type="button" class="btn btn-sm btn-tool" title="Refresh" onclick="location.reload()">
+            <i class="fa fa-refresh"></i>
+          </button>
+          <button type="button" class="btn btn-sm btn-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse">
             <i class="fa fa-minus"></i></button>
-          <button type="button" class="btn btn-tool" data-widget="remove" data-toggle="tooltip" title="Remove">
+          <button type="button" class="btn btn-sm btn-tool" data-widget="remove" data-toggle="tooltip" title="Remove">
             <i class="fa fa-times"></i></button>
         </div>
       </div>
-      <div class="row">
-
-      </div>
+      <div class="row"> </div>
 
       <div class="card-body">
 
@@ -93,18 +94,18 @@ $fechaHoy = date("Y-m-d");
         <div class="card">
           <div class="card-body">
             <table class="table table-bordered table-hover compact table-sm table-striped dt-responsive" id="dt-salidasalmacen" cellspacing="0" width="100%">
-              <thead class="thead-dark" style="font-size:.8rem; height:1.4px">
+              <thead class="thead-dark" style="font-size:.85rem; height:1.4px">
                 <tr>
-                  <th style="width:9px;">#</th>
-                  <th style="width:90px;">Fecha</th>
+                  <th style="width:10px;">#</th>
+                  <th class="text-center" style="width:90px;">Fecha</th>
                   <th>Almacen</th>
                   <th>Técnico</th>
                   <th>Motivo</th>
-                  <th style="width:90px;">Usuario</th>
+                  <th style="width:90px;">User</th>
                   <th style="width:90px;">Acción</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody style="font-size:0.90em">
 
               </tbody>
             </table>
@@ -200,7 +201,8 @@ $fechaHoy = date("Y-m-d");
                   <?php
                   $item = null;
                   $valor = null;
-                  $almacenes = ControladorAlmacenes::ctrMostrarAlmacenes($item, $valor);
+                  $estado=1;
+                  $almacenes = ControladorAlmacenes::ctrMostrarAlmacenes($item, $valor, $estado);
                   foreach ($almacenes as $key => $value) {
                     echo '<option value="' . $value["id"] . '-' . $value["nombre"] . '">' . $value["nombre"] . '</option>';
                   }
@@ -507,5 +509,5 @@ $fechaHoy = date("Y-m-d");
                 FIN MODAL PARA CAPTURAR LAS SALIDAS DEL ALMACEN
 ==================================================================================== -->
 
-<script defer src="vistas/js/salidasalmacen.js?v=02122021"></script>
+<script defer src="vistas/js/salidasalmacen.js?v=02012023"></script>
 <script defer src="vistas/js/salidasalmacenedit.js?v=02122021"></script>

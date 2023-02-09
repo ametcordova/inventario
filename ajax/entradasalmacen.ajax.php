@@ -100,7 +100,8 @@ switch ($_GET["op"]){
     case 'consultaExistenciaProd':
 
         $tabla = trim(strtolower($_GET['almacen']));;
-        $campo = "id_producto";
+        //$campo = "id_producto";
+        $campo = "id";
         $valor = $_GET['idprod'] ;
 
         // echo "<pre>"; print_r($_GET['almacen']); echo "</pre>";

@@ -43,7 +43,8 @@ function init(){
   VARIABLE LOCAL STORAGE
   =============================================*/
   if(localStorage.getItem("captRangoFecha") != null){
-    $("#daterange-btnOS span").html(localStorage.getItem("captRangoFecha"));
+    //$("#daterange-btnOS span").html(localStorage.getItem("captRangoFecha"));
+    iniciarangodefecha()
   }else{
     iniciarangodefecha()
   }
@@ -128,6 +129,9 @@ function listarOServicios(){
         "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
         "sSortDescending": ": Activar para ordenar la columna de manera descendente"
       },
+      scrollY:        "460px",
+      scrollX:        true,
+      scrollCollapse: true,
       "pagingType": "full_numbers",
           dom: '<clear>Bfrtip',
           buttons: [
@@ -158,6 +162,13 @@ function listarOServicios(){
             action: function ( e, dt, node, config ) {
               printselec();
             }
+          },
+          {
+            text: 'Chek O.S.',
+            className: 'btn btn-sm btn-outline-info',
+            action: function ( e, dt, node, config ) {
+              checkOS();
+            }
           }        
           ],
           initComplete: function () {
@@ -166,7 +177,7 @@ function listarOServicios(){
             btns.addClass('btn btn-success btn-sm');
           },  
           "columnDefs": [
-            {"className": "dt-center", "targets": [1,3,4,6,7,8,9,10,11]},
+            {"className": "dt-center", "targets": [1,6,7,8,9,10,11]},
             //{"className": "dt-right", "targets": [3,4]}				//"_all" para todas las columnas
             ],    
             select: false,     //se puso a false para poder seleccionar varios filas. true=1 fila
@@ -605,7 +616,7 @@ $("body").on("submit", "#formularioAgregaOS", function( event ) {
       if (aceptado) {
           let formData = new FormData($("#formularioAgregaOS")[0]);
           formData.append("firma", firma);
-          //for (var pair of formData.entries()){console.log(pair[0]+ ', ' + pair[1]);}     
+          //for (var pair of formData.entries()){console.log(pair[0]+ ', ' + pair[1]);}
 
            axios({ 
              method  : 'post', 
@@ -624,7 +635,7 @@ $("body").on("submit", "#formularioAgregaOS", function( event ) {
               if(response.data!=200){
                 mensajeaxios=response.data
                 tipoerror=3;
-                tiempo=3;
+                tiempo=2.5;
               }
               $('#DatatableOS').DataTable().ajax.reload(null, false);
               $('#modalAgregarOS').modal('hide')
@@ -852,6 +863,50 @@ $("body").on("submit", "#formularioEditarOS", function( event ) {
   
    });
 
+/*======================================================================*/
+function checkOS(){
+  $('#modalCheckOS').modal('show')
+}
+/*======================================================================*/
+//ENVIAR FORMULARIO PARA GUARDAR DATOS DE ORDEN DE SERVICIO
+/*======================================================================*/
+$("body").on("submit", "#formularioCheckOS", function(event) {	
+  event.preventDefault();
+  event.stopPropagation();	
+  xfilexls=$('#filexls').val() 
+  if(xfilexls.length == 0){;
+   return
+  }else{
+    //alert(xfilexls)
+    let formData = new FormData($("#formularioCheckOS")[0]);
+    for (var pair of formData.entries()){console.log(pair[0]+ ', ' + pair[1]);}
+
+    axios({ 
+      method  : 'post', 
+      url : 'controladores/procesar.controlador.php', 
+      data : formData, 
+    }) 
+    .then((res)=>{ 
+      if(res.status=="200") {
+        console.log(res);
+      }
+      console.log(res.data);
+    }) 
+    .catch((err) => {
+      alert("Algo salio mal!!!.")
+      throw err;
+    }); 
+    
+
+  }
+  
+});
+/*================ AL SALIR DEL MODAL DE AGREGAR OS, RESETEAR FORMULARIO==================*/
+$("#modalCheckOS").on('hidden.bs.modal', ()=> {
+  $("#formularioCheckOS")[0].reset();
+  //$("#tbodyOS").empty();
+});
+/*==============================================================================*/
 /*======================================================================*/
 
 /* *****************AL ABRIR EL MODAL DE AGREGAR************************************** */

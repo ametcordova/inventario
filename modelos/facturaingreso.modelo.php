@@ -44,7 +44,7 @@ static public function mdlObtenerUltimoNumero($tabla, $campo, $valor=null){
         if($valor!=null){
             $stmt=Conexion::conectar()->prepare("SELECT MAX($campo) AS folio FROM $tabla WHERE id=$valor");
         }else{
-            $stmt=Conexion::conectar()->prepare("SELECT MAX($campo) AS folio FROM $tabla");
+            $stmt=Conexion::conectar()->prepare("SELECT MAX(id) AS id, MAX($campo) AS folio FROM $tabla");
         }
 
         $stmt->execute();
@@ -140,7 +140,7 @@ static public function mdlCrearFacturaIngreso($tabla, $facturaingreso){
         //OBTENEMOS EL ÚLTIMO ID GUARDADO EN TABLA FACTURAINGRESO
         $campo='folio';
         $query=self::mdlObtenerUltimoNumero($tabla, $campo);
-            $folio=$query[0];
+            $folio=$query[1];
                 if(is_null($folio)){
                   $folio=1;
                 }else{
@@ -148,7 +148,7 @@ static public function mdlCrearFacturaIngreso($tabla, $facturaingreso){
                 }
         
         //GUARDAMOS EN TABLA FACTURAINGRESO
-        $stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(id_empresa, serie, folio, fechaelaboracion, rfcemisor, idregimenfiscalemisor, idtipocomprobante, idmoneda, idlugarexpedicion, idexportacion, idreceptor, idusocfdi, idformapago, idmetodopago, conceptos, observaciones, subtotal, tasaimpuesto, impuestos, totalfactura, ultusuario) VALUES (:id_empresa, :serie, :folio, :fechaelaboracion, :rfcemisor, :idregimenfiscalemisor, :idtipocomprobante, :idmoneda, :idlugarexpedicion, :idexportacion, :idreceptor, :idusocfdi, :idformapago, :idmetodopago, :conceptos, :observaciones, :subtotal,:tasaimpuesto, :impuestos, :totalfactura, :ultusuario)");
+        $stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(id_empresa, serie, folio, fechaelaboracion, rfcemisor, idregimenfiscalemisor, idtipocomprobante, idmoneda, idlugarexpedicion, idexportacion, idreceptor, idusocfdi, idformapago, idmetodopago, condicionesdepago, conceptos, observaciones, subtotal, tasaimpuesto, impuestos, totalfactura, saldoinsoluto, ultusuario) VALUES (:id_empresa, :serie, :folio, :fechaelaboracion, :rfcemisor, :idregimenfiscalemisor, :idtipocomprobante, :idmoneda, :idlugarexpedicion, :idexportacion, :idreceptor, :idusocfdi, :idformapago, :idmetodopago, :condicionesdepago, :conceptos, :observaciones, :subtotal,:tasaimpuesto, :impuestos, :totalfactura, :saldoinsoluto, :ultusuario)");
 
         $stmt->bindParam(":id_empresa", 	        $facturaingreso["id_empresa"], PDO::PARAM_INT);
         $stmt->bindParam(":serie", 	                $facturaingreso["serie"], PDO::PARAM_STR);
@@ -164,12 +164,14 @@ static public function mdlCrearFacturaIngreso($tabla, $facturaingreso){
         $stmt->bindParam(":idusocfdi", 	            $facturaingreso["idusocfdi"], PDO::PARAM_STR);
         $stmt->bindParam(":idformapago", 	        $facturaingreso["idformapago"], PDO::PARAM_STR);
         $stmt->bindParam(":idmetodopago", 	        $facturaingreso["idmetodopago"], PDO::PARAM_STR);
+        $stmt->bindParam(":condicionesdepago", 	    $facturaingreso["condicionesdepago"], PDO::PARAM_STR);
         $stmt->bindParam(":conceptos", 	            $facturaingreso["conceptos"], PDO::PARAM_STR);
         $stmt->bindParam(":observaciones",          $facturaingreso["observaciones"], PDO::PARAM_STR);
         $stmt->bindParam(":subtotal", 	            $facturaingreso["subtotal"], PDO::PARAM_STR);
         $stmt->bindParam(":tasaimpuesto", 	        $facturaingreso["tasaimpuesto"], PDO::PARAM_STR);
         $stmt->bindParam(":impuestos", 	            $facturaingreso["impuestos"], PDO::PARAM_STR);
         $stmt->bindParam(":totalfactura", 	        $facturaingreso["totalfactura"], PDO::PARAM_STR);
+        $stmt->bindParam(":saldoinsoluto", 	        $facturaingreso["totalfactura"], PDO::PARAM_STR);
         $stmt->bindParam(":ultusuario",             $facturaingreso["ultusuario"], PDO::PARAM_INT);
         $stmt->execute();
 
@@ -188,7 +190,7 @@ static public function mdlCrearFacturaIngreso($tabla, $facturaingreso){
 }
 
 /*=============================================
-	BUSCAR 
+	
 =============================================*/
 static public function mdlTimbrarFactura($tabla, $campo, $valor){
     try {    
@@ -217,7 +219,7 @@ static public function mdlObtenerDatosFactura($tabla, $campo, $valor, $tipo){
     try {    
         if($tipo=="I"){
             //tabla=facturaingreso
-            $stmt = Conexion::conectar()->prepare("SELECT tb1.*, emp.razonsocial AS nombreemisor, CONCAT(emp.direccion,' ',emp.colonia,' ',emp.num_ext) AS direccionemisor, emp.mailempresa, emp.telempresa, rf.descripcion AS regimenfiscalemisor, emp.numerocertificado, emp.codpostal, clie.nombre AS nombrereceptor, clie.rfc AS rfcreceptor, CONCAT(clie.direccion,' ',clie.num_int_ext,' ',clie.colonia,', ',clie.ciudad,', ',edo.nombreestado) AS direccionreceptor, clie.email, clie.telefono, clie.regimenfiscal, rfr.descripcion AS regimenfiscalreceptor, clie.codpostal AS codpostalreceptor, cfdi.id_cfdi, cfdi.descripcion AS usocfdi, fp.descripcionformapago, mp.descripcionmp, mn.id_moneda, mn.descripcion AS moneda, tc.descripcion AS descriptipocomprobante, ex.descripcion AS descripciontipoexporta
+            $stmt = Conexion::conectar()->prepare("SELECT tb1.*, emp.razonsocial AS nombreemisor, CONCAT(emp.direccion,' ',emp.num_ext,', ',emp.colonia,', ',emp.ciudad,', ',emp.estado) AS direccionemisor, emp.mailempresa, emp.telempresa, rf.descripcion AS regimenfiscalemisor, emp.numerocertificado, emp.codpostal, clie.nombre AS nombrereceptor, clie.rfc AS rfcreceptor, CONCAT(clie.direccion,' ',clie.num_int_ext,' ',clie.colonia,', ',clie.ciudad,', ',edo.nombreestado) AS direccionreceptor, clie.email, clie.telefono, clie.regimenfiscal, rfr.descripcion AS regimenfiscalreceptor, clie.codpostal AS codpostalreceptor, cfdi.id_cfdi, cfdi.descripcion AS usocfdi, fp.descripcionformapago, mp.descripcionmp, mn.id_moneda, mn.descripcion AS moneda, tc.descripcion AS descriptipocomprobante, ex.descripcion AS descripciontipoexporta
             FROM $tabla tb1
             INNER JOIN empresa emp ON emp.id=tb1.id_empresa
             INNER JOIN c_regimenfiscal rf ON rf.id=tb1.idregimenfiscalemisor
@@ -397,17 +399,17 @@ static public function mdlGetTasaImpuesto($tabla){
 =============================================*/
 static public function mdlGuardarRep($tabla, $complementodepago){
 	try {      
-        //OBTENEMOS EL ÚLTIMO ID GUARDADO EN TABLA FACTURAINGRESO
+        //OBTENEMOS EL ÚLTIMO ID GUARDADO EN TABLA 
         $campo='foliorep';
         $valor=$complementodepago["idrfcemisor"];
         $tablaempresa='empresa';
         $query=self::mdlObtenerUltimoNumero($tablaempresa, $campo, $valor);
             $folio=$query[0];
-                if(is_null($folio)){
-                  $folio=1;
-                  $foliorep='P'.$folio;
-                }else{
+                if(!is_null($folio)){
                     $folio++;
+                    $foliorep='P'.$folio;
+                }else{
+                    $folio=1;
                     $foliorep='P'.$folio;
                 }
         
@@ -447,7 +449,29 @@ static public function mdlGuardarRep($tabla, $complementodepago){
             $query->bindParam(":foliorep",  $folio, PDO::PARAM_INT);
             $query->execute();
 
+            if($query){
+                //ACTUALIZA FOLIO DE COMPLEMENTO DE PAGO EN TABLA FACTURAS. * CAMBIARLO A TIMBRARREP20.PHP PARA ACTUALIZAR AL TIMBRAR REP *
+                $status=1;
+                $datos_json=json_decode($complementodepago["doctosrelacionados"],TRUE);		//decodifica los datos JSON 
+
+                foreach($datos_json as $valor) {
+                    $serie=$valor['Serie'];
+                    $folio=$valor['Folio'];
+
+                    $query = Conexion::conectar()->prepare("UPDATE facturas SET numcomplemento=:numcomplemento, fechapagado=:fechapagado, status=:status WHERE serie=:serie AND numfact=:numfact");
+                    $query->bindParam(":serie",             $serie, PDO::PARAM_STR);
+                    $query->bindParam(":numfact",           $folio, PDO::PARAM_STR);
+                    $query->bindParam(":numcomplemento",    $foliorep, PDO::PARAM_STR);
+                    $query->bindParam(":fechapagado",       $complementodepago["fechapago"], PDO::PARAM_STR);
+                    $query->bindParam(":status",            $status, PDO::PARAM_INT);
+                    $query->execute();
+                }
+                
+            }
+
            return "ok";
+
+
         }else{
             return "error";
         }

@@ -157,7 +157,7 @@ $fechaHoy = date("Y-m-d");
               <div class="form-group col-md-3">
               <label><i class="fa fa-male"></i> Proveedor</label>
                   <select class="form-control form-control-sm" name="nvoProveedorEntrada" id="nvoProveedorEntrada" style="width: 100%;" tabindex="0" required>
-                  <option value="">Selecione Proveedor</option>
+                  <option value=0 selected>Selecione Proveedor...</option>
                   <?php
                     $item=null;
                     $valor=null;
@@ -214,7 +214,8 @@ $fechaHoy = date("Y-m-d");
                   <?php
                   $item = null;
                   $valor = null;
-                  $almacenes = ControladorAlmacenes::ctrMostrarAlmacenes($item, $valor);
+                  $estado=1;
+                  $almacenes = ControladorAlmacenes::ctrMostrarAlmacenes($item, $valor, $estado);
                   foreach ($almacenes as $key => $value) {
                     echo '<option value="' . $value["id"] . '-' . $value["nombre"] . '">' . $value["nombre"] . '</option>';
                   }
@@ -612,6 +613,6 @@ $fechaHoy = date("Y-m-d");
                 FIN MODAL PARA SUBIR ARCHIVOS DE ENTRADA CARSO AL ALMACEN 
 ==================================================================================== -->
 
-<script defer src="vistas/js/entradasalmacen.js?v=01102022"></script>
-<script defer src="vistas/js/entradasalmacenedit.js?v=01102022"></script>
+<script defer src="vistas/js/entradasalmacen.js?v=010220231551"></script>
+<script defer src="vistas/js/entradasalmacenedit.js?v=01012023"></script>
 <script defer src="extensiones/upload.js?v=05102020"></script>

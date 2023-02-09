@@ -86,10 +86,12 @@ switch ($_GET["op"]){
 		require_once "../modelos/almacen.modelo.php";
 
 			$campo = "id_producto";
+			//$campo = "id";
 			$valor =$_GET['idProducto'] ;
 			$tabla = trim($_GET['almacen']);
+			$estado=null;
 
-			$respuesta = ControladorAlmacen::ctrMostrarAlmacen($tabla, $campo, $valor);
+			$respuesta = ControladorAlmacen::ctrMostrarAlmacen($tabla, $campo, $valor, $estado);
 			
 			//var_dump($respuesta);
 			

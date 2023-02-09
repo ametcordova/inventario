@@ -17,7 +17,7 @@ const NUM_SEMANA= new Array(5,6,0,1,2,3,4)   //array con dias de la semana mexpe
 const NUM_DIAS= new Array(1,2,3,4,5,6,7)   //array de dias de la semana
 const EXTRAE=parseInt(NUM_SEMANA.indexOf(HOY));  
 endFecha=NUM_DIAS[EXTRAE];
-startFecha=NUM_SEMANA[EXTRAE]+NUM_DIAS[EXTRAE]+1;
+startFecha=NUM_SEMANA[EXTRAE]+NUM_DIAS[EXTRAE]+2;
 
 /**************************************************************/
 

@@ -201,11 +201,12 @@ $fechaHoy=date("Y-m-d");
               <div class="form-group col-md-3">
                   <label for="inputAlmacen"><i class="fa fa-hospital-o"></i> Almacen</label>
                   <select class="form-control form-control-sm" name="nvoAlmAjuste" id="nvoAlmAjuste" tabindex="4" required>
-                  <option value=0 selected>Seleccione Almacen</option>
+                  <option value=0 selected>Seleccione Almacen...</option>
                           <?php
                               $item=null;
                               $valor=null;
-                              $almacenes=ControladorAlmacenes::ctrMostrarAlmacenes($item, $valor);
+                              $estado=1;
+                              $almacenes=ControladorAlmacenes::ctrMostrarAlmacenes($item, $valor, $estado);
                               foreach($almacenes as $key=>$value){
                                 echo '<option value="'.$value["id"].'-'.$value["nombre"].'">'.$value["nombre"].'</option>';
                               }

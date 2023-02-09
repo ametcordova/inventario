@@ -87,14 +87,14 @@ class ModeloAlmacenes{
 /*=============================================
 	MOSTRAR ALMACENES
 =============================================*/
-static public function mdlMostrarAlmacenes($tabla, $item, $valor){
+static public function mdlMostrarAlmacenes($tabla, $item, $valor, $estado=null){
 
 	try{
 		if($item != null){
 
 			$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item = :$item");
 
-			$stmt -> bindParam(":".$item, $valor, PDO::PARAM_STR);
+			$stmt -> bindParam(":".$item, $valor, PDO::PARAM_INT);
 
 			$stmt -> execute();
 
@@ -102,8 +102,13 @@ static public function mdlMostrarAlmacenes($tabla, $item, $valor){
 
 		}else{
 
-			$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla");
-
+			if($estado!=null){
+				$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE estado=:estado");
+				$stmt -> bindParam(":estado", $estado, PDO::PARAM_INT);
+	
+			}else{
+				$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla");
+			}
 			$stmt -> execute();
 
 			return $stmt -> fetchAll();
@@ -124,13 +129,14 @@ static public function mdlMostrarAlmacenes($tabla, $item, $valor){
 static public function mdlEditarAlmacen($tabla, $datos){
 	try{
 
-		$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET ubicacion= :ubicacion, responsable= :responsable, email= :email, telefono= :telefono, ultusuario= :ultusuario WHERE id= :id");
+		$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET ubicacion=:ubicacion, responsable=:responsable, email=:email, telefono=:telefono, estado=:estado, ultusuario=:ultusuario WHERE id=:id");
 
 		$stmt->bindParam(":id", $datos["id"], PDO::PARAM_INT);
 		$stmt->bindParam(":ubicacion", $datos["ubicacion"], PDO::PARAM_STR);
 		$stmt->bindParam(":responsable", $datos["responsable"], PDO::PARAM_STR);
 		$stmt->bindParam(":email", $datos["email"], PDO::PARAM_STR);
 		$stmt->bindParam(":telefono", $datos["telefono"], PDO::PARAM_STR);
+		$stmt->bindParam(":estado", $datos["estado"], PDO::PARAM_INT);
 		$stmt->bindParam(":ultusuario", $datos["ultusuario"], PDO::PARAM_INT);
         
 		if($stmt->execute()){

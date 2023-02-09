@@ -8,9 +8,11 @@ ob_start(); // it starts buffering
     require_once "../../../controladores/facturaingreso.controlador.php";
     require_once "../../../modelos/facturaingreso.modelo.php";
     //require_once '../../../config/parametros.php';
+    require_once('../rotation.php');
     require_once('../fpdf.php');
 
-    class PDF extends FPDF{
+    //class PDF extends FPDF{
+    class PDF extends PDF_Rotate{
 
         
         // Cabecera de página
@@ -34,7 +36,12 @@ ob_start(); // it starts buffering
             // Movernos a la derecha
             //Cell(float w [, float h [, string txt [, mixed border [, int ln [, string align [, boolean fill [, mixed link]]]]]]])
             $this->Cell(122);    // w-ancho h-alto txt-texto 0,1 ó LTRB-border 0,1,2-Posicion actual L,C,R-Alineacion true,false-fondo
-            $this->Cell(30,4,utf8_decode('FACTURA No. '.$serfolfactura),0,0,'C');
+            if (function_exists('iconv'))
+            {
+                $this->Cell(30,4,iconv('UTF-8', 'ISO-8859-1','FACTURA No. '.$serfolfactura),0,0,'C');
+            }else{
+                $this->Cell(30,4,iconv('UTF-8', 'ISO-8859-1','FACTURA No. '.$serfolfactura),0,0,'C');
+            }         
             $this->Ln(4.5);
             $this->SetFont('Arial','B',10);
             $this->SetTextColor(0,0,0);
@@ -49,7 +56,7 @@ ob_start(); // it starts buffering
             $this->Cell(82);
             $x1=$this->GetX();
             $this->SetFont('Arial','B',10);
-            $this->Cell(0,6,utf8_decode('Fecha de expedición:'),0,0,1,false);
+            $this->Cell(0,6,iconv('UTF-8', 'ISO-8859-1','Fecha de expedición:'),0,0,1,false);
             $x2=$this->GetX();
             $this->Cell($x1-$x2+38);
             $this->SetFont('Arial','',10);
@@ -57,29 +64,29 @@ ob_start(); // it starts buffering
             $this->Ln(4);
             $this->Cell(82);
             $this->SetFont('Arial','B',10);
-            $this->Cell(0,6,utf8_decode('Fecha y hora de certificación:'),0,0,'L',false);
+            $this->Cell(0,6,iconv('UTF-8', 'ISO-8859-1','Fecha y hora de certificación:'),0,0,'L',false);
             $this->SetFont('Arial','',10);
             $this->Cell(-27,6,$fechatimbrado,0,0,'R',false);
             $this->Ln(4);
             $this->Cell(82);
             $this->SetFont('Arial','B',10);
-            $this->Cell(0,6,utf8_decode('Lugar de expedición:'),0,0,'L',false);
+            $this->Cell(0,6,iconv('UTF-8', 'ISO-8859-1','Lugar de expedición:'),0,0,'L',false);
             $this->SetFont('Arial','',10);
-            $this->Cell(-65,6,utf8_decode($idlugarexpedicion),0,0,'R',false);
+            $this->Cell(-65,6,iconv('UTF-8', 'ISO-8859-1',$idlugarexpedicion),0,0,'R',false);
             $this->Ln(4);
             $this->Cell(82);
             $this->SetFont('Arial','B',10);
-            $this->Cell(0,6,utf8_decode('Número de certificado: '),0,0,'L',false);
+            $this->Cell(0,6,iconv('UTF-8', 'ISO-8859-1','Número de certificado: '),0,0,'L',false);
             $this->SetFont('Arial','',10);
             $this->Cell(-33,6,$numerocertificado,0,0,'R',false);
             $this->Ln(4);
             $this->Cell(82);
             $this->SetFont('Arial','B',10);
-            $this->Cell(38,6,utf8_decode('Tipo de comprobante: '),0,0,1,false);
+            $this->Cell(38,6,iconv('UTF-8', 'ISO-8859-1','Tipo de comprobante: '),0,0,1,false);
             $this->SetFont('Arial','',10);
-            $this->Cell(30,6,$GLOBALS["idtipocomprobante"].' - '.utf8_decode($descriptipocomprobante),0,0,1,false);
+            $this->Cell(30,6,$GLOBALS["idtipocomprobante"].' - '.iconv('UTF-8', 'ISO-8859-1',$descriptipocomprobante),0,0,1,false);
             $this->SetFont('Arial','B',10);
-            $this->Cell(22,6,utf8_decode('Exportación: '),0,0,1,false);
+            $this->Cell(22,6,iconv('UTF-8', 'ISO-8859-1','Exportación: '),0,0,1,false);
             $this->SetFont('Arial','',10);
             $this->Cell(0,6, $idexportacion.' - '.$descripciontipoexporta,0,0,1,false);
             $this->Ln(6);
@@ -99,9 +106,22 @@ ob_start(); // it starts buffering
              $this->SetY(-15);  // Posición: a 1,5 cm del final
              $this->SetFont('Arial','I',8); // Arial italic 8
              $this->Cell(0,10,'Hoja '.$this->PageNo().' de {nb}',0,0,'C');  // Número de página
+
+              $uuid=$GLOBALS['uuid'];
+              if($uuid==""){
+                  $this->SetFont('Arial','',45);
+                  $this->SetTextColor(202, 183, 185);
+                  $this->RotatedText(20,205,'FACTURA SIN VALOR FISCAL',45);
+              }
+         }
+
+        function RotatedText($x, $y, $txt, $angle)
+        {
+            //Text rotated around its origin
+            $this->Rotate($angle,$x,$y);
+            $this->Text($x,$y,$txt);
+            $this->Rotate(0);
         }
-
-
     }       //fin de la clase Header y Footer
 
 
@@ -114,10 +134,9 @@ ob_start(); // it starts buffering
         $tabla="facturaingreso";
         $campo = "id";
         $codigo = $_GET["codigo"];
-        $tipo='I';
         // Quitamos los caracteres ilegales de la variable
         $valor = filter_var($codigo, FILTER_SANITIZE_NUMBER_INT);
-
+        $tipo='I';
         // Validamos la variable filtrada
         if(!filter_var($valor, FILTER_VALIDATE_INT)){
           return;
@@ -165,16 +184,16 @@ ob_start(); // it starts buffering
             $pdf->SetFont('Arial','B',9);
             $pdf->Cell(26,4,'Nombre: ',0,0,'L',true);
             $pdf->SetFont('Arial','',9);
-            $pdf->Cell(126,4,utf8_decode($resp['nombreemisor']),0,0,'L',true);
+            $pdf->Cell(126,4,iconv('UTF-8', 'ISO-8859-1',$resp['nombreemisor']),0,0,'L',true);
             $pdf->SetFont('Arial','B',9);
             $pdf->Cell(10,4,'RFC: ',0,0,'R',true);
             $pdf->SetFont('Arial','',9);
             $pdf->Cell(34,4,$resp['rfcemisor'],0,0,'L',true);
             $pdf->Ln();
             $pdf->SetFont('Arial','B',9);
-            $pdf->Cell(26,4,utf8_decode('Dirección: '),0,0,'L',true);
+            $pdf->Cell(26,4,iconv('UTF-8', 'ISO-8859-1','Dirección: '),0,0,'L',true);
             $pdf->SetFont('Arial','',9);
-            $pdf->Cell(170,4,utf8_decode($resp['direccionemisor']),0,0,'L',true);
+            $pdf->Cell(170,4,iconv('UTF-8', 'ISO-8859-1',$resp['direccionemisor']),0,0,'L',true);
             $pdf->Ln();
             $pdf->SetFont('Arial','B',9);
             $pdf->Cell(26,4,'e-mail: ',0,0,'L',true);
@@ -186,9 +205,9 @@ ob_start(); // it starts buffering
             $pdf->Cell(34,4,$resp['telempresa'],0,0,'L',true);
             $pdf->Ln();
             $pdf->SetFont('Arial','B',9);
-            $pdf->Cell(26,4,utf8_decode('Régimen Fiscal: '),0,0,'L',true);
+            $pdf->Cell(26,4,iconv('UTF-8', 'ISO-8859-1','Régimen Fiscal: '),0,0,'L',true);
             $pdf->SetFont('Arial','',9);
-            $pdf->Cell(126,4,$resp['idregimenfiscalemisor'].'-'.utf8_decode($resp['regimenfiscalemisor']),0,0,'L',true);
+            $pdf->Cell(126,4,$resp['idregimenfiscalemisor'].'-'.iconv('UTF-8', 'ISO-8859-1',$resp['regimenfiscalemisor']),0,0,'L',true);
             $pdf->SetFont('Arial','B',9);
             $pdf->Cell(10,4,'C.P.: ',0,0,'L',true);
             $pdf->SetFont('Arial','',9);
@@ -214,10 +233,10 @@ ob_start(); // it starts buffering
             $pdf->Cell(34,4,$resp['rfcreceptor'],0,0,'L',true);
             $pdf->Ln();
             $pdf->SetFont('Arial','B',9);
-            $pdf->Cell(26,4,utf8_decode('Dirección: '),0,0,'L',true);
+            $pdf->Cell(26,4,iconv('UTF-8', 'ISO-8859-1','Dirección: '),0,0,'L',true);
             $pdf->SetFont('Arial','',8.5);
             //$pdf->MultiCell(14, 5, '02', 'LTBR', 'C', 1);
-            $pdf->MultiCell(170,4,utf8_decode($resp['direccionreceptor']),0,'L',1);
+            $pdf->MultiCell(170,4,iconv('UTF-8', 'ISO-8859-1',$resp['direccionreceptor']),0,'L',1);
             $pdf->Ln(.2);
             $pdf->SetFont('Arial','B',9);
             $pdf->Cell(26,4,'e-mail: ',0,0,'L',true);
@@ -229,9 +248,9 @@ ob_start(); // it starts buffering
             $pdf->Cell(34,4,$resp['telefono'],0,0,'L',true);
             $pdf->Ln();
             $pdf->SetFont('Arial','B',9);
-            $pdf->Cell(26,4,utf8_decode('Régimen Fiscal: '),0,0,'L',true);
+            $pdf->Cell(26,4,iconv('UTF-8', 'ISO-8859-1','Régimen Fiscal: '),0,0,'L',true);
             $pdf->SetFont('Arial','',9);
-            $pdf->Cell(170,4,$resp['regimenfiscal'].' - '.utf8_decode($resp['regimenfiscalreceptor']),0,0,'L',true);
+            $pdf->Cell(170,4,$resp['regimenfiscal'].' - '.iconv('UTF-8', 'ISO-8859-1',$resp['regimenfiscalreceptor']),0,0,'L',true);
             $pdf->Ln();
             $pdf->SetFont('Arial','B',9);
             $pdf->Cell(26,4,'Uso CFDI: ',0,0,'L',true);
@@ -260,23 +279,25 @@ ob_start(); // it starts buffering
             $pdf->SetFont('Arial','B',9);
             $pdf->Cell(28,4,'Forma Pago: ',0,0,'L',true);
             $pdf->SetFont('Arial','',9);
-            $pdf->Cell(76,4,utf8_decode($resp['idformapago'].' - '.$resp['descripcionformapago']),0,0,'L',true);
+            $pdf->Cell(76,4,iconv('UTF-8', 'ISO-8859-1',$resp['idformapago'].' - '.$resp['descripcionformapago']),0,0,'L',true);
             $pdf->SetFont('Arial','B',9);
             $pdf->Cell(28,4,'Metodo Pago: ',0,0,'L',true);
             $pdf->SetFont('Arial','',9);
-            $pdf->Cell(64,4,utf8_decode($resp['idmetodopago'].' - '.$resp['descripcionmp']),0,0,'L',true);
+            $pdf->Cell(64,4,iconv('UTF-8', 'ISO-8859-1',$resp['idmetodopago'].' - '.$resp['descripcionmp']),0,0,'L',true);
             $pdf->Ln();
             $pdf->SetFont('Arial','B',9);
             $pdf->Cell(28,4,'Moneda: ',0,0,'L',true);
             $pdf->SetFont('Arial','',9);
-            $pdf->Cell(76,4,$resp['idmoneda'].' - '.$resp['id_moneda'].' - '.utf8_decode($resp['moneda']),0,0,'L',true);
+            $pdf->Cell(76,4,$resp['idmoneda'].' - '.$resp['id_moneda'].' - '.iconv('UTF-8', 'ISO-8859-1',$resp['moneda']),0,0,'L',true);
             $pdf->SetFont('Arial','B',9);
             $pdf->Cell(28,4,'Tipo de cambio: ',0,0,'L',true);
             $pdf->SetFont('Arial','',9);
             $pdf->Cell(64,4,'',0,0,'L',true);
             $pdf->Ln();
             $pdf->SetFont('Arial','B',8.5);
-            $pdf->Cell(28,4,'Condiciones Pago',0,0,'L',true);
+            $pdf->Cell(28,4,'Condiciones Pago: ',0,0,'L',true);
+            $pdf->SetFont('Arial','',9);
+            $pdf->Cell(76,4,iconv('UTF-8', 'ISO-8859-1',$resp['condicionesdepago']),0,0,'L',true);
             $pdf->SetFont('Arial','',9);
             $pdf->Cell(168,4,'',0,0,'L',true);
             $pdf->Ln(4);            
@@ -302,7 +323,7 @@ ob_start(); // it starts buffering
             $w = array(15, 32, 87, 14, 7, 20, 21);
             $num_headers = count($header);
             for($i = 0; $i < $num_headers; ++$i) {
-                $pdf->Cell($w[$i], 6, utf8_decode($header[$i]), 1, 0, 'C', 1);
+                $pdf->Cell($w[$i], 6, iconv('UTF-8', 'ISO-8859-1',$header[$i]), 1, 0, 'C', 1);
             };
             $pdf->SetDrawColor(0,0,0);
             $pdf->SetFillColor(255,255,255);
@@ -319,7 +340,7 @@ $sumasubtotal+=$row["Importe"];
 $x=$pdf->GetX();
 $y=$pdf->GetY();
 if($y2>0){
-    $y=$y2;
+    $y=$y2+.5;
     $pdf->SetY($y);
 }
     
@@ -335,29 +356,29 @@ $pdf->SetXY($x+15,$y);
 $pdf->MultiCell(32, 4, $row["ClaveUnidad"].'-'.$row["Unidad"],  $sinlinea, 'C', 1);
 
 $pdf->SetXY($x+47,$y);
-$pdf->MultiCell(87,3.5,utf8_decode($row["Descripcion"]), $sinlinea,'FJ',1);
+$pdf->MultiCell(87,3,iconv('UTF-8', 'ISO-8859-1',$row["Descripcion"]), $sinlinea,'FJ',1);
 
 $y2=$pdf->GetY();
 $pdf->SetXY($x+134,$y);
-$pdf->MultiCell(14, 5, $row["ObjetoImp"],  $sinlinea, 'C', 1);
+$pdf->MultiCell(14, 4, $row["ObjetoImp"],  $sinlinea, 'C', 1);
 
 $pdf->SetXY($x+148,$y);
-$pdf->MultiCell(7, 5, $row["Cantidad"],  $sinlinea, 'C', 1);
+$pdf->MultiCell(7, 4, $row["Cantidad"],  $sinlinea, 'C', 1);
 
 $pdf->SetXY($x+155,$y);
-$pdf->MultiCell(20,5, '$'.number_format($row["ValorUnitario"],4, '.',','),  $sinlinea, 0, 'R', 1);
+$pdf->MultiCell(20,4, '$'.number_format($row["ValorUnitario"],4, '.',','),  $sinlinea, 'R', 1);
 
 $pdf->SetXY($x+175,$y);
-$pdf->MultiCell(21,5, '$'.number_format($row["Importe"],2, '.',','),  $sinlinea, 0, 'R', 1);
+$pdf->MultiCell(21,4, '$'.number_format($row["Importe"],2, '.',','),  $sinlinea, 'R', 1);
 
-if ($row != end($conceptos_json)) $pdf->Ln(5.5);    //si no es el Ùltimo elemento del array, interlineado de 5.5
+if ($row != end($conceptos_json)) $pdf->Ln(5.8);    //si no es el Ùltimo elemento del array, interlineado de 5.5
 
 //break;
 endforeach;
 // ----------------------------------------FIN DE CONCEPTOS ---------------------------------------
 
 // --------------------------- LINEA DE SEPARACION ----------------------------------------------
-$pdf->Ln(6);
+$pdf->Ln(5.5);
 $y1=$pdf->GetY();
 $pdf->SetLineWidth(0.5);
 $pdf->SetDrawColor(0,0,0);
@@ -423,23 +444,23 @@ if($response){
     $y = $pdf->GetY();
     $pdf->SetXY($x-170,$y-2);
     $x = $pdf->GetX();
-    $pdf->MultiCell(0, 3.8, utf8_decode('Sello Digítal del CFDI: '),'LRT','FJ',1);
+    $pdf->MultiCell(0, 3.8, iconv('UTF-8', 'ISO-8859-1','Sello Digítal del CFDI: '),'LRT','FJ',1);
     $pdf->SetFont('Arial', '', 6);
     $pdf->SetX($x);
-    $pdf->MultiCell(0, 3.5, utf8_decode($response['sellodigitalcfdi']),'LRB','FJ',1);
+    $pdf->MultiCell(0, 3.5, iconv('UTF-8', 'ISO-8859-1',$response['sellodigitalcfdi']),'LRB','FJ',1);
     $pdf->Ln(1.7);
 
     $x = $pdf->GetX();
     $pdf->SetX($x+45.8);
     $pdf->SetFont('Arial', 'B', 6.5);
-    $pdf->MultiCell(0, 3.8, utf8_decode('Sello Digítal del SAT: '),'LRT','FJ',1);
+    $pdf->MultiCell(0, 3.8, iconv('UTF-8', 'ISO-8859-1','Sello Digítal del SAT: '),'LRT','FJ',1);
     $pdf->SetX($x+45.7);
     $pdf->SetFont('Arial', '', 6);
-    $pdf->MultiCell(0, 3.5, utf8_decode($response['sellodigitalsat']),'LRB','FJ',1);
+    $pdf->MultiCell(0, 3.5, iconv('UTF-8', 'ISO-8859-1',$response['sellodigitalsat']),'LRB','FJ',1);
     $pdf->Ln(2);
     if(IS_NULL($response['cadenaoriginalsat'])){
         $pdf->SetFont('Arial', 'B', 6.5);
-        $pdf->MultiCell(0, 3.5, utf8_decode('Cadena Original: '),'LRT','FJ',1);
+        $pdf->MultiCell(0, 3.5, iconv('UTF-8', 'ISO-8859-1','Cadena Original: '),'LRT','FJ',1);
         $pdf->SetX($x);
         $pdf->SetFont('Arial', '', 6);
         $pdf->MultiCell(0, 3.5, trim($response['cadenaoriginal']),'LRB','FJ',1);
@@ -447,7 +468,7 @@ if($response){
         $pdf->Ln(1);
     }else{
         $pdf->SetFont('Arial', 'B', 6.5);
-        $pdf->MultiCell(0, 3.5, utf8_decode('Cadena Original SAT: '),'LRT','FJ',1);
+        $pdf->MultiCell(0, 3.5, iconv('UTF-8', 'ISO-8859-1','Cadena Original SAT: '),'LRT','FJ',1);
         $pdf->SetX($x);
         $pdf->SetFont('Arial', '', 6);
         $pdf->MultiCell(0, 3.5, trim($response['cadenaoriginalsat']),'LRB','FJ',1);
@@ -462,7 +483,7 @@ if($response){
     $pdf->Ln(3);
     // --------------------------- IMPORTES TOTALES ------------------------------------------------------
     $pdf->SetFont('Arial','B',10);
-    $pdf->MultiCell(0,0,utf8_decode('Este documento es una representación impresa de un CFDI Versión 4.0'),0,'C',1);
+    $pdf->MultiCell(0,0,iconv('UTF-8', 'ISO-8859-1','Este documento es una representación impresa de un CFDI Versión 4.0'),0,'C',1);
     // --------------------------- LINEA DE SEPARACION ----------------------------------------------
     $pdf->Ln(3);
     $y1=$pdf->GetY();
