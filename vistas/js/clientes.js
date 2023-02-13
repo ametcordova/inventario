@@ -1,18 +1,18 @@
 $("#modalAgregarCliente, #modalEditarCliente").draggable({
       handle: ".modal-header"
 });
-const { fromEvent } = rxjs;
+//const { fromEvent } = rxjs;
 const { map} = rxjs.operators;
 const { ajax } = rxjs.ajax;
 
-/********************************************************* */
+/*********************CON JS************************************ */
 $(document).ready(function() {
   document.getElementById('nuevoRegFiscal').addEventListener('click', getRegFiscal);
-  //document.getElementById('nuevoFormaPago').addEventListener('click', formasdepago);
+  document.getElementById('editaRegFiscal').addEventListener('click', editRegFiscal);
 });
 
 function getRegFiscal(){
-  var $select = $('#nuevoRegFiscal');
+  let $select = $('#nuevoRegFiscal');
   fetch('config/catalogosat/c_RegimenFiscal.json')      //http://jsfiddle.net/MuGj7/
   .then((res) => res.json())
   .then((data) => {
@@ -22,7 +22,20 @@ function getRegFiscal(){
   })
 }
 /******************************************************** */
-
+function editRegFiscal(idregfiscal){
+  let $select = $('#editaRegFiscal');
+  fetch('config/catalogosat/c_RegimenFiscal.json')      //http://jsfiddle.net/MuGj7/
+  .then((res) => res.json())
+  .then((data) => {
+      $.each(data, function(i, val) {
+        if(data[i].id==idregfiscal){
+          $select.append('<option selected value='+data[i].id + '>' + data[i].id+'-'+data[i].descripcion + '</option>');
+        }else{
+          $select.append('<option value='+data[i].id + '>' + data[i].id+'-'+data[i].descripcion + '</option>');
+        }
+      });
+  })
+}
 /*********************CON RxJS************************************ */
 const catFormaPago = `config/catalogosat/c_FormaPago.json`;
 const users = ajax(catFormaPago);
@@ -34,22 +47,74 @@ click$.subscribe({
 });
 
 function formasdepago(){
-  const subscribe = users.subscribe(
+  users.subscribe(
     //res => console.log(res.response),
-    res => recorrerjson(res.response),
-    err => console.error(err),
-    complete => console.log("We have lift off"),
+    res => recorrerjson1(res.response),
+    err => console.error(err)
   );
 }
-
-function recorrerjson(data){
+/************************************************************ */
+function recorrerjson1(data){
     let $nuevaformapago = $('#nuevaFormaPago');
     $.each(data , function(i, val) {
       $nuevaformapago.append('<option value='+data[i].id + '>' + data[i].id+'-'+data[i].descripcion + '</option>');
     })
 }
 /************************************************************ */
+function editformapago(idformadepago){
+  let $editaformapago = $('#editaFormaPago');
+  fetch('config/catalogosat/c_FormaPago.json')      //http://jsfiddle.net/MuGj7/
+  .then((res) => res.json())
+  .then((data) => {
+    $.each(data , function(i, val) {
+      if(data[i].id==idformadepago){
+        $editaformapago.append('<option selected value='+data[i].id + '>' + data[i].id+'-'+data[i].descripcion + '</option>');
+      }else{
+        $editaformapago.append('<option value='+data[i].id + '>' + data[i].id+'-'+data[i].descripcion + '</option>');
+      }
+    });
+  })
+}
+/*********************CON RxJS************************************ */
+const catMetodoPago = `config/catalogosat/c_MetodoPago.json`;
+const metodopago = ajax(catMetodoPago);
+const searchMetodoPago = document.getElementById('nuevoMetodoPago');  
+// Search button observable
+const clickMP$ = fromEvent(searchMetodoPago,  'click');
+clickMP$.subscribe({
+  next: (e) => metodosdepago()
+});
 
+function metodosdepago(){
+  const subscribe = metodopago.subscribe(
+    //res => console.log(res.response),
+    res => recorrerjson2(res.response),
+    err => console.error(err),
+    complete => console.log("We have lift off"),
+  );
+}
+
+function recorrerjson2(data){
+    let $nuevometodopago = $('#nuevoMetodoPago');
+    $.each(data , function(i, val) {
+      $nuevometodopago.append('<option value='+data[i].id + '>' + data[i].id+'-'+data[i].descripcion + '</option>');
+    })
+}
+/************************************************************ */
+function editmetodopago(idmetodopago){
+  let $editametodopago = $('#editaMetodoPago');
+  fetch('config/catalogosat/c_MetodoPago.json')
+  .then((res) => res.json())
+  .then((data) => {
+    $.each(data , function(i, val) {
+      if(data[i].id==idmetodopago){
+        $editametodopago.append('<option selected value='+data[i].id + '>' + data[i].id+'-'+data[i].descripcion + '</option>');
+      }else{
+        $editametodopago.append('<option value='+data[i].id + '>' + data[i].id+'-'+data[i].descripcion + '</option>');
+      }
+    });
+  })
+}
 /*=============================================
 EDITAR CLIENTE
 =============================================*/
@@ -59,7 +124,6 @@ $(".DTClientes").on("click", ".btnEditarCliente", function(){
 
 	var datos = new FormData();
     datos.append("idCliente", idCliente);
-    console.log(datos);
     $.ajax({
 
       url:"ajax/clientes.ajax.php",
@@ -70,16 +134,30 @@ $(".DTClientes").on("click", ".btnEditarCliente", function(){
       processData: false,
       dataType:"json",
       success:function(respuesta, status){
-      console.log(respuesta, status);
-          var dateString = respuesta["fecha_nacimiento"];
-          console.log(moment(dateString).format('DD/MM/YYYY'));
-      	   $("#idCliente").val(respuesta["id"]);
-	       $("#EditarCliente").val(respuesta["nombre"]);
-	       $("#EditarDocumento").val(respuesta["rfc"]);
-	       $("#EditarEmail").val(respuesta["email"]);
-	       $("#EditarTelefono").val(respuesta["telefono"]);
-	       $("#EditarDireccion").val(respuesta["direccion"]);
-           $("#EditarFechaNacimiento").val(respuesta["fecha_nacimiento"]);
+      console.table(respuesta);
+        //var dateString = respuesta["fecha_nacimiento"];
+        //console.log(moment(dateString).format('DD/MM/YYYY'));
+      	$("#idCliente").val(respuesta["id"]);
+        $("input[name='editaCliente']").val(respuesta["nombre"]);
+        $("input[name='editaRFC']").val(respuesta["rfc"]);
+        $("input[name='editaCurp']").val(respuesta["curp"]);
+	      $("input[name='editaEmail']").val(respuesta["email"]);
+	      $("input[name='editaTelefono']").val(respuesta["telefono"]);
+	      $("input[name='editaDireccion']").val(respuesta["direccion"]);
+	      $("input[name='editaNumInt']").val(respuesta["num_int_ext"]);
+        $("input[name='editaColonia']").val(respuesta["colonia"]);
+        $("input[name='editaCP']").val(respuesta["codpostal"]);
+        $("input[name='editaCiudad']").val(respuesta["ciudad"]);
+        $("[name='editaEstado']").val(respuesta["estado"]);   //no funciona escibiendolo con INPUT
+        let idregfiscal=respuesta["regimenfiscal"];
+        let idformadepago=respuesta["formadepago"];
+        let idmetodopago=respuesta["metodopago"];
+        editRegFiscal(idregfiscal)
+        editformapago(idformadepago)
+        editmetodopago(idmetodopago)
+	      $("input[name='editaActividadEconomica']").val(respuesta["act_economica"]);
+        $("[name='editaUsoCFDI']").val(respuesta["id_usocfdi"]);
+	      $("input[name='editaFechaCreacion']").val(respuesta["fecha_creacion"]);
 	  }
 
   	})

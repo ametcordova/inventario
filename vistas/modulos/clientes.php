@@ -75,7 +75,7 @@ error_reporting(E_ALL^E_NOTICE);
           foreach ($clientes as $key => $value) {
             
             //$fechaNacimiento = date('d-m-Y', strtotime($value["fecha_nacimiento"]));
-            $fechaAlta = date('d-m-Y', strtotime($value["fecha"]));
+            $fechaAlta = date('d-m-Y', strtotime($value["fecha_creacion"]));
               
             echo '<tr>
 
@@ -137,7 +137,7 @@ error_reporting(E_ALL^E_NOTICE);
         <!-- /.card-body -->
         
         <div class="card-footer">
-          Footer
+
         </div>
         <!-- /.card-footer-->
       </div>
@@ -147,9 +147,9 @@ error_reporting(E_ALL^E_NOTICE);
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
-  
+ <!-- ========================================--> 
  <!-- === MODAL AGREGAR CLIENTES ==-->
- 
+ <!-- =========================================-->
   <div class="modal fade" id="modalAgregarCliente" data-backdrop="static" data-keyboard="false" tabindex="-1">
   <div class="modal-dialog modal-lg">
    
@@ -178,6 +178,8 @@ error_reporting(E_ALL^E_NOTICE);
                       <span class="input-group-text"><i class="fa fa-user"></i></span>
               </div>
               <input type="text" class="form-control input-lg" placeholder="Nombre y/o Razón Social" name="nuevoCliente" title="Nombre o Razón social" required>
+              <input type="hidden" name="id_empresa" value=1>
+              <input type="hidden" name="ultusuario" value="<?php echo $_SESSION['id']; ?>">
             </div>
 
             <div class="form-row">
@@ -190,7 +192,7 @@ error_reporting(E_ALL^E_NOTICE);
 
               <div class="input-group mb-3 col-md-7">
                 <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="fa fa-id-card"></i></span>
+                        <span class="input-group-text"><i class="fa fa-address-card-o"></i></span>
                 </div>
                 <input type="text" class="form-control input-lg" placeholder="CURP" name="nuevoCurp" title="CURP">
               </div>
@@ -199,13 +201,13 @@ error_reporting(E_ALL^E_NOTICE);
             <div class="form-row">
               <div class="input-group mb-3 col-md-8">
                 <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fa fa-map-marker"></i></span>
+                    <span class="input-group-text"><i class="fa fa-dot-circle-o"></i></span>
                 </div>
                 <input type="text" class="form-control input-lg" placeholder="Dirección" name="nuevaDireccion" title="Dirección" required>
             </div>
             <div class="input-group mb-3 col-md-4">
                 <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fa fa-map-marker"></i></span>
+                    <span class="input-group-text"><i class="fa fa-sort-numeric-asc"></i></span>
                 </div>
                 <input type="text" class="form-control input-lg" placeholder="No. Int. y ext." name="nuevoNumInt" title="Num. Int y Ext." required>
             </div>
@@ -214,7 +216,7 @@ error_reporting(E_ALL^E_NOTICE);
            <div class="form-row">
            <div class="input-group mb-3 col-md-5">
                 <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fa fa-map-marker"></i></span>
+                    <span class="input-group-text"><i class="fa fa-map-pin"></i></span>
                 </div>
                 <input type="text" class="form-control input-lg" placeholder="Colonia" name="nuevaColonia" title="Colonia" required>
             </div>
@@ -237,14 +239,14 @@ error_reporting(E_ALL^E_NOTICE);
             <div class="form-row">
             <div class="input-group mb-3 col-md-6">
                 <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fa fa-map-marker"></i></span>
+                    <span class="input-group-text"><i class="fa fa-globe"></i></span>
                 </div>
                 <input type="text" class="form-control input-lg" placeholder="Ciudad" name="nuevaCiudad" title="Ciudad" required>
             </div>
                                                                                                           
               <div class="input-group mb-3 col-md-6">
                 <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fa fa-phone"></i></span>
+                    <span class="input-group-text"><i class="fa fa-map"></i></span>
                 </div>
                 <select class="form-control" name="nuevoEstado" id="nuevoEstado" data-toggle="tooltip" title="Estado">
                   <option selected>Seleccione Estado</option>
@@ -265,7 +267,7 @@ error_reporting(E_ALL^E_NOTICE);
 
             <div class="input-group mb-3 col-md-6">
               <div class="input-group-prepend">
-                <label class="input-group-text" for="inputGroupSelect01"><i class="fa fa-envelope"></i></label>
+                <label class="input-group-text" for="nuevoRegFiscal"><i class="fa fa-gavel"></i></label>
               </div>
               <select class="custom-select" name="nuevoRegFiscal" id="nuevoRegFiscal" title="Régimen Fiscal" required>
                 <option selected>Seleccione Régimen Fiscal</option>
@@ -274,7 +276,7 @@ error_reporting(E_ALL^E_NOTICE);
 
               <div class="input-group mb-3 col-md-6">
                 <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+                    <span class="input-group-text"><i class="fa fa-money"></i></span>
                 </div>
                 <input type="text" class="form-control input-lg" placeholder="Actividad Economica" name="nvaActividadEconomica" id="nvaActividadEconomica" title="Actividad Economica" required>
               </div>
@@ -283,16 +285,45 @@ error_reporting(E_ALL^E_NOTICE);
 
             <div class="form-row">
 
-              <div class="input-group mb-1 col-md-4">
+              <div class="input-group mb-3 col-md-6">
                 <div class="input-group-prepend">
-                  <label class="input-group-text" for="inputGroupSelect02"><i class="fa fa-envelope"></i></label>
+                  <label class="input-group-text" for="nuevaFormaPago"><i class="fa fa-usd"></i></label>
                 </div>
                 <select class="custom-select" name="nuevaFormaPago" id="nuevaFormaPago" title="Forma de pago">
                   <option selected>Seleccione Forma de Pago</option>
                 </select>
               </div>
 
-              <div class="input-group mb-1 col-md-5">
+              <div class="input-group mb-3 col-md-6">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa fa-file-text"></i></span>
+                </div>
+                <select class="custom-select" name="nuevoUsoCFDI" id="nuevoUsoCFDI" title="Uso de CFDI">
+                <option value="">Seleccione uso de CFDI</option>
+                    <?php
+                    $item = null;
+                    $valor = null;
+                    $usocfdi = ControladorFacturaIngreso::ctrMostrarUsoCFDI($item, $valor);
+                    foreach ($usocfdi as $key => $value) {
+                      echo '<option value="'.$value["id"].'">'.$value["id_cfdi"].'-'.$value["descripcion"]. '</option>';
+                    }
+                    ?>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+
+            <div class="input-group mb-1 col-md-5">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fa fa-exchange"></i></span>
+                </div>
+                <select class="custom-select" name="nuevoMetodoPago" id="nuevoMetodoPago" title="Método  de pago">
+                  <option selected>Seleccione Método de Pago</option>
+                </select>
+              </div>
+
+            <div class="input-group mb-1 col-md-4">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="fa fa-envelope"></i></span>
                 </div>
@@ -300,14 +331,13 @@ error_reporting(E_ALL^E_NOTICE);
               </div>
 
               <div class="input-group mb-1 col-md-3">
-                <div class="input-group-prepend">
+                <!-- <div class="input-group-prepend">
                   <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                </div>
+                </div> -->
                 <input type="date" class="form-control input-lg" placeholder="Fecha creación" name="nuevaFechaCreacion" title="Fecha de creación" >
               </div>
-              
-            </div>
 
+            </div>
          </div>
         </div>
       
@@ -335,14 +365,14 @@ error_reporting(E_ALL^E_NOTICE);
 <!-- === =========MODAL EDITAR CLIENTES ================-->
  
   <div class="modal fade" id="modalEditarCliente" data-backdrop="static" data-keyboard="false" tabindex="-1">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-lg">
    
     <div class="modal-content">
     <form role="form" method="POST">
       <!-- Modal Header -->
-      <div class="modal-header colorbackModal">
+      <div class="modal-header colorbackModal m-2 p-1">
    
-            <h4 class="modal-title">Editar Cliente</h4>
+            <h5 class="modal-title">Editar Cliente</h5>
         
             <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
@@ -357,48 +387,170 @@ error_reporting(E_ALL^E_NOTICE);
         <div class="card card-info">
          <div class="card-body">
            
-            <div class="input-group mb-3">
+         <div class="input-group mb-3">
               <div class="input-group-prepend">
                       <span class="input-group-text"><i class="fa fa-user"></i></span>
               </div>
-              <input type="text" class="form-control input-lg" placeholder="Nombre completo" name="EditarCliente" id="EditarCliente" required>
-              <input type="hidden" id="idCliente" name="idCliente">
+              <input type="text" class="form-control input-lg" placeholder="Nombre y/o Razón Social" name="editaCliente" title="Nombre o Razón social" required>
+              <input type="hidden" name="idCliente" id="idCliente">
+              <input type="hidden" name="id_empresa" value=1>
+              <input type="hidden" name="ultusuario" value="<?php echo $_SESSION['id']; ?>">
             </div>
 
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                      <span class="input-group-text"><i class="fa fa-id-card"></i></span>
+            <div class="form-row">
+              <div class="input-group mb-3 col-md-5">
+                <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fa fa-id-card"></i></span>
+                </div>
+                <input type="text" class="form-control input-lg" placeholder="RFC" name="editaRFC" title="RFC del cliente" pattern="[/^[A-ZÑ&]{3,4}\d{6}(?:[A-Z\d]{3})?$/]" required>
               </div>
-              <input type="text" class="form-control input-lg" placeholder="Rfc" name="EditarDocumento" id="EditarDocumento" required>
+
+              <div class="input-group mb-3 col-md-7">
+                <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fa fa-address-card-o"></i></span>
+                </div>
+                <input type="text" class="form-control input-lg" placeholder="CURP" name="editaCurp" title="CURP">
+              </div>
             </div>
 
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                  <span class="input-group-text"><i class="fa fa-envelope"></i></span>
-              </div>
-              <input type="email" class="form-control input-lg" placeholder="email" name="EditarEmail" id="EditarEmail" required>
+            <div class="form-row">
+              <div class="input-group mb-3 col-md-8">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa fa-dot-circle-o"></i></span>
+                </div>
+                <input type="text" class="form-control input-lg" placeholder="Dirección" name="editaDireccion" title="Dirección" required>
+            </div>
+            <div class="input-group mb-3 col-md-4">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa fa-sort-numeric-asc"></i></span>
+                </div>
+                <input type="text" class="form-control input-lg" placeholder="No. Int. y ext." name="editaNumInt" title="Num. Int y Ext." required>
+            </div>
+           </div>                
+
+           <div class="form-row">
+           <div class="input-group mb-3 col-md-5">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa fa-map-pin"></i></span>
+                </div>
+                <input type="text" class="form-control input-lg" placeholder="Colonia" name="editaColonia" title="Colonia" required>
             </div>
 
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                  <span class="input-group-text"><i class="fa fa-phone"></i></span>
-              </div>
-              <input type="text" class="form-control input-lg" placeholder="Teléfono" name="EditarTelefono" id="EditarTelefono"data-inputmask='"mask": "(999) 999-9999"' data-mask required>
+            <div class="input-group mb-3 col-md-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa fa-map-marker"></i></span>
+                </div>
+                <input type="number" class="form-control input-lg" placeholder="Cod. Postal" name="editaCP" title="Código Postal" pattern="[0-9]{5}" required>
             </div>
 
-           <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                  <span class="input-group-text"><i class="fa fa-map-marker"></i></span>
+              <div class="input-group mb-3 col-md-4">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa fa-phone"></i></span>
+                </div>
+                <input type="text" class="form-control input-lg" placeholder="Teléfono" name="editaTelefono" data-inputmask='"mask": "(999) 999-9999"' data-mask title="Teléfono" required>
               </div>
-              <input type="text" class="form-control input-lg" placeholder="Dirección" name="EditarDireccion" id="EditarDireccion" required>
-           </div>
-                                                                                                        
-           <div class="input-group mb-3">
+            </div>
+
+            <div class="form-row">
+            <div class="input-group mb-3 col-md-6">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa fa-globe"></i></span>
+                </div>
+                <input type="text" class="form-control input-lg" placeholder="Ciudad" name="editaCiudad" title="Ciudad" required>
+            </div>
+                                                                                                          
+              <div class="input-group mb-3 col-md-6">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa fa-map"></i></span>
+                </div>
+                <select class="form-control" name="editaEstado" id="editaEstado" data-toggle="tooltip" title="Estado">
+                  <option value="">Seleccione Estado</option>
+                            <?php
+                              $item=null;
+                              $valor=null;
+                              $estado=ControladorTecnicos::ctrMostrarEstados($item, $valor);
+                              foreach($estado as $key=>$value){
+                                  echo '<option value="'.$value["idestado"].'">'.$value["nombreestado"].'</option>';
+                              }
+                            ?>
+                </select>			  
+
+              </div>
+            </div>
+
+            <div class="form-row">
+
+            <div class="input-group mb-3 col-md-6">
               <div class="input-group-prepend">
+                <label class="input-group-text" for="editaRegFiscal"><i class="fa fa-gavel"></i></label>
+              </div>
+              <select class="custom-select" name="editaRegFiscal" id="editaRegFiscal" title="Régimen Fiscal" required>
+                <option value="">Seleccione Régimen Fiscal</option>
+              </select>
+            </div>
+
+              <div class="input-group mb-3 col-md-6">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa fa-money"></i></span>
+                </div>
+                <input type="text" class="form-control input-lg" placeholder="Actividad Economica" name="editaActividadEconomica" id="editaActividadEconomica" title="Actividad Economica" required>
+              </div>
+
+            </div>
+
+            <div class="form-row">
+
+              <div class="input-group mb-3 col-md-6">
+                <div class="input-group-prepend">
+                  <label class="input-group-text" for="inputGroupSelect02"><i class="fa fa-usd"></i></label>
+                </div>
+                <select class="custom-select" name="editaFormaPago" id="editaFormaPago" title="Forma de pago">
+                  <option selected>Seleccione Forma de Pago</option>
+                </select>
+              </div>
+
+              <div class="input-group mb-3 col-md-6">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa fa-file-text"></i></span>
+                </div>
+                <select class="custom-select" name="editaUsoCFDI" id="editaUsoCFDI" title="Uso de CFDI">
+                <option value="">Seleccione uso de CFDI</option>
+                    <?php
+                    $item = null;
+                    $valor = null;
+                    $usocfdi = ControladorFacturaIngreso::ctrMostrarUsoCFDI($item, $valor);
+                    foreach ($usocfdi as $key => $value) {
+                      echo '<option value="'.$value["id"].'">'.$value["id_cfdi"].'-'.$value["descripcion"]. '</option>';
+                    }
+                    ?>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+
+            <div class="input-group mb-1 col-md-5">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fa fa-exchange"></i></span>
+                </div>
+                <select class="custom-select" name="editaMetodoPago" id="editaMetodoPago" title="Método  de pago">
+                  <option selected>Seleccione Método de Pago</option>
+                </select>
+              </div>
+
+            <div class="input-group mb-1 col-md-4">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+                </div>
+                <input type="email" class="form-control input-lg" placeholder="email" name="editaEmail" title="correo eléctronico" required>
+              </div>
+
+              <div class="input-group mb-1 col-md-3">
+                <div class="input-group-prepend">
                   <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                </div>
+                <input type="date" class="form-control input-lg" placeholder="Fecha creación" name="editaFechaCreacion" title="Fecha de creación" >
               </div>
-              <input type="text" class="form-control input-lg" placeholder="Fecha Nac. aaaa/mm/dd" name="EditarFechaNacimiento" id="EditarFechaNacimiento" data-inputmask="'alias': 'yyyy/mm/dd'" data-mask required>
-           </div>
                                                                                            
          </div>
         </div>
@@ -406,10 +558,10 @@ error_reporting(E_ALL^E_NOTICE);
       </div>
 
       <!-- Modal footer -->
-      <div class="modal-footer colorbackModal">
+      <div class="modal-footer colorbackModal m-2 p-1">
        
-        <button type="button" class="btn btn-primary float-left" data-dismiss="modal"><i class="fa fa-reply"></i> Salir</button>
-        <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Guardar Cambios</button>
+        <button type="button" class="btn btn-sm btn-primary float-left" data-dismiss="modal"><i class="fa fa-reply"></i> Salir</button>
+        <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-save"></i> Guardar Cambios</button>
       
       </div>
       

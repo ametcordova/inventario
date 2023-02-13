@@ -23,6 +23,7 @@ class ControladorClientes{
 				
                 //$newDate = date("Y-d-m", strtotime($_POST["nuevaFechaNacimiento"]));
 			   	$datos = array("nombre"			=>strtoupper($_POST["nuevoCliente"]),
+					           "id_empresa"		=>$_POST["id_empresa"],
 					           "rfc"			=>strtoupper($_POST["nuevoRFC"]),
 					           "curp"			=>strtoupper($_POST["nuevoCurp"]),
 					           "num_int_ext"	=>$_POST["nuevoNumInt"],
@@ -35,6 +36,8 @@ class ControladorClientes{
 					           "regimenfiscal"	=>$_POST["nuevoRegFiscal"],
 					           "act_economica"	=>strtoupper($_POST["nvaActividadEconomica"]),
 					           "formadepago"	=>$_POST["nuevaFormaPago"],	
+					           "id_usocfdi"		=>$_POST["nuevoUsoCFDI"],
+					           "id_metodopago"	=>$_POST["nuevoMetodoPago"],
 							   "email"			=>$_POST["nuevoEmail"],
 					           "fecha_creacion"	=>$_POST["nuevaFechaCreacion"]);
                 
@@ -113,13 +116,13 @@ class ControladorClientes{
 
 	static public function ctrEditarCliente(){
 
-		if(isset($_POST["EditarCliente"])){
+		if(isset($_POST["editaCliente"])){
 
-			if(preg_match('/^[#\.\,\a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ ]+$/', $_POST["EditarCliente"]) &&
-               preg_match('/^[\/a-zA-Z0-9 ]+$/', $_POST["EditarDocumento"]) &&
-               preg_match('/^[^0-9][a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[@][a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,4}$/', $_POST["EditarEmail"]) &&                
-			   preg_match('/^[()\-0-9 ]+$/', $_POST["EditarTelefono"]) &&
-			   preg_match('/^[#\.\,\-a-zA-Z0-9 ]+$/', $_POST["EditarDireccion"]) ){
+			if(preg_match('/^[#\.\,\a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ ]+$/', $_POST["editaCliente"]) &&
+               preg_match('/^[\/a-zA-Z0-9 ]+$/', $_POST["editaRFC"]) &&
+               preg_match('/^[^0-9][a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[@][a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,4}$/', $_POST["editaEmail"]) &&                
+			   preg_match('/^[()\-0-9 ]+$/', $_POST["editaTelefono"]) &&
+			   preg_match('/^[#\.\,\-a-zA-Z0-9 ]+$/', $_POST["editaDireccion"]) ){
 
 			   	$tabla = "clientes";
 
@@ -128,13 +131,28 @@ class ControladorClientes{
                 //$nuevaFecha = date("Y-m-d", strtotime($_POST["EditarFechaNacimiento"]));
                 //var_dump($nuevaFecha);
                 
-			   	$datos = array("id"=>$_POST["idCliente"],
-			   				   "nombre"=>   strtoupper($_POST["EditarCliente"]),
-					           "rfc"=>      strtoupper($_POST["EditarDocumento"]),
-					           "email"=>               $_POST["EditarEmail"],
-					           "telefono"=>            $_POST["EditarTelefono"],
-					           "direccion"=>strtoupper($_POST["EditarDireccion"]),
-					           "fecha_nacimiento"=>    $_POST["EditarFechaNacimiento"]);
+			   	$datos = array(
+								"id"			=>$_POST["idCliente"],
+								"id_empresa"	=>$_POST["id_empresa"],
+			   				   	"nombre"		=>strtoupper($_POST["editaCliente"]),
+					           	"rfc"			=>strtoupper($_POST["editaRFC"]),
+					           	"telefono"		=>$_POST["editaTelefono"],
+					           	"direccion"		=>strtoupper($_POST["editaDireccion"]),
+					           	"curp"			=>strtoupper($_POST["editaCurp"]),
+					           	"num_int_ext"	=>$_POST["editaNumInt"],
+					          	"colonia"		=>strtoupper($_POST["editaColonia"]),
+					           	"codpostal"		=>$_POST["editaCP"],
+					           	"ciudad"		=>strtoupper($_POST["editaCiudad"]),
+					           	"estado"		=>$_POST["editaEstado"],
+					           	"regimenfiscal"	=>$_POST["editaRegFiscal"],
+					           	"act_economica"	=>strtoupper($_POST["editaActividadEconomica"]),
+					           	"formadepago"	=>$_POST["editaFormaPago"],	
+					           	"id_usocfdi"	=>$_POST["editaUsoCFDI"],
+					           	"metodopago"	=>$_POST["editaMetodoPago"],
+					           	"email"			=>$_POST["editaEmail"],
+					           	"fecha_creacion"=>$_POST["editaFechaCreacion"],
+					           	"ultusuario"	=>$_POST["ultusuario"]);
+
 
 			   	$respuesta = ModeloClientes::mdlEditarCliente($tabla, $datos);
 				
@@ -145,7 +163,8 @@ class ControladorClientes{
 					swal({
 						  icon: "success",
 						  text: "El cliente ha sido cambiado correctamente",
-						  button: "Cerrar"
+						  button: "Cerrar",
+						  timer: 2500
 						  }).then((result)=>{
 									if (result) {
 
@@ -178,6 +197,7 @@ class ControladorClientes{
 
 			}
 
+		
 		}
 
 	}    

@@ -378,7 +378,7 @@ $("#TablaFacturas").on("click", ".btnEditarFactura", function(){
   var numFactura = $(this).attr("numFactura");
   var idEstatus = $(this).attr("idEstado");
   var idBorrado = $(this).attr("idBorrado");
-  console.log(idFactura, numFactura,idEstatus);
+  //console.log(idFactura, numFactura,idEstatus);
 	var datos = new FormData();
 	datos.append("idFactura", idFactura);
 	datos.append("numFactura", numFactura);
@@ -419,7 +419,7 @@ function mostrardatos(datos){
   $( "input[name='editaImporteFactura']" ).val(datos.importe);
   $( "input[name='editaFechaPagado']" ).val(datos.fechapagado);
   $("textarea[name='editaObservacion']" ).text(datos.observaciones);	//campo textarea
-  $("[name='editaStatusFactura']").val(datos.status);					//campo checkbox
+  $("[name='editaStatusFactura']").val(datos.status);					//campo 
   //  if(datos.status=="1"){
   //    $("[name='editaStatusFactura']").prop('disabled',true);
   //  }
