@@ -43,8 +43,8 @@ if($_SESSION["perfil"] == "Administrador" ){
           </div>
         </div>
         <div class="card-body">
+			
 		<form>
-
 		  <div class="form-row">
 		   <div class="form-group col-md-6">
 			<label for="inputAddress">Razón Social de la Empresa</label>
@@ -144,7 +144,7 @@ if($_SESSION["perfil"] == "Administrador" ){
         <!-- /.card-body 
         <div class="card-footer">
           Footer	
-        </div>
+        </div>-->
         <!-- /fin de .card-footer-->
       </div>
       <!-- /.card -->

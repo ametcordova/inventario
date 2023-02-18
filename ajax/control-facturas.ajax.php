@@ -98,6 +98,7 @@ switch ($_GET["op"]){
 
 					if ($_FILES["editarPdf"]["error"] > 0){
 						 echo "ha ocurrido un error:";
+						 exit;
 							//$rutaexpediente=null;
 					} else {
 							$rutaexpediente = "vistas/expedientes/"."expediente".$_POST["editaFactura"].".pdf";

@@ -338,3 +338,13 @@ function comparar(a, b) {
   return a - b;
 }
 /*====================================================================================*/
+
+/*************************************************** */
+/* FUNCION PARA CHECAR SI UN STRING ES UN NUMERO */
+/*************************************************** */
+function isNum(val){
+  return !isNaN(val)
+}
+/***************MISMA FUNCION. CHECA QUE UN STRING ES UN NUMERO*********** */
+const isNumeric = n => !isNaN(n);
+/************************************************************************ */

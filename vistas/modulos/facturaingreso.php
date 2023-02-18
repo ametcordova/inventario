@@ -689,4 +689,4 @@ $fechaHoy = date("Y-m-d");
                 FIN MODAL PARA SUBIR ARCHIVOS DE ENTRADA CARSO AL ALMACEN 
 ==================================================================================== -->
 
-<script defer src="vistas/js/facturaingreso.js?v=300120231635"></script>
+<script defer src="vistas/js/facturaingreso.js?v=150220231635"></script>

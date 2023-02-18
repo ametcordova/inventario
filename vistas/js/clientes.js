@@ -13,6 +13,7 @@ $(document).ready(function() {
 
 function getRegFiscal(){
   let $select = $('#nuevoRegFiscal');
+  $select.empty();
   fetch('config/catalogosat/c_RegimenFiscal.json')      //http://jsfiddle.net/MuGj7/
   .then((res) => res.json())
   .then((data) => {
@@ -24,6 +25,7 @@ function getRegFiscal(){
 /******************************************************** */
 function editRegFiscal(idregfiscal){
   let $select = $('#editaRegFiscal');
+  $select.empty();
   fetch('config/catalogosat/c_RegimenFiscal.json')      //http://jsfiddle.net/MuGj7/
   .then((res) => res.json())
   .then((data) => {
@@ -56,6 +58,7 @@ function formasdepago(){
 /************************************************************ */
 function recorrerjson1(data){
     let $nuevaformapago = $('#nuevaFormaPago');
+    $nuevaformapago.empty();
     $.each(data , function(i, val) {
       $nuevaformapago.append('<option value='+data[i].id + '>' + data[i].id+'-'+data[i].descripcion + '</option>');
     })
@@ -63,6 +66,7 @@ function recorrerjson1(data){
 /************************************************************ */
 function editformapago(idformadepago){
   let $editaformapago = $('#editaFormaPago');
+  $editaformapago.empty();
   fetch('config/catalogosat/c_FormaPago.json')      //http://jsfiddle.net/MuGj7/
   .then((res) => res.json())
   .then((data) => {
@@ -96,6 +100,7 @@ function metodosdepago(){
 
 function recorrerjson2(data){
     let $nuevometodopago = $('#nuevoMetodoPago');
+    $nuevometodopago.empty();
     $.each(data , function(i, val) {
       $nuevometodopago.append('<option value='+data[i].id + '>' + data[i].id+'-'+data[i].descripcion + '</option>');
     })
@@ -103,6 +108,7 @@ function recorrerjson2(data){
 /************************************************************ */
 function editmetodopago(idmetodopago){
   let $editametodopago = $('#editaMetodoPago');
+  $editametodopago.empty();
   fetch('config/catalogosat/c_MetodoPago.json')
   .then((res) => res.json())
   .then((data) => {

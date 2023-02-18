@@ -616,8 +616,9 @@ $('#nvoClienteReceptor').on('change', ()=> {
         }else{
           let idnomregimenfiscal=res.data.regimenfiscal+'-'+res.data.nombreregfiscal;
           $("#nvoregimenfiscalreceptor").val(idnomregimenfiscal);
-          //$("#nvoregimenfiscalreceptor").val(res.data.nombreregfiscal);
           $("#nvoFormaPago").val(res.data.formadepago);
+          $("#nvoUsocfdi").val(res.data.id_usocfdi);
+          $("#nvoMetodoPago").val(res.data.metodopago);
           $("#nvoemail").val(res.data.email);
         }
       }          
@@ -668,6 +669,8 @@ function formasdepago(){
 
 function recorrerjson(data){
     let $nuevaformapago = $('#nvoFormaPago');
+    //$("#tabladedetalles").empty();
+    $nuevaformapago.empty();
     $.each(data , function(i, val) {
       $nuevaformapago.append('<option value='+data[i].id + '>' + data[i].id+'-'+data[i].descripcion + '</option>');
       //$nuevaformapago.append('<option value='+data[i].id + '>' + data[i].id+'-'+data[i].descripcion +val.id + ' </option>');

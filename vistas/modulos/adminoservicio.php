@@ -718,22 +718,62 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                 <label class="form-label" for="filexls">Subir Archivo de Excel a escanear: &nbsp</label>
                 <p class="help-block m-0 p-0">Peso máximo 2mb.</p>
                 <div class="input-group">
-                     <input type="file" class="form-control"  id="filexls" name="file" accept=".xls, .xlsx">
+                    <input type="file" class="form-control"  id="filexls" name="file" accept=".xls, .xlsx">
                 </div>
              </div>
+
+             
+                    <!-- INSERTAR LEYENDA -->
+                    <div class="form-row mb-0 mt-2 pt-1" >
+                      <div class="col-md-6 col-sm-6 col-xs-6">
+                          <div class="form-group">
+                              <div class="checkbox icheck">
+                              <label>
+                                  <input type="checkbox" class="minimal flat-red insertaFact" tabindex="11">
+                                  Número de Factura. ✅ 
+                              </label>
+                              </div>
+                          </div>
+                      </div>
+
+                      <div class="col-md-5 col-sm-5 col-xs-5 inputFact d-none" style="padding-left:2px">
+                          <div class="input-group">
+                            <input type="text" class="form-control-sm" name="nuevaFact" id="nuevaFact" value="" placeholder="XXXX" maxlength="50" onkeyUp="mayuscula(this);" tabindex="12">
+                          </div>
+                      </div>
+                    </div>
+
+
+          <div class="container">
+            <table class="table table-hover compact table-sm dt-responsive" width="100%">
+            <thead class="thead-dark">
+              <tr class="text-center" style="font-size:.8rem; height:1px">
+                <th scope="col">#</th>
+                <th scope="col">OS</th>
+                <th scope="col">Telefono</th>
+                <th scope="col">Resultado</th>
+              </tr>
+              </thead>      
+              
+              <tbody id="datosos">
+
+              </tbody>
+
+            </table>
+          </div>
 
       </div>    <!-- fin del modal-body -->
 
       <!-- Modal footer -->
       <div class="modal-footer colorbackModal px-2 py-1">
-       
-        <button type="button" class="btn btn-primary btn-sm float-left salirfrm" data-dismiss="modal" tabindex="15"><i class="fa fa-reply"></i> 
+        <button type="button" class="btn btn-primary btn-sm float-left salirfrm" data-dismiss="modal" tabindex="16"><i class="fa fa-reply"></i> 
         Salir
         </button>
-        <button type="submit" class="btn btn-success btn-sm" name="submit" tabindex="14"><i class="fa fa-cog"></i> Procesar</button>
-         <!--<div class="spin">
-            <button type="button" class="btn btn-sm btn-warning"> Espere... <i class="fa fa-cog fa-pulse fa-1x fa-fw"></i></button>
-        </div>  -->
+        <button type="button" class="btn btn-info btn-sm enviarfrm" id="updateinvoice" tabindex="14"><i class="fa fa-"></i> Actualizar # Fact.</button>
+        <button type="submit" class="btn btn-success btn-sm enviarfrm" name="submit" id="form-checkos" tabindex="15"><i class="fa fa-cog"></i> Procesar</button>
+         <div class="spin">
+            <button type="button" class="btn btn-sm btn-warning">Procesando...<i class="fa fa-cog fa-pulse fa-1x fa-fw"></i></button>
+        </div>
       </div>
       
      </form>

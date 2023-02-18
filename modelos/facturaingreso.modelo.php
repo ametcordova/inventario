@@ -66,9 +66,10 @@ static public function mdlDatosReceptor($tabla, $campo, $valor){
 	try{
 
             //$tabla='clientes';
-    		$stmt = Conexion::conectar()->prepare("SELECT clie.curp, clie.email, clie.regimenfiscal, clie.formadepago, rf.descripcion AS nombreregfiscal 
+    		$stmt = Conexion::conectar()->prepare("SELECT clie.curp, clie.email, clie.regimenfiscal, clie.formadepago, clie.id_usocfdi, clie.metodopago, rf.descripcion AS nombreregfiscal
             FROM $tabla clie
             INNER JOIN c_regimenfiscal rf ON clie.regimenfiscal=rf.id
+            INNER JOIN c_usocfdi uso ON clie.id_usocfdi=uso.id
             WHERE clie.$campo = :$campo");
 
 			$stmt -> bindParam(":".$campo, $valor, PDO::PARAM_STR);

@@ -74,6 +74,7 @@ $(document).ready(function() {
 function regresar()
 {
 	location.href = 'inicio';
+  return true;
 }
 /********************************************* */
 

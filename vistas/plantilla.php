@@ -150,7 +150,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 				include_once "modulos/".$_GET["ruta"].".php";
 
 			}else{
-				include "modulos/405.php";
+				include "modulos/404.php";
 			}
 		}else{
 			include_once "modulos/inicio.php";
@@ -183,8 +183,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="vistas/js/reporteinventario.js?v=02092020"></script> 
 <script src="vistas/js/osvilla.js?v=02092020"></script> 
 <script src="vistas/js/adminseries.js?v=02092020"></script>
-<script src="vistas/js/adminoservicio.js?v=011220220104"></script>
-
+<script src="vistas/js/adminoservicio.js?v=010220230104"></script>
 <!--<script defer src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 

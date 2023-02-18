@@ -36,6 +36,7 @@ error_reporting(E_ALL^E_NOTICE);
 
           <!--<h2 class="card-title">Control de Usuarios</h2> -->
           <div class="card-tools">
+          <button class="btn btn-tool" onclick="location.reload()" title="Reset filtros"><i class="fa fa-refresh"></i></button>
             <button type="button" class="btn btn-tool" data-widget="collapse" data-toggle="tooltip" title="Ocultar">
               <i class="fa fa-minus"></i></button>
 			<button type="button" class="btn btn-tool" onclick="regresar()" title="a Inicio">
@@ -582,4 +583,4 @@ error_reporting(E_ALL^E_NOTICE);
   $eliminarCliente -> ctrEliminarCliente();
 
 ?>
-<script defer src="vistas/js/clientes.js?v=02082022"></script>
+<script defer src="vistas/js/clientes.js?v=020220230935"></script>

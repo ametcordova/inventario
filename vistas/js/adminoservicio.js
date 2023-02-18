@@ -1,8 +1,8 @@
 //$( "#modalAgregarOS" ).draggable();
-$("#modalAgregarObservaOS").draggable({
+$("#modalAgregarObservaOS, #modalCheckOS").draggable({
   handle: ".modal-header"
 });
-
+var unsub;
 var item;
 var data;
 var modalEvento='';
@@ -13,6 +13,7 @@ var captRangoFecha;
 var idsfacturas=new Array();
 var FechDev1;
 var FechDev2;
+var contenido=document.querySelector('#datosos');
 
 var sig=$('#signature, #signatureContainer').signature({ 
   background: '#ffffff', // Colour of the background 
@@ -30,7 +31,9 @@ var sig=$('#signature, #signatureContainer').signature({
   change: null // Callback when signature changed 
 });
 
-const { fromEvent } = rxjs;
+const { fromEvent, Observable } = rxjs;
+const { take, tap, mergeMap, finalize } = rxjs.operators;
+const { clear } = rxjs.operators;
 
 //Rx.Observable.fromEvent(document.getElementById("DatatableOS"), 'click').subscribe(() => console.log('Haz hecho click!'));
 // $(function(){
@@ -164,7 +167,7 @@ function listarOServicios(){
             }
           },
           {
-            text: 'Chek O.S.',
+            text: 'Check O.S.',
             className: 'btn btn-sm btn-outline-info',
             action: function ( e, dt, node, config ) {
               checkOS();
@@ -254,10 +257,11 @@ $('#DatatableOS tfoot th').each( function () {
     
   }
 });
-
 /**************************************************************/
 
-/* ====================click para seleccionar OS ====================*/
+/**************************************************************/
+/* ====================click para seleccionar OS ==============*/
+/**************************************************************/
 $('#DatatableOS tbody').on( 'click', 'tr', function () {
   $(this).toggleClass('selected');
   let x=(tblOrdendeServicios.rows('.selected').data().length);
@@ -271,7 +275,6 @@ $('#DatatableOS tbody').on( 'click', 'tr', function () {
 
 /* ====================CAMBIAR ESTADO DE OS ====================*/
 $('#DatatableOS tbody').on( 'click', 'button.btnEstado', function (event) {
-  var dtr=document.getElementById("DatatableOS");
   let elemento = this;
   const $button = document.getElementById('DatatableOS');
   const click$ = fromEvent($button, 'click');
@@ -296,15 +299,11 @@ $('#DatatableOS tbody').on( 'click', 'button.btnEstado', function (event) {
         })
       
         .then(function (response) {
-          //console.log(response.status);
-          if (response.status==200) {
+            if (response.status==200) {
             if($('#DatatableOS').DataTable().ajax.reload(null, false)){
               var subscription = click$.subscribe({
                 next: (e) => console.log('Event :', e)
               });
-              // Rx.Observable.fromEvent(dtr, 'change').subscribe(() => 
-              //   console.log('se actualizo registro!!')
-              // );
             };
             console.log(subscription);
           } else {
@@ -865,10 +864,23 @@ $("body").on("submit", "#formularioEditarOS", function( event ) {
 
 /*======================================================================*/
 function checkOS(){
+  $(".spin").hide();
+  $('.insertaFact').iCheck('check', function(){
+    $('.insertaFact').iCheck('uncheck');    
+  });
   $('#modalCheckOS').modal('show')
 }
 /*======================================================================*/
-//ENVIAR FORMULARIO PARA GUARDAR DATOS DE ORDEN DE SERVICIO
+$('.insertaFact').on('ifChanged', function(event) {
+  if( $(this).is(':checked') ){      // Hacer algo si el checkbox ha sido seleccionado
+      $(".inputFact").removeClass("d-none");
+  } else {        // Hacer algo si el checkbox ha sido deseleccionado
+      $("#nuevaFact").val("");
+      $(".inputFact").addClass("d-none");
+  }
+});
+/*======================================================================*/
+// REVISAR EMU (EXCEL) CON OS CAPTURADOS
 /*======================================================================*/
 $("body").on("submit", "#formularioCheckOS", function(event) {	
   event.preventDefault();
@@ -877,38 +889,122 @@ $("body").on("submit", "#formularioCheckOS", function(event) {
   if(xfilexls.length == 0){;
    return
   }else{
-    //alert(xfilexls)
+    contenido.innerHTML='';
     let formData = new FormData($("#formularioCheckOS")[0]);
-    for (var pair of formData.entries()){console.log(pair[0]+ ', ' + pair[1]);}
+    formData.append('aplicar',0)
+    //for (var pair of formData.entries()){console.log(pair[0]+ ', ' + pair[1]);}
+    $('.enviarfrm').hide(); //oculto mediante id
+    $(".spin").show();
+    (async () => {   
+      await axios({ 
+        method  : 'post', 
+        url : 'controladores/procesar.controlador.php', 
+        data : formData, 
+      }) 
+      .then((res)=>{ 
+        if(res.status==200) {
+          console.log(res.data);
+          listOs(res.data)
+        }  
+        
+      })
+      .catch((err) => {
+        $(".spin").hide();
+        $('.enviarfrm').show(); 
+        alert("Algo salio mal!!!.")
+        throw err;
+      })
+      .finally(function () {
+        //'siempre sera executado'
+        $(".spin").hide();
+        $('.enviarfrm').show(); 
+      });      ; 
 
-    axios({ 
-      method  : 'post', 
-      url : 'controladores/procesar.controlador.php', 
-      data : formData, 
-    }) 
-    .then((res)=>{ 
-      if(res.status=="200") {
-        console.log(res);
-      }
-      console.log(res.data);
-    }) 
-    .catch((err) => {
-      alert("Algo salio mal!!!.")
-      throw err;
-    }); 
-    
-
+    })();  //fin del async  
   }
   
 });
+
+/******************************************************************************* */
+function listOs(data){
+  id=1;
+  let obs;
+    for(let valor of data){
+
+      obs = `<td class='text-center'>${valor.OBS}</td>`;
+      if (isNumeric(valor.OBS)) {
+          obs = `<td class='text-center bg-danger'>${valor.OBS}</td>`;
+      }
+      contenido.innerHTML+=`
+      <tr style="font-size:0.85em">
+        <td class='text-center'>${id++}</td>
+        <td class='text-center'>${valor.OS}</td>
+        <td class='text-center'>${valor.Telefono}</td>
+        ${obs}
+      </tr>`;
+    }//fin del For
+
+}
+
+/****************************************************************************** */
 /*================ AL SALIR DEL MODAL DE AGREGAR OS, RESETEAR FORMULARIO==================*/
 $("#modalCheckOS").on('hidden.bs.modal', ()=> {
   $("#formularioCheckOS")[0].reset();
-  //$("#tbodyOS").empty();
+  contenido.innerHTML='';
+  $("#datosos").empty();
 });
-/*==============================================================================*/
-/*======================================================================*/
 
+/*==============================================================================*/
+/* funcion para Actualizar # Fact
+/*==============================================================================*/
+let btnUp=document.getElementById("updateinvoice");
+  // ✅ Using optional chaining (?.) si no existe el btnUp
+  btnUp?.addEventListener("click", ()=>{
+      updateos()
+  });
+
+ /*======================================================================*/
+function updateos(){
+  let xfilexls=$('#filexls').val()
+  let numinvoice=$('#nuevaFact').val()
+  if(xfilexls.length == 0 && numinvoice==''){
+   return
+  }else{
+    contenido.innerHTML='';
+    let formData = new FormData($("#formularioCheckOS")[0]);
+    formData.append('aplicar',1)
+    formData.append('factura',numinvoice)
+    //for (var pair of formData.entries()){console.log(pair[0]+ ', ' + pair[1]);}
+    $('.enviarfrm').hide(); //oculto mediante id
+    $(".spin").show();
+    (async () => {   
+      await axios({ 
+        method  : 'post', 
+        url : 'controladores/procesar.controlador.php', 
+        data : formData, 
+      }) 
+      .then((res)=>{ 
+        if(res.status==200) {
+          console.log(res.data);
+          listOs(res.data)
+        }  
+        
+      })
+      .catch((err) => {
+        $(".spin").hide();
+        $('.enviarfrm').show(); 
+        alert("Algo salio mal. REVISE!!!")
+        throw err;
+      })
+      .finally(function () {
+        //'siempre sera executado'
+        $(".spin").hide();
+        $('.enviarfrm').show(); 
+      });      ; 
+
+    })();  //fin del async  
+  }
+}
 /* *****************AL ABRIR EL MODAL DE AGREGAR************************************** */
 $('#modalAgregarOS').on('shown.bs.modal', function () {
   let iduser=$('#iduser').val();
@@ -1110,6 +1206,7 @@ $('#daterange-btnOS').daterangepicker({
  }
 )
 
+
 // function interval para recargar el datatable cada 60 seg.
 // ver: https://datatables.net/reference/api/ajax.reload()
 
@@ -1125,5 +1222,14 @@ setInterval( ()=> {
 }, 180000 );			//recargar cada 60 seg.
 /*********************************************************** */
 
-
 init();
+
+// document.addEventListener('DOMContentLoaded', () => {
+//   const btn = document.getElementById('btn');
+//   console.log(btn);
+
+//   // ✅ Works as expected
+//   btn.addEventListener('click', () => {
+//     console.log('btn clicked');
+//   });
+// });
