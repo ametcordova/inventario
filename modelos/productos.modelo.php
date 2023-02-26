@@ -187,25 +187,6 @@ static public function mdlActualizarProducto($tabla, $item1, $valor1, $valor){
 	
 }
 
-/*=============================================
-	MOSTRAR SUMA VENTAS
-=============================================*/	
-static public function mdlMostrarSumaVentas($tabla){
-	try{
-
-		$stmt = Conexion::conectar()->prepare("SELECT SUM(ventas) as total FROM $tabla");
-
-		$stmt -> execute();
-
-		return $stmt -> fetch();
-
-		$stmt = null;
-
-	} catch (Exception $e) {
-		echo "Failed: " . $e->getMessage();
-	}
-	
-}
 
 	
 

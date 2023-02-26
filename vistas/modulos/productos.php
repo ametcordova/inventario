@@ -304,6 +304,40 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                       </div>
                   </div>
               </div>
+
+              <div class="col-md-2 col-sm-2 col-xs-4">
+                  <div class="form-group">
+                    <div class="checkbox icheck">
+                      <label title="Es material para Fibra óptica?">
+                          <input type="checkbox" name="nvoFO" value="1" class="minimal flat-red conseries" title="Es material para Fibra óptica?">
+                          Para F.O.?
+                      </label>
+                      </div>
+                  </div>
+              </div>
+
+              <div class="col-md-3 col-sm-3 col-xs-4">
+                  <div class="form-group">
+                    <div class="checkbox icheck">
+                      <label title="Es material para Cobre?">
+                          <input type="checkbox" name="nvoCobre" value="1" class="minimal flat-red conseries" >
+                          Para Cobre?
+                      </label>
+                      </div>
+                  </div>
+              </div>
+
+              <div class="col-md-3 col-sm-3 col-xs-4">
+                  <div class="form-group">
+                    <div class="checkbox icheck">
+                      <label title="Es material para construcción?">
+                          <input type="checkbox" name="nvoConstruccion" value="1" class="minimal flat-red conseries" >
+                          Para Construcción?
+                      </label>
+                      </div>
+                  </div>
+              </div>
+
              </div>    <!-- fin del form-row-->        
 
                                     
@@ -318,6 +352,32 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                 </div>
                 <img src="vistas/img/productos/default/default.jpg" class="img-thumbnail previsualizar" width="100px" alt="">
             </div>
+
+            <div class="form-row">
+              <div class="form-group col-md-6 col-sm-6 col-xs-12 mb-4">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="fa fa-bell"></i></span>
+                    </div>
+                      <select class="form-control input-lg"  name="nuevoEstatus" id="nuevoEstatus" title="Activar/Desactivar" required>
+                        <option value=0>Activado</option>
+                        <option value=1>Desactivado</option>
+                      </select>
+                  </div>
+              </div>
+              <div class="form-group col-md-6 col-sm-6 col-xs-12 mb-4">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="fa fa-key"></i></span>
+                    </div>
+                      <select class="form-control input-lg"  name="nuevoListar" id="nuevoListar" title="Mostrar en el F200" required>
+                        <option value=1>Si</option>
+                        <option value=0>No</option>
+                      </select>
+                  </div>
+              </div>
+
+            </div>  <!-- fin del form-row-->                
     
          </div>
         </div>
@@ -418,7 +478,7 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
               <div class="input-group-prepend">
                       <span class="input-group-text"><i class="fa fa-barcode"></i></span>
               </div>
-              <input type="text" class="form-control input-lg" placeholder="Ingresar Código" name="editarCodInterno" id="editarCodInterno" required>
+              <input type="text" class="form-control input-lg" placeholder="Ingresar Código" name="editarCodInterno" id="editarCodInterno" title="Codigo Interno" required>
             </div>
             </div>
 		 
@@ -427,7 +487,7 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
               <div class="input-group-prepend">
                  <span class="input-group-text"><i class="fa fa-tag"></i></span>
               </div>
-              <input type="text" class="form-control input-lg" name="editarDescripcion" id="editarDescripcion" onkeyUp="mayuscula(this);" required>
+              <input type="text" class="form-control input-lg" name="editarDescripcion" id="editarDescripcion" onkeyUp="mayuscula(this);" title="Descripción del producto" required>
             </div>
             </div>
         </div>
@@ -439,7 +499,7 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
               <div class="input-group-prepend">
                  <span class="input-group-text"><i class="fa fa-check"></i></span>
               </div>
-              <input type="number" class="form-control input-lg" placeholder="Stock" name="editarStock" id="editarStock" min="0" step="any">
+              <input type="number" class="form-control input-lg" placeholder="Stock" name="editarStock" id="editarStock" min="0" step="any" title="Stock">
             </div>
             </div>
 
@@ -457,7 +517,7 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                   <div class="input-group-prepend">
                      <span class="input-group-text"><i class="fa fa-tags"></i></span>
                   </div>
-                  <input type="number" class="form-control input-lg" placeholder="SKU" name="editarsku" id="editarsku" min="0" step="any" value="" tabindex="7">
+                  <input type="number" class="form-control input-lg" placeholder="SKU" name="editarsku" id="editarsku" min="0" step="any" value="" tabindex="7" title="SKU">
                 </div>
             </div>
 
@@ -504,8 +564,9 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
 
              </div>    <!-- fin del form-row-->        
 
+             
              <div class="form-row">
-              <div class="col-sm-4 col-xs-4">
+              <div class="col-md-4 col-sm-4 col-xs-4">
                   <div class="form-group">
                     <div class="checkbox icheck">
                       <label>
@@ -515,7 +576,42 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                       </div>
                   </div>
               </div>
-             </div>    <!-- fin del form-row-->        
+              
+              <div class="col-md-2 col-sm-2 col-xs-4">
+                  <div class="form-group">
+                    <div class="checkbox icheck">
+                      <label title="Es material para Fibra óptica?">
+                          <input type="checkbox" name="editaFO" value="1" class="minimal flat-red conseries" title="Es material para Fibra óptica?">
+                          Para F.O.?
+                      </label>
+                      </div>
+                  </div>
+              </div>
+
+              <div class="col-md-3 col-sm-3 col-xs-4">
+                  <div class="form-group">
+                    <div class="checkbox icheck">
+                      <label title="Es material para Cobre?">
+                          <input type="checkbox" name="editaCobre" value="1" class="minimal flat-red conseries" >
+                          Para Cobre?
+                      </label>
+                      </div>
+                  </div>
+              </div>
+
+              <div class="col-md-3 col-sm-3 col-xs-4">
+                  <div class="form-group">
+                    <div class="checkbox icheck">
+                      <label title="Es material para construcción?">
+                          <input type="checkbox" name="editaConstruccion" value="1" class="minimal flat-red conseries" >
+                          Para Construcción?
+                      </label>
+                      </div>
+                  </div>
+              </div>
+
+             </div>    <!-- fin del form-row-->       
+            
                                     
             <div class="form-group">
                 <label for="exampleInputFile">Subir Imagen</label>
@@ -530,6 +626,32 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                 <input type="hidden" name="imagenActual" id="imagenActual">
             </div>
     
+            <div class="form-row">
+              <div class="form-group col-md-6 col-sm-6 col-xs-12 mb-4">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="fa fa-bell"></i></span>
+                    </div>
+                      <select class="form-control input-lg"  name="editarEstatus" id="editarEstatus" title="Activar/Desactivar" required>
+                        <option value=0>Activado</option>
+                        <option value=1>Desactivado</option>
+                      </select>
+                  </div>
+              </div>
+              <div class="form-group col-md-6 col-sm-6 col-xs-12 mb-4">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text"><i class="fa fa-key"></i></span>
+                    </div>
+                      <select class="form-control input-lg"  name="editarListar" id="editarListar" title="Mostrar en el F200" required>
+                        <option value=1>Si</option>
+                        <option value=0>No</option>
+                      </select>
+                  </div>
+              </div>
+
+            </div>  <!-- fin del form-row-->       
+
          </div>
         </div>
   

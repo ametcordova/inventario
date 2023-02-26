@@ -326,7 +326,8 @@ $(".tablaProductos tbody").on("click", "button.btnEditarProducto", function(){
            	$(".previsualizar").attr("src",  respuesta["imagen"]);
 
            }
-
+           $("#editarEstatus").val(respuesta["estado"]);
+           $("#editarListar").val(respuesta["listar"]);
       
     },
    error:function(response, status){

@@ -31,8 +31,34 @@ try{
             //$highestColumn = $worksheet->getHighestColumn(); 
             //$highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn); 
         if(isset($_POST['aplicar']) && $_POST['aplicar']==1){
-            $fact=$_POST['factura'];
-            json_output(json_build(http_response_code(200), null, $fact));
+            $factura=$_POST['factura'];
+            $estado=0;
+            $no=0;
+            $datos=$sincaptura=array();
+            for ($row = 2; $row <= $highestRow; $row++){ 
+                $os=$worksheet->getCell("A".$row)->getValue();
+                $tel=$worksheet->getCell("B".$row)->getValue();
+
+                $sql="UPDATE tabla_os SET estatus=:estatus, factura=:factura WHERE ordenservicio=$os";
+                $stmt=Conexion::conectar()->prepare($sql);
+                $stmt->bindParam(":estatus", $estado, PDO::PARAM_INT);
+                $stmt->bindParam(":factura", $factura, PDO::PARAM_STR);
+                $stmt->execute();
+
+                $no=$stmt->rowCount();
+                if($no>0){
+                    $datos[]=array('OS'=>$os, 'Telefono'=>$tel, 'OBS'=>'ACTUALIZADO');
+                }else{
+                    $sincaptura[]=array('OS'=>$os, 'Telefono'=>$tel, 'OBS'=>'SIN ACTUALIZAR');
+                }
+                
+            };  //fin del for
+
+            //si no existe ALGUN OS en la BD, se agrega al array
+            if(!empty($sincaptura) || sizeof($sincaptura)>0){
+                $datos=array_merge($datos,$sincaptura);    
+            }
+
         }else{
             $datos=$sincaptura=array();
             $flag=false;
@@ -66,15 +92,15 @@ try{
 
             };      //fin del For
 
-            //si no existen OS en la BD, se agrega al array
+            //si no existe ALGUN OS en la BD, se agrega al array
             if(!empty($sincaptura) || sizeof($sincaptura)>0){
                 $datos=array_merge($datos,$sincaptura);    
             }
         }; 
-
+        //ENVIA DATOS A FRONTEND
         $datos=json_encode($datos);
         echo $datos;
-
+        exit;
     }else{
         //$resp=array(400=>'Archivo no permitido');
         //$datos=json_encode(http_response_code(400));

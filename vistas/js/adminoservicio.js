@@ -168,9 +168,16 @@ function listarOServicios(){
           },
           {
             text: 'Check O.S.',
-            className: 'btn btn-sm btn-outline-info',
+            className: 'btn btn-sm btn-outline-info text-bold',
             action: function ( e, dt, node, config ) {
               checkOS();
+            }
+          },        
+          {
+            text: 'F200',
+            className: 'btn btn-sm btn-outline-warning text-bold',
+            action: function ( e, dt, node, config ) {
+              f200();
             }
           }        
           ],
@@ -624,12 +631,6 @@ $("body").on("submit", "#formularioAgregaOS", function( event ) {
            }) 
         
           .then((response)=>{  
-            // console.log(response);
-            //console.log(response.status);
-            //console.log(response.statusText);
-            // console.log(response.headers);
-            // console.log(response.config);
-
             if(response.status==200) {
               if(response.data!=200){
                 mensajeaxios=response.data
@@ -815,22 +816,6 @@ $("body").on("submit", "#formularioEditarOS", function( event ) {
           // console.log(firma);
           formData.append("firma", firma);
           
-          //for (var pair of formData.entries()){console.log(pair[0]+ ', ' + pair[1]);}
-          //TAMBIEN FUNCIONA CON AJAX
-          // $.ajax({
-          //   url: "ajax/adminoservicio.ajax.php?op=ActualizarOS",
-          //   method: 'POST',
-          //   data: formData,
-          //   processData: false,
-          //   contentType: false,
-          //   dataType: 'json',
-          //   success: function(data) {
-          //       alert(data.msg);
-          //       $('#DatatableOS').DataTable().ajax.reload(null, false);
-          //       modalEvento.hide();
-          //   }
-          // });
-
           axios({ 
             method  : 'post', 
             url : 'ajax/adminoservicio.ajax.php?op=ActualizarOS', 
@@ -871,6 +856,26 @@ function checkOS(){
   $('#modalCheckOS').modal('show')
 }
 /*======================================================================*/
+function f200(){
+// Datos que se enviarán al servidor
+const datos = {
+  parametro1: 'valor1',
+  parametro2: 'valor2'
+};
+
+// Configuración de la petición
+const opciones = {
+  method: 'POST',
+  body: JSON.stringify(datos)
+};
+
+// Realizar la petición al servidor
+fetch('controladores/generar-f200.php', opciones)
+  .then(response => response.text())
+  .then(data => console.log(data))
+  .catch(error => console.error(error));
+}
+/*======================================================================*/
 $('.insertaFact').on('ifChanged', function(event) {
   if( $(this).is(':checked') ){      // Hacer algo si el checkbox ha sido seleccionado
       $(".inputFact").removeClass("d-none");
@@ -903,7 +908,7 @@ $("body").on("submit", "#formularioCheckOS", function(event) {
       }) 
       .then((res)=>{ 
         if(res.status==200) {
-          console.log(res.data);
+          //console.log(res.data);
           listOs(res.data)
         }  
         
@@ -932,7 +937,7 @@ function listOs(data){
     for(let valor of data){
 
       obs = `<td class='text-center'>${valor.OBS}</td>`;
-      if (isNumeric(valor.OBS)) {
+      if (isNumeric(valor.OBS) || valor.OBS=='SIN ACTUALIZAR') {
           obs = `<td class='text-center bg-danger'>${valor.OBS}</td>`;
       }
       contenido.innerHTML+=`
@@ -984,8 +989,8 @@ function updateos(){
         data : formData, 
       }) 
       .then((res)=>{ 
-        if(res.status==200) {
-          console.log(res.data);
+        console.log(res.data);
+        if(res.status=='200') {
           listOs(res.data)
         }  
         
@@ -997,9 +1002,10 @@ function updateos(){
         throw err;
       })
       .finally(function () {
-        //'siempre sera executado'
+        //'siempre sera ejecutado'
         $(".spin").hide();
         $('.enviarfrm').show(); 
+        $('#DatatableOS').DataTable().ajax.reload(null, false)
       });      ; 
 
     })();  //fin del async  

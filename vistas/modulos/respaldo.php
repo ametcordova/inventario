@@ -34,7 +34,7 @@
           </div>
         </div>
         <div class="card-body text-center">
-          <form role="form" method="POST" action="">
+          <form role="form" method="POST" action="ajax/backup.php">
                 <button type="submit" name="submit" class="btn btn-primary btn-sm"><img src="vistas/img/mysqlbackup.png" style="width:50%" alt="respaldo" title="Pulsa para Generar Respaldo"/></button>
           </form>
         </div>
@@ -51,6 +51,6 @@
   </div>
   <!-- /.content-wrapper  -->
        <?php
-        $crearRespaldo=new ControladorRespaldo();
-        $crearRespaldo->ctrCrearRespaldo();
+        // $crearRespaldo=new ControladorRespaldo();
+        // $crearRespaldo->ctrCrearRespaldo();
       ?>               

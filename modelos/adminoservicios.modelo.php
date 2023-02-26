@@ -517,4 +517,17 @@ $consulta_sql = "INSERT INTO usuarios(id, imagen, nombre)\n".
                 "ON DUPLICATE KEY\n".
                 "    UPDATE imagen = VALUES(imagen), nombre=VALUES(nombre);";		
 
+PARA BUSCAR EL VALOR 107 EN EL CAMPO datos_material
+SELECT * FROM tabla_os WHERE JSON_EXTRACT(datos_material, '$[*].id_producto') LIKE '%107%'
+
+En esta consulta, JSON_CONTAINS(datos_material, '{"id_producto": 107}', '$') filtra los registros que contienen el valor 107 en el campo id_producto. La función JSON_REPLACE() reemplaza el valor 107 por 105 en el campo id_producto del objeto JSON contenido en el campo datos_material.
+Recuerda reemplazar "107" por el valor que deseas buscar y "105" por el valor que deseas reemplazar.
+
+UPDATE tabla_os 
+SET datos_material = JSON_REPLACE(datos_material, '$[id_producto=?]', '105') 
+WHERE JSON_CONTAINS(datos_material, '{"id_producto": 107}', '$');
+
+UPDATE tabla_os SET datos_material = JSON_REPLACE(datos_material, "$.id_producto", "105")
+WHERE JSON_SEARCH(datos_material, 'one', "107", NULL, '$**.id_producto') IS NOT NULL;
+
 */	
