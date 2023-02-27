@@ -402,9 +402,9 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
   </div>
 </div>  
 
-
+<!-- ========================================================================-->
 <!-- ================== MODAL EDITAR PRODUCTOS ===============================-->
- 
+ <!-- ========================================================================-->
   <div class="modal fade" id="modalEditarProducto" data-backdrop="static" data-keyboard="false" tabindex="-1">
   <div class="modal-dialog modal-lg p-0 my-0">
    
@@ -581,7 +581,7 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                   <div class="form-group">
                     <div class="checkbox icheck">
                       <label title="Es material para Fibra óptica?">
-                          <input type="checkbox" name="editaFO" value="1" class="minimal flat-red conseries" title="Es material para Fibra óptica?">
+                          <input type="checkbox" name="editaFO" value="1" class="minimal flat-red editaFO" title="Es material para Fibra óptica?">
                           Para F.O.?
                       </label>
                       </div>
@@ -592,7 +592,7 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                   <div class="form-group">
                     <div class="checkbox icheck">
                       <label title="Es material para Cobre?">
-                          <input type="checkbox" name="editaCobre" value="1" class="minimal flat-red conseries" >
+                          <input type="checkbox" name="editaCobre" value="1" class="minimal flat-red editaCobre" >
                           Para Cobre?
                       </label>
                       </div>
@@ -603,7 +603,7 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                   <div class="form-group">
                     <div class="checkbox icheck">
                       <label title="Es material para construcción?">
-                          <input type="checkbox" name="editaConstruccion" value="1" class="minimal flat-red conseries" >
+                          <input type="checkbox" name="editaConstruccion" value="1" class="minimal flat-red editaConstruccion" >
                           Para Construcción?
                       </label>
                       </div>

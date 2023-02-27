@@ -310,14 +310,25 @@ $(".tablaProductos tbody").on("click", "button.btnEditarProducto", function(){
 
            $("#editarsku").val(respuesta["sku"]);
 
-           $("#editarPrecioCompra").val(respuesta["precio_compra"]);
+          // SI LLEVA SERIE, LO CHECKEA
+          if(respuesta['conseries']==1){
+            $('.conseries').iCheck('check');       
+          }
 
-           $("#editarPrecioVenta").val(respuesta["precio_venta"]);
+          // SI LLEVA SERIE, LO CHECKEA
+          if(respuesta['esfo']==1){
+            $('.editaFO').iCheck('check');       
+          }
 
-		   // SI LLEVA SERIE, LO CHECKEA
-		   if(respuesta['conseries']==1){
-			$('.conseries').iCheck('check');       
-		   }
+          // SI LLEVA SERIE, LO CHECKEA
+          if(respuesta['escobre']==1){
+            $('.editaCobre').iCheck('check');       
+          }
+
+          // SI LLEVA SERIE, LO CHECKEA
+          if(respuesta['esconstruccion']==1){
+            $('.editaConstruccion').iCheck('check');       
+          }
 
            if(respuesta["imagen"] != ""){
 

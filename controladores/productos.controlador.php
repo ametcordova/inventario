@@ -27,13 +27,26 @@ class ControladorProductos{
 
 			if(preg_match('/^[_\#\.\,\-\(\)\/a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ ]+$/', $_POST["nuevaDescripcion"]) &&
 			   preg_match('/^[0-9]+$/', $_POST["nuevoStock"]) &&	
-			   preg_match('/^[0-9]+$/', $_POST["nuevoMinimo"]) &&	
-			   preg_match('/^[0-9.]+$/', $_POST["nuevoPrecioCompra"]) &&
-			   preg_match('/^[0-9.]+$/', $_POST["nuevoPrecioVenta"])){     //que acepte numero y . decimal
+			   preg_match('/^[0-9]+$/', $_POST["nuevoMinimo"])){     //que acepte numero y . decimal
 
 				$conseries=0;
 				if(isset($_POST['nvoconseries'])){
 					$conseries=1;
+				};
+
+				$esfo=0;
+				if(isset($_POST['nvoFO'])){
+					$esfo=1;
+				};
+
+				$escobre=0;
+				if(isset($_POST['nvoCobre'])){
+					$escobre=1;
+				};
+
+				$esconstruccion=0;
+				if(isset($_POST['nvoConstruccion'])){
+					$esconstruccion=1;
 				};
 
 		   		/*=============================================
@@ -136,9 +149,11 @@ class ControladorProductos{
 							   "stock" 			=> $_POST["nuevoStock"],
 							   "minimo" 		=> $_POST["nuevoMinimo"],
 							   "sku" 			=> $_POST["nuevosku"],
-							   "precio_compra" 	=> $_POST["nuevoPrecioCompra"],
-							   "precio_venta" 	=> $_POST["nuevoPrecioVenta"],
 							   "conseries" 		=> $conseries,
+							   "esfo" 			=> $esfo,
+							   "escobre" 		=> $escobre,
+							   "esconstruccion"	=> $esconstruccion,
+							   "listar" 		=> $_POST["nuevoListar"],
 							   "imagen" 		=> $ruta);
 
 				$respuesta = ModeloProductos::mdlIngresarProducto($tabla, $datos);
@@ -214,13 +229,26 @@ class ControladorProductos{
 
 			if(preg_match('/^[_\#\.\,\-\(\)\/a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ ]+$/', $_POST["editarDescripcion"]) &&
 			   preg_match('/^[0-9.]+$/', $_POST["editarStock"]) &&
-			   preg_match('/^[0-9.]+$/', $_POST["editarMinimo"]) &&
-			   preg_match('/^[0-9.]+$/', $_POST["editarPrecioCompra"]) &&
-			   preg_match('/^[0-9.]+$/', $_POST["editarPrecioVenta"])){
+			   preg_match('/^[0-9.]+$/', $_POST["editarMinimo"])){
 
 				$conseries=0;
 				if(isset($_POST['editconseries'])){
 					$conseries=1;
+				};
+
+				$esfo=0;
+				if(isset($_POST['editaFO'])){
+					$esfo=1;
+				};
+
+				$escobre=0;
+				if(isset($_POST['editaCobre'])){
+					$escobre=1;
+				};
+
+				$esconstruccion=0;
+				if(isset($_POST['editaConstruccion'])){
+					$esconstruccion=1;
 				};
 
 
@@ -317,9 +345,11 @@ class ControladorProductos{
 							   "stock" 			=> $_POST["editarStock"],
 							   "minimo" 		=> $_POST["editarMinimo"],
 							   "sku" 			=> $_POST["editarsku"],
-							   "precio_compra" 	=> $_POST["editarPrecioCompra"],
-							   "precio_venta" 	=> $_POST["editarPrecioVenta"],
 							   "conseries" 		=> $conseries,
+							   "esfo" 			=> $esfo,
+							   "escobre" 		=> $escobre,
+							   "esconstruccion"	=> $esconstruccion,
+							   "listar" 		=> $_POST["editarListar"],
 							   "imagen" 		=> $ruta);
 
 				$respuesta = ModeloProductos::mdlEditarProducto($tabla, $datos);

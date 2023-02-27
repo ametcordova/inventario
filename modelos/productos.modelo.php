@@ -51,7 +51,7 @@ static public function mdlMostrarProductos($tabla, $item, $valor, $orden){
 static public function mdlIngresarProducto($tabla, $datos){
 	try{
 
-		$stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(id_categoria, id_medida, codigo, codigointerno, descripcion, imagen, stock, minimo, sku, precio_compra, precio_venta, conseries, ultusuario) VALUES (:id_categoria, :id_medida, :codigo, :codigointerno, :descripcion, :imagen, :stock, :minimo, :sku, :precio_compra, :precio_venta, :conseries, :ultusuario)");
+		$stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(id_categoria, id_medida, codigo, codigointerno, descripcion, imagen, stock, minimo, sku, esfo, escobre, esconstruccion, conseries, listar, ultusuario) VALUES (:id_categoria, :id_medida, :codigo, :codigointerno, :descripcion, :imagen, :stock, :minimo, :sku, :esfo, :escobre, :esconstruccion, :conseries, :listar, :ultusuario)");
 
 		$stmt->bindParam(":id_categoria", 	$datos["id_categoria"], PDO::PARAM_INT);
 		$stmt->bindParam(":id_medida", 		$datos["id_medida"], PDO::PARAM_INT);
@@ -62,9 +62,11 @@ static public function mdlIngresarProducto($tabla, $datos){
 		$stmt->bindParam(":stock", 			$datos["stock"], PDO::PARAM_STR);
 		$stmt->bindParam(":minimo", 		$datos["minimo"], PDO::PARAM_INT);
 		$stmt->bindParam(":sku", 			$datos["sku"], PDO::PARAM_INT);
-		$stmt->bindParam(":precio_compra", 	$datos["precio_compra"], PDO::PARAM_STR);
-		$stmt->bindParam(":precio_venta", 	$datos["precio_venta"], PDO::PARAM_STR);
+		$stmt->bindParam(":esfo", 			$datos["esfo"], PDO::PARAM_INT);
+		$stmt->bindParam(":escobre", 		$datos["escobre"], PDO::PARAM_INT);
+		$stmt->bindParam(":esconstruccion",	$datos["esconstruccion"], PDO::PARAM_INT);
 		$stmt->bindParam(":conseries", 		$datos["conseries"], PDO::PARAM_STR);
+		$stmt->bindParam(":listar",			$datos["listar"], PDO::PARAM_INT);
 		$stmt->bindParam(":ultusuario", 	$datos["ultusuario"], PDO::PARAM_INT);
 
 		if($stmt->execute()){
@@ -93,7 +95,7 @@ static public function mdlIngresarProducto($tabla, $datos){
 static public function mdlEditarProducto($tabla, $datos){
 	try{
 
-		$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET id_categoria = :id_categoria, id_medida = :id_medida, codigo=:codigo, codigointerno = :codigointerno, descripcion = :descripcion, imagen = :imagen, stock = :stock, minimo = :minimo, sku =:sku, precio_compra = :precio_compra, precio_venta = :precio_venta, conseries = :conseries, ultusuario = :ultusuario WHERE id = :id");
+		$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET id_categoria = :id_categoria, id_medida = :id_medida, codigo=:codigo, codigointerno = :codigointerno, descripcion = :descripcion, imagen = :imagen, stock = :stock, minimo = :minimo, sku =:sku, esfo = :esfo, escobre = :escobre, esconstruccion = :esconstruccion, conseries = :conseries, listar = :listar, ultusuario = :ultusuario WHERE id = :id");
 
 		$stmt->bindParam(":id", $datos["id"], PDO::PARAM_INT);
 		$stmt->bindParam(":id_categoria", $datos["id_categoria"], PDO::PARAM_INT);
@@ -105,9 +107,11 @@ static public function mdlEditarProducto($tabla, $datos){
 		$stmt->bindParam(":stock", $datos["stock"], PDO::PARAM_STR);
 		$stmt->bindParam(":minimo", $datos["minimo"], PDO::PARAM_INT);
 		$stmt->bindParam(":sku", 	$datos["sku"], PDO::PARAM_STR);
-		$stmt->bindParam(":precio_compra", $datos["precio_compra"], PDO::PARAM_STR);
-		$stmt->bindParam(":precio_venta", $datos["precio_venta"], PDO::PARAM_STR);
 		$stmt->bindParam(":conseries", $datos["conseries"], PDO::PARAM_STR);
+		$stmt->bindParam(":esfo", $datos["esfo"], PDO::PARAM_INT);
+		$stmt->bindParam(":escobre", $datos["escobre"], PDO::PARAM_INT);
+		$stmt->bindParam(":esconstruccion", $datos["esconstruccion"], PDO::PARAM_INT);
+		$stmt->bindParam(":listar", $datos["listar"], PDO::PARAM_INT);
 		$stmt->bindParam(":ultusuario", $datos["ultusuario"], PDO::PARAM_INT);
 
 		if($stmt->execute()){
