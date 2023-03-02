@@ -62,7 +62,7 @@ try{
         echo "Error al descargar el archivo comprimido";
     }
     // Borramos los archivos temporales
-    unlink($backup_file);
+    //unlink($backup_file);
     unlink($zip_file);
 
 } catch (Exception $e) {

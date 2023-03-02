@@ -154,6 +154,7 @@ class ControladorProductos{
 							   "escobre" 		=> $escobre,
 							   "esconstruccion"	=> $esconstruccion,
 							   "listar" 		=> $_POST["nuevoListar"],
+							   "estado" 		=> $_POST["nuevoEstatus"],
 							   "imagen" 		=> $ruta);
 
 				$respuesta = ModeloProductos::mdlIngresarProducto($tabla, $datos);
@@ -350,6 +351,7 @@ class ControladorProductos{
 							   "escobre" 		=> $escobre,
 							   "esconstruccion"	=> $esconstruccion,
 							   "listar" 		=> $_POST["editarListar"],
+							   "estado" 		=> $_POST["editarEstatus"],
 							   "imagen" 		=> $ruta);
 
 				$respuesta = ModeloProductos::mdlEditarProducto($tabla, $datos);
@@ -361,12 +363,10 @@ class ControladorProductos{
 							  icon: "success",
 							  title: "El producto ha sido editado correctamente",
 							  button: "Cerrar",
-							  timer: 4000
+							  timer: 2000
 							  }).then((result)=>{
-										if (result) {
-											window.location = "productos";
-										}else{
-											window.location = "productos";
+										if(result) {
+											$(".tablaProductos").DataTable().ajax.reload(null, false);
 										}	
 									})
 
@@ -382,7 +382,8 @@ class ControladorProductos{
 					swal({
 						  icon: "error",
 						  title: "¡El producto no puede ir con los campos vacíos o llevar caracteres especiales!",
-						  button: "Cerrar"
+						  button: "Cerrar",
+						  timer: 3000
 						  }).then((result)=>{
 							if (result) {
 							window.location = "productos";

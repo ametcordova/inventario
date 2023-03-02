@@ -14,39 +14,18 @@ CARGAR LA TABLA DINÁMICA DE PRODUCTOS
  })*/
 
 var perfilOculto = $("#perfilOculto").val();
-
-$('.tablaProductos').DataTable( {
+//tablaSalidasAlmacen=$('#dt-entradasalmacen').dataTable(
+tableProduct=$('.tablaProductos').dataTable( {
     "ajax": "ajax/datatable-productos.ajax.php?perfilOculto="+perfilOculto,
     "deferRender": true,
-	"retrieve": true,
-	"processing": true,
-	"stateSave": true,
-	"lengthMenu": [ [10, 25, 50,100, -1], [10, 25, 50, 100, "Todos"] ],
-	"sPaginationType": "full_numbers",	
-	 "language": {
-			"sProcessing":     "Procesando...",
-			"sLengthMenu":     "Mostrar _MENU_ registros  &nbsp",
-			"sZeroRecords":    "No se encontraron resultados",
-			"sEmptyTable":     "Ningún dato disponible en esta tabla",
-			"sInfo":           "Mostrar registros del _START_ al _END_ de un total de _TOTAL_",
-			"sInfoEmpty":      "Mostrar registros del 0 al 0 de un total de 0",
-			"sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
-			"sInfoPostFix":    "",
-			"sSearch":         "Buscar:",
-			"sUrl":            "",
-			"sInfoThousands":  ",",
-			"sLoadingRecords": "Cargando...",
-			"oPaginate": {
-			"sFirst":    "|<",
-			"sLast":     " >|",
-			"sNext":     ">",
-			"sPrevious": "<"}
-			},
-			"sPaginationType": "full_numbers",
-			"oAria": {
-				"sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
-				"sSortDescending": ": Activar para ordenar la columna de manera descendente"
-			},
+    "retrieve": true,
+    "processing": true,
+    "stateSave": true,
+    "lengthMenu": [ [10, 25, 50,100, -1], [10, 25, 50, 100, "Todos"] ],
+    "sPaginationType": "full_numbers",	
+    "language": {
+      "url": "extensiones/espanol.json",
+    },   
         dom: '<clear>Bfrtip',
         buttons: [
             'copyHtml5',
@@ -63,7 +42,12 @@ $('.tablaProductos').DataTable( {
           btns.removeClass('dt-button');
           btns.addClass('btn btn-success btn-sm');
         },
-} );
+        "columnDefs": [
+          {"className": "dt-center", "targets": [1,6,7,8,9]},
+          //{"className": "dt-right", "targets": [3,4]}				//"_all" para todas las columnas
+          ],         
+        "order": [[ 3, 'asc' ]] //Ordenar (columna,orden)
+}).DataTable();
 
 /*=============================================
 CAPTURANDO LA CATEGORIA PARA ASIGNAR CÓDIGO
@@ -164,15 +148,15 @@ $(".nuevoPorcentaje").change(function(){
 
 $(".porcentaje").on("ifUnchecked",function(){
 
-	$("#nuevoPrecioVenta").prop("readonly",false);
-	$("#editarPrecioVenta").prop("readonly",false);
+	// $("#nuevoPrecioVenta").prop("readonly",false);
+	// $("#editarPrecioVenta").prop("readonly",false);
 
 })
 
 $(".porcentaje").on("ifChecked",function(){
 
-	$("#nuevoPrecioVenta").prop("readonly",true);
-	$("#editarPrecioVenta").prop("readonly",true);
+	// $("#nuevoPrecioVenta").prop("readonly",true);
+	// $("#editarPrecioVenta").prop("readonly",true);
 
 })
 
@@ -237,7 +221,7 @@ $(".tablaProductos tbody").on("click", "button.btnEditarProducto", function(){
 	
 	var datos = new FormData();
         datos.append("idProducto", idProducto);
-        for (var pair of datos.entries()){console.log(pair[0]+ ', ' + pair[1]);}
+        //for (var pair of datos.entries()){console.log(pair[0]+ ', ' + pair[1]);}
     $.ajax({
       url:"ajax/productos.ajax.php",
       method: "POST",
@@ -247,7 +231,7 @@ $(".tablaProductos tbody").on("click", "button.btnEditarProducto", function(){
       processData: false,
       dataType:"json",
       success:function(respuesta){
-          console.log(respuesta);
+          //console.log(respuesta);
           var datosCategoria = new FormData();
           datosCategoria.append("idCategoria",respuesta["id_categoria"]);
           //console.log(respuesta["id_categoria"]);
@@ -285,7 +269,7 @@ $(".tablaProductos tbody").on("click", "button.btnEditarProducto", function(){
               processData: false,
               dataType:"json",
               success:function(respuesta1){
-                console.log(respuesta1);
+                //console.log(respuesta1);
                   $("#editarMedida").val(respuesta1["id"]);
                   $("#editarMedida").html(respuesta1["medida"]);
 
@@ -397,7 +381,11 @@ $("#agregarProd").click(function(){
 $("#modalEditarProducto").on('hidden.bs.modal', function () {
     //$(".tbodypromo").empty();	//VACIA LOS DATOS DE LA PROMOCION DEL TBODY
      // desactiva el check de promo
-      $('.conseries').iCheck('uncheck');    
+      $('.conseries').iCheck('uncheck');
+      $('.editaFO').iCheck('uncheck');
+      $('.editaCobre').iCheck('uncheck');
+      $('.editaConstruccion').iCheck('uncheck');
+      $('.listar').iCheck('uncheck');
    });
    
 /*

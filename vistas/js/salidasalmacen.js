@@ -56,24 +56,9 @@ function dt_ListarSalidasAlmacen(){
 		"aProcessing": true,//Activamos el procesamiento del datatables
 	    "aServerSide": true,//Paginación y filtrado realizados por el servidor
     "lengthMenu": [ [10, 25, 50,100, -1], [10, 25, 50, 100, "Todos"] ],
-       "language": {
-		"sProcessing":     "Procesando...",
-        "sLengthMenu":     "Mostrar _MENU_ registros &nbsp",
-        "sZeroRecords":    "No se encontraron resultados",
-        "sEmptyTable":     "Ningún dato disponible en esta tabla",
-        "sInfo":           "Mostrar registros del _START_ al _END_ de un total de _TOTAL_",
-		"sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
-		"sInfoPostFix":    "",           
-        "sSearch":         "Buscar:",
-        "sInfoThousands":  ",",
-        "sLoadingRecords": "Cargando...",
-        "oPaginate": {
-		"sFirst":    "Primero",
-		"sLast":     "Último",
-		"sNext":     "Siguiente",
-		"sPrevious": "Anterior"}
-        },
-		"oAria": {
+    "language": {
+      "url": "extensiones/espanol.json",
+    },		"oAria": {
 			"sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
 			"sSortDescending": ": Activar para ordenar la columna de manera descendente"
 		},

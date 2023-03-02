@@ -12,10 +12,10 @@ class ModeloProductos{
 	=============================================*/
 static public function mdlMostrarProductos($tabla, $item, $valor, $orden){
 	try{
-        $estado=1;
+        //$estado=1;
 		if($item != null){
 
-			$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item = :$item  ORDER BY id ASC");
+			$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item = :$item ORDER BY id ASC");
 
 			$stmt -> bindParam(":$item", $valor, PDO::PARAM_STR);
 			//$stmt -> bindParam(":$estado", $estado, PDO::PARAM_INT);
@@ -26,7 +26,8 @@ static public function mdlMostrarProductos($tabla, $item, $valor, $orden){
 
 		}else{
 
-			$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE estado=$estado ORDER BY $orden ASC");
+			$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla ORDER BY $orden ASC");
+			//$stmt = Conexion::conectar()->prepare("SELECT * FROM `productos` ORDER BY `descripcion` ASC");
             
             //$stmt -> bindParam(":$estado", $estado, PDO::PARAM_INT);
             
@@ -51,7 +52,7 @@ static public function mdlMostrarProductos($tabla, $item, $valor, $orden){
 static public function mdlIngresarProducto($tabla, $datos){
 	try{
 
-		$stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(id_categoria, id_medida, codigo, codigointerno, descripcion, imagen, stock, minimo, sku, esfo, escobre, esconstruccion, conseries, listar, ultusuario) VALUES (:id_categoria, :id_medida, :codigo, :codigointerno, :descripcion, :imagen, :stock, :minimo, :sku, :esfo, :escobre, :esconstruccion, :conseries, :listar, :ultusuario)");
+		$stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(id_categoria, id_medida, codigo, codigointerno, descripcion, imagen, stock, minimo, sku, esfo, escobre, esconstruccion, conseries, listar, ultusuario, estado) VALUES (:id_categoria, :id_medida, :codigo, :codigointerno, :descripcion, :imagen, :stock, :minimo, :sku, :esfo, :escobre, :esconstruccion, :conseries, :listar, :ultusuario, :estado)");
 
 		$stmt->bindParam(":id_categoria", 	$datos["id_categoria"], PDO::PARAM_INT);
 		$stmt->bindParam(":id_medida", 		$datos["id_medida"], PDO::PARAM_INT);
@@ -68,6 +69,7 @@ static public function mdlIngresarProducto($tabla, $datos){
 		$stmt->bindParam(":conseries", 		$datos["conseries"], PDO::PARAM_STR);
 		$stmt->bindParam(":listar",			$datos["listar"], PDO::PARAM_INT);
 		$stmt->bindParam(":ultusuario", 	$datos["ultusuario"], PDO::PARAM_INT);
+		$stmt->bindParam(":estado", 		$datos["estado"], PDO::PARAM_INT);
 
 		if($stmt->execute()){
 
@@ -95,7 +97,7 @@ static public function mdlIngresarProducto($tabla, $datos){
 static public function mdlEditarProducto($tabla, $datos){
 	try{
 
-		$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET id_categoria = :id_categoria, id_medida = :id_medida, codigo=:codigo, codigointerno = :codigointerno, descripcion = :descripcion, imagen = :imagen, stock = :stock, minimo = :minimo, sku =:sku, esfo = :esfo, escobre = :escobre, esconstruccion = :esconstruccion, conseries = :conseries, listar = :listar, ultusuario = :ultusuario WHERE id = :id");
+		$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET id_categoria = :id_categoria, id_medida = :id_medida, codigo=:codigo, codigointerno = :codigointerno, descripcion = :descripcion, imagen = :imagen, stock = :stock, minimo = :minimo, sku =:sku, conseries = :conseries, esfo = :esfo, escobre = :escobre, esconstruccion = :esconstruccion, listar = :listar, ultusuario = :ultusuario, estado=:estado WHERE id = :id");
 
 		$stmt->bindParam(":id", $datos["id"], PDO::PARAM_INT);
 		$stmt->bindParam(":id_categoria", $datos["id_categoria"], PDO::PARAM_INT);
@@ -113,6 +115,7 @@ static public function mdlEditarProducto($tabla, $datos){
 		$stmt->bindParam(":esconstruccion", $datos["esconstruccion"], PDO::PARAM_INT);
 		$stmt->bindParam(":listar", $datos["listar"], PDO::PARAM_INT);
 		$stmt->bindParam(":ultusuario", $datos["ultusuario"], PDO::PARAM_INT);
+		$stmt->bindParam(":estado", $datos["estado"], PDO::PARAM_INT);
 
 		if($stmt->execute()){
 

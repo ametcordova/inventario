@@ -70,34 +70,38 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
 <div class="card">
             <div class="card-body">
               <table class="table table-bordered table-striped dt-responsive tablaProductos" width="100%">
-                <thead>
+                <thead style="font-size:.85rem; height:1px">
                   <tr>
                    <th style="width:10px">#</th>
                    <th>SKU</th>
                    <th>Cód.Int.</th>
                    <th>Descripción</th>
                    <th>Categoría</th>
-                   <th>Stock</th>
                    <th>Medida</th>
-                   <th>Agregado</th>                   
+                   <th>Stock</th>
+                   <th>F200</th>
+                   <th>Status</th>
+                   <th>Actualizado</th>                   
                    <th>Accion</th>
                  </tr> 
                 </thead>
                 
-                <tbody>
+                <tbody style="font-size:.8rem; height:1px">
                 
                 </tbody>
  
-                <tfoot>
+                <tfoot style="font-size:.85rem; height:1px">
                   <tr>
                    <th style="width:10px">#</th>
                    <th>SKU</th>
                    <th>Cód.Int.</th>
                    <th>Descripción</th>
                    <th>Categoría</th>
-                   <th>Stock</th>
                    <th>Medida</th>
-                   <th>Agregado</th>
+                   <th>Stock</th>
+                   <th>F200</th>
+                   <th>Status</th>
+                   <th>Actualizado</th>
                    <th>Accion</th>
                  </tr> 
                </tfoot>
@@ -420,7 +424,6 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
             <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
       
-
       <!-- Modal body -->
       <div class="modal-body">
            
@@ -457,15 +460,15 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                 </select>
               </div>
             </div> 
-			<div class="form-group col-sm-3 mb-4">
+			    <div class="form-group col-sm-3 mb-4">
             <div class="input-group">
               <div class="input-group-prepend">
                       <span class="input-group-text"><i class="fa fa-code"></i></span>
               </div>
               <input type="text" class="form-control input-lg" placeholder="" name="editarCodigo" id="editarCodigo" readonly>
 			  
-			  <input type="hidden"  name="idDeUsuario" value="<?php echo $_SESSION['id'];?>">
-			  <input type="hidden"  name="editarIdProducto" id="editarIdProducto" value="">
+              <input type="hidden"  name="idDeUsuario" value="<?php echo $_SESSION['id'];?>">
+              <input type="hidden"  name="editarIdProducto" id="editarIdProducto" value="">
 			  
             </div>
             </div>
@@ -582,7 +585,7 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                     <div class="checkbox icheck">
                       <label title="Es material para Fibra óptica?">
                           <input type="checkbox" name="editaFO" value="1" class="minimal flat-red editaFO" title="Es material para Fibra óptica?">
-                          Para F.O.?
+                            Para F.O.?
                       </label>
                       </div>
                   </div>
@@ -593,7 +596,7 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                     <div class="checkbox icheck">
                       <label title="Es material para Cobre?">
                           <input type="checkbox" name="editaCobre" value="1" class="minimal flat-red editaCobre" >
-                          Para Cobre?
+                            Para Cobre?
                       </label>
                       </div>
                   </div>
@@ -604,7 +607,7 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                     <div class="checkbox icheck">
                       <label title="Es material para construcción?">
                           <input type="checkbox" name="editaConstruccion" value="1" class="minimal flat-red editaConstruccion" >
-                          Para Construcción?
+                            Para Construcción?
                       </label>
                       </div>
                   </div>
@@ -633,8 +636,8 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                       <span class="input-group-text"><i class="fa fa-bell"></i></span>
                     </div>
                       <select class="form-control input-lg"  name="editarEstatus" id="editarEstatus" title="Activar/Desactivar" required>
-                        <option value=0>Activado</option>
-                        <option value=1>Desactivado</option>
+                        <option value=1>Activado</option>
+                        <option value=0>Desactivado</option>
                       </select>
                   </div>
               </div>

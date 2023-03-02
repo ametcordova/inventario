@@ -23,7 +23,7 @@ require_once('../fpdf.php');
             // Movernos a la derecha
             $this->Cell(80);    // w-ancho h-alto txt-texto 0,1 ó LTRB-border 0,1,2-Posicion actual L,C,R-Alineacion true,false-fondo
             // Título
-            $this->Cell(30,6,utf8_decode('TELÉFONOS DE MÉXICO S.A. DE C.V.'),0,0,'C');
+            $this->Cell(30,6,iconv('UTF-8', 'ISO-8859-1','TELÉFONOS DE MÉXICO S.A. DE C.V.'),0,0,'C');
             // Salto de línea
             $this->Ln(5);
             $this->SetFont('Arial','B',10);
@@ -84,23 +84,25 @@ require_once('../fpdf.php');
                 $factura=$respuesta[$key]['factura'];
                 $datos_instalacion_json=json_decode($respuesta[$key]['datos_instalacion'],TRUE);		//decodifica los datos JSON 
                 $datos_material_json=json_decode($respuesta[$key]['datos_material'],TRUE);		//decodifica los datos JSON 
-                $datos_material = array_merge($datos_material, $datos_material_json);           //une en un solo array los dif. array
+                $datos_material = array_merge($datos_material, $datos_material_json);           //une en un solo array los 2 array
 
-                $pdf->Cell(60,6,utf8_decode('NÚMERO DE SERIE:'),0,0,'R',true);
-                $pdf->Cell(100,6,utf8_decode($datos_instalacion_json[0]['numeroserie']),1,0,'L',true);
+                $pdf->Cell(60,6,iconv('UTF-8', 'ISO-8859-1','NÚMERO DE SERIE:'),0,0,'R',true);
+                $pdf->Cell(100,6,iconv('UTF-8', 'ISO-8859-1',$datos_instalacion_json[0]['numeroserie']),1,0,'L',true);
                 $pdf->Ln();
-                $pdf->Cell(60,6,utf8_decode('ALFANÚMERICO:'),0,0,'R',true);
+                $pdf->Cell(60,6,iconv('UTF-8', 'ISO-8859-1','ALFANÚMERICO:'),0,0,'R',true);
                 $pdf->Cell(100,6,$datos_instalacion_json[0]['alfanumerico'],1,0,'L',true);
                 $pdf->Ln();
-                $pdf->Cell(60,6,utf8_decode('OS/TEL:'),0,0,'R',true);
-                $pdf->Cell(100,6,utf8_decode($os.' / '.$tel),1,0,'L',true);
+                $pdf->Cell(60,6,iconv('UTF-8', 'ISO-8859-1','OS/TEL:'),0,0,'R',true);
+                $pdf->Cell(100,6,iconv('UTF-8', 'ISO-8859-1',$os.' / '.$tel),1,0,'L',true);
                 $pdf->Ln();
-                $pdf->Cell(60,6,utf8_decode('FACTURA:'),0,0,'R',true);
-                $pdf->Cell(100,6,utf8_decode($factura),1,0,'L',true);
+                $pdf->Cell(60,6,iconv('UTF-8', 'ISO-8859-1','FACTURA:'),0,0,'R',true);
+                $pdf->Cell(100,6,iconv('UTF-8', 'ISO-8859-1',$factura),1,0,'L',true);
                 $pdf->Ln(10);
 
             }
-// -----------------------------------------------------------------------------------------        
+/************************************************************************************************/
+// ------------ A PARTIR DE AQUIE ES EL CONCENTRADO DE MATERIAL INSTALADO-------------------------
+/************************************************************************************************/        
             $pdf->SetDrawColor(128,0,0);
             $pdf->SetFillColor(255,0,0);
             $pdf->SetTextColor(255,255,255);
@@ -123,7 +125,7 @@ require_once('../fpdf.php');
             $w = array(10, 20, 25, 106, 20, 15);
             $num_headers = count($header);
             for($i = 0; $i < $num_headers; ++$i) {
-                $pdf->Cell($w[$i], 6.5, utf8_decode($header[$i]), 1, 0, 'C', 1);
+                $pdf->Cell($w[$i], 6.5, iconv('UTF-8', 'ISO-8859-1',$header[$i]), 1, 0, 'C', 1);
             };
             $pdf->SetDrawColor(0,0,0);
             $pdf->SetFillColor(255,255,255);
@@ -152,15 +154,15 @@ require_once('../fpdf.php');
                 $sku = $respuestaProducto["sku"];
                 $descripcion = substr(trim($respuestaProducto["descripcion"]),0,47);
                 $medida = $respuestaProducto["medida"];
-                $existe=number_format($value,2, '.',',');
+                $cant=number_format($value,2, '.',',');
                 $total_material+=$value;
 
                 $pdf->Cell(10, 6.5, $valorProducto, 1, 0, 'C', 1);
                 $pdf->Cell(20, 6.5, $sku, 1, 0, 'C', 1);
                 $pdf->Cell(25, 6.5, $codigointerno, 1, 0, 'C', 1);
-                $pdf->Cell(106, 6.5, utf8_decode($descripcion), 1, 0, 'L', 1);      //42
-                $pdf->Cell(20, 6.5, utf8_decode($medida), 1, 0, 'C', 1);
-                $pdf->Cell(15, 6.5, $existe, 1, 0, 'C', 1);
+                $pdf->Cell(106, 6.5, iconv('UTF-8', 'ISO-8859-1',$descripcion), 1, 0, 'L', 1);      //42
+                $pdf->Cell(20, 6.5, $medida, 1, 0, 'C', 1);
+                $pdf->Cell(15, 6.5, $cant, 1, 0, 'C', 1);
 
                 $pdf->Ln(7.2);
             }   //termina el foreach

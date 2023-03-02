@@ -27,9 +27,10 @@ class TablaProductos{
 	
 		$item = null;
     	$valor = null;
-    	$orden = "id";
+    	$orden = "descripcion";
 
   		$productos = ControladorProductos::ctrMostrarProductos($item, $valor, $orden);	
+
 
   		if(count($productos) == 0){
 
@@ -42,6 +43,7 @@ class TablaProductos{
 		  "data": [';
 
 		  for($i = 0; $i < count($productos); $i++){
+			
 
 		  	/*=============================================
  	 		TRAEMOS LA IMAGEN
@@ -58,7 +60,9 @@ class TablaProductos{
 
 		  	/*=============================================
  	 		STOCK
-  			=============================================*/ 
+  			=============================================*/
+			$f200=$productos[$i]["listar"]?"<button class='btn btn-sm btn-primary px-1 py-1' title='Activado'><i class='fa fa-unlock fa-fw'></i> </button>":"<button class='btn btn-sm btn-warning px-1 py-1' title='Desactivado'><i class='fa fa-lock fa-fw'></i> </button>";
+			$estado=$productos[$i]["estado"]?"<button class='btn btn-sm btn-success px-1 py-1' title='Activado'><i class='fa fa-unlock fa-fw'></i> </button>":"<button class='btn btn-sm btn-danger px-1 py-1' title='Desactivado'><i class='fa fa-lock fa-fw'></i> </button>";
 			$minimo=round($productos[$i]["minimo"],0); 
 			$media=($productos[$i]["minimo"]/2);
 
@@ -86,17 +90,7 @@ class TablaProductos{
 		  	/*=============================================
  	 		TRAEMOS LAS ACCIONES
   			=============================================*/ 
-
-  			// if(isset($_GET["perfilOculto"]) && $_GET["perfilOculto"] == "Especial"){
-
-  			// 	$botones =  "<div class='btn-group'><button class='btn btn-warning btn-sm btnEditarProducto' idProducto='".$productos[$i]["id"]."' data-toggle='modal' data-target='#modalEditarProducto'><i class='fa fa-pencil'></i></button></div>"; 
-
-  			// }else{
-
-  			// 	 $botones =  "<div class='btn-group'><button class='btn btn-warning btn-sm btnEditarProducto' idProducto='".$productos[$i]["id"]."' data-toggle='modal' data-target='#modalEditarProducto' title='Editar'><i class='fa fa-pencil'></i></button><button class='btn btn-danger btn-sm btnEliminarProducto' idProducto='".$productos[$i]["id"]."' codigo='".$productos[$i]["codigo"]."' imagen='".$productos[$i]["imagen"]."' title='Borrar'><i class='fa fa-trash-o'></i></button></div>"; 
-
-			// }
-			  
+	  
 			$boton1=getAccess($acceso, ACCESS_EDIT)?"<button class='btn btn-warning btn-sm btnEditarProducto' idProducto='".$productos[$i]["id"]."' data-toggle='modal' data-target='#modalEditarProducto' title='Editar'><i class='fa fa-pencil'></i></button> ":"";
 			$boton2=getAccess($acceso, ACCESS_DELETE)?"<button class='btn btn-danger btn-sm btnEliminarProducto' idProducto='".$productos[$i]["id"]."' codigo='".$productos[$i]["codigo"]."' imagen='".$productos[$i]["imagen"]."' title='Borrar'><i class='fa fa-trash-o'></i></button>":"";
 
@@ -111,8 +105,10 @@ class TablaProductos{
 			      "'.$productos[$i]["codigointerno"].'",
 			      "'.$productos[$i]["descripcion"].'",
 			      "'.$categorias["categoria"].'",
-			      "'.$stock.'",
                   "'.$medidas["medida"].'",
+			      "'.$stock.'",
+                  "'.$f200.'",
+                  "'.$estado.'",
 			      "'.$fechaAgregado.'",
 			      "'.$botones.'"
 			    ],';
@@ -124,9 +120,8 @@ class TablaProductos{
 		 $datosJson .=   '] 
 
 		 }';
-		
+ 
 		echo $datosJson;
-
 
 	}
 

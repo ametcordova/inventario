@@ -1,6 +1,6 @@
 <style>
   .select2-results__options {
-    font-size: 11px !important;
+    font-size: 12px !important;
   }
 
 table.dataTable.dataTable_width_auto {
@@ -287,7 +287,7 @@ $fechaHoy = date("Y-m-d");
 
             </div> <!-- fin del 2do form-row -->
 
-            <div class="form-row col-md-12 p-1"> <span id="msjdeerrorentrada"></span></div>
+            <div class="form-row col-md-12 p-1"></div>
 
             <div class="form-row">
               <div class="form-group col-md-12">
@@ -308,8 +308,8 @@ $fechaHoy = date("Y-m-d");
                   </div>
               </div>
                             
-              <div class="col-md-5">
-                <input type="text" class="form-control form-control-sm mb-1" name="nvoconcepto" id="nvoconcepto" title="Concepto" placeholder="Producto o Servicio" tabindex="11" >
+              <div class="col-md-6">
+                <textarea type="text" class="form-control form-control-sm mb-1" name="nvoconcepto" id="nvoconcepto" title="Concepto" placeholder="Producto o Servicio" tabindex="11" rows="2"></textarea>
               </div>
 
               <div class="col-md-1">
@@ -322,7 +322,7 @@ $fechaHoy = date("Y-m-d");
                 <input type="hidden" name="nvoobjetoimp" id="nvoobjetoimp">
               </div>
 
-              <div class="col-md-2">
+              <div class="col-md-1">
                 <input type="number" class="form-control form-control-sm mb-1 text-right" name="nvovalorunitario" id="nvovalorunitario" value="0" step="any" min="0" tabindex="13" title="Precio Unitario">
                 <input type="hidden" name="ismodifik" id="ismodifik" value=0>
               </div>
@@ -331,7 +331,7 @@ $fechaHoy = date("Y-m-d");
                  <button class="btn btn-primary btn-sm mb-1" data-toggle="modal" id="agregaProdFactura"><i class="fa fa-plus-circle"></i> Agregar</button>
               </div>
               
-              <div class="col-md-4 alert-danger rounded d-none" style="height:30px;" id="mensajerrorentrada"></div>
+              <!-- <div class="col-md-4 alert-danger rounded d-none" style="height:30px;" id="mensajerrorentrada"></div> -->
 
             </div><!-- fin del form-row -->
 
@@ -689,4 +689,4 @@ $fechaHoy = date("Y-m-d");
                 FIN MODAL PARA SUBIR ARCHIVOS DE ENTRADA CARSO AL ALMACEN 
 ==================================================================================== -->
 
-<script defer src="vistas/js/facturaingreso.js?v=150220231635"></script>
+<script defer src="vistas/js/facturaingreso.js?v=200220231635"></script>

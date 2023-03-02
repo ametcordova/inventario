@@ -168,22 +168,22 @@ scratch. This page gets rid of all links and provides the needed markup only.
 ?>
 <!-- AQUI SE VINCULAN LOS ARCHIVOS JS -->
 <script src="vistas/js/funciones.js?v=04092020"></script>                  
-<script src="vistas/js/plantilla.js?v=10052022"></script>
-<script src="vistas/js/usuario.js?v=091120221643"></script>
-<script src="vistas/js/categorias.js?v=02092020"></script>
-<script src="vistas/js/medidas.js?v=02092020"></script>
-<script src="vistas/js/proveedores.js?v=02092020"></script>
-<script src="vistas/js/productos.js?v=260220231127"></script>
-<script src="vistas/js/devolucion-tecnicos.js?v=02092020"></script>
-<script src="vistas/js/entradas.js?v=02092020"></script>
-<script src="vistas/js/salidas.js?v=02092020"></script>
-<script src="vistas/js/crear-almacen.js?v=02092020"></script>
-<script src="vistas/js/adminalmacenes.js?v=01122020"></script>  
-<script src="vistas/js/adminsalidas.js?v=02092020"></script> 
-<script src="vistas/js/reporteinventario.js?v=02092020"></script> 
-<script src="vistas/js/osvilla.js?v=02092020"></script> 
-<script src="vistas/js/adminseries.js?v=02092020"></script>
-<script src="vistas/js/adminoservicio.js?v=010220230104"></script>
+<script src="vistas/js/plantilla.js?v=01032023"></script>
+<script src="vistas/js/usuario.js?v=010320231643"></script>
+<script src="vistas/js/categorias.js?v=010320231206"></script>
+<script src="vistas/js/medidas.js?v=010320231206"></script>
+<script src="vistas/js/proveedores.js?v=010320231206"></script>
+<script src="vistas/js/productos.js?v=010320231206"></script>
+<script src="vistas/js/devolucion-tecnicos.js?v=010320231206"></script>
+<script src="vistas/js/entradas.js?v=010320231206"></script>
+<script src="vistas/js/salidas.js?v=010320231206"></script>
+<script src="vistas/js/crear-almacen.js?v=010320231206"></script>
+<script src="vistas/js/adminalmacenes.js?v=010320231206"></script>  
+<script src="vistas/js/adminsalidas.js?v=010320231206"></script> 
+<script src="vistas/js/reporteinventario.js?v=010320231206"></script> 
+<script src="vistas/js/osvilla.js?v=010320231206"></script> 
+<script src="vistas/js/adminseries.js?v=010320231206"></script>
+<script src="vistas/js/adminoservicio.js?v=010320231206"></script>
 <!--<script defer src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 

@@ -112,25 +112,7 @@ function listarOServicios(){
       "aServerSide": true,//Paginación y filtrado realizados por el servidor
       "lengthMenu": [ [15, 25, 50, 100, -1], [15, 25, 50, 100, "Todos"] ],
       "language": {
-      "sProcessing":     "Procesando...",
-      "sLengthMenu":     "Mostrar _MENU_ registros &nbsp",
-      "sZeroRecords":    "No se encontraron resultados",
-      "sEmptyTable":     "Ningún dato disponible en esta tabla",
-      "sInfo":           "Mostrar registros del _START_ al _END_ de un total de _TOTAL_",
-      "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
-      "sInfoPostFix":    "",           
-      "sSearch":         "Buscar:",
-      "sInfoThousands":  ",",
-      "sLoadingRecords": "Cargando...",
-      "oPaginate": {
-      "sFirst":    "<<",
-      "sLast":     ">>",
-      "sNext":     ">",
-      "sPrevious": "<"}
-          },
-      "oAria": {
-        "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
-        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+        "url": "extensiones/espanol.json",
       },
       scrollY:        "460px",
       scrollX:        true,
@@ -205,7 +187,7 @@ function listarOServicios(){
       "bDestroy": true,
       "iDisplayLength": 15,//Paginación
       "order": [[ 0, 'desc' ]] //Ordenar (columna,orden)
-    }).DataTable();    
+    }).DataTable();
 
 }
 // ========= FIN LISTAR EN EL DATATABLE REGISTROS DE LA TABLA TABLAOS================

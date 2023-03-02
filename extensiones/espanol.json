@@ -10,11 +10,11 @@
     "sInfoThousands":  ",",
     "sLoadingRecords": "Cargando...",
     "oPaginate": {
-    "sFirst":    "Primero",
-    "sLast":     "Último",
-    "sNext":     "Siguiente",
-    "sPrevious": "Anterior"},
-  
+      "sFirst":    "<i class='fa fa-fast-backward fa-lg'></i>",
+      "sLast":     "<i class='fa fa-fast-forward fa-lg'></i>",
+      "sNext":     "<i class='fa fa-step-forward fa-lg'></i>",
+      "sPrevious": "<i class='fa fa-step-backward fa-lg'></i>"
+    },
     "oAria": {
       "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
       "sSortDescending": ": Activar para ordenar la columna de manera descendente"

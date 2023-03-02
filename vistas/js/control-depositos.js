@@ -147,10 +147,6 @@ function dt_crtl_depositos(){
 		"sNext":     "Siguiente",
 		"sPrevious": "Anterior"}
         },
-		"oAria": {
-			"sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
-			"sSortDescending": ": Activar para ordenar la columna de manera descendente"
-		},
     "pagingType": "full_numbers",
         dom: '<clear>Bfrtip',
         buttons: [

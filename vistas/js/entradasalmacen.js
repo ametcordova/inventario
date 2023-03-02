@@ -51,8 +51,8 @@ function dt_ListarEntradasAlmacen(){
     "lengthMenu": [ [10, 25, 50,100, -1], [10, 25, 50, 100, "Todos"] ],
     "language": {
       "url": "extensiones/espanol.json",
-    },    
-        dom: '<clear>Bfrtip',
+    },   
+      dom: '<clear>Bfrtip',
         buttons: [
             {
              text: 'Copiar',
@@ -98,7 +98,7 @@ function dt_ListarEntradasAlmacen(){
 		"bDestroy": true,
 		"iDisplayLength": 10,//Paginación
 	    "order": [[ 0, "desc" ]]//Ordenar (columna,orden)
-	}).DataTable();    
+	}).DataTable();
     
 } 
 
