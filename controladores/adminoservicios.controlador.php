@@ -143,4 +143,16 @@ static public function ctrGuardarAgregaOS($tabla, $idregos, $fechaagrega, $nvaob
 
 }
 
+	/*=============================================
+	MATERIAL CONSUMIDO EN LA(S) OS POR FACTURA
+	============================================*/
+	static public function ctrGetMaterialOsFactura($tabla, $campo, $valor){
+
+		$respuesta = ModeloOServicios::mdlGetMaterialOsFactura($tabla, $campo, $valor);
+
+		return $respuesta;
+
+	} 
+	/*=============================================*/
+
 }	//fin de la clase	

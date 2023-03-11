@@ -61,8 +61,14 @@ class TablaProductos{
 		  	/*=============================================
  	 		STOCK
   			=============================================*/
-			$f200=$productos[$i]["listar"]?"<button class='btn btn-sm btn-primary px-1 py-1' title='Activado'><i class='fa fa-unlock fa-fw'></i> </button>":"<button class='btn btn-sm btn-warning px-1 py-1' title='Desactivado'><i class='fa fa-lock fa-fw'></i> </button>";
-			$estado=$productos[$i]["estado"]?"<button class='btn btn-sm btn-success px-1 py-1' title='Activado'><i class='fa fa-unlock fa-fw'></i> </button>":"<button class='btn btn-sm btn-danger px-1 py-1' title='Desactivado'><i class='fa fa-lock fa-fw'></i> </button>";
+			$esfo=$productos[$i]["esfo"]?"<button class='btn btn-sm btn-info px-1 py-1' title='Fibra Optica'><i class='fa fa-check'></i></button> ":"<button class='btn btn-sm btn-default px-1 py-1' title='No es FO'><i class='fa fa-times fa-fw'></i></button> ";
+			$escobre=$productos[$i]["escobre"]?"<button class='btn btn-sm btn-info px-1 py-1' title='Cobre'><i class='fa fa-check'></i></button> ":"<button class='btn btn-sm btn-default px-1 py-1' title='No es mat. cobre'><i class='fa fa-times fa-fw'></i></button> ";
+			$esconstruccion=$productos[$i]["esconstruccion"]?"<button class='btn btn-sm btn-info px-1 py-1' title='Construcción'><i class='fa fa-check'></i></button> ":"<button class='btn btn-sm btn-default px-1 py-1' title='No es mat. construcción'><i class='fa fa-times fa-fw'></i> </button>";
+			
+			$f200=$productos[$i]["listar"]?"<button class='btn btn-sm btn-success px-1 py-1' title='Activado'><i class='fa fa-check-square-o fa-lg'></i> </button>":"<button class='btn btn-sm btn-dark px-1 py-1' title='Desactivado'><i class='fa fa-ban fa-lg'></i> </button>";
+
+			$estado=$productos[$i]["estado"]?"<button class='btn btn-sm btn-success px-1 py-1' title='Activado'><i class='fa fa-unlock fa-fw'></i> </button>":"<button class='btn btn-sm btn-danger px-1 py-1' title='Desactivado'><i class='fa fa-lock fa-lg'></i> </button>";
+
 			$minimo=round($productos[$i]["minimo"],0); 
 			$media=($productos[$i]["minimo"]/2);
 
@@ -95,6 +101,7 @@ class TablaProductos{
 			$boton2=getAccess($acceso, ACCESS_DELETE)?"<button class='btn btn-danger btn-sm btnEliminarProducto' idProducto='".$productos[$i]["id"]."' codigo='".$productos[$i]["codigo"]."' imagen='".$productos[$i]["imagen"]."' title='Borrar'><i class='fa fa-trash-o'></i></button>":"";
 
 			$botones=$boton1.$boton2;
+			$btnmaterial=$esfo.$escobre.$esconstruccion;
 
 		    $fechaAgregado = date('d-m-Y', strtotime($productos[$i]["fecha"]));
             //$compra = "$".number_format($productos[$i]["precio_compra"], 2, '.',',');
@@ -104,9 +111,9 @@ class TablaProductos{
 			      "'.$productos[$i]["sku"].'",
 			      "'.$productos[$i]["codigointerno"].'",
 			      "'.$productos[$i]["descripcion"].'",
-			      "'.$categorias["categoria"].'",
                   "'.$medidas["medida"].'",
 			      "'.$stock.'",
+				  "'.$btnmaterial.'",
                   "'.$f200.'",
                   "'.$estado.'",
 			      "'.$fechaAgregado.'",

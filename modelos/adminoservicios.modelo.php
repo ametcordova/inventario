@@ -258,7 +258,7 @@ static Public function mdlObtenerMaterialOS($tabla, $campo, $valor){
 	
 		   $stmt=Conexion::conectar()->prepare($sql);
 		   
-		   //$stmt->bindParam(":".$campo, $valor, PDO::PARAM_INT);
+		   //$stmt->bindParam(":".$campo, $valor, PDO::PARAM_STR);
 		   
 		   $stmt->execute();
 		   
@@ -429,6 +429,39 @@ static public function mdlGuardarAgregaOS($tabla, $idregos, $fechaagrega, $nvaob
   }
 }
 
+	/*=============================================
+		REPORTE DE MAT. UTILIZADO EN LA OS
+	=============================================*/	
+	static Public function mdlGetMaterialOsFactura($tabla, $campo, $valor){
+		try{     
+			if($campo !=null){    
+		
+				$sql="SELECT os.id, os.datos_material, os.estatus, os.factura, fi.conceptos FROM $tabla os
+				INNER JOIN facturaingreso fi ON CONCAT(fi.serie,fi.folio)=$campo
+				WHERE os.$campo=:$campo";
+		
+			$stmt=Conexion::conectar()->prepare($sql);
+			
+			$stmt->bindParam(":".$campo, $valor, PDO::PARAM_STR);
+			
+			$stmt->execute();
+			
+			return $stmt->fetchAll();
+			
+			}else{
+		
+				return false;
+		
+			}        
+			
+			$stmt=null;
+		
+		} catch (Exception $e) {
+			echo "Failed: " . $e->getMessage();
+		}
+	}    
+	/*==========================================================================================*/
+
 }       //fin de la clase
 
 /********************************************************************************* */
@@ -468,6 +501,7 @@ function actualizaDataOS($tabla, $cant, $ultusuario, $id, $disponible){
 		return $th;
 	}
 }
+
 
 
 
@@ -515,10 +549,16 @@ SELECT * FROM hist_salidas WHERE id_producto = 4 AND id_tecnico=13 AND id_almace
 $consulta_sql = "INSERT INTO usuarios(id, imagen, nombre)\n".
                 "    VALUES ('$id', '$img', '$nombre')\n".
                 "ON DUPLICATE KEY\n".
-                "    UPDATE imagen = VALUES(imagen), nombre=VALUES(nombre);";		
+                "    UPDATE imagen = VALUES(imagen), nombre=VALUES(nombre);";		[]
 
 PARA BUSCAR EL VALOR 107 EN EL CAMPO datos_material
-SELECT * FROM tabla_os WHERE JSON_EXTRACT(datos_material, '$[*].id_producto') LIKE '%107%'
+SELECT * FROM tabla_os WHERE JSON_EXTRACT(datos_material, '$[*].id_producto') LIKE '%107%'	ok
+SELECT `id`, `datos_material` FROM tabla_os WHERE JSON_EXTRACT(datos_material, "$[*].id_producto") LIKE '%107%';
+
+SELECT `id`,`datos_material` FROM tabla_os WHERE JSON_EXTRACT(datos_material, '$.id_producto')='107';
+SELECT * FROM tabla_os WHERE JSON_EXTRACT(campo_json, '$[*].id_producto') = 'valor_del_id_producto';
+UPDATE tabla_os SET datos_material = JSON_SET(datos_material, '$[*].id_producto', 105) WHERE JSON_EXTRACT(datos_material, '$[*].id_producto') LIKE '%107%';
+
 
 En esta consulta, JSON_CONTAINS(datos_material, '{"id_producto": 107}', '$') filtra los registros que contienen el valor 107 en el campo id_producto. La función JSON_REPLACE() reemplaza el valor 107 por 105 en el campo id_producto del objeto JSON contenido en el campo datos_material.
 Recuerda reemplazar "107" por el valor que deseas buscar y "105" por el valor que deseas reemplazar.
@@ -527,7 +567,8 @@ UPDATE tabla_os
 SET datos_material = JSON_REPLACE(datos_material, '$[id_producto=?]', '105') 
 WHERE JSON_CONTAINS(datos_material, '{"id_producto": 107}', '$');
 
-UPDATE tabla_os SET datos_material = JSON_REPLACE(datos_material, "$.id_producto", "105")
-WHERE JSON_SEARCH(datos_material, 'one', "107", NULL, '$**.id_producto') IS NOT NULL;
+UPDATE tabla_os SET datos_material = JSON_SET(datos_material, '$.id_producto', '105') WHERE JSON_EXTRACT(datos_material, '$[*].id_producto') LIKE '%107%';
+UPDATE tabla SET datos_material = JSON_REPLACE(datos_material, '$[0].id_producto', '105') WHERE JSON_EXTRACT(datos_material, '$[0].id_producto') = '107';
 
+SELECT * FROM tabla_os WHERE datos_material LIKE '%"id_producto":"107"%';
 */	

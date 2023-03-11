@@ -76,9 +76,9 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                    <th>SKU</th>
                    <th>Cód.Int.</th>
                    <th>Descripción</th>
-                   <th>Categoría</th>
                    <th>Medida</th>
                    <th>Stock</th>
+                   <th>FO- CO- OB</th>
                    <th>F200</th>
                    <th>Status</th>
                    <th>Actualizado</th>                   
@@ -96,9 +96,9 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                    <th>SKU</th>
                    <th>Cód.Int.</th>
                    <th>Descripción</th>
-                   <th>Categoría</th>
                    <th>Medida</th>
                    <th>Stock</th>
+                   <th>FO- CO- OB</th>
                    <th>F200</th>
                    <th>Status</th>
                    <th>Actualizado</th>
@@ -271,7 +271,7 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
 
                  <div class="col-sm-3 col-xs-3 mb-4" style="padding-left:4px">
                      <div class="input-group">
-                         <input type="number" class="form-control nuevoPorcentaje" min="0" value="40" required tabindex="8">
+                         <input type="number" class="form-control nuevoPorcentaje" min="0" value="0" tabindex="8">
                          <span class="input-group-text"><i class="fa fa-percent"></i></span>
                      </div>
                  </div>
@@ -532,7 +532,7 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                      <div class="form-group">
                         <div class="checkbox icheck">
                          <label>
-                             <input type="checkbox" class="minimal flat-red porcentaje" checked>
+                             <input type="checkbox" class="minimal flat-red porcentaje">
                              utilizar porcentaje
                          </label>
                          </div>
@@ -542,7 +542,7 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                 <!--Porcentaje no se guarda en la BD -->
                  <div class="col-sm-3 col-xs-3 mb-4" style="padding-left:4px">
                      <div class="input-group">
-                         <input type="number" class="form-control nuevoPorcentaje" min="0" value="40" required>
+                         <input type="number" class="form-control nuevoPorcentaje" min="0" value="0">
                          <span class="input-group-text"><i class="fa fa-percent"></i></span>
                      </div>
                  </div>

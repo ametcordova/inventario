@@ -43,7 +43,8 @@ tableProduct=$('.tablaProductos').dataTable( {
           btns.addClass('btn btn-success btn-sm');
         },
         "columnDefs": [
-          {"className": "dt-center", "targets": [1,6,7,8,9]},
+          {"width:":"25px", "targets": [3]},
+          {"className": "dt-center", "targets": [1,5,6,7,8,9,10]},
           //{"className": "dt-right", "targets": [3,4]}				//"_all" para todas las columnas
           ],         
         "order": [[ 3, 'asc' ]] //Ordenar (columna,orden)

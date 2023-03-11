@@ -9,6 +9,9 @@ $fechahoy = strftime("%d-%h-%Y", $date->getTimestamp());
 // Incluir la librería PhpSpreadsheet
 require_once '../extensiones/vendor/autoload.php';
 require_once dirname( __DIR__ ).'../modelos/conexion.php';
+require_once dirname( __DIR__ ).'../controladores/adminoservicios.controlador.php';
+require_once dirname( __DIR__ ).'../modelos/adminoservicios.modelo.php';
+
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -37,7 +40,7 @@ $estilostitulos = [
 ];
 
 // Establecer estilos de los bordes de las celdas
-$styleBorder = [
+$styleAllBorder = [
     'borders' => [
         'allBorders' => [
             'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN
@@ -127,14 +130,14 @@ $hoja->getRowDimension(6)->setRowHeight(7);
 $hoja->getStyle('K5:K5')->getAlignment()->setVertical('center')->setHorizontal('center');  //CENTRADO HORIZONTAL Y VERTICAL
 $hoja->setCellValue('K5', 'PROYECTO:');
 $hoja->getStyle('L5')->applyFromArray($styleBorderLower)->getAlignment()->setVertical('center')->setHorizontal('left'); 
-$hoja->setCellValue('L5', $proyecto);
+//$hoja->setCellValue('L5', $proyecto);
 
 $hoja->getStyle('A7:L7')->getFont()->setBold(true)->setSize(9);
 $hoja->getStyle('A7:A7')->getAlignment()->setVertical('center')->setHorizontal('center');  //CENTRADO HORIZONTAL Y VERTICAL
 $hoja->setCellValue('A7', 'PEP:');
 $hoja->mergeCells('B7:D7');
 $hoja->getStyle('B7:D7')->applyFromArray($styleBorderLower)->getAlignment()->setVertical('center')->setHorizontal('left');  
-$hoja->setCellValue('B7', $trabajo);
+//$hoja->setCellValue('B7', $trabajo);
 $hoja->getStyle('E7:E7')->getAlignment()->setVertical('center')->setHorizontal('right');  //CENTRADO HORIZONTAL Y VERTICAL
 $hoja->setCellValue('E7', 'RUTA:');
 $hoja->getStyle('F7')->applyFromArray($styleBorderLower);
@@ -175,14 +178,14 @@ $hoja->setCellValue('M10', 'SOBRANTE');
 $hoja->setCellValue('N10', 'P.U.');
 $hoja->setCellValue('O10', 'ADEUDO');
 
-$hoja->getStyle('A10:O10')->applyFromArray($estilostitulos)->applyFromArray($styleBorder);
+$hoja->getStyle('A10:O10')->applyFromArray($estilostitulos)->applyFromArray($styleAllBorder);
 //$hoja->getStyle('A6:L6')->applyFromArray($styleBorder);
 
 // Establecer ancho de columnas
-$hoja->getColumnDimension('A')->setWidth(7);
+$hoja->getColumnDimension('A')->setWidth(9);
 $hoja->getColumnDimension('B')->setWidth(7);
 $hoja->getColumnDimension('C')->setWidth(10);
-$hoja->getColumnDimension('D')->setWidth(50);
+$hoja->getColumnDimension('D')->setWidth(47);
 $hoja->getColumnDimension('E')->setWidth(10);
 $hoja->getColumnDimension('F')->setWidth(10);
 $hoja->getColumnDimension('G')->setWidth(10);
@@ -198,18 +201,18 @@ $hoja->getColumnDimension('O')->setWidth(10);
 /**************************************************************************************** */
 # Obtener los datos de la base de datoss
 try{
-    $sql = "SELECT COUNT(*) AS cuantos FROM productos WHERE esfo=1";
+    $sql = "SELECT COUNT(*) AS cuantos FROM productos WHERE esfo=1 AND listar=1 AND estado=1";
     $resultado = Conexion::conectar()->prepare($sql);
     $resultado->execute();
     $datos = $resultado->fetch(PDO::FETCH_ASSOC);    
         /* Comprobar el número de filas que coinciden con la sentencia SELECT */
         if (intval($datos['cuantos'])>0){
-                $consulta = "SELECT *, m.medida FROM productos p INNER JOIN medidas m ON p.id_medida=m.id WHERE esfo=1 ORDER BY p.descripcion ASC";
+            $consulta = "SELECT p.id, p.codigointerno, p.descripcion, p.sku, m.medida FROM productos p INNER JOIN medidas m ON p.id_medida=m.id WHERE esfo=1 AND listar=1 AND estado=1 ORDER BY p.descripcion ASC";
 
-                // Recorrer la tabla de MySQL y agregar los datos a la hoja de Excel
-                $stmt = Conexion::conectar()->prepare($consulta);
-                $stmt->execute();
-                $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            // Recorrer la tabla de MySQL y agregar los datos a la hoja de Excel
+            $stmt = Conexion::conectar()->prepare($consulta);
+            $stmt->execute();
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
 
 } catch (Exception $e) {
@@ -220,18 +223,21 @@ try{
     die(json_encode($response));
 }
 /**************************************************************************************** */
-
+/* SI EXISTEN DATOS SE CREA EL LLENADO DEL FORMATO */
+/**************************************************************************************** */
 if (!empty($data)) {
     $row = 11;
+    $idproductos=array();
     $cuantos=(intval($row)+intval($datos['cuantos']))-1;
-    $hoja->getStyle('A11:O'.$cuantos)->applyFromArray($styleBorder);
+    $hoja->getStyle('A11:O'.$cuantos)->applyFromArray($styleAllBorder);
     $hoja->getStyle('A11:O'.$cuantos)->getFont()->setBold(false)->setSize(10);
     // Rellenar la hoja de cálculo con los datos correspondientes
     foreach ($data as $rowdata) {
         $hoja->setCellValue('A'.$row, $rowdata['medida']);
-        $hoja->setCellValue('B'.$row, '');
+        $hoja->setCellValue('B'.$row, $rowdata['id'].'-'.$row);
         $hoja->setCellValue('C'.$row, $rowdata['codigointerno']);
         $hoja->setCellValue('D'.$row, $rowdata['descripcion']);
+        $idproductos+=[intval($row) => $rowdata['id']];
         $row++;
     }
 }else{
@@ -241,44 +247,135 @@ if (!empty($data)) {
     );
     die(json_encode($response));
 }  
+/**************************************************************************************** */
+/* TERMINA DE LLENAR EL FORMATO CON LOS DATOS DEL CATALOGO DE PRODUCTOS           */
+/**************************************************************************************** */
+    
+    //TRAEMOS LA INFORMACIÓN 
+    $tabla="tabla_os";
+    $campo = "factura";
+    $valor='A441';
+    //$valor = $_GET["idsfacturas"];
+    $errores=array();
+    //TRAER LOS DATOS DEL ALMACEN SELECCIONADO
+    $respuesta = ControladorOServicios::ctrGetMaterialOsFactura($tabla, $campo, $valor);
+        
+    if($respuesta){
+        
+        /********************************************************/
+        /* OBTIENE DATOS DE PEP Y PROY DE LA TABLA FACTURAINGRESO
+        /*******************************************************/
+        $datos=json_decode($respuesta[0]['conceptos'],true);
+        $descripcion=$datos[0]['Descripcion'];
+        $pep=substr(stristr($descripcion, "BRUNO DIAZ"),0,strpos(stristr($descripcion, "BRUNO DIAZ"),"."));
+        $proy=substr(stristr($descripcion,"CAR"),0,9);
+        $odc=substr(stristr($descripcion, "00"),0,8);
+        $hoja->setCellValue('L5', $proy);
+        $hoja->setCellValue('B7', $pep);
+        /*************************************************** */
 
-// Rellenar la hoja de cálculo con los datos correspondientes
-// $hoja->setCellValue('A11', 'PZA');
-// $hoja->setCellValue('B11', '');
-// $hoja->setCellValue('C11', '000143560');
-// $hoja->setCellValue('D11', 'ARGOLLA P/CORD. PARALELO POSTE SOLIDO');
+        $datos_material=array();
+        foreach($respuesta as $key => $val) {
+            //array_push($datos_material, json_decode($respuesta[$key]['datos_material'],TRUE));
+            array_push($datos_material, $respuesta[$key]['datos_material']);
+        }
 
-// $hoja->setCellValue('A12', 'PZA');
-// $hoja->setCellValue('B12', '');
-// $hoja->setCellValue('C12', '000143670');
-// $hoja->setCellValue('D12', 'ARGOLLA P/CORDON DE ACOMETIDA');
+        $i=0;$newArray = array(); 
+        foreach ($datos_material as $clave => $valor) {
+            //echo $clave . ' => ' . $valor.PHP_EOL;
+            $x=json_decode($valor, true);
+            foreach ($x as $key => $value) {
+                //echo 'id:'.$value['id_producto'].' - ';
+                //echo 'cant:'.$value['cantidad'].' - '.PHP_EOL;
+             if(array_key_exists($value['id_producto'], $newArray)) {
+                 $newArray[$value['id_producto']] += floatval($value['cantidad']);
+             } else {
+                 $newArray[$value['id_producto']] = floatval($value['cantidad']);
+             }
 
+            }
+            //exit;
+          }
 
-$hoja->setCellValue('I11', '1');
-$hoja->setCellValue('J11', '1');
-$hoja->setCellValue('K11', '0');
-$hoja->setCellValue('L11', '0');
-$hoja->setCellValue('M11', '0');
+          //echo ' '.PHP_EOL;
+          foreach ($newArray as $key => $value) {
+            $fila=array_search("$key",$idproductos,true);      //"$key", string)$key, strval($key) los 3 funcionan para conv numero a string
+            //echo $key.'-'.$value.'-'.$fila.PHP_EOL;
+            if(intval($fila)>0){
+                $hoja->setCellValue('I'.$fila, $value);
+                $hoja->setCellValue('J'.$fila, $value);
+                $hoja->setCellValue('K'.$fila, '0');
+                $hoja->setCellValue('L'.$fila, '0');
+                $hoja->setCellValue('M'.$fila, '0');
+            }else{
+                array_push($errores, "No existe producto $key con cant $value");
+            }
+          }
+/**************************************************************************************** */
+/*                            TITULOS EN EL PIE DE PAGINA                                 */
+/**************************************************************************************** */
+          $row=$row+3;
+          $hoja->getStyle('D'.$row.':J'.$row)->getFont()->setBold(true);
+          $hoja->getStyle('D'.$row.':D'.$row)->applyFromArray($styleBorderLower)->getAlignment()->setVertical('center')->setHorizontal('center'); 
+          $hoja->setCellValue('D'.$row, 'ING. BRUNO DIAZ GORDILLO');
 
-$hoja->setCellValue('I12', '20');
-$hoja->setCellValue('J12', '20');
-$hoja->setCellValue('K12', '0');
-$hoja->setCellValue('L12', '0');
-$hoja->setCellValue('M12', '0');
+          $hoja->getStyle('F'.$row.':H'.$row)->applyFromArray($styleBorderLower)->getAlignment()->setVertical('center')->setHorizontal('center'); 
+          $hoja->mergeCells('F'.$row.':H'.$row);
+          $hoja->setCellValue('F'.$row, 'ING. FRANCISCO LIEVANO');
 
+          $hoja->getStyle('J'.$row.':M'.$row)->applyFromArray($styleBorderLower)->getAlignment()->setVertical('center')->setHorizontal('center'); 
+          $hoja->mergeCells('J'.$row.':M'.$row);
+          $hoja->setCellValue('J'.$row, 'ING. CARLOS HUMBERTO GOMEZ');
+          $row++;
+          $hoja->getStyle('D'.$row.':D'.$row)->getAlignment()->setVertical('center')->setHorizontal('center'); 
+          $hoja->setCellValue('D'.$row, 'CONTRATISTA');
 
-// Guardar el archivo de Excel
-$writer = new Xlsx($spreadsheet);
-try {
-    $writer->save('mi_archivo_excel'.time().'.xlsx');
-    echo 'El archivo se guardó exitosamente.';
-} catch (PhpOffice\PhpSpreadsheet\Writer\Exception $e) {
-    echo 'Error al guardar el archivo: Es posible que este abierto',  $e->getMessage(), "\n";
-}
+          $hoja->getStyle('F'.$row.':H'.$row)->getAlignment()->setVertical('center')->setHorizontal('center'); 
+          $hoja->mergeCells('F'.$row.':H'.$row);
+          $hoja->setCellValue('F'.$row, 'COORDINADOR AX');
+
+          $hoja->getStyle('J'.$row.':M'.$row)->getAlignment()->setVertical('center')->setHorizontal('center'); 
+          $hoja->mergeCells('J'.$row.':M'.$row);
+          $hoja->setCellValue('J'.$row, 'SUPERVISOR DE LA OBRA');
+/**************************************************************************************** */
+
+    }else{
+        $response =  array(
+            'response' => 400,
+            'mensaje' =>"No existen factura"
+        );
+        echo json_encode($response);
+        exit;
+    }
+
+    if(count($errores)==0){
+        //$filename='mi_archivo_excel'.time().'.xlsx';
+        // Guardar el archivo de Excel
+        $writer = new Xlsx($spreadsheet);
+        try {
+            $writer->save('mi_archivo_excel'.time().'.xlsx');
+            echo 'El archivo se guardó exitosamente.';
+
+        } catch (PhpOffice\PhpSpreadsheet\Writer\Exception $e) {
+            echo 'Error al guardar el archivo: Es posible que este abierto',  $e->getMessage(), "\n";
+        }
+    }else{
+        $response =  array(
+            'response' => 400,
+            'mensaje' =>$errores
+        );
+        echo json_encode($response);
+    }
+
 // Cerrar la conexión a la base de datos MySQL
 $stmt = null;
-// header('Content-Type: application/vnd.ms-excel');
-// header('Content-Disposition: attachment;filename="salida.xlsx"');
-// $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
-// $writer->save('php://output');
 
+
+        //echo count($errores).PHP_EOL;
+        //var_dump($errores);
+        //   var_dump($newArray);
+        //   echo ' '.PHP_EOL;
+        //   var_dump($idproductos);
+        //   echo ' '.PHP_EOL;
+        //   echo array_search($value['id_producto'],$idproductos,true);
+        //   echo ' '.PHP_EOL;

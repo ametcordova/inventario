@@ -173,7 +173,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="vistas/js/categorias.js?v=010320231206"></script>
 <script src="vistas/js/medidas.js?v=010320231206"></script>
 <script src="vistas/js/proveedores.js?v=010320231206"></script>
-<script src="vistas/js/productos.js?v=010320231206"></script>
+<script src="vistas/js/productos.js?v=020320231206"></script>
 <script src="vistas/js/devolucion-tecnicos.js?v=010320231206"></script>
 <script src="vistas/js/entradas.js?v=010320231206"></script>
 <script src="vistas/js/salidas.js?v=010320231206"></script>
