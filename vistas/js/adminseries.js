@@ -80,7 +80,7 @@ var producto=$("#selecProductoSerie option:selected" ).text();       //obtener e
 var almacen=$( "#nuevoAlmacenSerie option:selected" ).text();
 
 let nNumeroSerie=$("#numeroSeries").val();
-let nAlfanumerico=$("#alfanumerico").val();
+let nAlfanumerico=$("#alfanumerico").val().toUpperCase();
 
 var codigoalma= almacen.substr(0, almacen.indexOf('-'));
 //console.log("# Alma",codigoalma)
@@ -120,6 +120,7 @@ var codigoalma= almacen.substr(0, almacen.indexOf('-'));
       inicializacampos();  
       //evaluarDevolucion(); 
       calculaTotalItems()
+      getFocus()
 })
 
 function inicializacampos(){
@@ -145,8 +146,12 @@ function calculaTotalItems() {
 	  $("#btnGuardarSerie").show();
 	  $("#calculoSerie").show();
 	}
+
 }
 
+function getFocus() {
+  document.getElementById("numeroSeries").focus();
+}
 /*======================================================================*/
 //ENVIAR FORMULARIO PARA GUARDAR DATOS DE ENTRADA
 $("body").on("submit", "#formularioSeries", function( event ) {	
@@ -465,8 +470,8 @@ function listarSeries(){
 					}
 				},
 		"bDestroy": true,
-		"iDisplayLength": 8,//Paginación
-	    "order": [[ 0, "asc" ]]//Ordenar (columna,orden)
+		"iDisplayLength": 10,//Paginación
+	    "order": [[ 0, "desc" ]]//Ordenar (columna,orden)
 	}).DataTable();    
     
 } 

@@ -171,7 +171,7 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
 
                     <div class="form-group col-md-3">
                         <label class="control-label" for="inputError"><i class="fa fa-check"></i>No. Docto:</label>
-                        <input type="text" class="form-control form-control-sm" name="numdocto" id="numdocto" value="Tests" placeholder="" tabindex="4" title="Numero de docto de entrada">
+                        <input type="text" class="form-control form-control-sm" name="numdocto" id="numdocto" value="" placeholder="#Docto" required tabindex="4" title="Numero de docto de entrada">
                       </div>
 
 

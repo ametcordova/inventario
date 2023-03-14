@@ -839,24 +839,66 @@ function checkOS(){
 }
 /*======================================================================*/
 function f200(){
-// Datos que se enviarán al servidor
-const datos = {
-  parametro1: 'valor1',
-  parametro2: 'valor2'
-};
 
-// Configuración de la petición
-const opciones = {
-  method: 'POST',
-  body: JSON.stringify(datos)
-};
+  swal({
+    text: 'Número de Factura.? ó "ESC" para salir',
+    content: "input",
+    button: {
+      text: "Generar F-200",
+      closeModal: false,
+    },
+  })
+  .then(factura => {
+    if (!factura){
+      swal("Tienes que capturar un número de factura válido!", "error");
+      return;
+    } 
+      axios.post('controladores/generar-f200.php', {
+      factura: factura
+    })
 
-// Realizar la petición al servidor
-fetch('controladores/generar-f200.php', opciones)
-  .then(response => response.text())
-  .then(data => console.log(data))
-  .catch(error => console.error(error));
+    .then(function (response) {
+      console.log(response)
+      if (response.data.respuesta===200) {
+        //console.log(response.data.respuesta, response.data.mensaje)
+        let params = '?invoice='+factura;
+        let url = 'controladores/descargar.php'+params;
+        //window.location.href = 'controladores/descargar.php';
+        window.location.href = url;
+        swal.stopLoading();
+        swal.close();
+      } else {
+        swal.close();
+        respuesta_f200(response)
+      }
+    })
+
+    .catch(function (error) {
+      if (error) {
+        swal("Oh no!", "la petición AJAX ha fallado!", "error");
+      } else {
+        swal.stopLoading();
+        swal.close();
+      }
+    })
+  });
+  
 }
+/*======================================================================*/
+function respuesta_f200(response){
+  console.log(response.data.respuesta, response.data.mensaje)
+  if(response.data.respuesta=400){
+    swal({
+      title: 'Atención',
+      text: response.data.mensaje,
+      icon: "error",
+      button: "Entendido",
+      dangerMode: true,
+      timer: 5000
+    })  //fin .then
+  }
+}
+/*======================================================================*/
 /*======================================================================*/
 $('.insertaFact').on('ifChanged', function(event) {
   if( $(this).is(':checked') ){      // Hacer algo si el checkbox ha sido seleccionado

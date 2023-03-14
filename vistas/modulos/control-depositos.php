@@ -133,7 +133,7 @@ $fechaHoy = date("Y-m-d");
                   <th translate="no" style="width:5.5em;">Acción</th>
                 </tr>
               </thead>
-              <tbody style="font-size:0.90em">
+              <tbody style="font-size:0.80em">
 
               </tbody>
 
