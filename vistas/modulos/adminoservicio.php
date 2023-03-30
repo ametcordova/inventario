@@ -65,12 +65,12 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
 
         <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalAgregarOS"><i class="fa fa-plus-circle"></i> Agregar O. Servicio </button>
 
-        <?php if (getAccess($acceso, ACCESS_ADD)) { ?>
+        <?php if (getAccess($acceso, ACCESS_ADD)) {?>
           <button class="btn btn-danger btn-sm" id="btnregresar" onclick="regresar()" type="button"><i class="fa fa-arrow-circle-left"></i> Regresar</button>
-        <?php } ?>
+        <?php }?>
 
         <!-- Date range -->
-        <?php if (getAccess($acceso, ACCESS_VIEW)) { ?>
+        <?php if (getAccess($acceso, ACCESS_VIEW)) {?>
           <button type="button" class="btn btn-default btn-sm ml-3 mr-2 " id="daterange-btnOS">
             <span>
               <i class="fa fa-calendar"></i> Rango de fecha
@@ -78,7 +78,7 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
             <i class="fa fa-caret-down"></i>
           </button>
           <button class="btn btn-success btn-sm" onclick="listarOServicios()"><i class="fa fa-eye"></i> Mostrar</button>
-        <?php } ?>
+        <?php }?>
         <!--<h2 class="card-title">Control de Usuarios</h2> -->
         <div class="card-tools">
           <button class="btn btn-tool" onclick="location.reload()" title="Reset filtros"><i class="fa fa-refresh"></i></button>
@@ -182,13 +182,13 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                     <select id="nvotecnico" class="form-control form-control-sm" name="nvotecnico" tabindex="1" required autofocus>
                       <option value="">Selecione Técnico</option>
                       <?php
-                      $item = 'status';
-                      $valor = 1;
-                      $tecnicos = ControladorTecnicos::ctrMostrarTecnicos($item, $valor);
-                      foreach ($tecnicos as $key => $value) {
-                        echo '<option value="' . $value["id"] . '">' . $value["nombre"] . '</option>';
-                      }
-                      ?>
+$item = 'status';
+$valor = 1;
+$tecnicos = ControladorTecnicos::ctrMostrarTecnicos($item, $valor);
+foreach ($tecnicos as $key => $value) {
+    echo '<option value="' . $value["id"] . '">' . $value["nombre"] . '</option>';
+}
+?>
                     </select>
                   </div>
 
@@ -198,14 +198,14 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                     <select id="nuevoAlmacenOS" class="form-control form-control-sm" name="nuevoAlmacenOS" tabindex="2" required>
                       <option value="">Seleccione Almacen</option>
                       <?php
-                      $item = null;
-                      $valor = null;
-                      $estado=1;
-                      $almacenes = ControladorAlmacenes::ctrMostrarAlmacenes($item, $valor, $estado);
-                      foreach ($almacenes as $key => $value) {
-                        echo '<option value="' . $value["id"] . '-' . $value["nombre"] . '">' . $value["nombre"] . '</option>';
-                      }
-                      ?>
+$item = null;
+$valor = null;
+$estado = 1;
+$almacenes = ControladorAlmacenes::ctrMostrarAlmacenes($item, $valor, $estado);
+foreach ($almacenes as $key => $value) {
+    echo '<option value="' . $value["id"] . '-' . $value["nombre"] . '">' . $value["nombre"] . '</option>';
+}
+?>
                     </select>
                     <input type="hidden" name="idDeUsuario" value="<?php echo $_SESSION['id']; ?>">
                     <input type="hidden" name="iduser" id="iduser" value="<?php echo $_SESSION['user']; ?>">  <!--NUMERO DE USIARIO EN TABLA TECNICOS -->
@@ -219,7 +219,7 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
 
                   <div class="form-group col-md-3 pt-0 mt-0">
                     <label class="control-label"><i class="fa fa-calendar"></i> Fecha Inst: <span class="text-danger">*</span></label>
-                    <input type="date" class="form-control form-control-sm" name="fechainst" id="fechainst" value="<?= $fechaHoy ?>" placeholder="" tabindex="4" title="Fecha Instalación" required>
+                    <input type="date" class="form-control form-control-sm" name="fechainst" id="fechainst" value="<?=$fechaHoy?>" placeholder="" tabindex="4" title="Fecha Instalación" required>
                   </div>
 
               </div> <!-- FIN DEL FORM-ROW -->
@@ -277,7 +277,7 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                   <input type="text" class="form-control form-control-sm" name="nombrefirma" id="nombrefirma" value="" placeholder="" tabindex="14" title="Numero Tipo" required autocomplete="on">
                 </div>
               </div>
-              
+
               <!-- ********************** FIRMA ****************************** -->
               <div class="form-row pt-1 text-center justify-content-center align-items-center" style="background-color:blanchedalmond; color:blue;">
                 <div class="col-md-12">
@@ -315,6 +315,7 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                 </div>
               </div>
 
+              <!-- AGREGAR PRODUCTOS  -->
               <div class="form-row pt-0 pb-0">
                 <div class="form-group col-md-6">
                   <label class="control-label" for="inputError"><i class="fa fa-barcode"></i> Producto: <span class="text-danger">*</span></label>
@@ -335,6 +336,7 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                 <div class="col-md-1 margen-custom text-center">
                   <button class="btn btn-primary btn-lg" id="agregarProductoOS" tabindex="20"><i class="fa fa-plus-circle"></i> Agregar</button>
                 </div>
+                <!-- FIN DE AGREGAR PRODUCTOS  -->
 
               </div> <!-- FIN DEL FORM-ROW -->
 
@@ -384,10 +386,8 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
 
                       </table>
 
-                    </div>
-                    <!-- /.col -->
-                  </div>
-                  <!-- /.row -->
+                    </div>   <!-- /.col -->
+                  </div> <!-- /.row -->
 
                   <div class="row">
                     <!-- accepted payments column -->
@@ -456,37 +456,38 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
 
               <div class="form-group col-md-4">
                   <label for="edittecnico"><i class="fa fa-male"></i> Técnico <span class="text-danger">*</span> </label>
-                  <select class="form-control form-control-sm" name="edittecnico" id="edittecnico" tabindex="1" required>
+                  <select class="form-control form-control-sm" name="edittecnico" id="edittecnico" tabindex="1" required  disabled>
                   <option value="">Selecione Técnico....</option>
                     <?php
-                    $item = 'status';
-                    $valor = 1;
-                    $tecnicos = ControladorTecnicos::ctrMostrarTecnicos($item, $valor);
-                    foreach ($tecnicos as $key => $value) {
-                      echo '<option value="' . $value["id"] . '">' . $value["nombre"] . '</option>';
-                    }
-                    ?>
+$item = 'status';
+$valor = 1;
+$tecnicos = ControladorTecnicos::ctrMostrarTecnicos($item, $valor);
+foreach ($tecnicos as $key => $value) {
+    echo '<option value="' . $value["id"] . '">' . $value["nombre"] . '</option>';
+}
+?>
                   </select>
                 </div>
 
                   <!-- data-date-end-date=no puede seleccionar una fecha posterior a la actual -->
                 <div class="form-group col-md-3">
                   <label for=""><i class="fa fa-hospital-o"></i> Almacen <span class="text-danger">*</span> </label>
-                  <select class="form-control form-control-sm" name="editAlmacenOS" id="editAlmacenOS" tabindex="2" required>
+                  <select class="form-control form-control-sm" name="editAlmacenOS" id="editAlmacenOS" tabindex="2" required disabled>
                   <option value=0 selected>Seleccione Almacen...</option>
                     <?php
-                    $item = null;
-                    $valor = null;
-                    $estado=1;
-                    $almacenes = ControladorAlmacenes::ctrMostrarAlmacenes($item, $valor, $estado);
-                    foreach ($almacenes as $key => $value) {
-                      echo '<option value="' . $value["id"].'">' . $value["nombre"] . '</option>';
-                    }
-                    ?>
+$item = null;
+$valor = null;
+$estado = 1;
+$almacenes = ControladorAlmacenes::ctrMostrarAlmacenes($item, $valor, $estado);
+foreach ($almacenes as $key => $value) {
+    echo '<option value="' . $value["id"] . '">' . $value["nombre"] . '</option>';
+}
+?>
                   </select>
                   <input type="hidden" name="idDeUsuario" value="<?php echo $_SESSION['id']; ?>">
                   <input type="hidden" name="iduser" id="editiduser" value="<?php echo $_SESSION['user']; ?>">
                   <input type="hidden" name="id" id="editid" value="">
+                  <input type="hidden" id="updateos" value=1>
                 </div>
 
                 <div class="form-group col-md-2">
@@ -496,7 +497,7 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
 
                 <div class="form-group col-md-3">
                   <label class="control-label"><i class="fa fa-calendar"></i> Fecha Inst: <span class="text-danger">*</span></label>
-                  <input type="date" class="form-control form-control-sm" name="editfechainst" id="editfechainst" value="<?= $fechaHoy ?>" placeholder="" tabindex="4" title="Fecha Instalación" required>
+                  <input type="date" class="form-control form-control-sm" name="editfechainst" id="editfechainst" value="<?=$fechaHoy?>" placeholder="" tabindex="4" title="Fecha Instalación" required>
                 </div>
 
               </div> <!-- FIN DEL FORM-ROW -->
@@ -554,12 +555,12 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                   <input type="text" class="form-control form-control-sm" name="editnombrefirma" id="editnombrefirma" value="" placeholder="" tabindex="14" title="Numero Tipo" required>
                 </div>
               </div>
-              
+
               <!-- ********************** FIRMA ****************************** -->
-              <div class="form-row pt-2 mb-4 text-center justify-content-center align-items-center" style="background-color:blanchedalmond;">
+              <div class="form-row pt-2 mb-4 text-center justify-content-center align-items-center d-none" style="background-color:blanchedalmond;">
 
                 <div id="signatureContainer"></div>
-                
+
                 <div class="col-md-12 d-block mt-2 mb-2">
                   <button type="button" class="btn btn-info btn-sm text-bold repetirfirma col-md-5 mb-1"> Repetir / Borrar firma</button>
                   <button type="button" class="btn btn-primary btn-sm text-bold habilitar col-md-5">Habilitar</button>
@@ -577,9 +578,7 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                 </div>
               </div>
 
-              <div class="form-row pt-0 pb-0" id="editdatosmodem">
-                <!--tmb invisible -->
-
+              <div class="form-row pt-0 pb-0" id="editdatosmodem">      <!--tmb invisible -->
                 <div class="col-md-6">
                   <input type="text" class="form-control form-control-sm" name="editnumeroSerie" id="editnumeroSerie" value="" placeholder="Serie No." title="No. de Serie">
                 </div>
@@ -587,17 +586,87 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                 <div class="col-md-6">
                   <input type="text" class="form-control form-control-sm" name="editalfanumerico" id="editalfanumerico" value="" placeholder="alfanumerico" title="">
                 </div>
-
               </div> <!-- FIN DEL FORM-ROW -->
+
+                  <!-- AGREGAR PRODUCTOS  -->
+                  <div class="form-row pt-0 pb-0">
+                    <div class="form-group col-md-6">
+                      <label class="control-label" for="inputError"><i class="fa fa-barcode"></i> Producto: <span class="text-danger">*</span></label>
+                      <select class="selProdOs js-states form-control-sm" name="selectProdOS" id="selectProdOS" style="width: 100%;" tabindex="17">
+                      </select>
+                    </div>
+
+                    <div class="form-group col-md-2">
+                      <label class="control-label" for="inputError"><i class="fa fa-cubes"></i> Exist:</label>
+                      <input type="number" class="form-control form-control-sm text-center mb-1" name="existecnico" id="existecnico" value="" step="any" tabindex="18" readonly title="cantidad Existente">
+                    </div>
+
+                    <div class="form-group col-md-2">
+                      <label class="control-label" for="inputError"><i class="fa fa-check"></i>Salida: <span class="text-danger">*</span></label>
+                      <input type="number" class="form-control form-control-sm text-center" name="cantsaliente" id="cantsaliente" step="any" min="0" tabindex="19" title="cantidad de Salida">
+                    </div>
+
+                    <div class="col-md-1 margen-custom text-center">
+                      <button class="btn btn-primary btn-lg" id="agregarProductoOS" tabindex="20"><i class="fa fa-plus-circle"></i> Agregar</button>
+                    </div>
+                  </div>
+                    <!-- FIN DE AGREGAR PRODUCTOS  -->
 
               <div class="form-row pt-0 pb-0">
                 <div class="col-md-12 alert-danger d-none" style="height:25px;" id="mensajerror"></div>
-              </div> <!-- FIN DEL FORM-ROW -->
+              </div> <!-- FIN DEL FORM-ROW DE MENSAJE DE ERROR -->
 
-              <div class="dropdown-divider"></div>
+              <div class="dropdown-divider" style="background-color:brown; color:blueviolet;"></div>
+
 
               <div class="respuesta"></div>
 
+                <div class="wrapper" id="editaProdOS">
+                  <!-- Main content Producto no existe o no tiene existencia que solicita!!-->
+                  <section class="invoice">
+
+                    <!-- Table row -->
+                    <div class="row">
+                      <div class="col-12 col-sm-12 table-hover table-compact table-responsive">
+                        <table class="table table-bordered table-hover compact table-striped table-sm" id="editaDetalleOS">
+
+                          <thead class="thead-dark" style="height:10px !important; font-size:0.80em !important;">
+                            <tr class="text-center">
+                              <th style="width:3rem"><i class="fa fa-cut"></i></th>
+                              <th>#</th>
+                              <th>Descripción - Código</th>
+                              <th>Cant.</th>
+                            </tr>
+                          </thead>
+
+                          <tbody id="editaTbodyOS" style="height:10px !important; font-size:0.80em !important;">
+                            <!--AQUI SE AÑADEN LAS ENTRADAS DE LOS PRODUCTOS  -->
+                          </tbody>
+
+                        </table>
+
+                      </div>   <!-- /.col -->
+                    </div> <!-- /.row -->
+
+                    <div class="row">
+                      <!-- accepted payments column -->
+                      <div class="col-lg-8 col-md-6 col-sm-2"></div>
+                      <!-- /.col -->
+                      <div class="col-lg-4 col-md-6 col-sm-10 text-right mostrarcantidades">
+                        <button type="button" class="btn badge-warning btn-sm mb-1 mr-1 p-0">Renglones: &nbsp
+                          <span class="badge badge-warning" id="renglones" style="font-size:1rem;"></span>
+                        </button>
+
+                        <button type="button" class="btn badge-warning btn-sm mb-1 mr-1 p-0">Cant: &nbsp
+                          <span class="badge badge-warning" id="totalsalidaOS" style="font-size:1rem;"></span>
+                        </button>
+
+                      </div>
+                      <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                  </section>
+                </div> <!-- ./wrapper -->
 
             </div>
             <!--Fin del card-body -->
@@ -623,7 +692,7 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
 ===============================================================================-->
 <div class="modal fade" id="modalAgregarObservaOS" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog">
-   
+
     <div class="modal-content ui-widget-content">
      <form role="form" id="form-AgregaObservaOS" method="POST">
         <!-- Modal Header -->
@@ -631,7 +700,7 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
             <h5 class="modal-title" id="numerodeid">Agregar Fecha</h5>
             <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
-        
+
         <!-- Modal body -->
           <div class="modal-body" style="font-size:.8rem">
             <div class="box-body pb-0 mb-0 mt-0 text-center">
@@ -663,10 +732,10 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                 </div>
               </div>
 
-            </div>  <!-- fin del box-body --> 
-            
+            </div>  <!-- fin del box-body -->
+
           </div>    <!-- fin del modal-body -->
-          
+
           <div class="mt-0 mb-1 ml-1">
             <table class="table table-bordered table-hover compact table-striped dataTable_width_auto" cellspacing="0" style="width:97%" id="detalleObserva">
               <thead class="thead-dark" style="height:10px !important; font-size:0.78em !important;">
@@ -678,16 +747,16 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
               </thead>
               <tbody style="height:6.5px !important; font-size:0.78em !important;">
             </tbody>
-            </table>          
+            </table>
           </div>
         <!-- Modal footer -->
         <div class="modal-footer colorbackModal p-1">
-          <button type="button" class="btn btn-sm btn-primary float-left py-0" data-dismiss="modal" tabindex="10"><i class="fa fa-reply"></i> 
+          <button type="button" class="btn btn-sm btn-primary float-left py-0" data-dismiss="modal" tabindex="10"><i class="fa fa-reply"></i>
           Salir
           </button>
           <button type="submit" class="btn btn-sm btn-success py-0" tabindex="11"><i class="fa fa-save"></i> Guardar</button>
         </div>
-      
+
      </form>
     </div> <!-- fin del modal-content -->
   </div>
@@ -698,22 +767,22 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
  ============================= =======================-->
  <div class="modal fade" id="modalCheckOS" data-backdrop="static" data-keyboard="false" tabindex="-1">
   <div class="modal-dialog">
-   
+
     <div class="modal-content">
     <!-- <form role="form" name="formularioCheckOS" id="formularioCheckOS" method="POST" action="../inventario/controladores/procesar.controlador.php" enctype="multipart/form-data" target="_blank"> -->
     <form role="form" name="formularioCheckOS" id="formularioCheckOS" method="POST" enctype="multipart/form-data">
       <!-- Modal Header -->
       <div class="modal-header colorbackModal px-2 py-1">
-   
+
             <h5 class="modal-title">Checar O.S.</h5>
-        
+
             <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
-      
+
 
       <!-- Modal body -->
       <div class="modal-body">
-           
+
             <div class="input-group mb-1">
                 <label class="form-label" for="filexls">Subir Archivo de Excel a escanear: &nbsp</label>
                 <p class="help-block m-0 p-0">Peso máximo 2mb.</p>
@@ -722,7 +791,7 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                 </div>
              </div>
 
-             
+
                     <!-- INSERTAR LEYENDA -->
                     <div class="form-row mb-0 mt-2 pt-1" >
                       <div class="col-md-6 col-sm-6 col-xs-6">
@@ -730,7 +799,7 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                               <div class="checkbox icheck">
                               <label>
                                   <input type="checkbox" class="minimal flat-red insertaFact" tabindex="11">
-                                  Número de Factura. ✅ 
+                                  Número de Factura. ✅
                               </label>
                               </div>
                           </div>
@@ -753,8 +822,8 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                 <th scope="col">Telefono</th>
                 <th scope="col">Resultado</th>
               </tr>
-              </thead>      
-              
+              </thead>
+
               <tbody id="datosos">
 
               </tbody>
@@ -766,7 +835,7 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
 
       <!-- Modal footer -->
       <div class="modal-footer colorbackModal px-2 py-1">
-        <button type="button" class="btn btn-primary btn-sm float-left salirfrm" data-dismiss="modal" tabindex="16"><i class="fa fa-reply"></i> 
+        <button type="button" class="btn btn-primary btn-sm float-left salirfrm" data-dismiss="modal" tabindex="16"><i class="fa fa-reply"></i>
         Salir
         </button>
         <button type="button" class="btn btn-info btn-sm enviarfrm" id="updateinvoice" tabindex="14"><i class="fa fa-"></i> Actualizar # Fact.</button>
@@ -775,9 +844,10 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
             <button type="button" class="btn btn-sm btn-warning">Procesando...<i class="fa fa-cog fa-pulse fa-1x fa-fw"></i></button>
         </div>
       </div>
-      
+
      </form>
     </div> <!-- fin del modal-content -->
   </div>
-</div>  
+</div>
 <!-- ==================================================================================== -->
+<script defer src="vistas/js/updateoservicio.js?v=08012022"></script>

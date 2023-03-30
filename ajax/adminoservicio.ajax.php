@@ -183,7 +183,8 @@ switch ($_GET["op"]){
             //$id_almacen=strstr($_POST['nuevoAlmacenOS'],'-',true);
 
             $tabla="tabla_os";
-
+			$productos=$_POST["editaidproducto"];
+			$cantidades=$_POST["editacantidad"];
 			$datos_inst_array = array(); //creamos un array para guardar los datos de la Inst. en el campo JSON
 			$datos_inst_array[]=array(
 				"numpisaplex"	=> $_POST["editnumpisaplex"],
@@ -202,6 +203,14 @@ switch ($_GET["op"]){
 
 			//Creamos el JSON
 			$datos_instalacion=json_encode($datos_inst_array);
+
+			$datos_material_array = array(); //creamos un array para guardar los prod y cant de material en el campo JSON
+			foreach ($_POST["editaidproducto"] as $clave=>$valor){
+				$datos_material_array[]=array("id_producto" => $_POST["editaidproducto"][$clave], "cantidad"=> $_POST["editacantidad"][$clave]);
+			};	
+			//Creamos el JSON
+			$datos_material=json_encode($datos_material_array);
+
 			//$firma=empty($_POST["firma"])?'':$_POST["firma"];
 			$firma=$_POST["firma"];
 			//echo $firma;
@@ -213,7 +222,7 @@ switch ($_GET["op"]){
 				"fecha_instalacion"	=>$_POST["editfechainst"],
 				"nombrecontrato"	=>$_POST["editnombrecontrato"],
 				"datos_instalacion"	=>$datos_instalacion,
-				//"datos_material"	=>$datos_material,
+				"datos_material"	=>$datos_material,
 				"firma"				=>$firma,
 				"observaciones"		=>$_POST["editobservaos"],
 				"ultusuario"		=>$_POST["idDeUsuario"]
@@ -223,7 +232,7 @@ switch ($_GET["op"]){
 			return $rspta;
 
 		}else{
-            $respuesta = array('idproducto' => $idproducto, 'error' => 'sindatos', 'status'=>http_response_code(400));		           
+            $respuesta = array('error' => 'sindatos', 'status'=>http_response_code(400));		           
             echo json_encode($respuesta);
        }
     break;    

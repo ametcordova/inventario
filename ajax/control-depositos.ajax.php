@@ -126,8 +126,8 @@ switch ($_GET["op"]){
 
         // Caracteres que queremos reemplazar por otros que hacen el texto igualmente legible    
         $replace_chars = array(
-            'áéíóúäëïöüàèìòùñ ',
-            'aeiouaeiouaeioun_'
+            'áéíóúäëïöüàèìòùñÁÉÍÓÚÑ ',
+            'aeiouaeiouaeiounAEIOUÑ '
         );
 
         // Convertimos el texto a analizar a minúsculas

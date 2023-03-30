@@ -307,7 +307,7 @@
               <div class="input-group-prepend">
                       <span class="input-group-text"><i class="fa fa-usd"></i></span>
               </div>
-              <input type="number" class="form-control form-control-sm" placeholder="Retención" name="nvaRetencion" id="nvaRetencion" value="" step="any" data-toggle="tooltip" data-placement="top" title="Retención" tabindex="10" required>
+              <input type="number" class="form-control form-control-sm" placeholder="Retención" name="nvaRetencion" id="nvaRetencion" value=0 step="any" data-toggle="tooltip" data-placement="top" title="Retención" tabindex="10" required>
             </div>
 
             <div class="input-group mb-3 col-md-6">
@@ -327,15 +327,25 @@
               <input type="text" class="form-control form-control-sm" placeholder="Observaciones" name="nvaObservacion" id="nvaObservacion" value="" onkeyUp="mayuscula(this);" placeholder="Observación" data-toggle="tooltip" title="Observación" tabindex="12">
             </div>
 
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                      <span class="input-group-text"><i class="fa fa-unlock-alt"></i></span>
+            <div class="form-row">			
+
+              <div class="input-group mb-3 col-md-6">
+                <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fa fa-sticky-note"></i></span>
+                </div>
+                <input type="text" class="form-control form-control-sm" placeholder="No. de contrato" name="nuevoContrato" id="nuevoContrato" value="" title="No. de contrato" tabindex="13">
               </div>
-                <select class="form-control form-control-sm" name="nvoStatusFactura" id="nvoStatusFactura" required tabindex="13" placeholder="" data-toggle="tooltip" title="Estatus" >
-                <option value="" selected>Seleccione</option>
-                <option value="1">Pagado</option>
-                <option value="0">Sin pagar</option>
-                </select>	
+
+              <div class="input-group mb-3 col-md-6">
+                <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fa fa-unlock-alt"></i></span>
+                </div>
+                  <select class="form-control form-control-sm" name="nvoStatusFactura" id="nvoStatusFactura" required tabindex="14" placeholder="" data-toggle="tooltip" title="Estatus" >
+                  <option value="" selected>Seleccione</option>
+                  <option value="1">Pagado</option>
+                  <option value="0">Sin pagar</option>
+                  </select>	
+              </div>
             </div>
 			
             <div class="input-group mb-1">
@@ -491,13 +501,20 @@
           </div>
         </div>				
 
-            <div class="input-group mb-3">
+          <div class="form-row">
+            <div class="input-group mb-3 col-md-8">
               <div class="input-group-prepend">
                       <span class="input-group-text"><i class="fa fa-file-text"></i></span>
               </div>
-			 <textarea class="form-control form-control-sm" name="editaObservacion" id="editaObservacion" onkeyUp="mayuscula(this);" placeholder="Observación" data-toggle="tooltip" title="Observación"  tabindex="12" rows="1"></textarea>
-             <!-- <input type="text" class="form-control form-control-sm" placeholder="Observaciones" name="editaObservacion" id="editaObservacion" value="" onkeyUp="mayuscula(this);" placeholder="Observación" data-toggle="tooltip" title="Observación"  tabindex="7" >-->
+        			 <textarea class="form-control form-control-sm" name="editaObservacion" id="editaObservacion" onkeyUp="mayuscula(this);" placeholder="Observación" data-toggle="tooltip" title="Observación"  tabindex="12" rows="1"></textarea>
             </div>
+            <div class="input-group mb-3 col-md-4">
+                <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fa fa-sticky-note"></i></span>
+                </div>
+                <input type="text" class="form-control form-control-sm" placeholder="# Contrato" name="editaContrato" id="editaContrato" value="" title="No. de Contrato" tabindex="13">
+              </div>
+          </div>
 
 		    <div class="form-row">
 		
@@ -505,14 +522,14 @@
               <div class="input-group-prepend">
                       <span class="input-group-text"><i class="fa fa-calendar-check-o"></i></span>
               </div>
-              <input type="date" class="form-control form-control-sm" placeholder="Fecha pagado" name="editaFechaPagado" value="" data-toggle="tooltip" title="Fecha Pagado" tabindex="13">
+              <input type="date" class="form-control form-control-sm" placeholder="Fecha pagado" name="editaFechaPagado" value="" data-toggle="tooltip" title="Fecha Pagado" tabindex="14">
             </div>
 
             <div class="input-group mb-3 col-md-6">
               <div class="input-group-prepend">
                       <span class="input-group-text"><i class="fa fa-unlock-alt"></i></span>
               </div>
-                <select class="form-control form-control-sm" name="editaStatusFactura" id="editaStatusFactura" required tabindex="14" placeholder="" data-toggle="tooltip" title="Estatus" >
+                <select class="form-control form-control-sm" name="editaStatusFactura" id="editaStatusFactura" required tabindex="15" placeholder="" data-toggle="tooltip" title="Estatus" >
                 <option value="" selected>Seleccione</option>
                 <option value="1">Pagado</option>
                 <option value="0">Sin pagar</option>
@@ -526,7 +543,7 @@
                 <label for="exampleInputFile">Subir PDF:&nbsp</label>
                 <p class="help-block m-0 p-0">Peso máximo 2mb.</p>
                 <div class="input-group">
-                     <input type="file" class="nuevoPdf" id="editarPdf" name="editarPdf" accept="application/pdf" tabindex="15">
+                     <input type="file" class="nuevoPdf" id="editarPdf" name="editarPdf" accept="application/pdf" tabindex="16">
                 </div>
 
               <div class="input-group mt-2 mb-0" id="downfile">
@@ -546,8 +563,8 @@
       <!-- Modal footer -->
       <div class="modal-footer colorbackModal p-2">
        
-        <button type="button" class="btn btn-sm btn-primary float-left salirfrm" tabindex="17" data-dismiss="modal"><i class="fa fa-reply"></i> Salir</button>
-        <button type="submit" class="btn btn-sm btn-success enviarfrm" tabindex="16"><i class="fa fa-save"></i> Guardar Cambios</button>
+        <button type="button" class="btn btn-sm btn-primary float-left salirfrm" tabindex="18" data-dismiss="modal"><i class="fa fa-reply"></i> Salir</button>
+        <button type="submit" class="btn btn-sm btn-success enviarfrm" tabindex="17"><i class="fa fa-save"></i> Guardar Cambios</button>
         <div class="spin">
             <button type="button" class="btn btn-sm btn-warning"> Espere... <i class="fa fa-spinner fa-pulse fa-1x fa-fw"></i></button>
         </div>

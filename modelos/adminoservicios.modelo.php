@@ -43,7 +43,7 @@ static public function mdlGuardarOS($tabla, $datos, $productos, $cantidades){
 static public function mdlActualizarOS($tabla, $datos){
 	
 	try {      
-			$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET ordenservicio=:ordenservicio, telefono=:telefono, fecha_instalacion=:fecha_instalacion, nombrecontrato=:nombrecontrato, datos_instalacion=:datos_instalacion, firma=:firma, observaciones=:observaciones, ultusuario=:ultusuario WHERE id=:id");
+			$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET ordenservicio=:ordenservicio, telefono=:telefono, fecha_instalacion=:fecha_instalacion, nombrecontrato=:nombrecontrato, datos_instalacion=:datos_instalacion, datos_material=:datos_material, firma=:firma, observaciones=:observaciones, ultusuario=:ultusuario WHERE id=:id");
 			  
 			  $stmt->bindParam(":id", 				$datos["id"], PDO::PARAM_INT);
 			  $stmt->bindParam(":ordenservicio", 	$datos["ordenservicio"], PDO::PARAM_STR);
@@ -51,12 +51,15 @@ static public function mdlActualizarOS($tabla, $datos){
 			  $stmt->bindParam(":fecha_instalacion",$datos["fecha_instalacion"], PDO::PARAM_STR);
 			  $stmt->bindParam(":nombrecontrato", 	$datos["nombrecontrato"], PDO::PARAM_STR);
 			  $stmt->bindParam(":datos_instalacion",$datos["datos_instalacion"], PDO::PARAM_STR);
+			  $stmt->bindParam(":datos_material",	$datos["datos_material"], PDO::PARAM_STR);
 			  $stmt->bindParam(":firma", 			$datos["firma"], PDO::PARAM_STR);
 			  $stmt->bindParam(":observaciones", 	$datos["observaciones"], PDO::PARAM_STR);
 			  $stmt->bindParam(":ultusuario",       $datos["ultusuario"], PDO::PARAM_INT);
 			  $stmt->execute();
 
         if($stmt){
+
+
           return "ok";
         }else{
           return "error";
@@ -112,20 +115,21 @@ static public function mdlActualizarTransito($tabla, $datos, $productos, $cantid
 				
 				foreach ($respuesta as $value) {
 					
-					$id=$value['id']; $disponible=(float)$value['disponible'];
+					$id=$value['id']; 
+					$disponible=(float)$value['disponible'];
 
 					if($disponible===$cant){        //Disponible es igual que la cant que sale
 						$rsp=actualizaDataOS($tabla, $cant, $datos["ultusuario"], $id, $disponible);
-						//$entra+=1;
 						break 1;	//SALE DEL FOREACH
+
 					}elseif($disponible>$cant){        //Disponible es Mayor que la cant que sale
 						$rsp=actualizaDataOS($tabla, $cant, $datos["ultusuario"], $id, $disponible);
-						//$entra+=2;
 						break 1;	//SALE DEL FOREACH
+
 					}elseif($disponible<$cant){        //Disponible es Menor que la cant que sale
 						$rsp=actualizaDataOS($tabla, $cant, $datos["ultusuario"], $id, $disponible);
 						$cant=$rsp;
-						//$entra+=3;
+
 					}else{
 						//$entra+=4;
 					}
@@ -430,19 +434,19 @@ static public function mdlGuardarAgregaOS($tabla, $idregos, $fechaagrega, $nvaob
 }
 
 	/*=============================================
-		REPORTE DE MAT. UTILIZADO EN LA OS
+		REPORTE DE MAT. (F200) UTILIZADO EN LA OS
 	=============================================*/	
-	static Public function mdlGetMaterialOsFactura($tabla, $campo, $valor){
+	static Public function mdlGetMaterialOsFactura($tabla, $campo, $factura){
 		try{     
 			if($campo !=null){    
 		
-				$sql="SELECT os.id, os.datos_material, os.estatus, os.factura, fi.conceptos FROM $tabla os
+				$sql="SELECT os.id, os.datos_material, os.estatus, os.factura, fi.conceptos, fi.id AS idfact, fi.serie FROM $tabla os
 				INNER JOIN facturaingreso fi ON CONCAT(fi.serie,fi.folio)=$campo
 				WHERE os.$campo=:$campo";
 		
 			$stmt=Conexion::conectar()->prepare($sql);
 			
-			$stmt->bindParam(":".$campo, $valor, PDO::PARAM_STR);
+			$stmt->bindParam(":".$campo, $factura, PDO::PARAM_STR);
 			
 			$stmt->execute();
 			
@@ -464,9 +468,9 @@ static public function mdlGuardarAgregaOS($tabla, $idregos, $fechaagrega, $nvaob
 
 }       //fin de la clase
 
-/********************************************************************************* */
-// FUNCION QUE REALIZA LA ACTUALIZACION DE LA CANT DISPONIBLE EN EL HIST_SALIDAS
-/********************************************************************************* */
+/**************************************************************************************************/
+// FUNCION QUE REALIZA ACTUALIZACION DE LA CANT DISPONIBLE EN EL HIST_SALIDAS. FUERA DE LA CLASE
+/***************************************************************************************************/
 function actualizaDataOS($tabla, $cant, $ultusuario, $id, $disponible){
 	$restadisp=0;
 	try {

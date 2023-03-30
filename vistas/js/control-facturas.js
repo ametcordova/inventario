@@ -419,6 +419,7 @@ function mostrardatos(datos){
   $( "input[name='editaImporteFactura']" ).val(datos.importe);
   $( "input[name='editaFechaPagado']" ).val(datos.fechapagado);
   $("textarea[name='editaObservacion']" ).text(datos.observaciones);	//campo textarea
+  $( "input[name='editaContrato']" ).val(datos.contrato);
   $("[name='editaStatusFactura']").val(datos.status);					//campo 
   //  if(datos.status=="1"){
   //    $("[name='editaStatusFactura']").prop('disabled',true);
@@ -470,9 +471,6 @@ $('#factpagadas').on('ifUnchecked', function (event) {
   valorcheck=0;
   //console.log("No chekeado", valorcheck)
 });
-
-  
-
  //console.log(valoryear, valorradio, valormonth);
   if(valorradio!==undefined){
     var saldo=0;
@@ -536,7 +534,7 @@ $('#factpagadas').on('ifUnchecked', function (event) {
             {"data": 9},
             {"data": 10},
             {"data": 11},
-            {"data": 12}
+            {"data": 12}    // las últimas 3 columas (13,14,15), no se ponen y no son ordenables
           ],
           initComplete: function () {			//botones pequeños y color verde
             var btns = $('.dt-button');

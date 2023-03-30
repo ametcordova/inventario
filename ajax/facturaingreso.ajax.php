@@ -376,11 +376,7 @@ switch ($_GET["op"]){
 
         //echo '<a href="descarga.php?file=archivoEjemplo.abc">Descargar</a>';
         echo "<a href='../vistas/modulos/download.php?filename=$file&ruta=$ruta&mime=xml'class'btn btn-sm btn-info' </a>";
-        //<a href="#" class="btn btn-success">¿Soy un botón o un enlace?</a>
 
-        //descargar($folio, $serie, $rfcemisor);
-        
-        //echo json_encode();
     break;
 
     case 'getDataClavesFact':
@@ -416,10 +412,10 @@ switch ($_GET["op"]){
 
                     //calculo para sacar el total a facturar
                     $tasaimpuesto=((float)$_POST["tasaimpcp"])+1;
-                    $totalrecibo=(float) $_POST["totalpagofact"];
+                    $totalrecibo=$_POST["totalpagofact"];
                     $iva=($tasaimpuesto-1)*100;         //1.16-1=.16*100=16
-                    $subtotal=$totalrecibo/$tasaimpuesto;   //29662
-                    $totalimpuesto=($subtotal*$iva)/100;
+                    $subtotal=round($totalrecibo,2)/$tasaimpuesto;   //29662
+                    $totalimpuesto=($subtotal*round($iva,2))/100;
                     $saldoinsoluto=0;   //pendiente sumar saldos insolutos de c/factura
                     $conceptos_json=null;
                     $doctosrelacionados_json=null;
@@ -490,7 +486,7 @@ switch ($_GET["op"]){
     /************************************************************************************************** */    
 
 /************************************************************************************************** */
-//                 PARA TIMBRAR FACTURAR
+//                 PARA TIMBRAR COMPLEMENTO DE PAGO 2.0
 /************************************************************************************************** */
     case 'GenerarRep20':
         try{
@@ -500,7 +496,7 @@ switch ($_GET["op"]){
                     $fecha = new DateTime($_GET['datafecha']);
                     $diff = $fecha->diff($fechaactual);
                     
-                     if($diff->d>0){
+                     if($diff->d>1){
                          json_output(json_build(403, null, 'Mas de 1 dia.'));
                          exit;
                      }
@@ -565,12 +561,12 @@ case 'ListCompPago20':
         $file=$value["rfcemisor"].'-'.$value["foliorep"].'.xml';
 
         if($value["fechatimbradorep"]!=""){
-            $boton0 =getAccess($acceso, ACCESS_ADD)?"<td><button class='btn btn-sm btn-dark px-0 py-0' title='Factura Timbrada'><i class='fa fa-bell fa-fw'></i> </button></td> ":"";
+            $boton0 =getAccess($acceso, ACCESS_ADD)?"<td><button class='btn btn-sm btn-dark px-0 py-0' title=R.E.P. Timbrada'><i class='fa fa-bell fa-fw'></i> </button></td> ":"";
 
             $boton1 =getAccess($acceso, ACCESS_PRINTER)?"<a href='vistas/modulos/download.php?filename=$file&ruta=2&mime=xml' title='Descargar XML' class='btn btn-sm btn-info px-1 py-0'><i class='fa fa-file-code-o'></i></a> ":"";
 
         }else{
-            $boton0 =getAccess($acceso, ACCESS_ADD)?"<td><button class='btn btn-sm btn-danger px-0 py-0' onclick='TimbrarCompPago20(this)' data-id='".$value['id']."' data-folio='".$value['foliorep']."' data-rfcemisor='".$value['rfcemisor']."' title='Factura sin timbrar'><i class='fa fa-bell fa-fw'></i> </button></td> ":"";
+            $boton0 =getAccess($acceso, ACCESS_ADD)?"<td><button class='btn btn-sm btn-danger px-0 py-0' onclick='TimbrarCompPago20(this)' data-id='".$value['id']."' data-folio='".$value['foliorep']."' data-rfcemisor='".$value['rfcemisor']."' data-fecha='".$value['fechaelaboracion']."'  title='R.E.P. sin timbrar'><i class='fa fa-bell fa-fw'></i> </button></td> ":"";
 
             $boton1 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-primary px-1 py-0 ' data-editar='".$value['id']."' title='Editar REP' ><i class='fa fa-file-edit'></i></button></td> ":"";
 

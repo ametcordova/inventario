@@ -132,6 +132,7 @@ function dt_ListarFacturasIngreso(){
           {"className": "dt-left", "targets": [8]},
           {"className": "dt-right", "targets": [10]},
           {"className": "dt-center", "targets": [6,7,9,11,12]},				//"_all" para todas las columnas
+          {orderable: false, targets:[11,12] },    //columna que no debe ordenarse
           // {
           //   "className": "dt-center",
           //   "targets": 10,
@@ -182,7 +183,7 @@ function GenCompPago20(){
   $.each(tblFacturaIngreso.$('input[type="checkbox"]'), function(index, rowId){
     if(this.checked && parseInt(rowId.value)>0){
       ids.push(parseInt(rowId.value));
-      console.log(index, parseInt(rowId.value))
+      //console.log(index, parseInt(rowId.value))
     }
     
   });
@@ -1267,6 +1268,7 @@ function TimbrarCompPago20(elem){
   let dataid = elem.dataset.id;
   let datafolio = elem.dataset.folio;
   let datarfcemisor = elem.dataset.rfcemisor;
+  let datafecha = elem.dataset.fecha;
   //console.log('id:',dataid, datafolio, datarfcemisor);
 
   $('#modalGestionREP20').waitMe({
@@ -1279,17 +1281,19 @@ function TimbrarCompPago20(elem){
     fontSize: ''    //default, '18px'
    });  
 
+
   (async () => {
     await axios.get('ajax/facturaingreso.ajax.php?op=GenerarRep20', {
       params: {
-        dataid:         dataid,
-        datafolio:      datafolio,
-        datarfcemisor: datarfcemisor
+        dataid:       dataid,
+        datafolio:    datafolio,
+        datarfcemisor:datarfcemisor,
+        datafecha:    datafecha
       }
     })
 
     .then((res)=>{ 
-      //console.log(res.data)
+      console.log(res.data)
       if(res.data.status==200 || res.data.status==201) {
         $('#dt-FacturaIngreso').DataTable().ajax.reload(null, false);
         $('#tblComplementoPago20').DataTable().ajax.reload(null, false);
@@ -1308,10 +1312,10 @@ function TimbrarCompPago20(elem){
         $('#modalGestionREP20').waitMe("hide");
         swal({
           title: "¡Lo sentimos mucho!!",
-          text: `No fue posible realizar timbrado. ${res.data.msg}!!`,
+          text: `No fue posible realizar timbrado. ${res.data.data}!!`,
           icon: "error",
           buttons: false,
-          timer: 3000
+          timer: 13000
         })  //fin swal
         }          
     })   

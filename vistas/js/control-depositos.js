@@ -186,8 +186,9 @@ function dt_crtl_depositos(){
 
         },  
         "columnDefs": [
-          {"className": "dt-center", "targets": [6,7,8,9]},
-          {"className": "dt-right", "targets": [3,4]}				//"_all" para todas las columnas
+          {className: "dt-center", targets: [6,7,8,9]},
+          {className: "dt-right", targets: [3,4]},				//"_all" para todas las columnas
+          {orderable: false, targets:[4,9] },    //columna que no debe ordenarse
           ],
           "footerCallback": function ( row, data, start, end, display ) {
           var api = this.api();
