@@ -578,16 +578,6 @@ foreach ($almacenes as $key => $value) {
                 </div>
               </div>
 
-              <div class="form-row pt-0 pb-0" id="editdatosmodem">      <!--tmb invisible -->
-                <div class="col-md-6">
-                  <input type="text" class="form-control form-control-sm" name="editnumeroSerie" id="editnumeroSerie" value="" placeholder="Serie No." title="No. de Serie">
-                </div>
-
-                <div class="col-md-6">
-                  <input type="text" class="form-control form-control-sm" name="editalfanumerico" id="editalfanumerico" value="" placeholder="alfanumerico" title="">
-                </div>
-              </div> <!-- FIN DEL FORM-ROW -->
-
                   <!-- AGREGAR PRODUCTOS  -->
                   <div class="form-row pt-0 pb-0">
                     <div class="form-group col-md-6">
@@ -597,20 +587,30 @@ foreach ($almacenes as $key => $value) {
                     </div>
 
                     <div class="form-group col-md-2">
-                      <label class="control-label" for="inputError"><i class="fa fa-cubes"></i> Exist:</label>
-                      <input type="number" class="form-control form-control-sm text-center mb-1" name="existecnico" id="existecnico" value="" step="any" tabindex="18" readonly title="cantidad Existente">
+                      <label class="control-label" for=""><i class="fa fa-cubes"></i> Exist:</label>
+                      <input type="number" class="form-control form-control-md text-center mb-1" name="existecnico" id="existecnico" value="" step="any" tabindex="18" readonly title="cantidad Existente">
                     </div>
 
                     <div class="form-group col-md-2">
-                      <label class="control-label" for="inputError"><i class="fa fa-check"></i>Salida: <span class="text-danger">*</span></label>
-                      <input type="number" class="form-control form-control-sm text-center" name="cantsaliente" id="cantsaliente" step="any" min="0" tabindex="19" title="cantidad de Salida">
+                      <label class="control-label" for="cantsaliente"><i class="fa fa-check"></i>Salida: <span class="text-danger">*</span></label>
+                      <input type="number" class="form-control form-control-md text-center" name="cantsaliente" id="cantsaliente" step="any" min="0" tabindex="19" title="cantidad de Salida">
                     </div>
 
-                    <div class="col-md-1 margen-custom text-center">
-                      <button class="btn btn-primary btn-lg" id="agregarProductoOS" tabindex="20"><i class="fa fa-plus-circle"></i> Agregar</button>
+                    <div class="col-md-1 text-center" style="margin-top:1em;">
+                      <button class="btn btn-primary btn-lg px-2" id="agregarProductoOS" tabindex="20"><i class="fa fa-plus-circle" style="margin-left:2px !important;"></i> Agregar</button>
                     </div>
                   </div>
                     <!-- FIN DE AGREGAR PRODUCTOS  -->
+
+                  <div class="form-row pt-0 pb-0 d-none" id="editdatosmodem">      <!--tmb invisible -->
+                    <div class="col-md-6">
+                      <input type="text" class="form-control form-control-sm" name="editnumeroSerie" id="editnumeroSerie" value="" placeholder="Serie No." title="No. de Serie">
+                    </div>
+
+                    <div class="col-md-6">
+                      <input type="text" class="form-control form-control-sm" name="editalfanumerico" id="editalfanumerico" value="" placeholder="alfanumerico" title="">
+                    </div>
+                  </div> <!-- FIN DEL FORM-ROW -->
 
               <div class="form-row pt-0 pb-0">
                 <div class="col-md-12 alert-danger d-none" style="height:25px;" id="mensajerror"></div>

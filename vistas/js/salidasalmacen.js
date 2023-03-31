@@ -100,8 +100,8 @@ function dt_ListarSalidasAlmacen(){
           btns.addClass('btn btn-success btn-sm');
         },  
         "columnDefs": [
-          {"className": "dt-center", "targets": [0,1,6]},
-          //{"className": "dt-right", "targets": [3,4]}				//"_all" para todas las columnas
+          {className: "dt-center", targets: [0,1,6]},
+          {orderable: false, targets:[6] },    //columna que no debe ordenarse
           ],    
           select: false,     //se puso a false para poder seleccionar varios filas. true=1 fila
           scrollX: true,

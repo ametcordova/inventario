@@ -3,7 +3,8 @@ $("#modalEditarOS").draggable({
 });
 var tbodyOS = document.querySelector('#editaTbodyOS');
 var arrayitems = new Array();
-
+localStorage.removeItem("numeroserie");
+localStorage.removeItem("alfanumerico");
 
 /* ====================EDITAR OS ====================*/
 $('#DatatableOS tbody').on('click', '.btnEditarOS', function (event) {
@@ -100,8 +101,10 @@ function datosinstalacion(json_datos_inst) {
     $("#editterminalos").val(json_datos_inst[0].terminalos);
     $("#editpuertoos").val(json_datos_inst[0].puertoos);
     $("#editnombrefirma").val(json_datos_inst[0].nombrefirma);
-    $("#editnumeroSerie").val(json_datos_inst[0].numeroserie);
-    $("#editalfanumerico").val(json_datos_inst[0].alfanumerico);
+    let editnumeroSerie = json_datos_inst[0].numeroserie;
+    let editalfanumerico = json_datos_inst[0].alfanumerico;
+    localStorage.setItem("numeroserie", editnumeroSerie);
+    localStorage.setItem("alfanumerico", editalfanumerico);
 }
 
 function datosMaterialOS(json_datos_mat) {
@@ -127,17 +130,22 @@ async function getDescripcion(id_producto, cant, i) {
         //console.log(response.data[0].descripcion)
         descripcion = response.data[0].descripcion
         codigointerno = response.data[0].codigointerno
+        conserial = parseInt(response.data[0].conseries)
         let amount = parseFloat(cant);
         itemsbefore(id_producto, amount);   //array de productos de la salida a editar
-
+        if (conserial > 0) {
+            let serial = localStorage.getItem("numeroserie");
+            let alfa = localStorage.getItem("alfanumerico");
+            ser_alfa = `<span><p class="mb-0">Serie: <b>${serial}</b> y Alfanumerico: <b>${alfa}</b></p></span>`;
+        }
         i++;
         tbodyOS.innerHTML += `
         <tr class="filas" id="fila${i}">
             <td> <button type="button" class="botonQuitar" onclick="eliminarProductoOS(${i}, ${cant})" title="Quitar concepto">X</button> </td>
             <td class='text-center'>${id_producto} <input type="hidden" name="editaidproducto[]" value="${id_producto}"</td>
-            <td class='text-left'>${descripcion} - ${codigointerno}</td>
-            <td class='text-center'>${cant} <input type="hidden" name="editacantidad[]" value="${cant}"</td>`;
-        tbodyOS.innerHTML += `</tr>`;
+            <td class='text-left'>${descripcion} - ${codigointerno} ${conserial > 0 ? ser_alfa : ''}</td>
+        <td class='text-center'>${cant} <input type="hidden" name="editacantidad[]" value="${cant}"</td>`;
+        tbodyOS.innerHTML += `</tr > `;
     } catch (error) {
         console.error(error);
     }
@@ -148,9 +156,9 @@ async function getDescripcion(id_producto, cant, i) {
 /*===================================================================*/
 function itemsbefore(itemproduct, itemcant) {
     tbodyOS.innerHTML += `<div class="d-none">
-    <input type="hidden" name="oldproducto[]" value="${itemproduct}">
-    <input type="hidden" name="oldcantidad[]" value="${itemcant}">
-    </div>`;
+        <input type="hidden" name="oldproducto[]" value="${itemproduct}">
+            <input type="hidden" name="oldcantidad[]" value="${itemcant}">
+            </div>`;
     arrayitems.push([itemproduct, itemcant]);
 }
 /*==============================================================*/
@@ -215,21 +223,12 @@ $("body").on("submit", "#formularioEditarOS", function (event) {
         });
 
 });
-/*================ AL SALIR DEL MODAL EDITAR OS, RESETEAR FORMULARIO ==================*/
-$("#modalEditarOS").on('hidden.bs.modal', () => {
-    $("#formularioEditarOS")[0].reset();
-    $("#editAlmacenOS, #edittecnico").prop('disabled', false);
-    $('#signatureContainer').signature('enable');
-    $('#signatureContainer').signature('clear');
-    $('.habilitar').text('Habilitar');
-    arrayitems["length"] = 0;                  //inicializa array
-});
-/*****************************************************************************************/
+
 /*=============================================
 SELECCIONAR PRODUCTO POR AJAX
 =============================================*/
 var $eventoSelect = $('#selectProdOS').select2({
-    placeholder: 'Seleccione producto...',
+    placeholder: 'Seleccione producto....',
     theme: "bootstrap4",
     ajax: {
         url: 'ajax/adminoservicio.ajax.php?op=buscarProdx',
@@ -291,15 +290,15 @@ function inicialize(conserie) {
     $('#selectProdOS').val(null).trigger('change');
     $("#existecnico").val(0);
     $("#cantsaliente").val(0);
-
-    // if (conserie > 0) {
-    //     $("#editdatosmodem").addClass("d-none");
-    // } else {
-    //     inputsmodem = document.getElementById("editdatosmodem");
-    //     if (!inputsmodem.classList.contains("d-none")) {
-    //         $("#editdatosmodem").addClass("d-none");
-    //     }
-    // }
+    console.log("entra...")
+    if (conserie > 0) {
+        $("#editdatosmodem").addClass("d-none");
+    } else {
+        inputsmodem = document.getElementById("editdatosmodem");
+        if (!inputsmodem.classList.contains("d-none")) {
+            $("#editdatosmodem").addClass("d-none");
+        }
+    }
 }
 /************************************************************************************ */
 $("#selectProdOS").change(function (event) {
@@ -327,7 +326,7 @@ $("#selectProdOS").change(function (event) {
         $('#existecnico').val(stock);
 
         if (conserie > 0) {
-            $("#datosmodem").removeClass("d-none");
+            $("#editdatosmodem").removeClass("d-none");
         }
     }
 })  //fin del select2
@@ -348,4 +347,16 @@ $("#cantsaliente").change(function (evt) {
         $("#cantsaliente").focus();
     }
 })  //fin de checar cant de salida
-  /*======================================================================*/
+/*======================================================================*/
+/*================ AL SALIR DEL MODAL EDITAR OS, RESETEAR FORMULARIO ==================*/
+$("#modalEditarOS").on('hidden.bs.modal', () => {
+    $("#formularioEditarOS")[0].reset();
+    $("#editAlmacenOS, #edittecnico").prop('disabled', false);
+    $('#signatureContainer').signature('enable');
+    $('#signatureContainer').signature('clear');
+    $('.habilitar').text('Habilitar');
+    arrayitems["length"] = 0;                  //inicializa array
+    localStorage.removeItem("numeroserie");
+    localStorage.removeItem("alfanumerico");
+});
+/*****************************************************************************************/

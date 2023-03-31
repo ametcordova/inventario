@@ -812,17 +812,17 @@ function listOs(data) {
   let obs;
   for (let valor of data) {
 
-    obs = `< td class='text-center' > ${valor.OBS}</td > `;
+    obs = `<td class='text-center'> ${valor.OBS} - ${valor.ID}</td>`;
     if (isNumeric(valor.OBS) || valor.OBS == 'SIN ACTUALIZAR') {
-      obs = `< td class='text-center bg-danger' > ${valor.OBS}</td > `;
+      obs = `<td class='text-center bg-danger'> ${valor.OBS} - ${valor.ID}</td>`;
     }
-    contenido.innerHTML += `
-      < tr style = "font-size:0.85em" >
+    contenido.innerHTML +=`
+      <tr style = "font-size:0.85em">
         <td class='text-center'>${id++}</td>
         <td class='text-center'>${valor.OS}</td>
         <td class='text-center'>${valor.Telefono}</td>
         ${obs}
-      </tr > `;
+      </tr>`;
   }//fin del For
 
 }

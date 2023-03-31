@@ -18,9 +18,9 @@ function init(){
   VARIABLE LOCAL STORAGE
   =============================================*/
   //console.log(localStorage.getItem("daterange-btn-factingreso"))
-  if (localStorage.getItem("daterange-btn-factingreso") === null) {
-    fechaactual();
-  }
+  // if (localStorage.getItem("daterange-btn-factingreso") === null) {
+  //   fechaactual();
+  // }
   
   $("#btnGuardarFactura").hide();
 
@@ -30,12 +30,13 @@ function init(){
 
 // ========= LISTAR EN EL DATATABLE REGISTROS DE LA TABLA FACTURAINGRESO================
 function dt_ListarFacturasIngreso(){
-  let rangodeFecha = (localStorage.getItem("daterange-btn-factingreso"));
-  $('#daterange-btn-factingreso span').html(rangodeFecha);
+  start=moment().subtract(1, 'months').format('DD-MM-YYYY');   // 1 mes atras. 
+  end=moment().format('DD-MM-YYYY')
+  $('#daterange-btn-factingreso span').html(start + ' - ' + end);
+  localStorage.setItem("Rangofechafactingreso", start+' - '+end);
+  rangodeFecha=$('#daterange-btn-factingreso span').html();
 
    if(rangodeFecha===undefined || rangodeFecha===null){
-      //  var FechDev1=moment().format('YYYY-MM-DD');
-      //  var FechDev2=moment().format('YYYY-MM-DD');
        FechDev1=moment().format('YYYY-MM-DD HH:mm:ss');
        FechDev2=moment().format('YYYY-MM-DD HH:mm:ss');
    }else{
@@ -86,21 +87,21 @@ function dt_ListarFacturasIngreso(){
             autoPrint: false            //TRUE para abrir la impresora
         },
         {
-          text: 'Generar REP 2.0',
+          text: 'Generar R.E.P. 2.0',
           className: 'btn btn-sm btn-dark ',
           action: function ( e, dt, node, config ) {
           GenCompPago20();
           }
         },
         {
-          text: 'Gestión REP 2.0',
+          text: 'Gestión R.E.P. 2.0',
           className: 'btn btn-sm btn-info',
           action: function ( e, dt, node, config ) {
           GestionCompPago20();
           }
         },
         {
-          text: 'Genera Excel ',
+          text: 'Genera Rel. Facts. <i class="fa fa-file-excel-o" aria-hidden="true"></i>',
           className: 'btn btn-sm btn-warning',
           action: function ( e, dt, node, config ) {
           RelacionExcel();
