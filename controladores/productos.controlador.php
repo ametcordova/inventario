@@ -166,7 +166,8 @@ class ControladorProductos{
 						swal({
 							  icon: "success",
 							  title: "El producto ha sido guardado correctamente",
-							  button: "Cerrar"
+							  button: "Cerrar",
+							  timer: 2500
 							  }).then(function(result){
 										if (result) {
 
@@ -184,12 +185,13 @@ class ControladorProductos{
 							  icon: "warning",
 							  title: "El producto NO ha sido guardado!!"+varjs,
 							  button: "Cerrar",
-							  timer: 4000
+							  timer: 3000
 							  }).then(function(result){
 										if (result) {
 											window.location = "productos";
+											//$(".tablaProductos").DataTable().ajax.reload(null, false);
 										}else{
-											window.location = "productos";
+											//window.location = "productos";
 										}
 									})
 

@@ -450,25 +450,25 @@ static public function mdlGuardarRep($tabla, $complementodepago){
             $query->bindParam(":foliorep",  $folio, PDO::PARAM_INT);
             $query->execute();
 
-            if($query){
-                //ACTUALIZA FOLIO DE COMPLEMENTO DE PAGO EN TABLA FACTURAS. * CAMBIARLO A TIMBRARREP20.PHP PARA ACTUALIZAR AL TIMBRAR REP *
-                $status=1;
-                $datos_json=json_decode($complementodepago["doctosrelacionados"],TRUE);		//decodifica los datos JSON 
+            // if($query){
+            //ACTUALIZA FOLIO DE COMPLEMENTO DE PAGO EN TABLA FACTURAS. * CAMBIARLO A TIMBRARREP20.PHP PARA ACTUALIZAR AL TIMBRAR REP *
+            //     $status=1;
+            //     $datos_json=json_decode($complementodepago["doctosrelacionados"],TRUE);		//decodifica los datos JSON 
 
-                foreach($datos_json as $valor) {
-                    $serie=$valor['Serie'];
-                    $folio=$valor['Folio'];
+            //     foreach($datos_json as $valor) {
+            //         $serie=$valor['Serie'];
+            //         $folio=$valor['Folio'];
 
-                    $query = Conexion::conectar()->prepare("UPDATE facturas SET numcomplemento=:numcomplemento, fechapagado=:fechapagado, status=:status WHERE serie=:serie AND numfact=:numfact");
-                    $query->bindParam(":serie",             $serie, PDO::PARAM_STR);
-                    $query->bindParam(":numfact",           $folio, PDO::PARAM_STR);
-                    $query->bindParam(":numcomplemento",    $foliorep, PDO::PARAM_STR);
-                    $query->bindParam(":fechapagado",       $complementodepago["fechapago"], PDO::PARAM_STR);
-                    $query->bindParam(":status",            $status, PDO::PARAM_INT);
-                    $query->execute();
-                }
+            //         $query = Conexion::conectar()->prepare("UPDATE facturas SET numcomplemento=:numcomplemento, fechapagado=:fechapagado, status=:status WHERE serie=:serie AND numfact=:numfact");
+            //         $query->bindParam(":serie",             $serie, PDO::PARAM_STR);
+            //         $query->bindParam(":numfact",           $folio, PDO::PARAM_STR);
+            //         $query->bindParam(":numcomplemento",    $foliorep, PDO::PARAM_STR);
+            //         $query->bindParam(":fechapagado",       $complementodepago["fechapago"], PDO::PARAM_STR);
+            //         $query->bindParam(":status",            $status, PDO::PARAM_INT);
+            //         $query->execute();
+            //     }
                 
-            }
+            // }
 
            return "ok";
 
@@ -503,7 +503,7 @@ static public function mdlListarRep20($tblRep20, $year, $usuario, $todes){
         INNER JOIN clientes cli ON cli.id=tbl.idrfcreceptor
         WHERE ".$where;
         
-              $stmt = Conexion::conectar()->prepare($sql);
+        $stmt = Conexion::conectar()->prepare($sql);
       
         $stmt -> execute();
       
@@ -519,7 +519,94 @@ static public function mdlListarRep20($tblRep20, $year, $usuario, $todes){
     
 /*=========================================================================================*/   
 
+/*=============================================
+	LISTAR SALIDAS
+=============================================*/
+static public function mdlAgregaCtrlFacts($tabla, $campo, $valor, $ids, $usuario){
+    try {
+        $fechaHoy=date("Y-m-d");
+        $id=$borrado=0;
+        //  $consulta = Conexion::conectar()->prepare("SELECT tb1.id, tb1.serie, tb1.folio, tb1.fechaelaboracion, tb1.subtotal, tb1.impuestos, tb1.totalfactura, tb1.conceptos, cli.nombre AS nombrereceptor,
+        //  FROM $tabla tb1
+        //  INNER JOIN clientes cli ON cli.id=tb1.idreceptor
+        //  WHERE tb1.id IN ($ids)");
+          $consulta = "SELECT tb1.id, tb1.serie, tb1.folio, tb1.fechaelaboracion, tb1.subtotal, tb1.impuestos, tb1.totalfactura, tb1.conceptos, cli.nombre AS nombrereceptor FROM $tabla tb1
+          INNER JOIN clientes cli ON cli.id=tb1.idreceptor
+          WHERE tb1.id IN ($ids) AND tb1.uuid IS NOT NULL";
+   
+        //$stmt = Conexion::conectar()->prepare($stmt);
+        $sentencia = Conexion::conectar()->prepare($consulta, [
+            PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL,
+        ]);
+        $sentencia->execute();
 
+        $tablafacturas="facturas";
+        while ($facturas = $sentencia->fetchObject()) {
+            // Preparar la consulta SQL con parámetros
+            $query = Conexion::conectar()->prepare("SELECT COUNT(*) FROM $tablafacturas WHERE serie=:serie AND numfact=:numfact AND borrado=:borrado");
+            // Vincular los parámetros
+            $query->bindParam(':serie', $facturas->serie);
+            $query->bindParam(':numfact', $facturas->folio);
+            $query->bindParam(':borrado', $borrado);
+            // Ejecutar la consulta SQL
+            $query->execute();
+
+            // Obtener el resultado de la consulta SQL
+            $result = $query->fetchColumn();
+
+            if ($result > 0) {
+                
+            } else {
+                $id++;
+                $datos=json_decode($facturas->conceptos);   //Como objeto
+    
+                $descripcion=$datos[0]->Descripcion;       //Como objeto
+               
+                $oper=substr(stristr($descripcion, "BRUNO DIAZ"),10,strpos(stristr($descripcion, "BRUNO DIAZ"),"."));
+                if($oper==''){
+                    $oper=substr(stristr($descripcion, "OPERACIÓN:"),11,strpos(stristr($descripcion, "OPERACIÓN:"),"."));
+                }
+                $result = explode(":", $oper)[0];
+                $oper=trim($result);
+            
+                $proy=substr(stristr($descripcion,"CAR"),0,9);
+            
+                $odc=substr(stristr($descripcion, "ODC"),5,8);
+    
+                $contrato=substr(stristr($descripcion, "CONTRATO"),10,10);
+    
+                $stmt=Conexion::conectar()->prepare("INSERT INTO $tablafacturas(serie, numfact, fechafactura, cliente, numorden, subtotal, iva, importe, tipotrabajo, fechaentregado, observaciones, contrato, idusuario) VALUES (:serie, :numfact, :fechafactura, :cliente, :numorden, :subtotal, :iva, :importe, :tipotrabajo, :fechaentregado, :observaciones, :contrato, :idusuario)");
+    
+                $stmt->bindParam(":serie",          $facturas->serie, PDO::PARAM_STR);
+                $stmt->bindParam(":numfact",        $facturas->folio, PDO::PARAM_INT);
+                $stmt->bindParam(":fechafactura",   $facturas->fechaelaboracion, PDO::PARAM_STR);
+                $stmt->bindParam(":cliente",        $facturas->nombrereceptor, PDO::PARAM_STR);
+                $stmt->bindParam(":numorden",       $odc, PDO::PARAM_STR);
+                $stmt->bindParam(":subtotal",       $facturas->subtotal, PDO::PARAM_STR);
+                $stmt->bindParam(":iva",            $facturas->impuestos, PDO::PARAM_STR);
+                $stmt->bindParam(":importe",        $facturas->totalfactura, PDO::PARAM_STR);
+                $stmt->bindParam(":tipotrabajo",    $oper, PDO::PARAM_STR);
+                $stmt->bindParam(":fechaentregado", $fechaHoy, PDO::PARAM_STR);
+                $stmt->bindParam(":observaciones",  $proy, PDO::PARAM_STR);
+                $stmt->bindParam(":contrato",       $contrato, PDO::PARAM_STR);
+                $stmt->bindParam(":idusuario",      $usuario, PDO::PARAM_INT);
+    
+                $stmt -> execute();
+            }            
+
+        }
+
+        return $id;
+    
+        $stmt = null;
+    
+    } catch (Exception $e) {
+        echo "Failed: " . $e->getMessage();
+    }
+    
+}	
+   
+/*=========================================================================================*/   
 
 
 

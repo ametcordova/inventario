@@ -116,10 +116,11 @@ static public function mdlMostrarTecnicos($tabla, $item, $valor){
 
 		if($item != null and $valor!=null){
 
-			$sql="SELECT tec.*,alm.nombre AS almacen,est.nombreestado 
+			$sql="SELECT tec.*,alm.nombre AS almacen,est.nombreestado, usu.id AS idusuario
 			FROM $tabla tec 
 			INNER JOIN almacenes alm ON tec.alm_asignado=alm.id 
 			INNER JOIN catestado est ON tec.estado=est.idestado	
+			LEFT JOIN usuarios usu ON usu.user=tec.id
 			WHERE tec.$item = :$item";
 			
 			$stmt = Conexion::conectar()->prepare($sql);
@@ -128,11 +129,11 @@ static public function mdlMostrarTecnicos($tabla, $item, $valor){
 
 			$stmt -> execute();
 
-			return $stmt -> fetchAll();
+			return $stmt -> fetchAll(PDO::FETCH_ASSOC);
 
 		 }elseif($item != null){
 
-			$sql="SELECT tec.*,alm.nombre AS almacen,est.nombreestado 
+			$sql="SELECT tec.*,alm.nombre AS almacen,est.nombreestado
 			FROM $tabla tec 
 			INNER JOIN almacenes alm ON tec.alm_asignado=alm.id 
 			INNER JOIN catestado est ON tec.estado=est.idestado	
@@ -144,14 +145,18 @@ static public function mdlMostrarTecnicos($tabla, $item, $valor){
 
 			$stmt -> execute();
 
-			return $stmt -> fetch();
+			return $stmt -> fetch(PDO::FETCH_ASSOC);
 		}else{
-
-			$stmt = Conexion::conectar()->prepare("SELECT tec.id,tec.nombre, tec.expediente, tec.curp, tec.rfc,tec.telefonos, tec.direccion, tec.num_cuenta, alm.nombre AS almacen,tec.status FROM $tabla tec INNER JOIN almacenes alm ON alm_asignado=alm.id");
-
+			$item="status";
+			$valor=1;
+			$stmt = Conexion::conectar()->prepare("SELECT tec.id, tec.nombre, tec.expediente, tec.curp, tec.rfc,tec.telefonos, tec.direccion, tec.num_cuenta, alm.nombre AS almacen, tec.status
+			FROM $tabla tec 
+			INNER JOIN almacenes alm ON alm_asignado=alm.id
+			WHERE tec.$item = :$item");
+			$stmt -> bindParam(":".$item, $valor, PDO::PARAM_STR);
 			$stmt -> execute();
 
-			return $stmt -> fetchAll();
+			return $stmt -> fetchAll(PDO::FETCH_ASSOC);
 
 		}
 

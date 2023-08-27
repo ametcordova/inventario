@@ -113,7 +113,7 @@ class ClaseGenerarRep20{
     $bytes = file_put_contents("../archivos/filesinvoices/".$datarfcemisor."-REP-".$datafolio.".json", $invoice_json); 
 
     if($bytes===false){
-        $resp = array('411' => 'Error al escribir archivo JSON.');	
+        $resp = array('401' => 'Error al escribir archivo JSON.');	
         return $resp;
    }
 

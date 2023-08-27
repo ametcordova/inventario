@@ -43,37 +43,38 @@ static public function mdlGuardarNumeroSeries($tabla, $id_almacen, $numerodocto,
 /*=============================================
 	LISTAR DEV TECNICOS
 =============================================*/
-static public function mdlListarSeries($tabla, $item, $valor, $orden, $fechadev1, $fechadev2){
+static public function mdlListarSeries($tabla, $item, $valor, $orden, $fechadev1, $fechadev2, $filtroanual){
 try{
-  //if($item = null){
+    if(!empty($filtroanual)){
+       $where="YEAR(cont_series.fechaentrada)='".$filtroanual."'";
+     }else{
+       $where="cont_series.fechaentrada>='".$fechadev1."' AND cont_series.fechaentrada<='".$fechadev2."'";
+       //$where = "os.fecha_instalacion>='" . $fechadev1 . "' AND os.fecha_instalacion<='" . $fechadev2 . "' ";
+    }
+    
+    $valor=intval($valor);
+    if($valor<99){    //1=disponible 0=transito 2=asignado
+      //$where.='AND cont_series.estado="'.$valor.'"';
+      $where.=" AND cont_series.estado='".$valor."'";
+    }
 
-    $stmt = Conexion::conectar()->prepare("SELECT series.id, series.id_producto, prod.descripcion, series.numerodocto, series.numeroserie, 
-    series.alfanumerico, series.estado, series.ultmodificacion FROM $tabla series 
-    INNER JOIN productos prod ON prod.id=series.id_producto"); 
-    //$stmt -> bindParam(":".$item, $valor, PDO::PARAM_STR);
+    $sql="SELECT cont_series.id, cont_series.id_producto, cont_series.id_almacen, prod.descripcion, cont_series.numerodocto, cont_series.numeroserie, cont_series.alfanumerico, cont_series.id_asignado, cont_series.notasalida, cont_series.os, cont_series.estado, cont_series.fechaentrada, cont_series.ultmodificacion, alm.nombre AS nombrealmacen 
+    FROM $tabla cont_series 
+    INNER JOIN productos prod ON prod.id=cont_series.id_producto
+    INNER JOIN almacenes alm ON alm.id=cont_series.id_almacen
+    WHERE ".$where;
 
-    $stmt -> execute();
-
-    return $stmt -> fetchAll();
-
-  //}else{
-
-    //$where='1=1';
-        
-/*     $where='dev.fecha_devolucion>="'.$fechadev1.'" AND dev.fecha_devolucion<="'.$fechadev2.'" ';
-
-    $where.=' ORDER BY dev.id DESC';
-
-    $sql="SELECT dev.id, tec.nombre, dev.fecha_devolucion, dev.id_almacen,  alm.nombre AS almacen FROM $tabla dev INNER JOIN tecnicos tec ON dev.id_tecnico=tec.id INNER JOIN almacenes alm ON dev.id_almacen=alm.id WHERE ".$where;
+    //echo $sql;
+    
 
     $stmt = Conexion::conectar()->prepare($sql);
 
-    $stmt -> execute();
 
-    return $stmt -> fetchAll();
- */    //return $sql;
+    //$stmt -> bindParam(":".$item, $valor, PDO::PARAM_STR);
 
-  //}
+     $stmt -> execute();
+
+    return $stmt -> fetchAll(PDO::FETCH_ASSOC);
 
     $stmt = null;
     
@@ -82,7 +83,89 @@ try{
   }
   
 }
-        
-    
+/************************************************************************ */
+static public function mdlMostrarONT($tabla, $item, $valor, $estado){
+	try{
+    //$estado=1;
 
+			$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item = :$item AND $estado = :$estado  ORDER BY id ASC");
+
+			$stmt -> bindParam(":$item", $valor, PDO::PARAM_INT);
+			$stmt -> bindParam(":$estado", $estado, PDO::PARAM_INT);
+
+			$stmt -> execute();
+
+			return $stmt -> fetchAll(PDO::FETCH_ASSOC);
+
+		$stmt = null;
+
+	} catch (Exception $e) {
+		echo "Failed: " . $e->getMessage();
+	}
+
+}
+/************************************************************************ */
+static public function mdlValidData($tabla, $campo1, $valor1, $campo2, $valor2, $campo3, $valor3){
+	try{
+    $numerodocto=(string)$valor2;   //Método 1. Mediante un casting de tipos.
+
+			 $stmt = Conexion::conectar()->prepare("SELECT id_almacen, numerodocto, id_producto 
+       FROM $tabla
+       WHERE $campo1 = :$campo1 AND $campo2=:$campo2 AND $campo3=:$campo3 LIMIT 1");
+
+			$stmt -> bindParam(":$campo1", $valor1, PDO::PARAM_INT);
+			$stmt -> bindParam(":$campo2", $numerodocto, PDO::PARAM_STR);
+			$stmt -> bindParam(":$campo3", $valor3, PDO::PARAM_INT);
+
+			$stmt -> execute();
+
+			return $stmt -> fetch(PDO::FETCH_ASSOC);
+
+		$stmt = null;
+
+	} catch (Exception $e) {
+		echo "Failed: " . $e->getMessage();
+	}
+
+}
+/************************************************************************ */
+
+/*==========================================================================================*/
+public static function mdlGuardarEditaSerie($tabla, $datos)
+{
+    try {
+
+            $sql = "UPDATE $tabla SET id_almacen=:id_almacen, numerodocto=:numerodocto, numeroserie=:numeroserie, alfanumerico=:alfanumerico, id_asignado=:id_asignado, os=:os, estado=:estado, ultusuario=:ultusuario WHERE id = :id";
+
+            $stmt = Conexion::conectar()->prepare($sql);
+
+            //$stmt->bindParam(":id_producto",  $datos["id_producto"], PDO::PARAM_INT);
+            $stmt->bindParam(":id",           $datos["id"], PDO::PARAM_INT);
+            $stmt->bindParam(":id_almacen",   $datos["id_almacen"], PDO::PARAM_INT);
+            $stmt->bindParam(":numerodocto",  $datos["numerodocto"], PDO::PARAM_STR);
+            $stmt->bindParam(":numeroserie",  $datos["numeroserie"], PDO::PARAM_STR);
+            $stmt->bindParam(":alfanumerico", $datos["alfanumerico"], PDO::PARAM_STR);
+            $stmt->bindParam(":id_asignado",  $datos["id_asignado"], PDO::PARAM_INT);
+            $stmt->bindParam(":os",           $datos["os"], PDO::PARAM_STR);
+            $stmt->bindParam(":estado",       $datos["estado"], PDO::PARAM_INT);
+            $stmt->bindParam(":ultusuario",   $datos["ultusuario"], PDO::PARAM_INT);
+            $stmt->execute();
+
+            return $stmt;
+
+        $stmt = null;
+
+    } catch (Exception $e) {
+        echo "Failed: " . $e->getMessage();
+    }
+}
+
+/*===========================================================================================*/
+/****************
+SELECT *
+FROM contenedor_series
+WHERE YEAR(`fechaentrada`) = 2023;
+
+* 
+*/
 }       //fin de la clase

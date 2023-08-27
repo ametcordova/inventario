@@ -5,21 +5,6 @@ var fechaInicial;
 var fechaFinal;
 var FechDev1;
 var FechDev2;
-/**************************************************************/
-// VARIABLES PARA OBTENER LA SEMANA ANTERIOR DE MEXPEI
-/**************************************************************/
-var startFecha;
-var endFecha;
-const HOY=parseInt(moment().format('d')); //Numero del dia de la semana
-                          //V,S,D,L,M,M,J
-const NUM_SEMANA= new Array(5,6,0,1,2,3,4)   //array con dias de la semana mexpei
-                        //1,2,3,4,5,6,7
-const NUM_DIAS= new Array(1,2,3,4,5,6,7)   //array de dias de la semana
-const EXTRAE=parseInt(NUM_SEMANA.indexOf(HOY));  
-endFecha=NUM_DIAS[EXTRAE];
-startFecha=NUM_SEMANA[EXTRAE]+NUM_DIAS[EXTRAE]+2;
-
-/**************************************************************/
 
 $('#edit-benef').hide();
 
@@ -217,7 +202,7 @@ function dt_crtl_depositos(){
           $(api.column(5).footer()).html(total);
           
           $('.dataTables_filter input').bind('keyup', function(e) {
-            if (e.keyCode==08 || e.keyCode==27){    //SI ES BACKSPACE O ESC LIMPIA EL IMP. DE LO SELEC.
+            if (e.keyCode==8 || e.keyCode==27){    //SI ES BACKSPACE O ESC LIMPIA EL IMP. DE LO SELEC.
               $(api.column(1).footer()).html(` `);
             }else{
               $(api.column(1).footer()).html(`Total Datos Selecionados: ${totPagActual}`);
@@ -262,6 +247,26 @@ function dt_crtl_depositos(){
 //fechaFinal=moment().format('DD-MM-YYYY');
 //'Ult. Sem. MexPei' : [moment().subtract(7, 'days'), moment().subtract(1, 'days')],
 /*==================================================================*/
+
+/**************************************************************/
+// VARIABLES PARA OBTENER LA SEMANA ANTERIOR DE MEXPEI
+/**************************************************************/
+var startFecha;
+var endFecha;
+const HOY=parseInt(moment().format('d')); //Numero de dia de la semana  4
+
+                          //V,S,D,L,M,M,J
+const NUM_SEMANA= new Array(5,6,0,1,2,3,4)   //array con dias de la semana mexpei
+const EXTRAE=parseInt(NUM_SEMANA.indexOf(HOY));   6
+
+                        //1,2,3,4,5,6,7
+const NUM_DIAS= new Array(1,2,3,4,5,6,7)   //array de dias de la semana
+var endFecha=NUM_DIAS[EXTRAE];    7
+
+var startFecha=(NUM_SEMANA[EXTRAE]+EXTRAE+HOY)-3;
+console.log("HOY:",HOY, "EXTRAE:",EXTRAE, "STARTFECHA:", startFecha, "ENDFECHA:", endFecha, "NUM_SEM:",NUM_SEMANA[EXTRAE]);
+/**************************************************************/
+
 
 $('#daterange-btn-ctrldepositos').daterangepicker({
   ranges   : {
@@ -477,7 +482,8 @@ $("body").on("submit", "#form-AgregaDeposito", function( event ) {
         $('#modalAgregarDeposito').modal('hide')
       }else{
         $("#identifica").val(0); 
-        modalEvento.hide();
+        $('#modalAgregarDeposito').modal('hide')
+        //modalEvento.hide();
       }
       $('#dt-crtl-depositos').DataTable().ajax.reload(null, false);
       ohSnap('Registro guardado correctamente.', {duration: '2500', color: 'success', icon: 'icon-alert'});

@@ -85,7 +85,6 @@
 
 <script src="extensiones/plugins/moment.js"></script>
 
-
 <script src="extensiones/plugins/datepicker/bootstrap-datepicker.js"></script>
 
 <!-- daterangepicker -->
@@ -100,7 +99,7 @@
 <!-- axios -->
 <script src="extensiones/axios-0.19.2/axios.min.js"></script>
 <!-- notie -->
-<script src="https://unpkg.com/notie"></script>
+<script src="extensiones/plugins/notie/notie.min.js"></script>
 <!-- Alertas ohSnap -->
 <script src="extensiones/plugins/ohSnap/ohsnap.js"></script>
 
@@ -111,7 +110,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
 
 <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/4.1.0/rx.all.js"></script> -->
-
 
 </body>
 </html>

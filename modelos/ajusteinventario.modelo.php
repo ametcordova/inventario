@@ -235,7 +235,7 @@ try{
 =============================================*/
 static public function mdlDatosProducto($tabla, $item, $valor){
 try{
-	$stmt = Conexion::conectar()->prepare("SELECT prod.id, prod.id_medida, prod.codigointerno, prod.descripcion, prod.sku, med.medida 
+	$stmt = Conexion::conectar()->prepare("SELECT prod.id, prod.id_medida, prod.codigointerno, prod.descripcion, prod.sku, prod.conseries, med.medida 
 	FROM $tabla prod
 	INNER JOIN medidas med ON med.id=prod.id_medida
 	WHERE prod.$item=:$item AND estado=1");

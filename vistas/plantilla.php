@@ -16,10 +16,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
   <link rel="shortcut icon" type="image/x-icon" href="extensiones/dist/img/favicon.ico"/>
 
-  	<script src="extensiones/plugins/Signature/js/jquery.min.js"></script>
+  <script src="extensiones/plugins/Signature/js/jquery.min.js"></script>
 	<script src="extensiones/plugins/Signature/js/jquery-ui.min.js"></script>
 
-
+  
 
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 
@@ -48,7 +48,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
    <!-- Google Font: Source Sans Pro
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet"> -->
   <link href="extensiones/dist/css/css.css" rel="stylesheet">
-
+  
  <!-- datepicker -->
   <link rel="stylesheet" href="extensiones/plugins/datepicker/datepicker3.css">
 
@@ -76,7 +76,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <link rel="stylesheet" href="extensiones/dropzone/dropzone.css">
 
 <!-- ALERTAS NOTIE -->
-<link rel="stylesheet" type="text/css" href="https://unpkg.com/notie/dist/notie.min.css">
+<link rel="stylesheet" type="text/css" href="extensiones/plugins/notie/notie.min.css">
 <!-- ALERTAS ohSnap -->
 <link rel="stylesheet" type="text/css" href="extensiones/plugins/ohSnap/ohsnap.css">
 
@@ -110,6 +110,7 @@ if (isset($_SESSION["iniciarSesion"]) && $_SESSION["iniciarSesion"] == "ok") {
 
     if (isset($_GET["ruta"])) {
         if ($_GET["ruta"] == "inicio" ||
+            $_GET["ruta"] == "prueba" ||
             $_GET["ruta"] == "dash" ||
             $_GET["ruta"] == "usuarios" ||
             $_GET["ruta"] == "template-inicial" ||
@@ -153,7 +154,7 @@ if (isset($_SESSION["iniciarSesion"]) && $_SESSION["iniciarSesion"] == "ok") {
             include "modulos/404.php";
         }
     } else {
-        include_once "modulos/inicio.php";
+        //include_once "modulos/inicio.php";
     }
 
     /* Main Footer */
@@ -174,7 +175,7 @@ if (isset($_SESSION["iniciarSesion"]) && $_SESSION["iniciarSesion"] == "ok") {
 <script src="vistas/js/medidas.js?v=010320231206"></script>
 <script src="vistas/js/proveedores.js?v=010320231206"></script>
 <script src="vistas/js/productos.js?v=020320231206"></script>
-<script src="vistas/js/devolucion-tecnicos.js?v=010320231206"></script>
+<script src="vistas/js/devolucion-tecnicos.js?v=010420231206"></script>
 <script src="vistas/js/entradas.js?v=010320231206"></script>
 <script src="vistas/js/salidas.js?v=010320231206"></script>
 <script src="vistas/js/crear-almacen.js?v=010320231206"></script>
@@ -182,8 +183,8 @@ if (isset($_SESSION["iniciarSesion"]) && $_SESSION["iniciarSesion"] == "ok") {
 <script src="vistas/js/adminsalidas.js?v=010320231206"></script>
 <script src="vistas/js/reporteinventario.js?v=010320231206"></script>
 <script src="vistas/js/osvilla.js?v=010320231206"></script>
-<script src="vistas/js/adminseries.js?v=010320231206"></script>
-<script src="vistas/js/adminoservicio.js?v=100320231206"></script>
+<script src="vistas/js/adminoservicio.js?v=070720231233"></script>
+
 <!--<script defer src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 

@@ -17,7 +17,7 @@ static public function mdlCrearFactura($tabla, $datos){
 		$newFechaFact=date("Y-m-d",strtotime($datos["fechafactura"])); 
 		$newFechaEntrega=$datos["fechaentregado"]==""?null:$datos["fechaentregado"]; 
 
-		   $stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(numfact, serie, fechafactura, cliente, numorden, subtotal, iva, imp_retenido, importe, tipotrabajo, fechaentregado, status, observaciones, rutaexpediente, idusuario) VALUES (:numfact, :serie, :fechafactura, :cliente, :numorden, :subtotal, :iva, :imp_retenido, :importe, :tipotrabajo, :fechaentregado, :status, :observaciones, :rutaexpediente, :idusuario)");
+		   $stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(numfact, serie, fechafactura, cliente, numorden, subtotal, iva, imp_retenido, importe, tipotrabajo, fechaentregado, status, observaciones, contrato, rutaexpediente, idusuario) VALUES (:numfact, :serie, :fechafactura, :cliente, :numorden, :subtotal, :iva, :imp_retenido, :importe, :tipotrabajo, :fechaentregado, :status, :observaciones, :contrato, :rutaexpediente, :idusuario)");
    
 			$stmt->bindParam(":numfact", $datos["numfact"], PDO::PARAM_INT);
 			$stmt->bindParam(":serie", $datos["serie"], PDO::PARAM_STR);
@@ -32,6 +32,7 @@ static public function mdlCrearFactura($tabla, $datos){
 			$stmt->bindParam(":fechaentregado", $newFechaEntrega, PDO::PARAM_STR);
 			$stmt->bindParam(":status", $datos["status"], PDO::PARAM_INT);
 			$stmt->bindParam(":observaciones", $datos["observaciones"], PDO::PARAM_STR);
+			$stmt->bindParam(":contrato", $datos["contrato"], PDO::PARAM_STR);
 			$stmt->bindParam(":rutaexpediente", $datos["rutaexpediente"], PDO::PARAM_STR);
 			$stmt->bindParam(":idusuario", $datos["idusuario"], PDO::PARAM_INT);
 		   if($stmt->execute()){
@@ -66,7 +67,7 @@ static public function mdlGuardarEditarFactura($tabla, $datos){
 		$nuevaFechaEntrega=$datos["fechaentregado"]==""?null:$datos["fechaentregado"]; 
 		$nuevaFechaPagado=$datos["fechapagado"]==""?null:$datos["fechapagado"];
 
-		   $stmt = Conexion::conectar()->prepare("UPDATE $tabla SET fechafactura=:fechafactura, serie=:serie, cliente=:cliente, numorden=:numorden, subtotal=:subtotal, iva=:iva, imp_retenido=:imp_retenido, importe=:importe, tipotrabajo=:tipotrabajo, fechaentregado=:fechaentregado, fechapagado=:fechapagado, status=:status, observaciones=:observaciones, rutaexpediente=:rutaexpediente, idusuario=:idusuario WHERE id=:id");
+		   $stmt = Conexion::conectar()->prepare("UPDATE $tabla SET fechafactura=:fechafactura, serie=:serie, cliente=:cliente, numorden=:numorden, subtotal=:subtotal, iva=:iva, imp_retenido=:imp_retenido, importe=:importe, tipotrabajo=:tipotrabajo, fechaentregado=:fechaentregado, fechapagado=:fechapagado, status=:status, observaciones=:observaciones, contrato=:contrato, construccion=:construccion, rutaexpediente=:rutaexpediente, idusuario=:idusuario WHERE id=:id");
 
 		   $stmt->bindParam(":id", $datos["idregistro"], PDO::PARAM_INT);
 		   $stmt->bindParam(":serie", $datos["serie"], PDO::PARAM_STR);
@@ -82,6 +83,8 @@ static public function mdlGuardarEditarFactura($tabla, $datos){
 		   $stmt->bindParam(":fechapagado", $nuevaFechaPagado, PDO::PARAM_STR);
 		   $stmt->bindParam(":status", $datos["status"], PDO::PARAM_INT);
 		   $stmt->bindParam(":observaciones", $datos["observaciones"], PDO::PARAM_STR);
+		   $stmt->bindParam(":contrato", $datos["contrato"], PDO::PARAM_STR);
+		   $stmt->bindParam(":construccion", $datos["construccion"], PDO::PARAM_INT);
 		   $stmt->bindParam(":rutaexpediente", $datos["rutaexpediente"], PDO::PARAM_STR);
 		   $stmt->bindParam(":idusuario", $datos["idusuario"], PDO::PARAM_INT);
 		   if($stmt->execute()){
@@ -206,7 +209,7 @@ try{
 /*=============================================
 	MOSTRAR FACTURAS
 =============================================*/
-static public function mdlMostrarFacturas($tabla, $item, $valor, $orden, $tipo, $year, $monthinicial, $monthfinal, $solopagadas){
+static public function mdlMostrarFacturas($tabla, $item, $valor, $valor2, $orden, $tipo, $year, $monthinicial, $monthfinal, $solopagadas){
 try{
 		if($item != null){
 			$orden=intval($orden);
@@ -324,12 +327,23 @@ static public function mdlModificarSaldoDisp($tabla, $item, $valor, $datos, $ope
 
 		if($operacion=="resta"){
 
-			$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET saldodisponible=saldodisponible-(:saldodisponible) WHERE $item =:$item"); 
+			if($datos["construccion"]==0){
 
-			$stmt->bindParam(":".$item, $valor, PDO::PARAM_STR);
+				$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET saldodisponible=saldodisponible-(:saldodisponible) WHERE $item =:$item"); 
+	
+				$stmt->bindParam(":".$item, $valor, PDO::PARAM_STR);
+	
+				$stmt->bindParam(":saldodisponible", $datos["subtotal"], PDO::PARAM_STR);
 
-			$stmt->bindParam(":saldodisponible", $datos["subtotal"], PDO::PARAM_STR);
-
+			}else{
+				$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET saldoconstruccion=saldoconstruccion-(:saldoconstruccion) WHERE $item =:$item"); 
+	
+				$stmt->bindParam(":".$item, $valor, PDO::PARAM_STR);
+	
+				$stmt->bindParam(":saldoconstruccion", $datos["subtotal"], PDO::PARAM_STR);
+				
+			}
+			
 			$stmt -> execute();
 
 			return 'ok';

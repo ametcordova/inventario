@@ -351,26 +351,33 @@ if($y2>0){
     $linea="T";
  }
 
-$pdf->MultiCell(15, 6.5, $row["ClaveProdServ"], $linea, 'C');
+ if(strlen($row["Descripcion"])>270){
+    $hightrow=6.5;
+}else{
+    $hightrow=3.5;
+}
+
+$pdf->MultiCell(15, $hightrow, $row["ClaveProdServ"], $linea, 'C');
 
 $pdf->SetXY($x+15,$y);
-$pdf->MultiCell(32, 6.5, $row["ClaveUnidad"].'-'.$row["Unidad"],  $linea, 'C', 1);
+$pdf->MultiCell(32, $hightrow, $row["ClaveUnidad"].'-'.$row["Unidad"],  $linea, 'C', 1);
 
 $pdf->SetXY($x+47,$y);
-$pdf->MultiCell(87,3.4,iconv('UTF-8', 'ISO-8859-1',$row["Descripcion"]), $linea,'FJ',1);
+$pdf->MultiCell(87,$hightrow,iconv('UTF-8', 'ISO-8859-1',$row["Descripcion"]), $linea,'FJ',1);
 
 $y2=$pdf->GetY();
 $pdf->SetXY($x+134,$y);
-$pdf->MultiCell(14, 6.5, $row["ObjetoImp"],  $linea, 'C', 1);
+$pdf->MultiCell(14, $hightrow, $row["ObjetoImp"],  $linea, 'C', 1);
 
 $pdf->SetXY($x+148,$y);
-$pdf->MultiCell(7, 6.5, $row["Cantidad"],  $linea, 'C', 1);
+$pdf->MultiCell(7, $hightrow, $row["Cantidad"],  $linea, 'C', 1);
 
 $pdf->SetXY($x+155,$y);
-$pdf->MultiCell(20,6.5, '$'.number_format($row["ValorUnitario"],4, '.',','),  $linea, 'R', 1);
+$pdf->MultiCell(20,$hightrow, '$'.number_format($row["ValorUnitario"],4, '.',','),  $linea, 'R', 1);
 
 $pdf->SetXY($x+175,$y);
-$pdf->MultiCell(21,6.5, '$'.number_format($row["Importe"],2, '.',','),  $linea, 'R', 1);
+$pdf->MultiCell(21,$hightrow, '$'.number_format($row["Importe"],2, '.',','),  $linea, 'R', 1);
+
 
 if ($row != end($conceptos_json)) $pdf->Ln(6.5);    //si no es el Ùltimo elemento del array, interlineado de 5.5
 
@@ -379,7 +386,7 @@ endforeach;
 // ----------------------------------------FIN DE CONCEPTOS ---------------------------------------
 
 // --------------------------- LINEA DE SEPARACION ----------------------------------------------
-$pdf->Ln(10.5);
+$pdf->Ln(14);
 $y1=$pdf->GetY();
 $pdf->SetLineWidth(0.5);
 $pdf->SetDrawColor(0,0,0);
@@ -445,7 +452,7 @@ if($response){
     $y = $pdf->GetY();
     $pdf->SetXY($x-170,$y-2);
     $x = $pdf->GetX();
-    $pdf->MultiCell(0, 3.8, utf8_decode('Sello Digítal del CFDI: '),'LRT','FJ',1);
+    $pdf->MultiCell(0, 3.8, iconv('UTF-8', 'ISO-8859-1','Sello Digítal del CFDI: '),'LRT','FJ',1);
     $pdf->SetFont('Arial', '', 6);
     $pdf->SetX($x);
     $pdf->MultiCell(0, 3.5, iconv('UTF-8', 'ISO-8859-1',$response['sellodigitalcfdi']),'LRB','FJ',1);
@@ -489,11 +496,15 @@ if($response){
     $pdf->Ln(3);
     $y1=$pdf->GetY();
     $pdf->Line(10,$y1,206,$y1);
-    $pdf->Ln(4);
+    $pdf->Ln(3);
 }
-// ------------------------------------------------------------------------------------------------     
- 
-
+// ------------------------------------- FIRMA ---------------------------------------------------     
+    $pdf->Ln(10);
+    $pdf->SetFont('Arial','B',12);
+    $pdf->Cell(65,5,' ',0,0,'C',true);
+    $pdf->MultiCell(70,5,'BRUNO DIAZ GORDILLO','T','C',1);
+    $pdf->Cell(50,5,'',0,0,'C',true);
+    $pdf->Ln(4);
 // ------------------------------------------------------------------------------------------------      
     $nombrearchivo=$resp['rfcemisor'].'-'.$GLOBALS['serie'].$GLOBALS['folio'];
     $pdf->Output('I',$nombrearchivo.'.pdf');

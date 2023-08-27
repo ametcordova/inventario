@@ -22,11 +22,11 @@ class ControladorSeries{
     LISTAR SERIES
 ============================================*/
 
-static public function ctrListarSeries($item, $valor, $orden, $fechadev1, $fechadev2){
+static public function ctrListarSeries($item, $valor, $orden, $fechadev1, $fechadev2, $filtroanual){
 
 	$tabla = "contenedor_series";
 
-	$respuesta = ModeloSeries::mdlListarSeries($tabla, $item, $valor, $orden, $fechadev1, $fechadev2);
+	$respuesta = ModeloSeries::mdlListarSeries($tabla, $item, $valor, $orden, $fechadev1, $fechadev2, $filtroanual);
 
 	return $respuesta;
 
@@ -61,5 +61,44 @@ static public function ctrListarSeries($item, $valor, $orden, $fechadev1, $fecha
 	
 	}  	
 	
+	/*=============================================
+	MOSTRAR ONTS
+	=============================================*/
+
+	static public function ctrMostrarONT($item, $valor, $estado){
+
+		$tabla = "productos";
+
+		$respuesta = ModeloSeries::mdlMostrarONT($tabla, $item, $valor, $estado);
+
+		return $respuesta;
+
+	}
+
+	/*=============================================
+	VALIDAR DATOS 
+	============================================*/
+
+	static public function ctrvalidData($tabla, $campo1, $valor1, $campo2, $valor2, $campo3, $valor3){
+
+
+		$respuesta = ModeloSeries::MdlValidData($tabla, $campo1, $valor1, $campo2, $valor2, $campo3, $valor3);
+
+		return $respuesta;
+	
+	}  	
+
+	/*=============================================
+	MOSTRAR ONTS
+	=============================================*/
+
+	static public function ctrGuardarEditaSerie($tabla, $datos){
+
+
+		$respuesta = ModeloSeries::mdlGuardarEditaSerie($tabla, $datos);
+
+		return $respuesta;
+
+	}
 	
 }	//fin de la clase	

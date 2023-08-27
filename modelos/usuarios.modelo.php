@@ -9,14 +9,14 @@ try {
      if($campo !=null){    
         $stmt=Conexion::conectar()->prepare("SELECT usu.*, tec.alm_asignado
 		FROM $tabla usu 
-		INNER JOIN tecnicos tec ON tec.id=usu.user
+		LEFT JOIN tecnicos tec ON tec.id=usu.user
 		WHERE usu.$campo=:$campo");
         
         $stmt->bindParam(":".$campo, $valor, PDO::PARAM_STR);
         
         $stmt->execute();
         
-        return $stmt->fetch();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
         
  	}else{
 
@@ -128,12 +128,14 @@ try {
 	ACTUALIZAR USUARIO  <no pasa por el controlador>
 	=============================================*/
 
-static public function mdlActualizarUsuario($tabla, $item1, $valor1, $item2, $valor2){
+static public function mdlActualizarUsuario($tabla, $item1, $valor1, $item2, $valor2, $logueado){
 	try{
-		$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET $item1 = :$item1 WHERE $item2 = :$item2");
+		//$logueado=1;
+		$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET $item1 = :$item1, logueado=:logueado WHERE $item2 = :$item2");
 
 		$stmt -> bindParam(":".$item1, $valor1, PDO::PARAM_STR);
 		$stmt -> bindParam(":".$item2, $valor2, PDO::PARAM_STR);
+		$stmt -> bindParam(":logueado", $logueado, PDO::PARAM_INT);
 
 		if($stmt -> execute()){
 
@@ -153,7 +155,33 @@ static public function mdlActualizarUsuario($tabla, $item1, $valor1, $item2, $va
 	
 
 }
-    
+/**********************************************************************************/
+static public function mdlDesloguearse($tabla, $id){
+try{	
+	$logueado=0;
+	$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET logueado=:logueado WHERE id = :id");
+
+	$stmt -> bindParam(":id", $id, PDO::PARAM_INT);
+	$stmt -> bindParam(":logueado", $logueado, PDO::PARAM_INT);
+
+	if($stmt -> execute()){
+
+		return "ok";
+	
+	}else{
+
+		return "error";	
+
+	}
+
+	$stmt = null;
+
+} catch (Exception $e) {
+	echo "Failed: " . $e->getMessage();
+}
+
+}
+/**********************************************************************************/
     
 /*=============================================
 	BORRAR USUARIO

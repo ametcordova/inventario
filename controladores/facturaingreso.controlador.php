@@ -146,7 +146,12 @@ static public function ctrListarRep20($tblRep20, $year, $usuario, $todes){
 
 }  
 
-
+/*================= AGREGAR A CONTROL DE FACTURAS ================================ */
+static public function ctrAgregaCtrlFacts($tabla, $campo, $valor, $ids, $usuario){
+	$respuesta = ModeloFacturaIngreso::mdlAgregaCtrlFacts($tabla, $campo, $valor, $ids, $usuario);
+	return $respuesta;
+}  
+/*=================FIN DE AGREGAR A CONTROL DE FACTURAS ================================ */
 
 }   //fin de la clase
 ?>

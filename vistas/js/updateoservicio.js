@@ -83,7 +83,7 @@ function fillform(datosOS) {
         }
     }
 
-    $("#editAlmacenOS, #edittecnico").prop('disabled', true);
+    //$("#editAlmacenOS, #edittecnico").prop('disabled', true);
     datosinstalacion(json_datos_inst);
     datosMaterialOS(json_datos_mat);
 
@@ -162,6 +162,85 @@ function itemsbefore(itemproduct, itemcant) {
     arrayitems.push([itemproduct, itemcant]);
 }
 /*==============================================================*/
+/*AGREGA PRODUCTO SELECCIONADO
+/*============================================================*/
+$("#addProductOS").click(function (event) {
+    event.preventDefault();
+    let encontrado = false;
+    let cadena = $("#selectProdOS").val();
+    if (cadena == null)
+        return;
+
+    let idproducto = cadena.substr(0, cadena.indexOf('-'));  //extrae el Id del prod
+    let largo = idproducto.length;
+    let id_producto = parseInt(idproducto);
+    //SEPARA EL ID PARA SABER SI ES MODEM
+    let conserie = cadena.substr(largo + 1, cadena.indexOf('-') - 1);
+    //OBTENER LA CANT DE SALIDA
+    let sald = $('#cantsaliente').val();   //obtener la cant de salida
+    let cantidad = parseFloat(sald);
+    //Si no selecciona producto retorna o cantidad
+    if (isNaN(idproducto) || isNaN(cantidad) || cantidad < 0.01) {
+        return true;
+    }
+
+    // CHECA QUE NO LA CANT NO SEA MAYOR QUE LA EXIST.
+    if (!checkSalida()) {
+        return
+    }
+
+    if (parseInt(conserie) > 0) {
+        numserie = document.getElementsByName('editnumeroSerie')[0].value;
+        numserie = numserie.trim();
+        alfanumerico = document.getElementsByName('editalfanumerico')[0].value;
+        alfanumerico = alfanumerico.trim();
+    } else {
+        //console.log('no debe entrar', conserie)
+    }
+
+    let descripcion = $("#selectProdOS").text();   //extrae la descripcion del prod
+    str = descripcion.trim();
+    descripcion = str.replace('null', '');
+
+    //TRUE SI EL PRODUCTO YA ESTA CAPTURADO
+    for (item of arrayitems) { // recorro cada array dentro del array padre
+        if (item[0] === idproducto) { // en cada array ve si en indice 0 o sea el id es igual id
+            encontrado = true
+            break;
+        }
+    }
+    console.log("entra aqui", cadena, idproducto, conserie, cantidad, descripcion, arrayitems, encontrado)
+    if (!encontrado) {
+        arrayitems.push([idproducto, cantidad]);
+        addProdOS(id_producto, descripcion, cantidad, conserie, numserie, alfanumerico);
+    } else {
+        inicializa(1);
+    }
+
+});
+/*======================================================================*/
+/*  ADICIONA PRODUCTOS AL TBODY
+==================================================================*/
+function addProdOS(...argsProductos) {
+    tbodyOS.innerHTML += `
+  <tr class="filas" id="fila${argsProductos[0]}">
+    <td> <button type="button" class="botonQuitar" onclick="eliminarProductoOS(${argsProductos[0]}, ${argsProductos[2]})" title="Quitar concepto">X</button> </td>
+    <td class='text-center'>${argsProductos[0]} <input type="hidden" name="editaidproducto[]" value="${argsProductos[0]}"</td>
+    <td class='text-left'>${argsProductos[1]}</td>
+    <td class='text-center'>${argsProductos[2]} <input type="hidden" name="editacantidad[]" value="${argsProductos[2]}"</td>`;
+    if (argsProductos[3] > 0) {
+        tbodyOS.innerHTML += `
+      <input type="hidden" name="nvonumserie" value="${argsProductos[4]}">
+      <input type="hidden" name="nvoalfanumerico" value="${argsProductos[5]}"/>`;
+    }
+    tbodyOS.innerHTML += `</tr>`;
+
+    // renglonesOS++;
+    // cantSalidaOS += argsProductos[2];
+    // evaluaFilaOS(renglonesOS, cantSalidaOS);
+    inicialize(argsProductos[3]);
+}
+
 /*======================================================================*/
 //ENVIAR FORMULARIO PARA GUARDAR EDICION DE DATOS DE ORDEN DE SERVICIO
 /*======================================================================*/
@@ -177,50 +256,51 @@ $("body").on("submit", "#formularioEditarOS", function (event) {
     } else {
         var firma = $('#signatureContainer').signature('toJSON');
     }
+    if (checkSalida()) {        //checa que la salida no se mayor que la exisrencia
 
-    swal({
-        title: "¿Está seguro de Actualizar OS?",
-        text: "¡Si no lo está puede cancelar la acción!",
-        icon: "warning",
-        buttons: ["Cancelar", "Sí, Actualizar"],
-        dangerMode: true,
-    })
+        swal({
+            title: "¿Está seguro de Actualizar OS?",
+            text: "¡Si no lo está puede cancelar la acción!",
+            icon: "warning",
+            buttons: ["Cancelar", "Sí, Actualizar"],
+            dangerMode: true,
+        })
 
-        .then((aceptado) => {
-            if (aceptado) {
-                let formData = new FormData($("#formularioEditarOS")[0]);
-                // console.log(firma);
-                for (var pair of formData.entries()) { console.log(pair[0] + ', ' + pair[1]); }
-                formData.append("firma", firma);
-                return
-                axios({
-                    method: 'post',
-                    url: 'ajax/adminoservicio.ajax.php?op=ActualizarOS',
-                    data: formData,
-                })
-
-                    .then((response) => {
-                        //console.log(response.data); 
-                        if (response.data.status == 200) {
-                            mensajeaxios = response.data.msg
-                            tipomsg = 3;
-                            tiempo = 3;
-
-                            $('#DatatableOS').DataTable().ajax.reload(null, false);
-                            modalEvento.hide();
-                            mensajenotie(tipomsg, `${mensajeaxios} `, 'top', tiempo);
-                        } else {
-                            modalEvento.hide();
-                            mensajenotie('Error', 'Hubo problemas al guardar OS!', 'bottom', 3);
-                        }
-                        //console.log(response); 
+            .then((aceptado) => {
+                if (aceptado) {
+                    let formData = new FormData($("#formularioEditarOS")[0]);
+                    // console.log(firma);
+                    for (var pair of formData.entries()) { console.log(pair[0] + ', ' + pair[1]); }
+                    formData.append("firma", firma);
+                    axios({
+                        method: 'post',
+                        url: 'ajax/adminoservicio.ajax.php?op=ActualizarOS',
+                        data: formData,
                     })
-                    .catch((err) => { throw err });   //          .catch(function (error) {console.log(error.toJSON())})
 
-            } else {
-                return false;
-            }
-        });
+                        .then((response) => {
+                            console.log(response.data);
+                            if (response.data.status == 200) {
+                                mensajeaxios = response.data.msg
+                                tipomsg = 3;
+                                tiempo = 3;
+
+                                $('#DatatableOS').DataTable().ajax.reload(null, false);
+                                modalEvento.hide();
+                                mensajenotie(tipomsg, `${mensajeaxios} `, 'top', tiempo);
+                            } else {
+                                modalEvento.hide();
+                                mensajenotie('Error', 'Hubo problemas al guardar OS!', 'bottom', 3);
+                            }
+                            //console.log(response);
+                        })
+                        .catch((err) => { throw err });   //          .catch(function (error) {console.log(error.toJSON())})
+
+                } else {
+                    return false;
+                }
+            });
+    }
 
 });
 
@@ -253,8 +333,8 @@ var $eventoSelect = $('#selectProdOS').select2({
                     //console.log("data:",data[3]['existe'], "item:",item, "params:", params );
                     if (item.existe > 0) {
                         return {
-                            text: item.descripcion + ' - ' + item.codigointerno,
-                            id: item.id_producto + '-' + item.conseries + '-' + item.existe   //id de prod, si tiene serie, existencia
+                            "id": item.id_producto + '-' + item.conseries + '-' + item.existe,   //id de prod, si tiene serie, existencia
+                            "text": item.descripcion + ' - ' + item.codigointerno
                         }
                     }
                 }),
@@ -290,7 +370,7 @@ function inicialize(conserie) {
     $('#selectProdOS').val(null).trigger('change');
     $("#existecnico").val(0);
     $("#cantsaliente").val(0);
-    console.log("entra...")
+    //console.log("entra...")
     if (conserie > 0) {
         $("#editdatosmodem").addClass("d-none");
     } else {
@@ -301,13 +381,17 @@ function inicialize(conserie) {
     }
 }
 /************************************************************************************ */
+/*  */
+/************************************************************************************ */
 $("#selectProdOS").change(function (event) {
-    //console.log($("#selecProductoOS").val())
-    //console.log($("#selecProductoOS").text())
+    //console.log($("#selectProdOS").val())
+
     if ($("#selectProdOS").val() != null) {
         cadena = $("#selectProdOS").val();
+        //console.log($("#selectProdOS").text(), cadena)
         let descripcion = $("#selectProdOS").text();
         descripcion = descripcion.trim();
+
 
         //SEPARA EL ID DEL PRODUCTO SELECCIONADO
         let idproducto = cadena.substr(0, cadena.indexOf('-'));
@@ -319,7 +403,7 @@ $("#selectProdOS").change(function (event) {
         let conserie = cadena.substr(largo + 1, cadena.indexOf('-') - 1);
         conserie = conserie.replace(/-/g, '');   //si encuentra un guion (-) lo sustituye con vacio
 
-        //SEPARA LA EXISTENCIA DEL PROD. SELECCIONADO        
+        //SEPARA LA EXISTENCIA DEL PROD. SELECCIONADO
         let stock = parseFloat(cadena.substr(cadena.lastIndexOf("-") + 1));
         //console.log('ID:',idproducto,' EXISTENCIA:',stock, 'CONSERIE:',conserie, 'Prod:',descripcion );
 
@@ -331,11 +415,13 @@ $("#selectProdOS").change(function (event) {
     }
 })  //fin del select2
 /*******************************************************
-VERIFICA QUE LA CANT SALIENTE NO SEA MAYOR QUE LA EXIST. 
+VERIFICA QUE LA CANT SALIENTE NO SEA MAYOR QUE LA EXIST.
 ********************************************************/
-$("#cantsaliente").change(function (evt) {
+function checkSalida() {
+    check = true;
     let sald = $('#cantsaliente').val();
     let cant = parseFloat($('#existecnico').val());
+    console.log(sald, cant)
     if (sald > cant || sald < 0) {
         swal({
             text: 'Cantidad saliente es mayor que la Existencia!',
@@ -345,9 +431,12 @@ $("#cantsaliente").change(function (evt) {
         })  //fin .then
         $("#cantsaliente").val(0);
         $("#cantsaliente").focus();
+        check = false;
     }
-})  //fin de checar cant de salida
+    return check;
+}
 /*======================================================================*/
+
 /*================ AL SALIR DEL MODAL EDITAR OS, RESETEAR FORMULARIO ==================*/
 $("#modalEditarOS").on('hidden.bs.modal', () => {
     $("#formularioEditarOS")[0].reset();

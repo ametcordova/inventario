@@ -12,7 +12,7 @@ $tabla = "tabla_os";
 $campo = "factura";
 //$valor = 'A441';
 if (isset($POST["factura"]) && !empty($POST["factura"])) {
-    $factura = strtoupper($POST['factura']);
+    $factura = strtoupper(trim($POST['factura']));
 } else {
     $response = array(
         'respuesta' => http_response_code(400),
@@ -99,10 +99,10 @@ $spreadsheet->getActiveSheet()->getPageSetup()->setHorizontalCentered(true);
 // Establecer los márgenes izquierdo, derecho, superior e inferior en milímetros, Header y footer
 $spreadsheet->getActiveSheet()->getPageMargins()->setHeader(0);
 $spreadsheet->getActiveSheet()->getPageMargins()->setFooter(0);
-$spreadsheet->getActiveSheet()->getPageMargins()->setLeft(.45);
-$spreadsheet->getActiveSheet()->getPageMargins()->setRight(.45);
-$spreadsheet->getActiveSheet()->getPageMargins()->setTop(.45);
-$spreadsheet->getActiveSheet()->getPageMargins()->setBottom(.45);
+$spreadsheet->getActiveSheet()->getPageMargins()->setLeft(.30);
+$spreadsheet->getActiveSheet()->getPageMargins()->setRight(.35);
+$spreadsheet->getActiveSheet()->getPageMargins()->setTop(.40);
+$spreadsheet->getActiveSheet()->getPageMargins()->setBottom(.40);
 
 // Seleccionar la hoja activa
 $hoja = $spreadsheet->getActiveSheet();
@@ -119,38 +119,38 @@ $dibujo->setWorksheet($hoja);
 
 // nombre del formato en la celda A1
 $hoja->getRowDimension(1)->setRowHeight(10);
-$hoja->getStyle('A1:N1')->getFont()->setBold(false)->setSize(8);
-$hoja->mergeCells('A1:N1');
-$hoja->getStyle('A1:N1')->getAlignment()->setVertical('center')->setHorizontal('right'); //CENTRADO HORIZONTAL Y VERTICAL
+$hoja->getStyle('A1:T1')->getFont()->setBold(false)->setSize(8);
+$hoja->mergeCells('A1:T1');
+$hoja->getStyle('A1:T1')->getAlignment()->setVertical('center')->setHorizontal('right'); //CENTRADO HORIZONTAL Y VERTICAL
 $hoja->setCellValue('A1', 'FR-PE-56');
 
 // Establecer el valor del encabezado en la celda E1
 $fila = 2;
 $hoja->getRowDimension($fila)->setRowHeight(12);
-$hoja->getStyle('C2:M3')->getFont()->setBold(true)->setSize(16);
-$hoja->mergeCells('C2:M3');
-$hoja->getStyle('C2:M3')->getAlignment()->setVertical('center')->setHorizontal('center'); //CENTRADO HORIZONTAL Y VERTICAL
+$hoja->getStyle('C2:Q3')->getFont()->setBold(true)->setSize(16);
+$hoja->mergeCells('C2:Q3');
+$hoja->getStyle('C2:Q3')->getAlignment()->setVertical('center')->setHorizontal('center'); //CENTRADO HORIZONTAL Y VERTICAL
 $hoja->setCellValue('C2', 'CUADRE MANUAL DE MATERIALES MONTADOS EN OBRA (F200)');
 
-$hoja->getStyle('N' . $fila)->getFont()->setBold(false)->setSize(8);
-$hoja->getStyle('N' . $fila)->getAlignment()->setVertical('center')->setHorizontal('right'); //CENTRADO HORIZONTAL Y VERTICAL
-$hoja->setCellValue('N' . $fila, 'SEMANA:');
+$hoja->getStyle('R' . $fila)->getFont()->setBold(false)->setSize(8);
+$hoja->getStyle('R' . $fila)->getAlignment()->setVertical('center')->setHorizontal('right'); //CENTRADO HORIZONTAL Y VERTICAL
+$hoja->setCellValue('R' . $fila, 'SEMANA:');
 $fila += 1;
 $hoja->getRowDimension($fila)->setRowHeight(12);
-$hoja->getStyle('N' . $fila)->getFont()->setBold(false)->setSize(8);
-$hoja->getStyle('N' . $fila)->getAlignment()->setVertical('center')->setHorizontal('right'); //CENTRADO HORIZONTAL Y VERTICAL
-$hoja->setCellValue('N' . $fila, 'CONSECUTIVO:');
+$hoja->getStyle('R' . $fila)->getFont()->setBold(false)->setSize(8);
+$hoja->getStyle('R' . $fila)->getAlignment()->setVertical('center')->setHorizontal('right'); //CENTRADO HORIZONTAL Y VERTICAL
+$hoja->setCellValue('R' . $fila, 'CONSECUTIVO:');
 
 $fila = 4;
 $hoja->getRowDimension($fila)->setRowHeight(12);
-$hoja->getStyle('C' . $fila . ':M' . $fila)->getFont()->setBold(true)->setSize(14);
-$hoja->mergeCells('C' . $fila . ':M' . $fila);
-$hoja->getStyle('C' . $fila . ':M' . $fila)->getAlignment()->setVertical('center')->setHorizontal('center'); //CENTRADO HORIZONTAL Y VERTICAL
+$hoja->getStyle('C' . $fila . ':Q' . $fila)->getFont()->setBold(true)->setSize(14);
+$hoja->mergeCells('C' . $fila . ':Q' . $fila);
+$hoja->getStyle('C' . $fila . ':Q' . $fila)->getAlignment()->setVertical('center')->setHorizontal('center'); //CENTRADO HORIZONTAL Y VERTICAL
 $hoja->setCellValue('C' . $fila, 'MOVIMIENTOS DE MATERIALES');
 
-$hoja->getStyle('N' . $fila)->getFont()->setBold(false)->setSize(8);
-$hoja->getStyle('N' . $fila)->getAlignment()->setVertical('center')->setHorizontal('right'); //CENTRADO HORIZONTAL Y VERTICAL
-$hoja->setCellValue('N' . $fila, 'FACTURA:');
+$hoja->getStyle('R' . $fila)->getFont()->setBold(false)->setSize(8);
+$hoja->getStyle('R' . $fila)->getAlignment()->setVertical('center')->setHorizontal('right'); //CENTRADO HORIZONTAL Y VERTICAL
+$hoja->setCellValue('R' . $fila, 'FACTURA:');
 
 /******************************************************************************* */
 //$hoja->getRowDimension(3)->setRowHeight(9);
@@ -159,20 +159,20 @@ $hoja->setCellValue('N' . $fila, 'FACTURA:');
 
 $fila = 5;
 $hoja->getRowDimension($fila)->setRowHeight(12);
-$hoja->getStyle('N' . $fila)->getFont()->setBold(false)->setSize(8);
-$hoja->getStyle('N' . $fila)->getAlignment()->setVertical('center')->setHorizontal('right'); //CENTRADO HORIZONTAL Y VERTICAL
-$hoja->setCellValue('N' . $fila, 'OC:');
+$hoja->getStyle('R' . $fila)->getFont()->setBold(false)->setSize(8);
+$hoja->getStyle('R' . $fila)->getAlignment()->setVertical('center')->setHorizontal('right'); //CENTRADO HORIZONTAL Y VERTICAL
+$hoja->setCellValue('R' . $fila, 'OC:');
 
-$hoja->getStyle('N2:O5')->applyFromArray($styleExtBorder);
+$hoja->getStyle('R2:T5')->applyFromArray($styleExtBorder);
 
-$hoja->getStyle('O2:O' . $fila)->getAlignment()->setVertical('center')->setHorizontal('left');
-$hoja->getStyle('O2:O' . $fila)->getFont()->setBold(true)->setSize(8); //NEGRITAS PARA EL CUADRO CON DATOS DEL F200
+$hoja->getStyle('R2:R' . $fila)->getAlignment()->setVertical('center')->setHorizontal('left');
+$hoja->getStyle('R2:R' . $fila)->getFont()->setBold(true)->setSize(8); //NEGRITAS PARA EL CUADRO CON DATOS DEL F200
 /******************************************************************************* */
 // SUBTITULOS
 /******************************************************************************* */
 $fila += 1;
 $hoja->getRowDimension($fila)->setRowHeight(16);
-$hoja->getStyle('A' . $fila . ':M' . $fila)->getFont()->setBold(true)->setSize(9);
+$hoja->getStyle('A' . $fila . ':T' . $fila)->getFont()->setBold(true)->setSize(9);
 $hoja->getStyle('A' . $fila . ':L' . $fila)->getAlignment()->setVertical('center')->setHorizontal('center'); //CENTRADO HORIZONTAL Y VERTICAL
 $hoja->setCellValue('A' . $fila, 'FECHA:');
 $hoja->getStyle('B' . $fila . ':C' . $fila)->applyFromArray($styleBorderLower)->getAlignment()->setVertical('center')->setHorizontal('left');
@@ -183,16 +183,17 @@ $hoja->setCellValue('D' . $fila, 'CONTRATISTA:');
 $hoja->mergeCells('E' . $fila . ':H' . $fila);
 $hoja->getStyle('E' . $fila . ':H' . $fila)->applyFromArray($styleBorderLower)->getAlignment()->setVertical('center')->setHorizontal('left');
 $hoja->setCellValue('E' . $fila, 'BRUNO DIAZ GORDILLO');
-$hoja->getStyle('L' . $fila . ':L' . $fila)->getAlignment()->setVertical('center')->setHorizontal('center'); //CENTRADO HORIZONTAL Y VERTICAL
-$hoja->setCellValue('L' . $fila, 'PROYECTO:');
-$hoja->getStyle('M' . $fila)->applyFromArray($styleBorderLower)->getAlignment()->setVertical('center')->setHorizontal('left');
+$hoja->mergeCells('N' . $fila . ':O' . $fila);
+$hoja->getStyle('N' . $fila . ':O' . $fila)->getAlignment()->setVertical('center')->setHorizontal('right'); //CENTRADO HORIZONTAL Y VERTICAL
+$hoja->setCellValue('N' . $fila, 'PROYECTO:');
+$hoja->getStyle('P' . $fila)->applyFromArray($styleBorderLower)->getAlignment()->setVertical('center')->setHorizontal('left');
 
 // Agregar contenido a la celda A1
 //$hoja->setCellValue('A6','este es');
 
 $fila += 1;
 $hoja->getRowDimension($fila)->setRowHeight(16);
-$hoja->getStyle('A' . $fila . ':M' . $fila)->getFont()->setBold(true)->setSize(9);
+$hoja->getStyle('A' . $fila . ':T' . $fila)->getFont()->setBold(true)->setSize(9);
 $hoja->getStyle('A' . $fila . ':A' . $fila)->getAlignment()->setVertical('center')->setHorizontal('center'); //CENTRADO HORIZONTAL Y VERTICAL
 $hoja->setCellValue('A' . $fila, 'PEP:');
 $hoja->mergeCells('B' . $fila . ':D' . $fila);
@@ -201,63 +202,84 @@ $hoja->getStyle('E' . $fila . ':E' . $fila)->getAlignment()->setVertical('center
 $hoja->setCellValue('E' . $fila, 'RUTA:');
 $hoja->getStyle('F' . $fila)->applyFromArray($styleBorderLower);
 $hoja->getStyle('G' . $fila . ':K' . $fila)->getAlignment()->setVertical('center')->setHorizontal('right'); //CENTRADO HORIZONTAL Y VERTICAL
-$hoja->setCellValue('G' . $fila, 'OEI:');
-$hoja->getStyle('H' . $fila)->applyFromArray($styleBorderLower);
-$hoja->setCellValue('I' . $fila, 'OE:');
-$hoja->getStyle('J' . $fila)->applyFromArray($styleBorderLower);
-$hoja->getStyle('L' . $fila)->getAlignment()->setVertical('center')->setHorizontal('right'); //CENTRADO HORIZONTAL Y VERTICAL
-$hoja->setCellValue('L' . $fila, 'CTL/DTO:');
-$hoja->getStyle('M' . $fila)->applyFromArray($styleBorderLower)->getAlignment()->setVertical('center')->setHorizontal('left');
-$hoja->setCellValue('M' . $fila, 'VARIOS');
+$hoja->setCellValue('H' . $fila, 'OEI:');
+$hoja->getStyle('I' . $fila)->applyFromArray($styleBorderLower);
+$hoja->setCellValue('K' . $fila, 'OE:');
+$hoja->getStyle('L' . $fila)->applyFromArray($styleBorderLower);
+$hoja->mergeCells('N' . $fila . ':O' . $fila);
+$hoja->getStyle('N' . $fila)->getAlignment()->setVertical('center')->setHorizontal('right'); //CENTRADO HORIZONTAL Y VERTICAL
+$hoja->setCellValue('N' . $fila, 'CTL/DTO:');
+$hoja->getStyle('P' . $fila)->applyFromArray($styleBorderLower)->getAlignment()->setVertical('center')->setHorizontal('left');
+$hoja->setCellValue('P' . $fila, 'VARIOS');
 $fila += 1;
-$hoja->getRowDimension($fila)->setRowHeight(4);
+$hoja->getRowDimension($fila)->setRowHeight(6);
 
 /*********************************************************************************** */
 /* EMPIEZA LOS TITULOS DE LAS CABECERAS*/
 /*********************************************************************************** */
-$fila = 10;
-$hoja->getStyle('A' . $fila . ':O' . $fila)->getFont()->setBold(true)->setSize(10);
-$hoja->getStyle('A' . $fila . ':O' . $fila)->getAlignment()->setVertical('center')->setHorizontal('center'); //CENTRADO HORIZONTAL Y VERTICAL
+$fila = 9;
+$hoja->getStyle('A' . $fila . ':T' . intval($fila+1))->getFont()->setBold(true)->setSize(8);
+$hoja->getStyle('A' . $fila . ':T' . $fila)->getAlignment()->setVertical('center')->setHorizontal('center'); //CENTRADO HORIZONTAL Y VERTICAL
 
 // Establecer los títulos de las celdas a partir de la celda A6
+$hoja->mergeCells('A' . $fila . ':A' . intval($fila+1));
 $hoja->setCellValue('A' . $fila, 'UNIDAD');
-$hoja->setCellValue('B' . $fila, 'SKU');
+$hoja->mergeCells('B' . $fila . ':B' . intval($fila+1));
+$hoja->setCellValue('B' . $fila, '');
+$hoja->getStyle('C'. $fila)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('FFFF00');
+$hoja->mergeCells('C' . $fila . ':C' . intval($fila+1));
 $hoja->setCellValue('C' . $fila, 'CATALOGO AX');
 $hoja->getStyle('C' . $fila)->getAlignment()->setWrapText(true); //AJUSTAR TEXTO
+$hoja->mergeCells('D' . $fila . ':D' . intval($fila+1));
 $hoja->setCellValue('D' . $fila, 'DENOMINACION');
 
-$hoja->mergeCells('E' . $fila . ':F' . $fila);
+$hoja->getStyle('E'. $fila . ':L'. intval($fila+1))->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('FFFF00');
+$hoja->mergeCells('E' . $fila . ':J' . $fila);
 $hoja->setCellValue('E' . $fila, 'SALIDAS');
-$hoja->mergeCells('G' . $fila . ':H' . $fila);
-$hoja->setCellValue('G' . $fila, 'DEVOLUCIONES');
+$hoja->mergeCells('E' . intval($fila+1) . ':J' . intval($fila+1));
+$hoja->setCellValue('E' . intval($fila+1), 'DIARIOS DE AX');
 
-$hoja->setCellValue('I' . $fila, 'RECIBIDO');
-$hoja->setCellValue('J' . $fila, 'MONTADO');
-$hoja->setCellValue('K' . $fila, 'DIFERENCIA');
-$hoja->setCellValue('L' . $fila, 'DEVOLUCION');
-$hoja->setCellValue('M' . $fila, 'SOBRANTE');
-$hoja->setCellValue('N' . $fila, 'P.U.');
-$hoja->setCellValue('O' . $fila, 'ADEUDO');
+$hoja->mergeCells('K' . $fila . ':M' . intval($fila+1));
+$hoja->setCellValue('K' . $fila, 'DEVOLUCIONES');
+$hoja->mergeCells('N' . $fila . ':N' . intval($fila+1));
+$hoja->setCellValue('N' . $fila, 'RECIBIDO');
+$hoja->mergeCells('O' . $fila . ':O' . intval($fila+1));
+$hoja->setCellValue('O' . $fila, 'MONTADO');
+$hoja->mergeCells('P' . $fila . ':P' . intval($fila+1));
+$hoja->setCellValue('P' . $fila, 'DIFERENCIA');
+$hoja->mergeCells('Q' . $fila . ':Q' . intval($fila+1));
+$hoja->setCellValue('Q' . $fila, 'DEVOLUCION');
+$hoja->mergeCells('R' . $fila . ':R' . intval($fila+1));
+$hoja->setCellValue('R' . $fila, 'SOBRANTE');
+$hoja->mergeCells('S' . $fila . ':S' . intval($fila+1));
+$hoja->setCellValue('S' . $fila, 'P.U.');
+$hoja->mergeCells('T' . $fila . ':T' . intval($fila+1));
+$hoja->setCellValue('T' . $fila, 'ADEUDO');
 
-$hoja->getStyle('A' . $fila . ':O' . $fila)->applyFromArray($estilostitulos)->applyFromArray($styleAllBorder);
+$hoja->getStyle('A' . $fila . ':T' . intval($fila+1))->applyFromArray($estilostitulos)->applyFromArray($styleAllBorder);
 //$hoja->getStyle('A6:L6')->applyFromArray($styleBorder);
 
 // Establecer ancho de columnas
-$hoja->getColumnDimension('A')->setWidth(9);
-$hoja->getColumnDimension('B')->setWidth(7);
-$hoja->getColumnDimension('C')->setWidth(10);
-$hoja->getColumnDimension('D')->setWidth(47);
-$hoja->getColumnDimension('E')->setWidth(10);
-$hoja->getColumnDimension('F')->setWidth(10);
-$hoja->getColumnDimension('G')->setWidth(10);
-$hoja->getColumnDimension('H')->setWidth(10);
-$hoja->getColumnDimension('I')->setWidth(10);
-$hoja->getColumnDimension('J')->setWidth(12);
-$hoja->getColumnDimension('K')->setWidth(10);
-$hoja->getColumnDimension('L')->setWidth(12);
-$hoja->getColumnDimension('M')->setWidth(10);
-$hoja->getColumnDimension('N')->setWidth(10);
-$hoja->getColumnDimension('O')->setWidth(10);
+$hoja->getColumnDimension('A')->setWidth(6);        //UNIDAD
+$hoja->getColumnDimension('B')->setWidth(6);        //SKU
+$hoja->getColumnDimension('C')->setWidth(9);       //CATALOGO AX
+$hoja->getColumnDimension('D')->setWidth(45);       //DENOMINACION
+$hoja->getColumnDimension('E')->setWidth(6);       //PZA
+$hoja->getColumnDimension('F')->setWidth(6);       //''
+$hoja->getColumnDimension('G')->setWidth(6);        //''
+$hoja->getColumnDimension('H')->setWidth(6);        //''
+$hoja->getColumnDimension('I')->setWidth(6);       //''
+$hoja->getColumnDimension('J')->setWidth(5.5);       //''
+$hoja->getColumnDimension('K')->setWidth(6);       //''
+$hoja->getColumnDimension('L')->setWidth(6);       //''
+$hoja->getColumnDimension('M')->setWidth(5.5);       //''
+$hoja->getColumnDimension('N')->setWidth(7);
+$hoja->getColumnDimension('O')->setWidth(7);
+$hoja->getColumnDimension('P')->setWidth(9);
+$hoja->getColumnDimension('Q')->setWidth(9);
+$hoja->getColumnDimension('R')->setWidth(8);
+$hoja->getColumnDimension('S')->setWidth(5.5);
+$hoja->getColumnDimension('T')->setWidth(7);
 
 /**************************************************************************************** */
 # Obtener los datos de la base de datoss
@@ -287,19 +309,21 @@ try {
 /* SI EXISTEN DATOS SE CREA EL LLENADO DEL FORMATO */
 /**************************************************************************************** */
 if (!empty($data)) {
-    $row = $fila + 1;
+    $row = $fila + 2;
     $idproductos = array();
     $cuantos = (intval($row) + intval($datos['cuantos'])) - 1;
-    $hoja->getStyle('A' . $row . ':O' . $cuantos)->applyFromArray($styleAllBorder);
-    $hoja->getStyle('A' . $row . ':O' . $cuantos)->getFont()->setBold(false)->setSize(10);
+    $hoja->getStyle('A' . $row . ':T' . $cuantos)->applyFromArray($styleAllBorder);
+    $hoja->getStyle('A' . $row . ':T' . $cuantos)->getFont()->setBold(false)->setSize(9);
     // Rellenar la hoja de cálculo con los datos correspondientes
     foreach ($data as $rowdata) {
+        //$hoja->setCellValue('A' . $row, '');
         $hoja->setCellValue('A' . $row, $rowdata['medida']);
         //$hoja->setCellValue('B'.$row, $rowdata['id'].'-'.$row);
         $hoja->setCellValue('B' . $row, '');
         $hoja->setCellValue('C' . $row, $rowdata['codigointerno']);
         $hoja->setCellValue('D' . $row, $rowdata['descripcion']);
-        $idproductos += [intval($row) => $rowdata['id']];
+        $hoja->setCellValue('E' . $row, '');
+        $idproductos += [intval($row) => strval($rowdata['id'])];
         $row++;
     }
 } else {
@@ -312,9 +336,7 @@ if (!empty($data)) {
 /**************************************************************************************** */
 /* TERMINA DE LLENAR EL FORMATO CON LOS DATOS DEL CATALOGO DE PRODUCTOS           */
 /**************************************************************************************** */
-
-$errores = array();
-//TRAER LOS DATOS DEL ALMACEN SELECCIONADO
+//TRAER LOS DATOS DEL ALMACEN SELECCIONADO y tabla_os
 $respuesta = ControladorOServicios::ctrGetMaterialOsFactura($tabla, $campo, $factura);
 
 if ($respuesta) {
@@ -327,22 +349,27 @@ if ($respuesta) {
     $pep = substr(stristr($descripcion, "BRUNO DIAZ"), 0, strpos(stristr($descripcion, "BRUNO DIAZ"), "."));
     $proy = substr(stristr($descripcion, "CAR"), 0, 9);
     $odc = substr(stristr($descripcion, "00"), 0, 8);
+    $serialid=$respuesta[0]['serie'].$respuesta[0]['idfact'];
     $cadena = explode("/", $pep);
     $anio = substr($cadena[0], -4);
     $semana = substr($cadena[1], 0, 2);
-    $hoja->setCellValue('O2', $semana . "-" . $anio);
-    $hoja->setCellValue('O3', "XY");
-    $hoja->setCellValue('O4', $factura);
-    $hoja->setCellValue('O5', $odc);
-    $hoja->setCellValue('M6', $proy);
+
+    $hoja->getStyle('T2:T5')->getFont()->setBold(true)->setSize(8);
+    $hoja->setCellValue('T2', $semana . "-" . $anio);
+    $hoja->setCellValue('T3', $serialid);
+    $hoja->setCellValue('T4', $factura);
+    $hoja->setCellValue('T5', $odc);
+    $hoja->setCellValue('P6', $proy);
     $hoja->setCellValue('B7', $pep);
 
     /*************************************************** */
 
+    $datos_instalacion = array();
     $datos_material = array();
     foreach ($respuesta as $key => $val) {
-        //array_push($datos_material, json_decode($respuesta[$key]['datos_material'],TRUE));
-        array_push($datos_material, $respuesta[$key]['datos_material']);
+    //array_push($datos_material, json_decode($respuesta[$key]['datos_material'],TRUE));
+         array_push($datos_instalacion, $respuesta[$key]['datos_instalacion']);
+         array_push($datos_material, $respuesta[$key]['datos_material']);
     }
 
     $i = 0;
@@ -358,50 +385,69 @@ if ($respuesta) {
             } else {
                 $newArray[$value['id_producto']] = floatval($value['cantidad']);
             }
-
         }
-
     }
-
+    $errores = array();
     foreach ($newArray as $key => $value) {
         $pos = array_search("$key", $idproductos, true); //"$key", string)$key, strval($key) los 3 funcionan para conv numero a string
         //echo $key.'-'.$value.'-'.$fila.PHP_EOL;
-        if (intval($fila) > 0) {
-            $hoja->setCellValue('I' . intval($pos), $value);
-            $hoja->setCellValue('J' . intval($pos), $value);
-            $hoja->setCellValue('K' . intval($pos), '0');
-            $hoja->setCellValue('L' . intval($pos), '0');
-            $hoja->setCellValue('M' . intval($pos), '0');
+        if (intval($pos) > 0) {
+            $hoja->setCellValue('N' . intval($pos), $value);
+            $hoja->setCellValue('O' . intval($pos), $value);
+            $hoja->setCellValue('P' . intval($pos), '0');
+            $hoja->setCellValue('Q' . intval($pos), '0');
+            $hoja->setCellValue('R' . intval($pos), '0');
+            $hoja->setCellValue('T' . intval($pos), '0');
         } else {
             array_push($errores, "No existe producto $key con cant $value");
         }
     }
+
+/**************************************************************************************** */
+/*                              ALFANUMERICOS DE ONT'S                                   */
+/**************************************************************************************** */
+//$row=$row+1;
+$arrayalfa = array();
+foreach ($datos_instalacion as $clave => $valor) {
+    $mega = json_decode($valor, true);
+    foreach ($mega as $key => $value) {
+        array_push($arrayalfa, $value['alfanumerico']);
+    }
+}
+$hoja->getRowDimension(1)->setRowHeight(15);
+$hoja->getStyle('A'. intval($row).':T'. intval($row))->getFont()->setBold(true)->setSize(9);
+$hoja->mergeCells('A'. intval($row).':T'. intval($row));
+$hoja->getStyle('A'. intval($row).':T'. intval($row))->getAlignment()->setVertical('center')->setHorizontal('left'); //CENTRADO HORIZONTAL Y VERTICAL
+$hoja->setCellValue('A'.intval($row), 'ALFANÚMERICO ONT: '.implode(", ", $arrayalfa));
+$hoja->getStyle('A' . $row)->getAlignment()->setWrapText(true); //AJUSTAR TEXTO
+$hoja->getStyle('A'. $row)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('DEDED3');
+
 /**************************************************************************************** */
 /*                            TITULOS EN EL PIE DE PAGINA                                 */
 /**************************************************************************************** */
-    $row = $row + 3;
-    $hoja->getStyle('D' . $row . ':J' . $row)->getFont()->setBold(true);
+    $row = $row + 4;
+    $hoja->getStyle('D' . $row . ':N' . $row)->getFont()->setBold(true);
     $hoja->getStyle('D' . $row . ':D' . $row)->applyFromArray($styleBorderLower)->getAlignment()->setVertical('center')->setHorizontal('center');
     $hoja->setCellValue('D' . $row, 'ING. BRUNO DIAZ GORDILLO');
 
-    $hoja->getStyle('F' . $row . ':H' . $row)->applyFromArray($styleBorderLower)->getAlignment()->setVertical('center')->setHorizontal('center');
-    $hoja->mergeCells('F' . $row . ':H' . $row);
-    $hoja->setCellValue('F' . $row, 'ING. FRANCISCO LIEVANO');
+    $hoja->getStyle('G' . $row . ':K' . $row)->applyFromArray($styleBorderLower)->getAlignment()->setVertical('center')->setHorizontal('center');
+    $hoja->mergeCells('G' . $row . ':K' . $row);
+    $hoja->setCellValue('G' . $row, 'ING. FRANCISCO LIEVANO');
 
-    $hoja->getStyle('J' . $row . ':M' . $row)->applyFromArray($styleBorderLower)->getAlignment()->setVertical('center')->setHorizontal('center');
-    $hoja->mergeCells('J' . $row . ':M' . $row);
-    $hoja->setCellValue('J' . $row, 'ING. CARLOS HUMBERTO GOMEZ');
+    $hoja->getStyle('N' . $row . ':R' . $row)->applyFromArray($styleBorderLower)->getAlignment()->setVertical('center')->setHorizontal('center');
+    $hoja->mergeCells('N' . $row . ':R' . $row);
+    $hoja->setCellValue('N' . $row, 'ING. CARLOS HUMBERTO GOMEZ');
     $row++;
     $hoja->getStyle('D' . $row . ':D' . $row)->getAlignment()->setVertical('center')->setHorizontal('center');
     $hoja->setCellValue('D' . $row, 'CONTRATISTA');
 
-    $hoja->getStyle('F' . $row . ':H' . $row)->getAlignment()->setVertical('center')->setHorizontal('center');
-    $hoja->mergeCells('F' . $row . ':H' . $row);
-    $hoja->setCellValue('F' . $row, 'COORDINADOR AX');
+    $hoja->getStyle('G' . $row . ':K' . $row)->getAlignment()->setVertical('center')->setHorizontal('center');
+    $hoja->mergeCells('G' . $row . ':K' . $row);
+    $hoja->setCellValue('G' . $row, 'COORDINADOR AX');
 
-    $hoja->getStyle('J' . $row . ':M' . $row)->getAlignment()->setVertical('center')->setHorizontal('center');
-    $hoja->mergeCells('J' . $row . ':M' . $row);
-    $hoja->setCellValue('J' . $row, 'SUPERVISOR DE LA OBRA');
+    $hoja->getStyle('N' . $row . ':R' . $row)->getAlignment()->setVertical('center')->setHorizontal('center');
+    $hoja->mergeCells('N' . $row . ':R' . $row);
+    $hoja->setCellValue('N' . $row, 'SUPERVISOR DE LA OBRA');
 /**************************************************************************************** */
 
 } else {
@@ -413,7 +459,8 @@ if ($respuesta) {
     exit;
 }
 
-if (count($errores) == 0) {
+
+//if (count($errores) === 0) {
     //$filename='mi_archivo_excel'.time().'.xlsx';
     // Guardar el archivo de Excel
     $writer = new Xlsx($spreadsheet);
@@ -434,13 +481,13 @@ if (count($errores) == 0) {
         );
         echo json_encode($response);
     }
-} else {
-    $response = array(
-        'respuesta' => 400,
-        'mensaje' => $errores,
-    );
-    echo json_encode($response);
-}
+// } else {
+//     $response = array(
+//         'respuesta' => 401,
+//         'mensaje' => $errores,
+//     );
+//     echo json_encode($response);
+// }
 
 // Cerrar la conexión a la base de datos MySQL
 $stmt = null;

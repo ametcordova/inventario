@@ -49,7 +49,7 @@
     <!-- **************************************************************
                           HORA Y FECHA 
     ******************************************************************-->
-	  <div class="ml-1 mr-1 d-none d-sm-inline-block d-md-inline-block text-center" style="width:35rem; color:violet; font-weight: bold;">
+	  <div class="ml-1 mr-1 mt-3 d-none d-sm-inline-block d-md-inline-block text-center" id="datepicker5" style="width:35rem; color:violet; font-weight: bold;" onclick="vercalendario()">
       <a href="#">
          <p id="liveclock"> </p>
       </a>
@@ -74,6 +74,86 @@
         </button>        
     </div>
     <!-- ************************************************************** -->
+    <!-- **************************************************************
+                          USUARIOS CONECTADOS
+    ******************************************************************-->
+    <div class="col-md-1" style='font-size:.40em;'>
+        <button type="button" class="btn btn-sm btn-success rounded p-1 dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"  title="Usuarios conectados"><i class="fa fa-users fa-lg" id="numusers"></i> </button>
+        <div class="dropdown-menu" style="background-color:#7EF379;" id="userslog">
+        </div>  
+    </div>
+
+    <!-- ************************************************************** -->
+  <script>
+  const dropdownMenu = document.getElementById("userslog");
+  if (typeof EventSource !== "undefined") {
+      //Server.php es donde está el código php que va a lanzar los eventos
+      const source = new EventSource("./modelos/serverside.php");
+       source.onopen=(e)=>{
+         console.log("connected to the server event")
+       }
+
+      document.getElementById("numusers").innerHTML = "";
+
+      source.onmessage = (event)=> {
+          //result es el id de un div donde se escribirán los eventos
+        //console.log(event)
+        const data = JSON.parse(event.data);
+        dropdownMenu.innerHTML="";
+        //recorre el data de los usuarios conectados
+        data.forEach(obj => {
+          let dropdownItem = document.createElement("a");
+          dropdownItem.classList.add("dropdown-item");
+          dropdownItem.classList.add("font-weight-bold");
+          dropdownItem.href = "#";
+          
+          dropdownItem.textContent = `id: ${obj.id} - Usuario: ${obj.usuario}`;
+
+          dropdownMenu.appendChild(dropdownItem);
+        });
+
+        document.getElementById("numusers").innerHTML = " "+data[0].logueados;;
+
+        source.addEventListener('message', function(e) {
+          var data = JSON.parse(e.data);
+          //console.log(data);
+          }, false);
+
+
+          source.addEventListener('update', function(e) {
+            var data = JSON.parse(e.data);
+            console.log(data.username + ' is now ' + data.emotion);
+            }, false);          
+        // source.addEventListener('evento',()=>{
+        //   //console.log(`Que usuario: ${usuario}`)
+        //   console.log(`Que usuario: `)
+        // })
+
+         source.onerror=(err)=>{
+           if(err){
+            //console.error("Event source failed:", err);
+             //console.log("error. Se cerró la conexión.", err)
+             //source.close()
+           }
+         }
+        
+         source.addEventListener('users',function(ev) {
+           console.log(ev.data)
+         });
+
+
+        // Habilitar esta funcion, si es necesario.
+        // function stopper(){
+        //   source.close()
+        //   console.log("Evento: se cerró la conexión.")
+        // }
+
+      };
+  } else {
+      document.getElementById("numusers").innerHTML = "";
+  }
+  </script>
+<!-- ************************************************************** -->
       <!-- Right navbar links -->
       <ul class="navbar-nav ml-auto">
 
@@ -123,7 +203,6 @@
 </nav>  <!-- /.navbar -->
 
  <script>
-
  </script>
 <!-- ========================================================================================== -->
-<script defer src="vistas/js/consultaclima.js?v=01042022"></script>
+<script defer src="vistas/js/consultaclima.js?v=01072023"></script>

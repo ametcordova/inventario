@@ -17,7 +17,6 @@ require_once 'controladores/respaldo.controlador.php';
 require_once 'controladores/ajusteinventario.controlador.php';
 require_once 'controladores/facturaingreso.controlador.php';
 
-
 require_once 'modelos/salidas.modelo.php';
 require_once 'modelos/usuarios.modelo.php';
 require_once 'modelos/categorias.modelo.php';

@@ -24,7 +24,12 @@ class ControladorUsuarios{
                 $respuesta=ModeloUsuarios::mdlMostrarUsuarios($tabla,$campo,$valor);
                 //var_dump($respuesta["usuario"]);
                 
-                if($respuesta["usuario"]==$_POST["ingUsuario"] && $respuesta["password"]==$_POST["ingPassword"]){   /*cambiar el $_POST[ingPassword] por $encriptar */
+				if(!isset($respuesta["usuario"])){
+					echo '<br><div class="alert alert-danger text-center"> Usuario No Permitido</div>';  
+					
+				}
+				
+                if(isset($respuesta["usuario"]) && $respuesta["usuario"]==$_POST["ingUsuario"] && $respuesta["password"]==$_POST["ingPassword"]){   /*cambiar el $_POST[ingPassword] por $encriptar */
                     
                   if($respuesta["estado"]==1){
                       
@@ -55,8 +60,9 @@ class ControladorUsuarios{
 
 						$item2 = "id";
 						$valor2 = $respuesta["id"];
+						$logueado=1;
 
-						$ultimoLogin = ModeloUsuarios::mdlActualizarUsuario($tabla, $item1, $valor1, $item2, $valor2);     
+						$ultimoLogin = ModeloUsuarios::mdlActualizarUsuario($tabla, $item1, $valor1, $item2, $valor2, $logueado);     
                       
                       if($ultimoLogin == "ok"){
                         echo '<script> window.location="inicio";</script>';                          
@@ -72,7 +78,20 @@ class ControladorUsuarios{
         }
 		
     }
-    
+ /********************************************* DESLOGUEARSE ***************************************************************** */   
+ static public function ctrDesloguearse(){
+	$tabla="usuarios" ;
+	$id=$_SESSION["id"];
+	$desLogin = ModeloUsuarios::mdlDesloguearse($tabla, $id);
+                      
+	if($desLogin == "ok"){
+		return true;
+	 }else{
+		return false;
+	 }
+
+ }	
+ /************************************************************************************************************** */   
     
     /* registro de usuario */
     

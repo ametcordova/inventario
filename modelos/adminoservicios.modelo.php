@@ -8,7 +8,7 @@ class ModeloOServicios
 /*=============================================
 REGISTRO ORDEN DE SERVICIO
 =============================================*/
-    public static function mdlGuardarOS($tabla, $datos, $productos, $cantidades)
+    public static function mdlGuardarOS($tabla, $datos, $productos, $cantidades, $numdealfanumerico)
     {
 
         try {
@@ -30,6 +30,18 @@ REGISTRO ORDEN DE SERVICIO
             $stmt->execute();
 
             if ($stmt) {
+                if(!empty($numdealfanumerico)){
+                    $estado = 0;
+                    $tabla_contenedor_series="contenedor_series";
+                    $sql="UPDATE $tabla_contenedor_series SET id_asignado=:id_asignado, os=:os, estado=:estado, ultusuario=:ultusuario WHERE alfanumerico=:alfanumerico";
+                    $query = Conexion::conectar()->prepare($sql);
+                    $query->bindParam(":id_asignado",   $datos["id_tecnico"], PDO::PARAM_INT);
+                    $query->bindParam(":os",            $datos["ordenservicio"], PDO::PARAM_STR);
+                    $query->bindParam(":estado",        $estado, PDO::PARAM_INT);
+                    $query->bindParam(":ultusuario",    $datos["ultusuario"], PDO::PARAM_INT);
+                    $query->bindParam(":alfanumerico",  $numdealfanumerico, PDO::PARAM_STR);
+                    $query->execute();
+                }
                 return "ok";
             } else {
                 return "error";
@@ -40,7 +52,7 @@ REGISTRO ORDEN DE SERVICIO
     }
 
 /*=============================================
-REGISTRO ORDEN DE SERVICIO
+ACTUALIZAR REGISTRO ORDEN DE SERVICIO
 =============================================*/
     public static function mdlActualizarOS($tabla, $datos)
     {
@@ -170,15 +182,15 @@ LISTAR ORDENES DE SERVICIO
             } else {
                 $where .= " AND os.id_tecnico='" . $valor . "' ";
             }
-
-            $stmt = Conexion::conectar()->prepare("SELECT os.`id`,os.`id_empresa`, os.id_tecnico, os.`ordenservicio`,os.`telefono`,user.nombre AS tecnico, alm.nombre AS almacen, os.`fecha_instalacion`, os.fecha_eppago, os.`estatus`, os.factura, os.ultusuario, usu.nombre AS capturo
+            //$fact=concat_ws(fact.serie,fact.numfact);
+            $stmt = Conexion::conectar()->prepare("SELECT os.`id`,os.`id_empresa`, os.id_tecnico, os.`ordenservicio`,os.`telefono`,user.nombre AS tecnico, alm.nombre AS almacen, os.`fecha_instalacion`, os.fecha_eppago, os.`estatus`, os.factura, os.ultusuario, usu.nombre AS capturo                   
     FROM $tabla os
     INNER JOIN almacenes alm ON alm.id=os.id_almacen
     INNER JOIN usuarios user ON user.user=os.id_tecnico
     INNER JOIN tecnicos tec ON tec.id=os.id_tecnico
     INNER JOIN usuarios usu ON usu.id=os.ultusuario
     WHERE " . $where);
-
+//--, fact.fechapagado AS fechapago INNER JOIN facturas fact ON concat(fact.serie,fact.numfact)=os.factura
             $stmt->execute();
 
             return $stmt->fetchAll();
@@ -210,7 +222,7 @@ LISTAR ORDENES DE SERVICIO
 
             $stmt->execute();
 
-            return $stmt->fetchAll();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             $stmt = null;
         } catch (Exception $e) {
@@ -316,9 +328,9 @@ REPORTE DE MAT. UTILIZADO EN LA OS
         }
     }
 
-/*=============================================
+/*===========================================================================================*/
 
-=============================================*/
+/*===========================================================================================*/
     public static function mdlGetDataOServicios($tabla, $campo, $valor, $status)
     {
         try {
@@ -448,7 +460,7 @@ GUARDAR CUANDO SE AGREGA OS AL GRUPO PARA PAGO
         try {
             if ($campo != null) {
 
-                $sql = "SELECT os.id, os.datos_material, os.estatus, os.factura, fi.conceptos, fi.id AS idfact, fi.serie FROM $tabla os
+                $sql = "SELECT os.id, os.datos_instalacion, os.datos_material, os.estatus, os.factura, fi.conceptos, fi.id AS idfact, fi.serie FROM $tabla os
 				INNER JOIN facturaingreso fi ON CONCAT(fi.serie,fi.folio)=$campo
 				WHERE os.$campo=:$campo";
 
@@ -473,6 +485,27 @@ GUARDAR CUANDO SE AGREGA OS AL GRUPO PARA PAGO
         }
     }
     /*==========================================================================================*/
+/************************************************************************************* */
+public static function mdlValidAlfanum($tabla, $campo, $valor)
+{
+
+    try {
+        $sql = "SELECT alfanumerico FROM $tabla WHERE alfanumerico LIKE '$valor%' AND estado=1";
+
+        $stmt = Conexion::conectar()->prepare($sql);
+
+        //$stmt->bindParam(":" . $campo, $valor, PDO::PARAM_STR);
+
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+
+    } catch (Exception $e) {
+        echo "Failed: " . $e->getMessage();
+    }
+
+}
+/************************************************************************************* */    
 
 } //fin de la clase
 
@@ -580,4 +613,8 @@ UPDATE tabla_os SET datos_material = JSON_SET(datos_material, '$.id_producto', '
 UPDATE tabla SET datos_material = JSON_REPLACE(datos_material, '$[0].id_producto', '105') WHERE JSON_EXTRACT(datos_material, '$[0].id_producto') = '107';
 
 SELECT * FROM tabla_os WHERE datos_material LIKE '%"id_producto":"107"%';
+
+PARA CORREGIR OS
+SELECT * FROM `hist_salidas` WHERE `id_tecnico`=32 and `id_producto` IN (15,5,6,99,11,14,19,109) ORDER BY id_producto, ultmodificacion ASC;
+
  */

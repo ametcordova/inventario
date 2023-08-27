@@ -1,3 +1,14 @@
+<script>
+    document.addEventListener("DOMContentLoaded", ()=>{
+      // Invocamos cada 5 minutos ;
+      const milisegundos = 500*1000;
+      setInterval(()=>{
+      // No esperamos la respuesta de la petición porque no nos importa
+      //console.log("500 segundos.. refrescado")
+      fetch("vistas/modulos/refrescar.php");
+      },milisegundos);
+    });
+  </script>
 <?php
 $tabla="usuarios";
 $module="pproductos";
@@ -60,8 +71,15 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
             <button class="btn btn-danger btn-sm" id="btnregresar" onclick="regresar()" type="button"><i class="fa fa-arrow-circle-left"></i> Regresar</button>
 
               <div class="card-tools">
-                <button type="button" class="btn btn-tool" data-widget="collapse" data-toggle="tooltip" title="Ocultar"><i class="fa fa-minus"></i></button>
-                 <button type="button" class="btn btn-tool" onclick="regresar()" title="a Inicio"><i class="fa fa-times"></i></button>
+                <button type="button" class="btn btn-sm btn-tool" title="Refresh" onclick="location.reload()">
+                  <i class="fa fa-refresh"></i>
+                </button>
+                <button type="button" class="btn btn-tool" data-widget="collapse" data-toggle="tooltip" title="Ocultar">
+                  <i class="fa fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-tool" onclick="regresar()" title="a Inicio">
+                  <i class="fa fa-times"></i>
+                </button>
               </div>
 
         </div>
@@ -70,8 +88,8 @@ $acceso=accesomodulo($tabla, $_SESSION['id'], $module, $campo);
 <div class="card">
             <div class="card-body">
               <table class="table table-bordered table-striped dt-responsive tablaProductos" width="100%">
-                <thead style="font-size:.85rem; height:1px">
-                  <tr>
+                <thead class="thead-dark">
+                  <tr style="height:8px !important; font-size:0.80em !important;">
                    <th style="width:10px">#</th>
                    <th>SKU</th>
                    <th>Cód.Int.</th>

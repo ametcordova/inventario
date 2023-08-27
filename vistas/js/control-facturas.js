@@ -45,16 +45,17 @@ $("#TablaFacturas").on("click", ".btnVerFactura", function(){
 
   //var idcounter = $('.btnVerFactura').attr("id");
   var idFactura = $(this).attr("idFactura");
+  var idSerie = $(this).attr("idserie");
   var numFactura = $(this).attr("numFactura");
   var idEstatus = $(this).attr("idEstado");
   var idBorrado = $(this).attr("idBorrado");
   var xfile;
   
-  console.log(idFactura, numFactura,idEstatus, idBorrado);
+  console.log(idFactura, idSerie, numFactura,idEstatus, idBorrado);
   
 	(async () => { 
-		xfile=await verpdf(idFactura,numFactura,idEstatus, idBorrado);
-    console.log(xfile);
+		xfile=await verpdf(idFactura, idSerie, numFactura,idEstatus, idBorrado);
+    //console.log(xfile);
     window.open(xfile, '_blank');
 		//await mostrarPDF(xfile,numFactura);
 		
@@ -67,13 +68,14 @@ $("#TablaFacturas").on("click", ".btnVerFactura", function(){
 });
 
 /* ==== FUNCION PARA TRAER EL RUTA DEL PDF DE LA FACTURA  =====*/
-async function verpdf(idFactura,numFactura,idEstatus, idBorrado){
+async function verpdf(idFactura,idSerie, numFactura,idEstatus, idBorrado){
  $("#pdfdoc").attr("data","");  
   var filePdf;
       
   console.log(idFactura, numFactura,idEstatus, idBorrado);
 	var datos = new FormData();
 	datos.append("idFactura", idFactura);
+	datos.append("idSerie", idSerie);
 	datos.append("numFactura", numFactura);
 	datos.append("idEstatus", idEstatus);
 	datos.append("idBorrado", idBorrado);
@@ -224,8 +226,7 @@ function agregarFactura(e){
   $(".spin").show();                 //mostrar spinner
 
 	var formData = new FormData($("#formularioAgregarFactura")[0]);
-     //for (var pair of formData.entries()){console.log(pair[0]+ ', ' + pair[1]);}
-
+     for (var pair of formData.entries()){console.log(pair[0]+ ', ' + pair[1]);}
      fetch('ajax/control-facturas.ajax.php?op=guardar', {
       method: 'POST',
       body: formData
@@ -375,12 +376,14 @@ $("#TablaFacturas").on("click", ".btnEditarFactura", function(){
 
   $("[name='editaStatusFactura']").prop('disabled',false);
   var idFactura = $(this).attr("idFactura");
+  var idSerie = $(this).attr("idserie");
   var numFactura = $(this).attr("numFactura");
   var idEstatus = $(this).attr("idEstado");
   var idBorrado = $(this).attr("idBorrado");
   //console.log(idFactura, numFactura,idEstatus);
 	var datos = new FormData();
 	datos.append("idFactura", idFactura);
+	datos.append("idSerie", idSerie);
 	datos.append("numFactura", numFactura);
 	datos.append("idEstatus", idEstatus);
 	datos.append("idBorrado", idBorrado);
@@ -402,9 +405,8 @@ $("#TablaFacturas").on("click", ".btnEditarFactura", function(){
 })
 
 function mostrardatos(datos){
-
   $( "input[name='idregistro']").val(datos.id);
-  $( "input[name='nuevaSerie']").val(datos.serie);
+  $( "input[name='editaSerie']").val(datos.serie);
   $( "input[name='editaFactura']").val(datos.numfact);
   $("#editaFactura").val(datos.numfact);
   $( "input[name='editaCliente']").val(datos.cliente);
@@ -421,9 +423,10 @@ function mostrardatos(datos){
   $("textarea[name='editaObservacion']" ).text(datos.observaciones);	//campo textarea
   $( "input[name='editaContrato']" ).val(datos.contrato);
   $("[name='editaStatusFactura']").val(datos.status);					//campo 
-  //  if(datos.status=="1"){
-  //    $("[name='editaStatusFactura']").prop('disabled',true);
-  //  }
+  
+    if(datos.construccion==='1'){
+      $("input[name='editEsConstruccion']").iCheck('check');
+    }
    $( "input[name='actualPdf']" ).val(datos.rutaexpediente);
 
 }
@@ -749,6 +752,8 @@ $("#TablaFacturas").on("click", ".btnAgregaGastos", function(){
 
 /*================ AL SALIR DEL MODAL DE EDICION RESETEAR FORMULARIO==================*/
 $("#modalEditarFactura").on('hidden.bs.modal', ()=> {
+  //$("input[name='editEsConstruccion']").iCheck('uncheck');
+  $("#editEsConstruccion").iCheck('uncheck');
 	$('#formularioEditFactura')[0].reset();
 });
 

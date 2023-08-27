@@ -190,6 +190,7 @@ $jsonpermisos4=($jsonpermisos4==NULL)?$jsonpermisos4=["SINDATO"=>0]:$jsonpermiso
 			
         </li>
 
+
         <!-- EMPIEZA MENU CATALOGO -->
 	      <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
@@ -440,3 +441,4 @@ $jsonpermisos4=($jsonpermisos4==NULL)?$jsonpermisos4=["SINDATO"=>0]:$jsonpermiso
 <!--
 
 -->              
+

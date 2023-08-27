@@ -15,6 +15,7 @@ var FechDev1;
 var FechDev2;
 var contenido = document.querySelector('#datosos');
 
+
 var sig = $('#signature, #signatureContainer').signature({
   background: '#ffffff', // Colour of the background 
   color: 'blue', // Colour of the signature 
@@ -31,9 +32,6 @@ var sig = $('#signature, #signatureContainer').signature({
   change: null // Callback when signature changed 
 });
 
-const { fromEvent, Observable } = rxjs;
-const { take, tap, mergeMap, finalize } = rxjs.operators;
-const { clear } = rxjs.operators;
 
 //Rx.Observable.fromEvent(document.getElementById("DatatableOS"), 'click').subscribe(() => console.log('Haz hecho click!'));
 // $(function(){
@@ -381,10 +379,10 @@ var $eventSelect = $('#selecProductoOS').select2({
     processResults: function (data, params) {
       return {
         results: $.map(data, function (item, params) {
-          //console.log("data:",data[3]['existe'], "item:",item, "params:", params );
+          //console.log("data:", data[3]['existe'], "item:", item, "params:", params);
           if (item.existe > 0) {
             return {
-              text: item.descripcion + ' - ' + item.codigointerno,
+              text: item.descripcion + '-' + item.codigointerno + '-',
               id: item.id_producto + '-' + item.conseries + '-' + item.existe   //id de prod, si tiene serie, existencia
             }
           }
@@ -456,8 +454,8 @@ $("#selecProductoOS").change(function (event) {
 
   }
 })  //fin del select2
-
 /*******************************************************
+ * 
 VERIFICA QUE LA CANT SALIENTE NO SEA MAYOR QUE LA EXIST. 
 ********************************************************/
 $("#cantout").change(function (evt) {
@@ -504,11 +502,13 @@ $("#agregarProductoOS").click(function (event) {
     alfanumerico = document.getElementsByName('alfanumerico')[0].value;
     alfanumerico = alfanumerico.trim();
   } else {
-    //console.log('no debe entrar',conserie)
+    alfanumerico="";
   }
 
   let descripcion = $("#selecProductoOS").text();   //extrae la descripcion del prod
   descripcion = descripcion.trim();
+  descripcion = quitarSubstring(descripcion, 'null');
+  //console.log(descripcion);
 
   //TRUE SI EL PRODUCTO YA ESTA CAPTURADO
   let encontrado = arrayProductosOS.includes(id_producto)
@@ -528,17 +528,26 @@ ADICIONA PRODUCTOS AL TBODY
 ==================================================================*/
 function addProductosSalida(...argsProductos) {
   //console.log("manyMoreArgs", argsProductos);
+  let hayalfa = false;
+  let seriealfanumerico = "";
   let contenido = document.querySelector('#tbodyOS');
+  if (argsProductos[3].length > 0) {
+    hayalfa = true;
+    seriealfanumerico = argsProductos[5];
+  }
+
   contenido.innerHTML += `
   <tr class="filas" id="fila${argsProductos[0]}">
     <td> <button type="button" class="botonQuitar" onclick="eliminarProductoOS(${argsProductos[0]}, ${argsProductos[2]})" title="Quitar concepto">X</button> </td>
     <td class='text-center'>${argsProductos[0]} <input type="hidden" name="idproducto[]" value="${argsProductos[0]}"</td>
-    <td class='text-center'>${argsProductos[1]}</td>
+    <td class='text-left'>${argsProductos[1]}
+      <span class='text-left spanalfa .overflow-visible text-bold'>${hayalfa ? seriealfanumerico : ''}</span>
+    </td>
     <td class='text-center'>${argsProductos[2]} <input type="hidden" name="cantidad[]" value="${argsProductos[2]}"</td>`;
   if (argsProductos[3] > 0) {
     contenido.innerHTML += `
-      <input type="hidden" name="nvonumserie" value="${argsProductos[4]}">
-      <input type="hidden" name="nvoalfanumerico" value="${argsProductos[5]}"/>`;
+        <input type="hidden" name="nvonumserie" value="${argsProductos[4]}">
+        <input type="hidden" name="nvoalfanumerico" value="${argsProductos[5]}"/>`;
   }
   contenido.innerHTML += `</tr>`;
 
@@ -621,11 +630,11 @@ $("body").on("submit", "#formularioAgregaOS", function (event) {
               }
               $('#DatatableOS').DataTable().ajax.reload(null, false);
               $('#modalAgregarOS').modal('hide')
-              mensajenotie(tipoerror, `${mensajeaxios}`, 'top', tiempo);
+              mensajenotie(tipoerror, `${mensajeaxios} `, 'top', tiempo);
 
             } else {
               $('#modalAgregarOS').modal('hide')
-              mensajenotie('Error', 'Hubo problemas al guardar OS!', 'bottom', 2);
+              mensajenotie('Error', 'Hubo problemas al guardar OS!', 'bottom', 8);
             }
             //console.log(res); 
           })
@@ -701,7 +710,7 @@ function f200() {
       })
 
         .then(function (response) {
-          console.log(response)
+          //console.log(response)
           if (response.data.respuesta === 200) {
             //console.log(response.data.respuesta, response.data.mensaje)
             let params = '?invoice=' + factura;
@@ -783,17 +792,36 @@ $("body").on("submit", "#formularioCheckOS", function (event) {
         data: formData,
       })
         .then((res) => {
+          //console.log(res.data);
           if (res.status == 200) {
-            //console.log(res.data);
             listOs(res.data)
+          } else {
+            console.log(res.data.msg);
+            swal({
+              title: 'Atención',
+              text: res.data.msg,
+              icon: "error",
+              button: "Entendido",
+              dangerMode: true,
+              timer: 6000
+            })  //fin .then      
           }
 
         })
         .catch((err) => {
+          //console.log(err);
           $(".spin").hide();
           $('.enviarfrm').show();
-          alert("Algo salio mal!!!.")
-          throw err;
+          //alert("Algo salio mal!!!.")
+          //throw err;
+          swal({
+            title: 'Atención',
+            text: err,
+            icon: "error",
+            button: "Entendido",
+            dangerMode: true,
+            timer: 6000
+          })  //fin .then      
         })
         .finally(function () {
           //'siempre sera executado'
@@ -814,15 +842,15 @@ function listOs(data) {
 
     obs = `<td class='text-center'> ${valor.OBS} - ${valor.ID}</td>`;
     if (isNumeric(valor.OBS) || valor.OBS == 'SIN ACTUALIZAR') {
-      obs = `<td class='text-center bg-danger'> ${valor.OBS} - ${valor.ID}</td>`;
+      obs = `<td class='text-center bg-danger'> ${valor.OBS} - ${valor.ID}</td> `;
     }
-    contenido.innerHTML +=`
-      <tr style = "font-size:0.85em">
+    contenido.innerHTML += `
+    <tr style = "font-size:0.85em">
         <td class='text-center'>${id++}</td>
         <td class='text-center'>${valor.OS}</td>
         <td class='text-center'>${valor.Telefono}</td>
         ${obs}
-      </tr>`;
+      </tr > `;
   }//fin del For
 
 }
@@ -891,7 +919,7 @@ function updateos() {
 $('#modalAgregarOS').on('shown.bs.modal', function () {
   let iduser = $('#iduser').val();
   let idalmacen = $('#id_almacen').val();
-  console.log(iduser, idalmacen)
+  // console.log("usuario", iduser, "almacen", idalmacen)
   $("#nvotecnico").val(iduser);
   $("#nuevoAlmacenOS").val(idalmacen);
 })
@@ -1084,6 +1112,72 @@ $('#daterange-btnOS').daterangepicker({
 )
 
 
+// var input = document.getElementById('alfanumerico');
+// const keyDown$ = fromEvent(input, 'keydown');
+
+// keyDown$
+//   .pipe(
+//     map((event) => event.target.value),
+//     filter((query) => query.length >= 2),
+//     debounceTime(500),
+//     distinctUntilChanged(),
+//     map((query) => {
+//       // Aquí puedes realizar la búsqueda y devolver los resultados
+//       return ajax({
+//         url: 'ajax/apiquery.ajax.php',
+//         method: 'POST',
+//         params: {
+//           alfanum: query
+//         }
+// headers: {
+//   'Content-Type': 'application/json'
+// },
+//body: { query }
+//     });
+
+//   })
+// ).subscribe(response => {
+//   //output.textContent = JSON.stringify(response);
+//   //resp = JSON.stringify(response);
+//   console.log(response)
+// });
+
+/******************************************************************* */
+function validalfatecnico() {
+  //datoalfa = $("input[name=alfanumerico]").val();
+  const input = document.getElementById('alfanumerico').value;
+  //console.log(input)
+  const output = document.getElementById('output');
+  output.textContent = "";
+  const apiUrl = 'ajax/adminoservicio.ajax.php';
+  const parametro1 = 'validaAlfanum';
+  const parametro2 = input.toString();
+  const url = `${apiUrl}?op=${parametro1}&numalfa=${parametro2}`;
+  ajax({
+    url: url,
+    method: 'GET',
+  }).subscribe(
+    (response) => {
+      //console.log(response);
+      if (response.response === null || response.response == false) {
+        //console.log(response.response);
+        const emoji = '😪';
+        output.textContent = "No existe Número!!" + emoji;
+      } else {
+        //console.log(response.response);
+        const emoji = '😊';
+        const respuesta = response.response.alfanumerico.trim();
+        output.textContent = respuesta + emoji;
+      }
+    }, (error) => {
+      // Maneja el error aquí
+      console.error(error);
+    }
+  );
+
+
+}
+/******************************************************************* */
 // function interval para recargar el datatable cada 60 seg.
 // ver: https://datatables.net/reference/api/ajax.reload()
 
@@ -1098,6 +1192,9 @@ setInterval(() => {
   //console.log('recargo')
 }, 180000);			//recargar cada 60 seg.
 /*********************************************************** */
+function quitarSubstring(cadenaPrincipal, cadenaRemover) {
+  return cadenaPrincipal.replace(cadenaRemover, '');
+}
 
 init();
 

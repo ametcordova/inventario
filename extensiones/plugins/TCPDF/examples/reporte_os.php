@@ -49,7 +49,7 @@ require_once('tcpdf_include.php');
 				// Salto de línea
 			$this->Ln(5);
 			$this->SetFont('helvetica','B',10);
-			$this->Cell(0,0,'PLANTA EXTERIOR',0,false,'C',0,'',0,false, 'M','M');
+			$this->Cell(0,0,'PLANTA EXTERNA',0,false,'C',0,'',0,false, 'M','M');
 		}
 
 		// Page footer
@@ -98,13 +98,14 @@ require_once('tcpdf_include.php');
 			//$pdf->setDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 
 			// set margins
-			//$pdf->setMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
-			  $pdf->SetMargins(5,5,5);
+			//$pdf->setMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT); PDF_MARGIN_FOOTER
+			$pdf->SetMargins(5,5,5);
 			$pdf->setHeaderMargin(PDF_MARGIN_HEADER);
 			$pdf->setFooterMargin(PDF_MARGIN_FOOTER);
 
 			// set auto page breaks
-			$pdf->setAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+			//$pdf->setAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+			$pdf->setAutoPageBreak(TRUE, 5);
 
 			// set image scale factor
 			//$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
@@ -124,6 +125,7 @@ require_once('tcpdf_include.php');
 			$pdf->AddPage();
 			$fechaInstalacion=date("d-m-Y", strtotime($respuesta['fecha_instalacion']));
 			$factura=$respuesta['factura'];
+			$idos=$respuesta['id'];
 
 			$datos_instalacion_json=json_decode($respuesta['datos_instalacion'],TRUE);		//decodifica los datos JSON 
 			$datos_material_json=json_decode($respuesta['datos_material'],TRUE);		//decodifica los datos JSON 
@@ -134,7 +136,7 @@ require_once('tcpdf_include.php');
 			$pdf->SetTextColor(0,0,0);		//color Texto
 			$pdf->SetLineWidth(.3);     //GRUESO DE LOS BORDES
 			$pdf->SetFont('Helvetica','B',10);
-			$pdf->Cell(0,6,'ORDEN DE SERVICIO',1,0,'C',true);
+			$pdf->Cell(0,6,'ORDEN DE SERVICIO No. '.$idos,1,0,'C',true);
 			$pdf->Ln(7.5);
 			$pdf->SetDrawColor(0,0,0);
 			$pdf->SetFillColor(255,255,255);
@@ -142,7 +144,7 @@ require_once('tcpdf_include.php');
 			$pdf->Ln(.2);
 			// ---------------------------------------------------------		
 			$pdf->Cell(10,6,'',0,0,'R',true);
-			$pdf->Cell(23,6,utf8_decode('TELEFONO:'),0,0,'L',true);
+			$pdf->Cell(23,6,iconv('UTF-8', 'ISO-8859-1','TELEFONO:'),0,0,'L',true);
 			$pdf->Cell(28,6,$respuesta['telefono'],1,0,'L',true);
 			$pdf->SetX(71);    
 			$pdf->Cell(8,6,'',0,0,'R',true);
@@ -267,24 +269,27 @@ require_once('tcpdf_include.php');
 	
 			$pdf->SetFont('helvetica','B',7);
 			$pdf->Cell(0,10,'OBSERVACIONES:',1,0,'L',true);
-			$pdf->Ln(28);
+			$pdf->Ln(25);
 
 				// --------------------FIRMA-------------------------------------			
 				$getx=$pdf->GetX();
 				$gety=$pdf->GetY();
 
 				$cadena = $respuesta['firma'];
+				// echo $cadena;
+				// exit;
 				if($cadena!="Sin Firma"){
 					$separador = "image/svg+xml,";
 					$firma = explode($separador, $cadena);
+					//$imgdata = base64_decode($imageArray[1]);
 					$pdf->ImageSVG('@'.$firma[1], $x=$getx+75, $y=$gety-57, $w='50', $h=97, $link='', $align='', $palign='', $border=0, $fitonpage=false);
 				}
 				// -------------------------------------------------------------			
 
 			$pdf->SetFont('Helvetica','',8);
-			$pdf->Cell(200,4,$datos_instalacion_json[0]['nombrefirma'],0,0,'C',true);
+			$pdf->Cell(205,4,$datos_instalacion_json[0]['nombrefirma'],0,0,'C',true);
 			$pdf->Ln();
-			$pdf->Cell(62,6,$respuesta['tecnico'],1,0,'C',true);
+			$pdf->Cell(62,6,$respuesta['id_tecnico'].'-'.$respuesta['tecnico'],1,0,'C',true);
 			$pdf->SetX(77);
 			$pdf->SetFont('helvetica','B',7);
 			$pdf->Cell(62,5,'RECIBÍ SERVICIO DE CONFORMIDAD:','LTR',0,'C',true);

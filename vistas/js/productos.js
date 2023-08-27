@@ -17,9 +17,10 @@ var perfilOculto = $("#perfilOculto").val();
 //tablaSalidasAlmacen=$('#dt-entradasalmacen').dataTable(
 tableProduct=$('.tablaProductos').dataTable( {
     "ajax": "ajax/datatable-productos.ajax.php?perfilOculto="+perfilOculto,
-    "deferRender": true,
+    "deferRender": true,  //habilita la representación diferida
     "retrieve": true,
     "processing": true,
+    "aServerSide": true,//Paginación y filtrado realizados por el servidor
     "stateSave": true,
     "lengthMenu": [ [10, 25, 50,100, -1], [10, 25, 50, 100, "Todos"] ],
     "sPaginationType": "full_numbers",	

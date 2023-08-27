@@ -182,7 +182,21 @@ static public function ctrMostrarTipoMov($item, $valor){
 	$respuesta = ModeloSalidasAlmacen::mdlMostrarTipoMov($tabla, $item, $valor);
     return $respuesta;
 }
+/*=================MOSTRAR ONTS ================================ */
+static public function ctrMostrarOnts($item, $valor, $order){
+    $tabla="contenedor_series";
+	$respuesta = ModeloSalidasAlmacen::mdlMostrarOnts($tabla, $item, $valor, $order);
+    return $respuesta;
+}
 
+/*================= VALIDAR SI FOUND ALFANUMERICO ================================ */
+static public function ctrvalidAlfanumerico($tabla, $campo, $valor){
+
+	$respuesta = ModeloSalidasAlmacen::mdlvalidAlfanumerico($tabla, $campo, $valor);
+
+    return $respuesta;
+}
+/*================= FIN VALIDAR SI FOUND ALFANUMERICO ==============================*/
 
 }   //fin de la clase
 ?>

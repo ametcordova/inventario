@@ -4,9 +4,9 @@ class ControladorOServicios{
 /*=============================================
 GUARDAR REGISTROS DE ORDENES DE SERVICIO
 =============================================*/
-static public function ctrGuardarOS($tabla, $datos, $productos, $cantidades){
+static public function ctrGuardarOS($tabla, $datos, $productos, $cantidades, $numdealfanumerico){
 
-	$respuesta = ModeloOServicios::mdlGuardarOS($tabla, $datos, $productos, $cantidades);
+	$respuesta = ModeloOServicios::mdlGuardarOS($tabla, $datos, $productos, $cantidades, $numdealfanumerico);
 
 	if($respuesta=='ok'){
 		 $tabla='hist_salidas';
@@ -146,9 +146,33 @@ static public function ctrGuardarAgregaOS($tabla, $idregos, $fechaagrega, $nvaob
 	/*=============================================
 	MATERIAL CONSUMIDO EN LA(S) OS POR FACTURA
 	============================================*/
-	static public function ctrGetMaterialOsFactura($tabla, $campo, $valor){
+	static public function ctrGetMaterialOsFactura($tabla, $campo, $factura){
 
-		$respuesta = ModeloOServicios::mdlGetMaterialOsFactura($tabla, $campo, $valor);
+		$respuesta = ModeloOServicios::mdlGetMaterialOsFactura($tabla, $campo, $factura);
+
+		return $respuesta;
+
+	} 
+	/*=============================================*/
+
+/*=============================================
+	BUSQUEDA INCREMENTAL DE ALFANUMERICO
+	============================================*/
+	static public function ctrValidAlfanum($tabla, $campo, $valor){
+
+		$respuesta = ModeloOServicios::mdlValidAlfanum($tabla, $campo, $valor);
+
+		return $respuesta;
+
+	} 
+	/*=============================================*/
+
+/*=============================================
+	BUSQUEDA DE ALFANUMERICO
+============================================*/
+	static public function ctrDatosOnt($campo, $valor){
+		$tabla="contenedor_series";
+		$respuesta = ModeloOServicios::mdlDatosOnt($tabla, $campo, $valor);
 
 		return $respuesta;
 

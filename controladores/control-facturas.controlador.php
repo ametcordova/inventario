@@ -12,8 +12,8 @@ static public function ctrCrearFactura($tabla, $datos){
 
 		if($respuesta=='ok'){
 			$tabla="clientes";
-			$item="id";
-			$valor=5;
+			$item="id";		
+			$valor=5;			//carso construcciones
 			$operacion="resta";
 			$respuesta = ModeloFacturas::mdlModificarSaldoDisp($tabla, $item, $valor, $datos, $operacion);
 		}
@@ -25,11 +25,11 @@ static public function ctrCrearFactura($tabla, $datos){
     LISTAR FACTURAS
 ============================================*/
 
-static public function ctrMostrarFacturas($item, $valor, $orden, $tipo, $year, $monthinicial, $monthfinal, $solopagadas){
+static public function ctrMostrarFacturas($item, $valor, $valor2, $orden, $tipo, $year, $monthinicial, $monthfinal, $solopagadas){
 
 		$tabla = "facturas";
 
-		$respuesta = ModeloFacturas::mdlMostrarFacturas($tabla, $item, $valor, $orden, $tipo, $year, $monthinicial, $monthfinal, $solopagadas);
+		$respuesta = ModeloFacturas::mdlMostrarFacturas($tabla, $item, $valor, $valor2, $orden, $tipo, $year, $monthinicial, $monthfinal, $solopagadas);
 
 		return $respuesta;
 	

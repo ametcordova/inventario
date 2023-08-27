@@ -7,22 +7,23 @@ class ModeloRepositorio{
 /*=============================================
 	MOSTRAR FACTURAS
 =============================================*/
-static public function mdlListsFiles($tabla, $item, $valor, $orden, $ispublic){
+static public function mdlListsFiles($tabla, $item, $valor, $ispublic){
 try{
 
     //$where='1=1';
-    $where=' repo.'.$item.'="'.$valor.'"';
+    $where='repo.'.$item.'="'.$valor.'"';
     $where.=' OR repo.is_public="'.$ispublic.'"';
 
-	$stmt = Conexion::conectar()->prepare("SELECT repo.*, usu.usuario FROM $tabla repo 
+	$stmt = Conexion::conectar()->prepare("SELECT repo.id, repo.nombrearchivo, repo.descripcion, repo.is_public, repo.user_id, repo.ruta, usu.usuario FROM $tabla repo 
                                           INNER JOIN usuarios usu ON repo.user_id=usu.id 
                                           WHERE ".$where);
-    
-    $stmt->bindParam(":".$item, $valor, PDO::PARAM_INT);
+        
+    //$stmt->bindParam(":".$item, $valor, PDO::PARAM_INT);
+    //$stmt->bindParam(":is_public", $ispublic, PDO::PARAM_INT);
 
 	$stmt -> execute();
 
-	return $stmt -> fetchAll();
+	return $stmt -> fetchAll(PDO::FETCH_ASSOC);
 
 } catch (Exception $e) {
 	echo "Failed: " . $e->getMessage();

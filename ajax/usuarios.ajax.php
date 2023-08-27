@@ -37,12 +37,13 @@ ACTIVAR USUARIO
 
 		$item1 = "estado";
 		$valor1 = $this->activarUsuario;
+		$logueado=0;
 
 		$item2 = "id";
 		$valor2 = $this->activarId;
         
         // se va directo al modelo, sin pasar por el controlador
-		$respuesta = ModeloUsuarios::mdlActualizarUsuario($tabla, $item1, $valor1, $item2, $valor2);
+		$respuesta = ModeloUsuarios::mdlActualizarUsuario($tabla, $item1, $valor1, $item2, $valor2, $logueado);
 
 	}
     

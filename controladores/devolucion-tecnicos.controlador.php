@@ -61,5 +61,18 @@ static public function ctrListarDevTec($item, $valor, $orden, $fechadev1, $fecha
 	
 	}  	
 	
+	/*=============================================
+	MOSTRAR EXIST EN TRANSITO DE TECNICOS
+	============================================*/
+
+	static public function ctrMostrarTransito($tabla, $tablaalmacen, $item, $valor, $estado=null, $idtec){
+
+
+		$respuesta = ModeloDevolucion::MdlMostrarTransito($tabla, $tablaalmacen, $item, $valor, $estado, $idtec);
+
+		return $respuesta;
+	
+	}  
+
 	
 }	//fin de la clase	

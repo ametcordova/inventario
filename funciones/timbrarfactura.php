@@ -49,7 +49,7 @@ class ClaseFacturar{
     $datos['Comprobante']['Version'] = '4.0';
     $datos['Comprobante']['Serie'] = $datosdefactura['seriefacturacion'];
     $datos['Comprobante']['Folio'] = $datosdefactura['folio'];
-    $datos['Comprobante']['Fecha'] = date('Y-m-d\TH:i:s', time() - 120);
+    $datos['Comprobante']['Fecha'] = date('Y-m-d\TH:i:s', time() - 3600);
     $datos['Comprobante']['FormaPago'] = $datosdefactura['idformapago'];
     $datos['Comprobante']['NoCertificado'] = $datosdefactura['numerocertificado'];
     $datos['Comprobante']['CondicionesDePago'] = 'NA';
@@ -142,7 +142,6 @@ class ClaseFacturar{
         //$url = 'https://dev.facturaloplus.com/ws/servicio.do?wsdl';
 
         $objConexion = new ConexionWS($url);
-        //$folio=$valor;
         $ultusuario=$_SESSION['id'];
 
         # CREDENCIAL
@@ -311,7 +310,7 @@ class ClaseFacturar{
 //  FUNCION PARA CANCELAR FACTURA
 /*========================================================= */
 static public function CancelarFacturaWS($tabla, $campo, $valor, $rfcEmisor, $rfcReceptor, $uuid, $total){
-
+    //tabla=facturaingreso, campo=1 valor=dataidfact
     header('Content-Type: application/json');
 
     # OBJETO DEL API DE CONEXION
@@ -319,7 +318,7 @@ static public function CancelarFacturaWS($tabla, $campo, $valor, $rfcEmisor, $rf
     //$url = 'https://dev.facturaloplus.com/ws/servicio.do?wsdl';     //endpoint de pruebas
 
     $objConexion = new ConexionWS($url);
-    //$folio=$valor;
+    //$foliofact=$valor;
     $ultusuario=$_SESSION['id'];
 
     //OBTENER EL DIRECTORIO PRINCIPAL
@@ -386,26 +385,26 @@ static public function CancelarFacturaWS($tabla, $campo, $valor, $rfcEmisor, $rf
 
     //Cuando sea codigo "200" o "307" se guardaran los archivos XML y PDF
     if ($res['codigo'] == '200' || $res['codigo'] == '201') {
+                ## GUARDAR ACUSE EN DIRECTORIO ACTUAL ##
+                file_put_contents('./cancelado/acuse_cancelacion.xml', $res['acuse']);
 
-    	## GUARDAR ACUSE EN DIRECTORIO ACTUAL ##
-		file_put_contents('./cancelado/acuse_cancelacion.xml', $res['acuse']);
+                // Se crea el objeto de la respuesta del Servicio.
+                $dataOBJ = json_decode($res['data'], false);
 
-        // Se crea el objeto de la respuesta del Servicio.
-        $dataOBJ = json_decode($res['datos'], false);
+                //Creamos los archivos con la extencion .xml y .pdf de la respuesta obtenida del parametro "data"
+                $bytes=file_put_contents('./cancelado/'.$rfcEmisor."-"."-CANCELADO-".$valor.'.xml', $dataOBJ->XML);
 
-        //Creamos los archivos con la extencion .xml y .pdf de la respuesta obtenida del parametro "data"
-        $bytes=file_put_contents('./cancelado/'.$rfcEmisor."-"."-CANCELADO".'.xml', $dataOBJ->XML);
-
-        file_put_contents('./cancelado/archivo_recibido.xml', $res['resultado']);
-        file_put_contents('./cancelado/archivo.xml', $dataOBJ);
+                file_put_contents('./cancelado/archivo_recibido.xml', $res['resultado']);
+                file_put_contents('./cancelado/archivo.xml', $dataOBJ);
 
     }else{
-        $existcode=in_array($res['codigo'], $coderesp, true);
-        if($existcode){
-            //return(array_search(201,$coderesp, true));
-            return $resp;
-        }
-        return $resp;
+                $existcode=in_array($res['codigo'], $coderesp, true);
+                if($existcode){
+                    //return(array_search(201,$coderesp, true));
+                    return $resp;
+                }
+    return $resp;
+
     }
 
     if($bytes===false){

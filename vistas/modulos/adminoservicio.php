@@ -12,6 +12,17 @@
 .dataTable_width_auto {
   width: auto;
 }
+.spanalfa {
+   word-wrap: break-word;
+  /*word-break: break-all !important;
+  white-space: nowrap !important; */
+  overflow: hidden;
+  font-size: .75rem;
+}
+
+.overflow-visible {
+  white-space: initial;
+}
 </style>
 <script>
   //evitar que se desconecte.
@@ -182,13 +193,13 @@ $acceso = accesomodulo($tabla, $_SESSION['id'], $module, $campo);
                     <select id="nvotecnico" class="form-control form-control-sm" name="nvotecnico" tabindex="1" required autofocus>
                       <option value="">Selecione Técnico</option>
                       <?php
-$item = 'status';
-$valor = 1;
-$tecnicos = ControladorTecnicos::ctrMostrarTecnicos($item, $valor);
-foreach ($tecnicos as $key => $value) {
-    echo '<option value="' . $value["id"] . '">' . $value["nombre"] . '</option>';
-}
-?>
+                          $item = 'status';
+                          $valor = 1;
+                          $tecnicos = ControladorTecnicos::ctrMostrarTecnicos($item, $valor);
+                          foreach ($tecnicos as $key => $value) {
+                              echo '<option value="' . $value["id"] . '">' . $value["nombre"] . '</option>';
+                          }
+                          ?>
                     </select>
                   </div>
 
@@ -198,18 +209,18 @@ foreach ($tecnicos as $key => $value) {
                     <select id="nuevoAlmacenOS" class="form-control form-control-sm" name="nuevoAlmacenOS" tabindex="2" required>
                       <option value="">Seleccione Almacen</option>
                       <?php
-$item = null;
-$valor = null;
-$estado = 1;
-$almacenes = ControladorAlmacenes::ctrMostrarAlmacenes($item, $valor, $estado);
-foreach ($almacenes as $key => $value) {
-    echo '<option value="' . $value["id"] . '-' . $value["nombre"] . '">' . $value["nombre"] . '</option>';
-}
-?>
+                        $item = null;
+                        $valor = null;
+                        $estado = 1;
+                        $almacenes = ControladorAlmacenes::ctrMostrarAlmacenes($item, $valor, $estado);
+                        foreach ($almacenes as $key => $value) {
+                            echo '<option value="' . $value["id"] . '-' . $value["nombre"] . '">' . $value["nombre"] . '</option>';
+                        }
+                        ?>
                     </select>
                     <input type="hidden" name="idDeUsuario" value="<?php echo $_SESSION['id']; ?>">
-                    <input type="hidden" name="iduser" id="iduser" value="<?php echo $_SESSION['user']; ?>">  <!--NUMERO DE USIARIO EN TABLA TECNICOS -->
-                    <input type="hidden" name="id_almacen" id="id_almacen" value="<?php echo $_SESSION['id_almacen']; ?>">  <!--NUMERO DE USIARIO EN TABLA TECNICOS -->
+                    <input type="hidden" name="iduser" id="iduser" value="<?php echo $_SESSION['user'];?>">  <!--NUMERO DE USIARIO EN TABLA TECNICOS-->
+                    <input type="hidden" name="id_almacen" id="id_almacen" value="<?php echo $_SESSION['id_almacen'];?>">  
                   </div>
 
                   <div class="form-group col-md-2 pt-0 mt-0">
@@ -344,13 +355,15 @@ foreach ($almacenes as $key => $value) {
               <div class="form-row pt-0 pb-0 d-none" id="datosmodem">
                 <!--tmb invisible -->
 
-                <div class="col-md-5">
+                <div class="col-md-4">
                   <input type="text" class="form-control form-control-sm" name="numeroSerie" id="numeroSerie" value="" placeholder="Serie No." title="No. de Serie">
                 </div>
 
-                <div class="col-md-5">
-                  <input type="text" class="form-control form-control-sm" name="alfanumerico" id="alfanumerico" value="" placeholder="alfanumerico" title="">
+                <div class="col-md-4">
+                  <input type="text" class="form-control form-control-sm bg-warning text-white font-weight-bold" name="alfanumerico" id="alfanumerico" value="" onkeyup="validalfatecnico()" placeholder="alfanumerico" title="Capture el Alfanúmerico">
                 </div>
+
+                <div class="col-md-3" id="output"></div>
 
               </div> <!-- FIN DEL FORM-ROW -->
 
@@ -429,7 +442,7 @@ foreach ($almacenes as $key => $value) {
 </div> <!-- fin del modal  <div class="form-row"></div>   -->
 
 <!-- ========================================================================================-->
-<!-- ========================== MODAL AGREGAR OS ====================================-->
+<!-- ========================== MODAL EDITAR OS ====================================-->
 <!-- ========================================================================================-->
 <div class="modal fade" id="modalEditarOS" data-backdrop="static" data-keyboard="false">
 
@@ -472,7 +485,7 @@ foreach ($tecnicos as $key => $value) {
                   <!-- data-date-end-date=no puede seleccionar una fecha posterior a la actual -->
                 <div class="form-group col-md-3">
                   <label for=""><i class="fa fa-hospital-o"></i> Almacen <span class="text-danger">*</span> </label>
-                  <select class="form-control form-control-sm" name="editAlmacenOS" id="editAlmacenOS" tabindex="2" required disabled>
+                  <select class="form-control form-control-sm" name="editAlmacenOS" id="editAlmacenOS" tabindex="2" required>
                   <option value=0 selected>Seleccione Almacen...</option>
                     <?php
 $item = null;
@@ -597,7 +610,7 @@ foreach ($almacenes as $key => $value) {
                     </div>
 
                     <div class="col-md-1 text-center" style="margin-top:1em;">
-                      <button class="btn btn-primary btn-lg px-2" id="agregarProductoOS" tabindex="20"><i class="fa fa-plus-circle" style="margin-left:2px !important;"></i> Agregar</button>
+                      <button class="btn btn-primary btn-lg px-2" id="addProductOS" tabindex="20"><i class="fa fa-plus-circle" style="margin-left:2px !important;"></i> Agregar</button>
                     </div>
                   </div>
                     <!-- FIN DE AGREGAR PRODUCTOS  -->
@@ -804,11 +817,16 @@ foreach ($almacenes as $key => $value) {
                               </div>
                           </div>
                       </div>
-
                       <div class="col-md-5 col-sm-5 col-xs-5 inputFact d-none" style="padding-left:2px">
                           <div class="input-group">
                             <input type="text" class="form-control-sm" name="nuevaFact" id="nuevaFact" value="" placeholder="XXXX" maxlength="50" onkeyUp="mayuscula(this);" tabindex="12">
                           </div>
+                      </div>
+                    </div>
+
+                    <div class="form-row mb-2 mt-0 d-none" id="copiardatos">
+                      <div class="col-md-11 col-sm-11 col-xs-11">
+                      <button type="button" class="btn btn-outline-info btn-sm float-right" id="btncopiardatos"><i class="fa fa-copy"></i> Copiar Resultado</button>                        
                       </div>
                     </div>
 
@@ -839,7 +857,7 @@ foreach ($almacenes as $key => $value) {
         Salir
         </button>
         <button type="button" class="btn btn-info btn-sm enviarfrm" id="updateinvoice" tabindex="14"><i class="fa fa-"></i> Actualizar # Fact.</button>
-        <button type="submit" class="btn btn-success btn-sm enviarfrm" name="submit" id="form-checkos" tabindex="15"><i class="fa fa-cog"></i> Procesar</button>
+        <button type="submit" class="btn btn-success btn-sm enviarfrm" name="submit" id="form-checkos" tabindex="15"><i class="fa fa-cog"></i> Revisar EMU</button>
          <div class="spin">
             <button type="button" class="btn btn-sm btn-warning">Procesando...<i class="fa fa-cog fa-pulse fa-1x fa-fw"></i></button>
         </div>
@@ -850,4 +868,4 @@ foreach ($almacenes as $key => $value) {
   </div>
 </div>
 <!-- ==================================================================================== -->
-<script defer src="vistas/js/updateoservicio.js?v=08012022"></script>
+<script defer src="vistas/js/updateoservicio.js?v=10032023"></script>

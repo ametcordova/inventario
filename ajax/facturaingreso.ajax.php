@@ -52,7 +52,7 @@ switch ($_GET["op"]){
             $folio=$value["folio"];
             $rfcemisor=$value["rfcemisor"];
             $file=$rfcemisor.'-'.$serie.$folio.'.xml';
-            $numcomppago=trim($value['numcomppago'])==''?"<td><button class='btn btn-sm btn-default px-1 py-1' title='Sin Recibo de Pago'>SRP</button></td>":"<td><button class='btn btn-sm btn-warning px-1 py-1' data-numrep='".trim($value['numcomppago'])."' title='Comp. de Pago timbrada'>".trim($value['numcomppago'])."</button></td>";
+            $numcomppago=trim((string)$value['numcomppago'])==''?"<td><button class='btn btn-sm btn-default px-1 py-1' title='Sin Recibo de Pago'>SRP</button></td>":"<td><button class='btn btn-sm btn-warning px-1 py-1' data-numrep='".trim($value['numcomppago'])."' title='Comp. de Pago timbrada'>".trim($value['numcomppago'])."</button></td>";
             
             $cheka=true;
 
@@ -90,6 +90,8 @@ switch ($_GET["op"]){
             $boton2 =getAccess($acceso, ACCESS_PRINTER)?"<td><button class='btn btn-success btn-sm px-1 py-1 btnPrintPdf' data-id='".$value['id']."' data-folio='".$value['folio']."' title='Generar y descargar PDF '><i class='fa fa-file-pdf-o'></i></button></td> ":"";
            
             $botones=$boton2.$boton3.$boton4.$boton5;
+            
+            $uuid = substr((string)$value["uuid"],-12) ?? '';
 
             $data[]=array(
                 $chek,
@@ -99,7 +101,7 @@ switch ($_GET["op"]){
                 $value["rfcemisor"],
                 $value["fechaelaboracion"],
                 $value["fechatimbrado"],
-                substr($value["uuid"],-12),
+                $uuid,
                 $value["nombrereceptor"],
                 $value["idtipocomprobante"],
                 $importeFact,
@@ -181,6 +183,10 @@ switch ($_GET["op"]){
                     //Tabla a guardar datos de la factura
                     $tabla = "facturaingreso";
 
+                    $mifecha= date('Y-m-d H:i:s'); 
+                    $nuevaFecha = strtotime('-1 hour',strtotime($mifecha));
+                    $fechaelaboracion = date ( 'Y-m-d H:i:s' , $nuevaFecha);
+
                     //calculo para sacar el total a facturar
                     $tasaimpuesto=16.00;
                     $totalPU=(float) array_sum($_POST["importe"]);
@@ -219,7 +225,7 @@ switch ($_GET["op"]){
                         'serie' => $_POST['serie'],
                         'folio' => $_POST["nvofolio"],
                         'uuid' => '',
-                        'fechaelaboracion' => date("Y-m-d H:i:s"),
+                        'fechaelaboracion' => $fechaelaboracion,
                         'fechatimbrado' => '',
                         'fechacancelado' => '',
                         'rfcemisor' => $_POST['rfcemisor'],
@@ -409,7 +415,9 @@ switch ($_GET["op"]){
                 
                     //Tabla a guardar datos de complemento de Pago 2.0
                     $tabla = "complementodepago";
-
+                    $mifecha= date('Y-m-d H:i:s'); 
+                    $nuevaFecha = strtotime('-1 hour',strtotime($mifecha));
+                    $fechaelaboracion = date ( 'Y-m-d H:i:s' , $nuevaFecha);
                     //calculo para sacar el total a facturar
                     $tasaimpuesto=((float)$_POST["tasaimpcp"])+1;
                     $totalrecibo=$_POST["totalpagofact"];
@@ -448,7 +456,8 @@ switch ($_GET["op"]){
                     $complementodepago= array(
                         'tipodecomprobante' => "P",
                         //'foliorep' => $_POST["foliorep"],
-                        'fechaelaboracion'  => date("Y-m-d H:i:s"),
+                        //'fechaelaboracion'  => date("Y-m-d H:i:s"),
+                        'fechaelaboracion'  => $fechaelaboracion,
                         'idrfcemisor'       => $_POST['idemisorrep'],
                         'cpemisor'          => $_POST['cpemisorcp'],
                         'idrfcreceptor'     => $_POST["idreceptorrep"],
@@ -508,13 +517,14 @@ switch ($_GET["op"]){
                     $datarfcemisor  = $_GET['datarfcemisor'];
             
 
-                    $respuesta = ClaseGenerarRep20::GenerarJsonRep20($tabla, $campo, $valor, $datafolio, $datarfcemisor );
+                    $respuesta = ClaseGenerarRep20::GenerarJsonRep20($tabla, $campo, $valor, $datafolio, $datarfcemisor );  //generarrep20.php
 
                     if($respuesta==='401'){
                         json_output(json_build(401, $respuesta, 'No se creo el archivo JSON'));
                     }else{
                         //json_output(json_build(201, $respuesta, 'Se creo el archivo JSON'));    
-                        $respuesta = ClaseTimbrarRep20::EnviarJsonRep20WS($tabla, $campo, $valor, $datafolio, $datarfcemisor);
+                        $respuesta = ClaseTimbrarRep20::EnviarJsonRep20WS($tabla, $campo, $valor, $datafolio, $datarfcemisor);  //timbrarrep20.php
+
                         json_output(json_build(201, $respuesta, 'Respuesta existosa'));    
                     }
                     
@@ -532,7 +542,8 @@ switch ($_GET["op"]){
         }    
     break;
 /************************************************************************************************** */    
-
+/* DATATABLE EN VENTANA MODAL DE LOS COMPLEMENTOS DE PAGO 2.0
+/************************************************************************************************** */    
 case 'ListCompPago20':
 
     if(isset($_POST["dateyear"])){
@@ -560,12 +571,12 @@ case 'ListCompPago20':
         $fechaelaboracion = date('Y-m-d', strtotime($value["fechaelaboracion"]));
         $file=$value["rfcemisor"].'-'.$value["foliorep"].'.xml';
 
-        if($value["fechatimbradorep"]!=""){
+        if($value["fechatimbradorep"]!=""){     //REP está timbrado
             $boton0 =getAccess($acceso, ACCESS_ADD)?"<td><button class='btn btn-sm btn-dark px-0 py-0' title=R.E.P. Timbrada'><i class='fa fa-bell fa-fw'></i> </button></td> ":"";
 
             $boton1 =getAccess($acceso, ACCESS_PRINTER)?"<a href='vistas/modulos/download.php?filename=$file&ruta=2&mime=xml' title='Descargar XML' class='btn btn-sm btn-info px-1 py-0'><i class='fa fa-file-code-o'></i></a> ":"";
 
-        }else{
+        }else{          //REP no está timbrado
             $boton0 =getAccess($acceso, ACCESS_ADD)?"<td><button class='btn btn-sm btn-danger px-0 py-0' onclick='TimbrarCompPago20(this)' data-id='".$value['id']."' data-folio='".$value['foliorep']."' data-rfcemisor='".$value['rfcemisor']."' data-fecha='".$value['fechaelaboracion']."'  title='R.E.P. sin timbrar'><i class='fa fa-bell fa-fw'></i> </button></td> ":"";
 
             $boton1 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-primary px-1 py-0 ' data-editar='".$value['id']."' title='Editar REP' ><i class='fa fa-file-edit'></i></button></td> ":"";
@@ -598,7 +609,36 @@ case 'ListCompPago20':
               "aaData"=>$data);
       echo json_encode($results);        
 
- break;     
+ break;
+/************************************************************************************************** */
+//                 PARA TIMBRAR COMPLEMENTO DE PAGO 2.0
+/************************************************************************************************** */
+case 'AgregaCtrlFacts':
+    try{
+       
+        if(isset($_GET['ids'])){  
+
+            $valor = $_GET['ids'];
+            $ids=implode(",",$valor);
+            $campo          = "id";
+            $usuario=$_SESSION['id'];
+            $tabla          = "facturaingreso";
+        
+            $respuesta = ControladorFacturaIngreso::ctrAgregaCtrlFacts($tabla, $campo, $valor, $ids, $usuario);
+
+            if($respuesta){
+                json_output(json_build(201, $respuesta, 'Respuesta Exitosa'));
+            }else{
+                json_output(json_build(401, $respuesta, 'Respuesta con Errores'));    
+            }
+
+        }else{
+            json_output(json_build(401, $respuesta, 'No hay datos para procesar'));
+         }
+    } catch (Exception $e) {
+        json_output(json_build(403, 'No hay datos', $e->getMessage()));
+    }    
+break; 
  /************************************************************************************************** */    
 		default:
             json_output(json_build(403, null, 'No existe opciòn. Revise'));

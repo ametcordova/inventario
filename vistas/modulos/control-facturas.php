@@ -347,6 +347,19 @@
                   </select>	
               </div>
             </div>
+
+            <div class="form-row">			
+              <div class="col-md-4 col-sm-4 col-xs-5">
+                  <div class="form-group">
+                    <div class="checkbox icheck">
+                      <label title="Es material para construcción?">
+                          <input type="checkbox" name="nvoEsConstruccion" class="minimal flat-red conseries">
+                          Construcción?
+                      </label>
+                      </div>
+                  </div>
+              </div>
+            </div>
 			
             <div class="input-group mb-1">
                 <label for="exampleInputFile">Subir PDF:&nbsp</label>
@@ -538,7 +551,20 @@
             </div>
 			
         </div>
-		
+
+        <div class="form-row">			
+              <div class="col-md-4 col-sm-4 col-xs-5">
+                  <div class="form-group">
+                    <div class="checkbox icheck">
+                      <label title="Es material para construcción?">
+                          <input type="checkbox" name="editEsConstruccion" id="editEsConstruccion" class="minimal flat-red conseries">
+                          Construcción?
+                      </label>
+                      </div>
+                  </div>
+              </div>
+            </div>
+	
             <div class="input-group mb-0">
                 <label for="exampleInputFile">Subir PDF:&nbsp</label>
                 <p class="help-block m-0 p-0">Peso máximo 2mb.</p>
@@ -719,7 +745,7 @@
     </div>
   </div>
 </div>
-<script defer src="vistas/js/control-facturas.js?v=020220231411"></script>
+<script defer src="vistas/js/control-facturas.js?v=030620231411"></script>
 <!--===========================================================================================-->
 
 <!--================================= MODAL VER EXPEDIENTE DE FACTURA =======================================-->

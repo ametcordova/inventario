@@ -127,13 +127,13 @@ class ClaseTimbrarRep20{
             file_put_contents('./rep20/archivo_cadenaoriginalSAT.xml', $dataOBJ->CadenaOriginalSAT);
             file_put_contents('./rep20/archivo_recibido.xml', $res['datos']);
         }else{
-            return $resp;
+            return $res['codigo'];      //CRP20268 si es este código, es posible error de redondeo
         }
 
         if($bytes===false){
             //echo "Error al escribir archivo XML.".PHP_EOL;
             $resp = array('411' => 'Error al escribir archivo XML.');	
-            return $resp;
+            return $resp['data'];
        }
 
         //Falta validad si existe archivo, para borrarlo.
@@ -198,6 +198,7 @@ class ClaseTimbrarRep20{
                     //CONVIERTE EL JSON A ARRAY Y SACA SOLO LOS NUMEROS DE LOS FOLIOS DE LAS FACTS.
                     $folios=[];
                     $data = json_decode($aswer['doctosrelacionados'], true);
+                    $fechapago=$aswer['fechapago'];
                     foreach ($data as $value) {
                          array_push($folios, $value['Folio']);
                     }
@@ -209,6 +210,16 @@ class ClaseTimbrarRep20{
                         $sql="UPDATE facturaingreso SET numcomppago='$datafolio' WHERE folio IN ($fol)";
                         $stmt = Conexion::conectar()->prepare($sql);
                         $stmt -> execute();
+
+                        $serie='A';
+                        $status=1;
+                        $query = Conexion::conectar()->prepare("UPDATE facturas SET numcomplemento=:numcomplemento, fechapagado=:fechapagado, status=:status WHERE serie=:serie AND numfact IN ($fol)");    //ACTUALIZA EN LA TABLA FACTURAS
+                        $query->bindParam(":serie",             $serie, PDO::PARAM_STR);
+                        $query->bindParam(":numcomplemento",    $datafolio, PDO::PARAM_STR);
+                        $query->bindParam(":fechapagado",       $fechapago, PDO::PARAM_STR);
+                        $query->bindParam(":status",            $status, PDO::PARAM_INT);
+                        $query->execute();
+
                     }
                     
                 }

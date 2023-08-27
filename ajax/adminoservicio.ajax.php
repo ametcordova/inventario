@@ -47,6 +47,7 @@ switch ($_GET["op"]){
 
             $fecha = date('d-m-Y', strtotime($value["fecha_instalacion"]));
 			$fepp=IS_NULL($value["fecha_eppago"])?'':date('d-m-Y', strtotime($value["fecha_eppago"]));
+			//$fechapago=IS_NULL($value["fechapago"])?'':date('d-m-Y', strtotime($value["fechapago"]));
             $nombre = substr($value["tecnico"],0,30);    //extrae el primer nombre del tecnico
 			$fact=$value["factura"];
 			$fagr=IS_NULL($fepp)?'':$fepp;
@@ -79,6 +80,7 @@ switch ($_GET["op"]){
 			      $fecha,
 				  $fagr,
 				  $capturo,
+				  //$fechapago,
 			      $botonestado,
 				  $value["factura"],
                   $botones,
@@ -115,15 +117,15 @@ switch ($_GET["op"]){
             //$tablatmp =trim(substr($_POST['nuevoAlmacenOS'],strpos($_POST['nuevoAlmacenOS'].'-','-')+1)); 
             //$tabla_almacen=strtolower($tablatmp);
             //EXTRAE EL NUMERO DE ALMACEN
-            $id_almacen=strstr($_POST['nuevoAlmacenOS'],'-',true);   
+            $id_almacen=strstr($_POST['nuevoAlmacenOS'],'-',true);
 
             $tabla="tabla_os";
 
 			$productos=$_POST["idproducto"];
 			$cantidades=$_POST["cantidad"];
-
+			$numdealfanumerico=strtoupper($_POST["alfanumerico"]);
 			$datos_inst_array = array(); //creamos un array para guardar los datos de la Inst. en el campo JSON
-			$datos_inst_array[]=array(
+			$datos_inst_array[]=array( 
 				"numpisaplex"	=> $_POST["numpisaplex"],
 				"numtipo"		=> strtoupper($_POST["numtipo"]),
 				"direccionos"	=> strtoupper($_POST["direccionos"]),
@@ -164,7 +166,7 @@ switch ($_GET["op"]){
 				"ultusuario"		=>$_POST["idDeUsuario"]
 			);
 
-			$rspta = ControladorOServicios::ctrGuardarOS($tabla, $datos, $productos, $cantidades);
+			$rspta = ControladorOServicios::ctrGuardarOS($tabla, $datos, $productos, $cantidades, $numdealfanumerico);
 			echo json_encode($rspta);
 
 			//echo json_encode($_POST["firma"]);
@@ -180,13 +182,12 @@ switch ($_GET["op"]){
 
         if(isset($_POST["id"])){
 
-            //$id_almacen=strstr($_POST['nuevoAlmacenOS'],'-',true);
+            $id_almacen=strstr($_POST['editAlmacenOS'],'-',true);
 
             $tabla="tabla_os";
-			$productos=$_POST["editaidproducto"];
-			$cantidades=$_POST["editacantidad"];
-			$datos_inst_array = array(); //creamos un array para guardar los datos de la Inst. en el campo JSON
-			$datos_inst_array[]=array(
+
+			$datos_inst_array = array();	 //creamos un array para guardar los datos de la Inst. en el campo JSON
+			$datos_inst_array[]=array(		//Guardamos en el array los datos de la OS
 				"numpisaplex"	=> $_POST["editnumpisaplex"],
 				"numtipo"		=> strtoupper($_POST["editnumtipo"]),
 				"direccionos"	=> strtoupper($_POST["editdireccionos"]),
@@ -195,14 +196,29 @@ switch ($_GET["op"]){
 				"terminalos"	=> strtoupper($_POST["editterminalos"]),
 				"puertoos"		=> $_POST["editpuertoos"],
 				"nombrefirma"	=> strtoupper($_POST["editnombrefirma"]),
-				//"modemretirado"	=> $_POST["modemretirado"],
-				//"modemnumserie"	=> strtoupper($_POST["modemnumserie"]),
 				"numeroserie"	=> $_POST["editnumeroSerie"],
 				"alfanumerico"	=> strtoupper($_POST["editalfanumerico"])
+				//"modemretirado"	=> $_POST["modemretirado"],
+				//"modemnumserie"	=> strtoupper($_POST["modemnumserie"]),
 			);
-
 			//Creamos el JSON
 			$datos_instalacion=json_encode($datos_inst_array);
+
+			$oldproducts=$_POST["oldproducto"];
+			$oldcounts=$_POST["oldcantidad"];
+
+            var_dump($oldproducts);
+            var_dump($oldcounts);
+
+			$newproducts=$_POST["editaidproducto"];
+			$newcounts=$_POST["editacantidad"];
+
+            var_dump($newproducts);
+            var_dump($newcounts);
+
+            exit;
+
+
 
 			$datos_material_array = array(); //creamos un array para guardar los prod y cant de material en el campo JSON
 			foreach ($_POST["editaidproducto"] as $clave=>$valor){
@@ -357,6 +373,28 @@ switch ($_GET["op"]){
 			echo json_encode($respuesta);
 	
 		break;		
+
+		case 'validaAlfanum':
+
+			//if(isset($_GET["idalmacen"]) && isset($_GET["numdocto"]) && isset($_GET["idproducto"])){
+			if(isset($_GET["numalfa"])){
+	
+				$tabla = "contenedor_series";
+				$campo = "alfanumerico";
+				$valor = trim($_GET['numalfa']);
+		
+				$respuesta = ControladorOServicios::ctrValidAlfanum($tabla, $campo, $valor);
+				//$respuesta = array('idproducto' => $_GET["idproducto"], 'numdocto' => $_GET["numdocto"], 'status' => http_response_code(201));
+				echo json_encode($respuesta);
+	
+			}else{
+	
+				$respuesta = array('status' => http_response_code(400));
+				echo json_encode($respuesta);
+			}
+		break;      
+	
+	
 }  //FIN DE SWITCH
 
 function validar_fecha_espanol($fecha){

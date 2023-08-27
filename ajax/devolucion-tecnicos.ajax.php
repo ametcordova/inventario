@@ -20,10 +20,10 @@ switch ($_GET["op"]){
 				$productos=$_POST["idProducto"];
 				$cantidades=$_POST["cantidad"];
 				$tablaDev = "devolucion_tecnicos";
-			
+				
                 //EXTRAE EL NOMBRE DEL ALMACEN
 				$tabla =trim(substr($_POST['nuevaDevolucionAlmacen'],strpos($_POST['nuevaDevolucionAlmacen'].'-','-')+1)); 
-                
+				$tabla = strtolower($tabla);
                 //EXTRAE EL NUMERO DE ALMACEN
                 $id_almacen=strstr($_POST['nuevaDevolucionAlmacen'],'-',true);   			
 			
@@ -82,16 +82,17 @@ switch ($_GET["op"]){
 	
 		if(isset( $_GET["almacen"])){
 			
-		require_once "../controladores/almacen.controlador.php";
-		require_once "../modelos/almacen.modelo.php";
+		// require_once "../controladores/almacen.controlador.php";
+		// require_once "../modelos/almacen.modelo.php";
 
 			$campo = "id_producto";
-			//$campo = "id";
 			$valor =$_GET['idProducto'] ;
-			$tabla = trim($_GET['almacen']);
+			$idtec =$_GET['idtecnico'] ;
+			$tabla = trim(strtolower($_GET['almacen']));
+			$tablaalmacen = trim($_GET['id_almacen']);
 			$estado=null;
 
-			$respuesta = ControladorAlmacen::ctrMostrarAlmacen($tabla, $campo, $valor, $estado);
+			$respuesta = ControladorDevolucion::ctrMostrarTransito($tabla, $tablaalmacen, $campo, $valor, $estado, $idtec);
 			
 			//var_dump($respuesta);
 			

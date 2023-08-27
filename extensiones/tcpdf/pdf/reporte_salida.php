@@ -214,13 +214,69 @@ $bloque6 = <<<EOF
 EOF;
 
 $pdf->writeHTML($bloque6, false, false, false, false, '');    
+$pdf->Ln(2);
+// ---------------------------------------------------------
+$bloque2 = <<<EOF
+	<h4 style="text-align:center;">ALFANÚMERICOS DE ONT'S</h4>
+EOF;
+$pdf->writeHTML($bloque2, false, false, false, false, '');
+$pdf->Ln(1);
+// ---------------------------------------------------------
+//		CONSULTA PARA TRAER LOS ALFANUMERICOS DE LOS ONTS
+// ---------------------------------------------------------
+$item="notasalida";
+$order="id_producto";
+$query = ControladorSalidasAlmacen::ctrMostrarOnts($item, $valor, $order);
+if ($query) {
+	$idinicial=$query[0]["id_producto"];
+	$alfa=[];
+	foreach ($query as $row) {
+		$id = $row["id_producto"];
+		if($idinicial===$id){
+			$alfa[] = $row["alfanumerico"];
+			$idinicial=$row["id_producto"];
+		}else{
+			// Mostrar los nombres de usuarios como una cadena
+			$cadena_alfa = implode(", ", $alfa);	
+			$bloque7 = <<<EOF
+				<table style="font-size:9px; padding:5px 3px;">
+				<tr bgcolor="#F3EFEF">
+				<td style="border: 1px solid #666; width:25px; text-align:center">$idinicial</td>
+				<td style="border: 1px solid #666; width:515px; text-align:left">$cadena_alfa</td>
+				</tr>
+				</table>
+			EOF;
+			$pdf->writeHTML($bloque7, false, false, false, false, '');    
+			$pdf->Ln(1);
+			$alfa=[];
+			$idinicial=$row["id_producto"];
+			$alfa[] = $row["alfanumerico"];
+		}
+	}
+	$cadena_alfa = implode(", ", $alfa);
+	$bloque7 = <<<EOF
+	<table style="font-size:9px; padding:5px 3px;">
+	<tr bgcolor="#F3EFEF">
+	<td style="border: 1px solid #666; width:25px; text-align:center">$id</td>
+	<td style="border: 1px solid #666; width:515px; text-align:left">$cadena_alfa</td>
+	</tr>
+	</table>
+	EOF;
+	$pdf->writeHTML($bloque7, false, false, false, false, '');    
+	
+} else {
+// ---------------------------------------------------------
+	$bloque12 = <<<EOF
+		<h6 style="text-align:center;font-family:verdana;">SIN CARGA DE ONT'S</h6>
+	EOF;
+	$pdf->writeHTML($bloque12, false, false, false, false, '');
+}	
+// ---------------------------------------------------------
 $pdf->Ln(6);
 // ---------------------------------------------------------
-$bloque7 = <<<EOF
-
+$bloque10 = <<<EOF
 
 	<table style="font-size:9px; padding:5px 3px;">
-
     <tr>
 		<td style="border: 1px solid #666;width:260px; height:20px; text-align:center">Nombre y firma quien recibe</td>
         <td style="width:20px;height:20px; text-align:center"></td>
@@ -234,14 +290,9 @@ $bloque7 = <<<EOF
         <td style="width:20px;height:40px; text-align:center"></td>
         <td style="border: 1px solid #666;width:260px; height:40px; text-align:center"></td>
     </tr>
-
  	</table>
-
-	
-	 
 EOF;
-
-$pdf->writeHTML($bloque7, false, false, false, false, '');     
+$pdf->writeHTML($bloque10, false, false, false, false, '');     
 // ---------------------------------------------------------    
 //SALIDA DEL ARCHIVO 
  $nombre_archivo="reporte_salida".trim($valor).".pdf";   //genera el nombre del archivo para descargarlo

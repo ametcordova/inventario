@@ -23,6 +23,12 @@ switch ($_GET["op"]){
             //EXTRAE EL NUMERO DE ALMACEN
             $id_almacen=strstr($_POST['idAlmacenSalida'],'-',true);   
 
+            if(isset($_POST["idalfanumericos"])){
+                $alfanumerico=$_POST["idalfanumericos"];
+            }else{
+                $alfanumerico=[];
+            }
+
             $tabla="tbl_salidas";
 
             $datos = array(
@@ -33,6 +39,7 @@ switch ($_GET["op"]){
                 "id_usuario" =>$_POST["idDeUsuario"],
                 "productos"  =>$_POST["idproducto"],
                 "cantidades" =>$_POST["cantidad"],
+                "alfanumerico" =>$alfanumerico,
                 "motivo"     =>strtoupper($_POST["nvaObservacion"]),
                 "ultusuario" =>$_POST["idDeUsuario"]
             );
@@ -70,7 +77,7 @@ switch ($_GET["op"]){
 
                 //TRAER NUMERO DE LA ULTIMA CANCELACION
                 $query = ControladorSalidasAlmacen::ctrObtenerUltimoId($tabla_cancela, $id_cancela);
-                $idnumcancela=$query[0];
+                $idnumcancela=$query["idcancela"];
                 if(is_null($idnumcancela)){
                     $idnumcancela=1;
                 }else{
@@ -139,7 +146,7 @@ switch ($_GET["op"]){
                  }
                 }
             
-            $aadicionar=(array_diff_key($newarray, $oldarray));            
+            $aadicionar=(array_diff_key($newarray, $oldarray));       
             if(!empty($aadicionar)) {
     
                 foreach ($aadicionar as $key => $value) {
@@ -277,10 +284,10 @@ switch ($_GET["op"]){
 
             $tri = '<tr><td>'.($value["id"]).'</td>';
             $trf='</tr';
-
+            //btnEditSalidaAlmacen Y btnDelSalidaAlmacen  - actualizar para Habilitar   
             $boton1 =getAccess($acceso, ACCESS_PRINTER)?"<td><button class='btn btn-sm btn-success btnPrintSalidaAlmacen' idPrintSalida='".$value['id']."' title='Generar PDF '><i class='fa fa-file-pdf-o'></i></button></td> ":""; 
-            $boton2 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-primary btnEditSalidaAlmacen' idEditSalida='".$value['id']."' title='Editar Salida' data-toggle='modal' data-target='#modalEditarSalidasAlmacen'><i class='fa fa-edit'></i></button></td> ":""; 
-            $boton3 =getAccess($acceso, ACCESS_DELETE)?"<td><button class='btn btn-sm btn-danger btnDelSalidaAlmacen' idDeleteSalAlm='".$value['id']."' title='Eliminar Salida '><i class='fa fa-trash'></i></button></td> ":"";
+            $boton2 =getAccess($acceso, ACCESS_EDIT)?"<td><button class='btn btn-sm btn-primary' idEditSalida='".$value['id']."' title='Editar Salida' data-toggle='modal' data-target='#modalEditarSalidasAlmacen'><i class='fa fa-edit'></i></button></td> ":""; 
+            $boton3 =getAccess($acceso, ACCESS_DELETE)?"<td><button class='btn btn-sm btn-danger px-1' idDeleteSalAlm='".$value['id']."' title='Eliminar Salida '><i class='fa fa-trash'></i></button></td> ":"";
 
             $botones=$boton1.$boton2.$boton3;
 
@@ -311,6 +318,16 @@ switch ($_GET["op"]){
 
         echo json_encode($respuesta);
     
+    break;
+
+    case 'validAlfanumerico':
+        $tabla = "contenedor_series";
+        $campo = "alfanumerico";
+        $valor = trim($_GET['idalfa']);
+
+        $respuesta = ControladorSalidasAlmacen::ctrvalidAlfanumerico($tabla, $campo, $valor);
+        echo json_encode($respuesta);
+
     break;
 
 } // fin del switch

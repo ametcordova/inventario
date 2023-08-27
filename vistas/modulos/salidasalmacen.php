@@ -2,6 +2,17 @@
   .select2-results__options {
     font-size: 14px !important;
   }
+  .spanalfa {
+   word-wrap: break-word;
+  /*word-break: break-all !important;
+  white-space: nowrap !important; */
+  overflow: hidden;
+  font-size: .75rem;
+}
+
+.overflow-visible {
+  white-space: initial;
+}  
 </style>
 <script>
     document.addEventListener("DOMContentLoaded", ()=>{
@@ -71,7 +82,7 @@ $fechaHoy = date("Y-m-d");
         <?php } ?>
         <!--<h2 class="card-title">Control de Usuarios</h2> -->
         <div class="card-tools p-0">
-        <button type="button" class="btn btn-sm btn-tool" title="Refresh" onclick="location.reload()">
+          <button type="button" class="btn btn-sm btn-tool" title="Refresh" onclick="location.reload()">
             <i class="fa fa-refresh"></i>
           </button>
           <button type="button" class="btn btn-sm btn-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse">
@@ -252,7 +263,11 @@ $fechaHoy = date("Y-m-d");
               </div>
 
               <div class="col-md-1">
-                 <button class="btn btn-primary btn-sm mb-1" data-toggle="modal" id="agregaSalidaProd"><i class="fa fa-plus-circle"></i> Agregar</button>
+                 <button class="btn btn-primary btn-sm mb-1" id="agregaSalidaProd"><i class="fa fa-plus-circle"></i> Agregar</button>
+              </div>
+
+              <div class="col-md-1 d-none" id="agregaSeries">
+                 <button class="btn btn-warning btn-sm mb-1" data-toggle="modal" data-target="#modalAgregarSeries"><i class="fa fa-plus-circle"></i> Series</button>
               </div>
 
               <div class="col-md-4 alert-danger rounded d-none" style="height:30px;" id="mensajerrorsalida"></div>
@@ -269,11 +284,11 @@ $fechaHoy = date("Y-m-d");
                       <thead class="thead-dark" style="font-size:.8rem; height:1px">
                         <tr translate="no" class="text-center">
                         <th translate="no" style="width:2.5rem">Acción</th>
-                        <th translate="no" style="width:2.5rem">#</th>
-                        <th translate="no" style="width:15rem">Código</th>
+                        <th translate="no" style="width:3rem">#</th>
+                        <th translate="no" style="width:9rem">Código</th>
                         <th translate="no">Producto</th>
-                        <th translate="no" style="width:10rem">U. Med</th>
-                        <th translate="no" style="width:5rem">Cant</th>
+                        <th translate="no" style="width:8rem">U. Med</th>
+                        <th translate="no" style="width:6rem">Cant</th>
                         </tr>
                       </thead>
                         <tbody id="tbodysalidasalmacen">
@@ -508,6 +523,44 @@ $fechaHoy = date("Y-m-d");
 <!-- ==============================================================================
                 FIN MODAL PARA CAPTURAR LAS SALIDAS DEL ALMACEN
 ==================================================================================== -->
+<!--=????????=================== MODAL AGREGAR VIATICO ==============================-->
+<div class="modal fade" id="modalAgregarSeries" data-backdrop="static" data-keyboard="false" tabindex="-1">
+  <div class="modal-dialog">
+   
+    <div class="modal-content">
 
-<script defer src="vistas/js/salidasalmacen.js?v=02012023"></script>
-<script defer src="vistas/js/salidasalmacenedit.js?v=02122021"></script>
+      <form role="form" id="formularioAgregaSeries">
+        <!-- Modal Header -->
+        <div class="modal-header bg-warning p-1">
+              <h4 class="modal-title">Agregar Series</h4>
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <!-- Modal body -->
+        <div class="modal-body">
+            
+          <div class="card-body p-1">
+
+              <div id="inputs"></div>
+
+              <div class="row justify-content-center text-center" id="msginputsalfa"></div>
+
+          </div>
+            
+        </div>    <!-- fin del modal-body -->
+
+        <!-- Modal footer -->
+        <div class="modal-footer bg-warning p-1">
+          <button type="button" class="btn btn-dark btn-sm float-left" data-dismiss="modal" tabindex="11"><i class="fa fa-reply"></i> No guardar</button>
+          <button type="submit" class="btn btn-success btn-sm" tabindex="10" id="adicionaAlfa"><i class="fa fa-check"></i> Aceptar y Salir</button>
+        </div>
+
+      </form>
+
+    </div> <!-- fin del modal-content -->
+  </div>
+</div>  
+<!--==================================================================================== -->
+
+
+<script defer src="vistas/js/salidasalmacen.js?v=020720231331"></script>
+<script defer src="vistas/js/salidasalmacenedit.js?v=021220211231"></script>

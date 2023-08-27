@@ -309,7 +309,7 @@ $fechaHoy = date("Y-m-d");
               </div>
                             
               <div class="col-md-6">
-                <textarea type="text" class="form-control form-control-sm mb-1" name="nvoconcepto" id="nvoconcepto" title="Concepto" placeholder="Producto o Servicio" tabindex="11" rows="2"></textarea>
+                <textarea type="text" class="form-control form-control-sm mb-1" name="nvoconcepto" id="nvoconcepto" title="Concepto" placeholder="Producto o Servicio" tabindex="11" rows="4"></textarea>
               </div>
 
               <div class="col-md-1">
@@ -689,4 +689,4 @@ $fechaHoy = date("Y-m-d");
                 FIN MODAL PARA SUBIR ARCHIVOS DE ENTRADA CARSO AL ALMACEN 
 ==================================================================================== -->
 
-<script defer src="vistas/js/facturaingreso.js?v=200320231635"></script>
+<script defer src="vistas/js/facturaingreso.js?v=260620231635"></script>

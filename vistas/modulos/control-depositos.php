@@ -4,7 +4,7 @@
   }
 #dt-crtl-depositos {
   overflow: auto;
-}  
+}
 .boton2 {
   color:wheat;
   background-color: #008CBA;
@@ -12,6 +12,20 @@
   .seleccionado{
     background-color: #008CBA;
   }
+
+
+#nvoFecha:invalid::after {
+  content: "✖";
+  padding-left: 3px;
+  color:crimson;
+}
+
+#nvoFecha:valid::after {
+  display: inline-block;
+  content: "✓";
+  padding-left: 3px;
+  color:darkgreen;
+}
 </style>
 <script>
     document.addEventListener("DOMContentLoaded", ()=>{
@@ -63,27 +77,27 @@ $fechaHoy = date("Y-m-d");
       <div class="card-header col-md-12">
 
         <div class="col-md-2 d-inline" >
-          <?php if (getAccess($acceso, ACCESS_ADD)) { ?>
+          <?php if (getAccess($acceso, ACCESS_ADD)) {?>
             <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modalAgregarDeposito">
               <span class="fa fa-plus-circle"></span> Agregar Depósito
             </button>
-          <?php } ?>
+          <?php }?>
         </div>
-        
+
         <div class="col-md-2 d-inline">
-          <?php if (getAccess($acceso, ACCESS_ADD)) { ?>
+          <?php if (getAccess($acceso, ACCESS_ADD)) {?>
             <button class="btn btn-sm btn-warning" data-toggle="modal" data-target="#modalAgregarcuentahabiente" title="Agregar Cuentahabiente">
               <span class="fa fa-plus-circle"></span> Agregar Cuentah.
             </button>
-          <?php } ?>
+          <?php }?>
         </div>
-        <div class="col-md-1 d-inline">  
+        <div class="col-md-1 d-inline">
           <button class="btn btn-danger btn-sm" id="btnregresar" onclick="regresar()" type="button"><i class="fa fa-arrow-circle-left"></i> Regresar</button>
         </div>
 
         <div class="col-md-3 d-inline">
           <!-- Date range -->
-          <?php if (getAccess($acceso, ACCESS_VIEW)) { ?>
+          <?php if (getAccess($acceso, ACCESS_VIEW)) {?>
             <button type="button" class="btn btn-dark btn-sm ml-1 mr-2 " id="daterange-btn-ctrldepositos">
               <span>
                 <i class="fa fa-calendar"></i> Rango de fecha
@@ -94,7 +108,7 @@ $fechaHoy = date("Y-m-d");
             <!-- <button class="btn btn-success btn-sm " onclick="dt_crtl_depositos()">
               <i class="fa fa-list"></i> Listar
             </button> -->
-          <?php } ?>
+          <?php }?>
         </div>
 
         <div class="card-tools">
@@ -109,11 +123,11 @@ $fechaHoy = date("Y-m-d");
       </div>
 
       <div class="row">
-        
+
       </div>
 
       <div class="card-body">
-      
+
         <div class="card">
           <div id="ohsnap" style="z-index:100;"></div>
           <div class="card-body p-1">
@@ -122,15 +136,15 @@ $fechaHoy = date("Y-m-d");
               <thead class="thead-dark" >
                 <tr style="font-size:0.80em">
                   <th translate="no" style="width:2em;">#</th>
-                  <th translate="no" style="width:21em;">Nombre</th>
+                  <th translate="no" style="width:24em;">Nombre</th>
                   <th translate="no">Motivo</th>
                   <th translate="no" style="width:6em;">Importe</th>
                   <th translate="no" style="width:5em;">Comisión</th>
                   <th translate="no" style="width:12em;">Destino</th>
                   <th translate="no" style="width:14em;">Referencia</th>
-                  <th translate="no" style="width:7em;">F. Movto</th>
+                  <th translate="no" style="width:10em;">F. Movto</th>
                   <th translate="no" style="width:4em;">Suc.</th>
-                  <th translate="no" style="width:5.5em;">Acción</th>
+                  <th translate="no" style="width:5.1em;">Acción</th>
                 </tr>
               </thead>
               <tbody style="font-size:0.80em">
@@ -165,7 +179,7 @@ $fechaHoy = date("Y-m-d");
 ===============================================================================-->
  <div class="modal fade" id="modalAgregarDeposito" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog">
-   
+
     <div class="modal-content ui-widget-content">
      <form role="form" name="" id="form-AgregaDeposito" method="POST">
         <!-- Modal Header -->
@@ -173,11 +187,11 @@ $fechaHoy = date("Y-m-d");
             <h4 class="modal-title">Agregar Depósito</h4>
             <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
-        
-          
+
+
         <!-- Modal body -->
         <div class="modal-body">
-            
+
           <div class="box-body">
 
           <div class="form-group p-0" id="form-benef">
@@ -186,7 +200,6 @@ $fechaHoy = date("Y-m-d");
                     <select class="form-control" name="nvoBeneficiario" id="nvoBeneficiario" style="width:100%;" tabindex="1" >
                     </select>
                     <input type="hidden" name="idDeUsuario" value="<?php echo $_SESSION['id']; ?>">
-                    <input type="hidden" name="" value="<?php echo $_SESSION['id']; ?>">
                     <input type="hidden" name="identifica" id="identifica" value=0>
           </div>
 
@@ -232,42 +245,44 @@ $fechaHoy = date("Y-m-d");
 
           <div class="form-row">
 
-            <div class="form-group col-md-3 pt-0">
+            <div class="form-group col-md-5 pt-0">
               <label for="inputNombre">Sucursal</label>
                 <select class="form-control" name="nvoSucursal" id="nvoSucursal" required tabindex="7" title="Sucursal" >
                   <option value="VLH">VLH - VillaHermosa</option>
                   <option value="TGZ">TGZ - Tuxtla Gtz.</option>
                   <option value="FIP">FIP - Fipabide</option>
                   <option value="LEG">LEG - Personal</option>
-                </select>	
+                </select>
             </div>
 
-            <div class="form-group col-md-5 pt-0">
-              <label for="inputNombre">Fecha Trans.</label>
-              <input type="date" class="form-control" id="nvoFecha" name="nvoFecha" placeholder="" value="" tabindex="8" required>
+            <div class="form-group col-md-7 pt-0">
+              <label for="inputnvoFecha">Fecha Trans.</label>
+              <input type="datetime-local" class="form-control" id="nvoFecha" name="nvoFecha" placeholder="" value="" tabindex="8" required>
+              <span class="validity"></span>
             </div>
 
-            <div class="form-group col-md-4 pt-0">
+            <!-- <div class="form-group col-md-3 pt-0">
               <label for="inputNombre">Estatus</label>
                 <select class="form-control" name="nvoEstatus" id="nvoEstatus" required tabindex="9" title="Estatus" >
                   <option value=1>Activo</option>
                   <option value=0>Desactivado</option>
-                </select>	
-            </div>
+                </select>
+            </div> -->
+
           </div>
 
-        </div>   
+        </div>
 
         </div>    <!-- fin del modal-body -->
 
         <!-- Modal footer -->
         <div class="modal-footer colorbackModal p-1">
-          <button type="button" class="btn btn-primary btn-sm float-left salirfrm" data-dismiss="modal" tabindex="10"><i class="fa fa-reply"></i> 
+          <button type="button" class="btn btn-primary btn-sm float-left salirfrm" data-dismiss="modal" tabindex="10"><i class="fa fa-reply"></i>
           Salir
           </button>
           <button type="submit" class="btn btn-success btn-sm enviarfrm" tabindex="11"><i class="fa fa-save"></i> Guardar</button>
         </div>
-      
+
      </form>
     </div> <!-- fin del modal-content -->
   </div>
@@ -279,7 +294,7 @@ $fechaHoy = date("Y-m-d");
 ===============================================================================-->
 <div class="modal fade" id="modalAgregarcuentahabiente" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog">
-   
+
     <div class="modal-content ui-widget-content">
      <form role="form" name="" id="form-Agregarcuentahabiente" method="POST">
         <!-- Modal Header -->
@@ -287,11 +302,11 @@ $fechaHoy = date("Y-m-d");
             <h4 class="modal-title">Agregar Cuentahabiente</h4>
             <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
-        
+
 
         <!-- Modal body -->
         <div class="modal-body">
-            
+
           <div class="box-body">
 
           <div class="form-group p-0">
@@ -311,13 +326,13 @@ $fechaHoy = date("Y-m-d");
               <select class="form-control" name="nvoDestinatario" id="nvoDestinatario" style="width: 100%;" tabindex="3" required>
                 <option value="">Selecione</option>
                 <?php
-                  $item="estatus";
-                  $valor=1;
-                  $destinatario=ControladorCtrolDepositos::ctrMostrarDestinatarios($item, $valor);
-                  foreach($destinatario as $key=>$value){
-                    echo '<option value="'.$value["id"].'">'.$value["nombre"].'</option>';
-                  }
-                  ?>				  
+$item = "estatus";
+$valor = 1;
+$destinatario = ControladorCtrolDepositos::ctrMostrarDestinatarios($item, $valor);
+foreach ($destinatario as $key => $value) {
+    echo '<option value="' . $value["id"] . '">' . $value["nombre"] . '</option>';
+}
+?>
               </select>
             </div>
           </div>
@@ -337,7 +352,7 @@ $fechaHoy = date("Y-m-d");
           <div class="form-row">
             <div class="form-group col-md-6 pt-0">
               <label for="inputNombre">Fecha Pago.</label>
-              <input type="date" class="form-control" id="nvoFechaPago" name="nvoFechaPago" placeholder="" value="<?= $fechaHoy ?>" tabindex="6" required>
+              <input type="datetime-local" class="form-control" id="nvoFechaPago" name="nvoFechaPago" placeholder="" value="<?=$fechaHoy?>" tabindex="6" required>
             </div>
 
             <div class="form-group col-md-6 pt-0">
@@ -345,28 +360,28 @@ $fechaHoy = date("Y-m-d");
                 <select class="form-control" name="nvoStatus" id="nvoStatus" required tabindex="7" title="Estatus" >
                   <option value="1">Activo</option>
                   <option value="0">Desactivado</option>
-                </select>	
+                </select>
             </div>
           </div>
 
 
-        </div>   
+        </div>
 
         </div>    <!-- fin del modal-body -->
 
         <!-- Modal footer -->
         <div class="modal-footer colorbackModal p-1">
-          <button type="button" class="btn btn-primary btn-sm float-left" data-dismiss="modal" tabindex="9"><i class="fa fa-reply"></i> 
+          <button type="button" class="btn btn-primary btn-sm float-left" data-dismiss="modal" tabindex="9"><i class="fa fa-reply"></i>
           Salir
           </button>
           <button type="submit" class="btn btn-success btn-sm" tabindex="10"><i class="fa fa-save"></i> Guardar</button>
         </div>
-      
+
      </form>
     </div> <!-- fin del modal-content -->
   </div>
 </div>  <!-- fin del modal -->
 <!-- ==================================================================================== -->
-<script defer src="vistas/js/control-depositos.js?v=04102022"></script>
+<script defer src="vistas/js/control-depositos.js?v=060520231657"></script>
 
 

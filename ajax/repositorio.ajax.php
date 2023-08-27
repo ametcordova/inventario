@@ -25,12 +25,14 @@ switch ($_GET["op"]){
 	
 		$item = "user_id";
     	$valor = $_GET["id_user"];
-    	$orden = "id";
-		$ispublic=1;
+    	//$orden = "id";
+		$ispublic="1";
 
-  		$storefiles = ControladorRepositorio::ctrListsFiles($item, $valor, $orden, $ispublic);	
+  		$storefiles = ControladorRepositorio::ctrListsFiles($item, $valor, $ispublic);
 
-  		if(count($storefiles) == 0){
+        //var_dump($storefiles);
+    
+  		if(is_countable((array)$storefiles) && count((array)$storefiles) <1){
   			echo '{"data": []}';           //arreglar, checar como va
 		  	return;
   		}    
@@ -38,7 +40,7 @@ switch ($_GET["op"]){
            foreach($storefiles as $key => $value){
 			
 			//if(getAccess($acceso, ACCESS_SELECT)){
-				$botonLock=$value["is_public"]==1?"<button class='btn btn-warning btn-sm px-1 py-1 btnCambiaStatus' data-id-file='".$value['id']."' data-estado='".$value['is_public']."' title='Archivo para todos los usuarios'><i class='fa fa-unlock'></i> Público</button>":
+				$botonLock=$value["is_public"]==1?"<button class='btn btn-warning btn-sm px-1 py-1 btnCambiaStatus' data-id-file='".$value['id']."' data-estado='".$value['is_public']."' title='Archivo para todos los usuarios'><i class='fa fa-unlock'></i> P&uacute;blico</button>":
 				"<button class='btn btn-success px-1 py-1 btn-sm btnCambiaStatus' data-id-file='".$value['id']."' data-estado='".$value['is_public']."' title='Solo puede ver el usuario que subio archivo'><i class='fa fa-lock'></i> Privado</button>";
 			//}
 
@@ -54,7 +56,7 @@ switch ($_GET["op"]){
 				$peso='0';
 			}
 			
-			$boton1=getAccess($acceso, ACCESS_EDIT)?"<button class='btn btn-circle btn-primary btn-sm px-1 py-1 btnEditFile' data-idfile='".$value['id']."' data-toggle='modal' data-target='#modalEditFile' title='Editar datos'><i class='fa fa-pencil'></i></button> ":"";
+			$boton1=getAccess($acceso, ACCESS_EDIT)?"<button class='btn btn-circle btn-primary btn-sm px-1 py-1 btnEditarFactura' idFile='".$value['id']."' title='Editar datos'><i class='fa fa-pencil'></i></button> ":"";
 			$boton2=getAccess($acceso, ACCESS_PRINTER)?"<button class='btn btn-circle btn-info btn-sm px-1 py-1 btnViewFile' data-description='".$value['descripcion']."' data-viewfile='".$value['nombrearchivo']."' data-viewruta='".$value['ruta']."' data-toggle='modal' data-target='#modalViewFile' title='Visualizar archivo '><i class='fa fa-eye'></i></button> ":"";
     	  	$boton3=getAccess($acceso, ACCESS_DELETE)?"<button class='btn btn-circle btn-danger btn-sm px-1 py-1 btnDeleteFile' data-deletefile='".$value['id']."' data-namefile='".$value['nombrearchivo']."' title='Borrar archivo'><i class='fa fa-trash'></i></button> ":"";
     	  	$boton4=getAccess($acceso, ACCESS_VIEW)?"<a class='btn btn-circle btn-dark btn-sm px-1' href='".urldecode($enlace)."' role='button' title='Descargar archivo' download target='_blank'><i class='fa fa-download'></i></a>":"";
@@ -78,8 +80,10 @@ switch ($_GET["op"]){
            );
         }
     
+    //var_dump($data);
+    
         $results = array(
-					"sEcho"=>1, //Información para el datatables
+					"sEcho"=>1, //Informacion para el datatables
 					"iTotalRecords"=>count($data), //enviamos el total registros al datatable
 					"iTotalDisplayRecords"=>count($data), //enviamos el total registros a visualizar
 					"aaData"=>$data);

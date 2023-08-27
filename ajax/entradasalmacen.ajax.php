@@ -99,7 +99,7 @@ switch ($_GET["op"]){
 
     case 'consultaExistenciaProd':
 
-        $tabla = trim(strtolower($_GET['almacen']));;
+        $tabla = trim(strtolower($_GET['almacen']));
         //$campo = "id_producto";
         $campo = "id";
         $valor = $_GET['idprod'] ;
@@ -180,8 +180,8 @@ switch ($_GET["op"]){
             $oldarray=array_combine($_POST["oldproducto"], $_POST["oldcantidad"]);      //combina 2 array en 1. (indice)prod y (valor)cant
             $newarray=array_combine($_POST["idproducto"], $_POST["cantidad"]);
 
-            //ARRAY DE PROD(S) A ELIMINAR DE LA ENTRADA.
-            $aeliminar=array_diff_key($oldarray, $newarray);        
+            //ARRAY DE PROD(S) A ELIMINAR DE LA ENTRADA ORIGINAL.
+            $aeliminar=array_diff_key($oldarray, $newarray);
             if(!empty($aeliminar)) {
                 foreach ($aeliminar as $key => $value) {
                     $respuesta = ControladorEntradasAlmacen::ctrEditEliminarRegEA($tabla_almacen, $id_almacen, $key, $value, $id_entrada);
@@ -191,7 +191,7 @@ switch ($_GET["op"]){
                 }
             }
 
-            //ARRAY DE PROD(S) A AGREGAR A LA ENTRADA
+            //ARRAY DE PROD(S) A AGREGAR A LA NUEVA ENTRADA
             $aadicionar=(array_diff_key($newarray, $oldarray));            
             if(!empty($aadicionar)) {
                 foreach ($aadicionar as $key => $value) {

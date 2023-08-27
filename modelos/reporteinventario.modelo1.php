@@ -17,8 +17,7 @@ INNER JOIN productos pro ON pri.id_producto=pro.id where (pri.cant-pro.stock)<1"
 
 	return $stmt -> fetchAll();      
     
-    $stmt->close();
-       
+           
     $stmt=null;
 
 }		

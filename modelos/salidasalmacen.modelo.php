@@ -9,6 +9,8 @@ class ModeloSalidasAlmacen{
 static public function mdlAltaSalidasAlmacen($tabla_almacen, $tabla, $datos){
 	try {      
 
+        //return array("alfa:"=>$datos["alfanumerico"], "tipo",gettype($datos["alfanumerico"]));
+
         $stmt = Conexion::conectar()->prepare("INSERT INTO $tabla(fechasalida, id_tecnico, id_tipomov, id_almacen, id_usuario, motivo, ultusuario) VALUES (:fechasalida, :id_tecnico, :id_tipomov, :id_almacen, :id_usuario, :motivo, :ultusuario)");
         $stmt->bindParam(":fechasalida", 	$datos["fechasalida"], PDO::PARAM_STR);
         $stmt->bindParam(":id_tecnico", 	$datos["id_tecnico"], PDO::PARAM_INT);
@@ -20,13 +22,14 @@ static public function mdlAltaSalidasAlmacen($tabla_almacen, $tabla, $datos){
         $stmt->execute();
         
         if($stmt){
+
             //OBTENEMOS EL ÚLTIMO ID GUARDADO EN tbl_salidas
             $campo=null;
             $query=self::mdlObtenerUltimoId($tabla, $campo);
-            $idnumsalida=$query[0];
-            if(is_null($idnumsalida)){
-            	$idnumsalida=1;
-            }
+            $idnumsalida=$query["id"];
+                if(is_null($idnumsalida)){
+                    $idnumsalida=1;
+                }
 
             $contador = count($datos["productos"]);    //CUANTO PRODUCTOS VIENEN PARA EL FOR
             $nombremes_actual = strtolower(date('F'));  // NOMBRE DEL MES ACTUAL PARA ACTUALIZAR KARDEX 
@@ -49,31 +52,55 @@ static public function mdlAltaSalidasAlmacen($tabla_almacen, $tabla, $datos){
                 $stmt->execute();
             }      //termina ciclo 1er for 
             
-            if($stmt){
-                //SCRIPT QUE REGISTRA LA SALIDA EN EL ALMACEN ELEGIDO
-                for($i=0;$i<$contador;$i++) { 
-                   
-                     $stmt = Conexion::conectar()->prepare("UPDATE $tabla_almacen SET cant=cant-(:cant), ultusuario=:ultusuario WHERE id_producto = :id_producto");
-                     $stmt->bindParam(":id_producto", $datos["productos"][$i], PDO::PARAM_INT);
-                     $stmt->bindParam(":cant", $datos["cantidades"][$i], PDO::PARAM_INT);
-                     $stmt->bindParam(":ultusuario", $datos["id_usuario"], PDO::PARAM_INT);
-                     $stmt->execute();
+                if($stmt){
+                    //SCRIPT QUE REGISTRA LA SALIDA EN EL ALMACEN ELEGIDO
+                    for($i=0;$i<$contador;$i++) { 
+                    
+                        $stmt = Conexion::conectar()->prepare("UPDATE $tabla_almacen SET cant=cant-(:cant), ultusuario=:ultusuario WHERE id_producto = :id_producto");
+                        $stmt->bindParam(":id_producto", $datos["productos"][$i], PDO::PARAM_INT);
+                        $stmt->bindParam(":cant", $datos["cantidades"][$i], PDO::PARAM_INT);
+                        $stmt->bindParam(":ultusuario", $datos["id_usuario"], PDO::PARAM_INT);
+                        $stmt->execute();
 
-   					//GUARDA EN KARDEX DEL ALMACEN ELEGIDO
-					$query = Conexion::conectar()->prepare("UPDATE $tabla_kardex SET $nombremes_actual=$nombremes_actual-(:$nombremes_actual) WHERE id_producto = :id_producto");
-					$query->bindParam(":id_producto", $datos["productos"][$i], PDO::PARAM_INT);
-					$query->bindParam(":".$nombremes_actual, $datos["cantidades"][$i], PDO::PARAM_STR);
-					$query->execute();
+                        //GUARDA EN KARDEX DEL ALMACEN ELEGIDO
+                        $query = Conexion::conectar()->prepare("UPDATE $tabla_kardex SET $nombremes_actual=$nombremes_actual-(:$nombremes_actual) WHERE id_producto = :id_producto");
+                        $query->bindParam(":id_producto", $datos["productos"][$i], PDO::PARAM_INT);
+                        $query->bindParam(":".$nombremes_actual, $datos["cantidades"][$i], PDO::PARAM_STR);
+                        $query->execute();
 
-                   }   //termina ciclo 2do for                    
-                   
-                      if($stmt){
-                          return "ok";
-                       }else{
+                        //ACTUALIZA ALFANUMERICOS
+                        if(strlen($datos["alfanumerico"][$i])>0){
+                            $arrayDatos = $datos["alfanumerico"][$i];
+                            $tabla_contenedor="contenedor_series";
+                            $estado=0;
+                            $queryseries = Conexion::conectar()->prepare("UPDATE $tabla_contenedor SET id_asignado=:id_asignado, notasalida=:notasalida, ultusuario=:ultusuario, estado=:estado WHERE alfanumerico = :alfanumerico");
+                            
+                            $datalfa = explode(',', $arrayDatos); 
+                            foreach ($datalfa as $alfanumerico) {
+                                $queryseries->bindParam(":alfanumerico",$alfanumerico, PDO::PARAM_STR);
+                                $queryseries->bindParam(":id_asignado", $datos["id_tecnico"], PDO::PARAM_INT);
+                                $queryseries->bindParam(":notasalida",  $idnumsalida, PDO::PARAM_INT);
+                                $queryseries->bindParam(":estado",      $estado, PDO::PARAM_INT);
+                                $queryseries->bindParam(":ultusuario",  $datos["id_usuario"], PDO::PARAM_INT);
+                                $queryseries->execute();
+                            }
+                    
+                            if(!$queryseries){
+                                return array("alfa:"=>$datos["alfanumerico"], "num salida"=>$idnumsalida, "id_asignado"=>$datos["id_tecnico"], "estado"=>$estado, "usuario"=>$datos["id_usuario"]);
+                            }
+                        }
+
+                    }   //termina ciclo 2do for                    
+                    
+                        if($queryseries){
+                    
+                            return "ok";
+
+                        }else{
                             return "error";
-                       }
+                        }
 
-            }
+                }
 
             return "ok";
         }else{
@@ -89,14 +116,14 @@ static public function mdlAltaSalidasAlmacen($tabla_almacen, $tabla, $datos){
 static Public function mdlConsultaExistenciaProd($tabla, $campo, $valor){
 try {          
     //$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $campo = :$campo");
-    $stmt = Conexion::conectar()->prepare("SELECT a.cant ,p.id_medida,m.medida FROM $tabla a 
+    $stmt = Conexion::conectar()->prepare("SELECT a.cant, p.id_medida, p.conseries, m.medida FROM $tabla a 
     INNER JOIN productos p ON a.id_producto=p.id
     INNER JOIN medidas m ON p.id_medida=m.id
     WHERE $campo = :$campo");
 
     $stmt -> bindParam(":$campo", $valor, PDO::PARAM_STR);
     $stmt -> execute();
-    return $stmt -> fetch();      
+    return $stmt -> fetch(PDO::FETCH_ASSOC);      
     $stmt=null;
 
 } catch (Exception $e) {
@@ -129,7 +156,7 @@ try {
   
 	$stmt -> execute();
   
-	return $stmt -> fetchAll();
+	return $stmt -> fetchAll(PDO::FETCH_ASSOC);
   
     $stmt = null;
 
@@ -164,7 +191,7 @@ try {
                 
     $stmt->execute();
                
-    return $stmt->fetchAll();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     $stmt = null;
 
@@ -202,7 +229,7 @@ try {
                 
     $stmt->execute();
                
-    return $stmt->fetchAll();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     $stmt = null;
         
@@ -398,7 +425,7 @@ static public function mdlBorrarSalidaAlmacen($tabla_hist, $idaborrar, $campo){
         $stmt->execute();
 
         if ($stmt->rowCount() > 0) {
-            return $stmt->fetchAll();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }else{
             //$respuesta = array("error" =>'vacio');
             $respuesta = "error";
@@ -522,7 +549,7 @@ try {
 
     $stmt->execute();
         
-    return $stmt->fetch();
+    return $stmt->fetch(PDO::FETCH_ASSOC);
 
     $stmt = null;
 
@@ -543,7 +570,7 @@ static public function mdlMostrarTipoMov($tabla, $item, $valor){
     
         $stmt -> execute();
     
-        return $stmt -> fetchAll();
+        return $stmt -> fetchAll(PDO::FETCH_ASSOC);
     
         $stmt = null;
 
@@ -553,6 +580,50 @@ static public function mdlMostrarTipoMov($tabla, $item, $valor){
     
 }
     
+/*=============================================
+	MOSTRAR TIPO DE MOV DE SALIDA
+=============================================*/
+static public function mdlMostrarOnts($tabla, $item, $valor, $order){
+    try {
+        $stmt = Conexion::conectar()->prepare("SELECT id, id_producto, alfanumerico FROM $tabla WHERE $item = :$item ORDER BY id_producto=:id_producto ASC");
+        
+        $stmt->bindParam(":".$item,     $valor, PDO::PARAM_STR);
+        $stmt->bindParam(":id_producto",$order, PDO::PARAM_INT);
+    
+        $stmt -> execute();
+    
+        return $stmt -> fetchAll(PDO::FETCH_ASSOC);
+    
+        $stmt = null;
+
+    } catch (Exception $e) {
+        echo "Failed: " . $e->getMessage();
+    }
+    
+}
+
+/*=============================================
+	VALIDAR SI FOUND ALFANUMERICO
+=============================================*/
+static public function mdlvalidAlfanumerico($tabla, $campo, $valor){
+    try {
+        $estado=1;
+        $stmt = Conexion::conectar()->prepare("SELECT alfanumerico FROM $tabla WHERE $campo = :$campo AND estado = :estado");
+        
+        $stmt->bindParam(":".$campo, $valor, PDO::PARAM_STR);
+        $stmt->bindParam(":estado", $estado, PDO::PARAM_INT);
+    
+        $stmt -> execute();
+    
+        return $stmt -> fetch(PDO::FETCH_ASSOC);
+    
+        $stmt = null;
+
+    } catch (Exception $e) {
+        echo "Failed: " . $e->getMessage();
+    }
+    
+}
 
 } //fin de la clase
 

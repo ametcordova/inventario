@@ -2,9 +2,9 @@ var arrayProductos=[];
 var modalEvento='';
 var renglonesfacturar=cantidadfacturar=cantidadimporte=sumasubtotal=sumatotal=0;
 var indexcp=0;
-const { ajax } = rxjs.ajax;
+//const { ajax } = rxjs.ajax;
 //const { fromEvent } = rxjs;
-var FechDev;
+var FechDev1;
 var FechDev2;
 $("#modalCrearFactura").draggable({
     handle: ".modal-header"
@@ -17,11 +17,7 @@ function init(){
 /*=============================================
   VARIABLE LOCAL STORAGE
   =============================================*/
-  //console.log(localStorage.getItem("daterange-btn-factingreso"))
-  // if (localStorage.getItem("daterange-btn-factingreso") === null) {
-  //   fechaactual();
-  // }
-  
+   
   $("#btnGuardarFactura").hide();
 
   dt_ListarFacturasIngreso();
@@ -30,11 +26,17 @@ function init(){
 
 // ========= LISTAR EN EL DATATABLE REGISTROS DE LA TABLA FACTURAINGRESO================
 function dt_ListarFacturasIngreso(){
-  start=moment().subtract(1, 'months').format('DD-MM-YYYY');   // 1 mes atras. 
-  end=moment().format('DD-MM-YYYY')
-  $('#daterange-btn-factingreso span').html(start + ' - ' + end);
-  localStorage.setItem("Rangofechafactingreso", start+' - '+end);
-  rangodeFecha=$('#daterange-btn-factingreso span').html();
+  let rangodeFecha='';
+  if(localStorage.getItem('daterange-btn-factingreso') !== undefined && localStorage.getItem('daterange-btn-factingreso')){
+    rangodeFecha = (localStorage.getItem("daterange-btn-factingreso"));
+    $('#daterange-btn-factingreso span').html(rangodeFecha);
+  }else{
+    start=moment().subtract(1, 'months').format('DD-MM-YYYY');   // 1 mes atras. 
+    end=moment().format('DD-MM-YYYY')
+    $('#daterange-btn-factingreso span').html(start + ' - ' + end);
+    localStorage.setItem("daterange-btn-factingreso", start+' - '+end);
+    rangodeFecha=$('#daterange-btn-factingreso span').html();
+  }
 
    if(rangodeFecha===undefined || rangodeFecha===null){
        FechDev1=moment().format('YYYY-MM-DD HH:mm:ss');
@@ -79,13 +81,6 @@ function dt_ListarFacturasIngreso(){
                     pdfMake.createPdf(doc).open();
                 },
             },
-            
-       {
-            extend: 'print',
-            text: 'Imprimir',
-            className: 'btn btn-success btn-sm',
-            autoPrint: false            //TRUE para abrir la impresora
-        },
         {
           text: 'Generar R.E.P. 2.0',
           className: 'btn btn-sm btn-dark ',
@@ -105,6 +100,13 @@ function dt_ListarFacturasIngreso(){
           className: 'btn btn-sm btn-warning',
           action: function ( e, dt, node, config ) {
           RelacionExcel();
+          }
+        },
+        {
+          text: 'Agrega a Ctrl Facts. <i class="fa fa-check-square"></i>',
+          className: 'boton-link',
+          action: function ( e, dt, node, config ) {
+          AgregaCtrlFacts();
           }
         },
 
@@ -164,7 +166,7 @@ function dt_ListarFacturasIngreso(){
 				},
 		"bDestroy": true,
 		"iDisplayLength": 15,//Paginación
-	    "order": [[ 1, "desc" ]]//Ordenar (columna,orden)
+	  "order": [[ 1, "desc" ]]//Ordenar (columna,orden)
 	}).DataTable();    
 } 
 /****************************************************************************** */
@@ -200,7 +202,7 @@ function GenCompPago20(){
       })
       .then((res)=>{ 
         if(res.status==200) {
-          console.log(res.data)
+          //console.log(res.data)
           $('input[name=idEmpresa]').val(res.data[0].id_empresa);
           $('input[name=foliorep]').val(res.data[0].serierep+(parseInt(res.data[0].foliorep)+1));
           $('input[name=idemisorrep]').val(res.data[0].idemisor);
@@ -409,10 +411,9 @@ $("body").on("submit", "#formularioComplementoPago", function( event ) {
     data : formData, 
   }) 
   .then((res)=>{ 
-    console.log(res);
+    //console.log(res);
     if(res.status===200) {
       //console.log(res.data['status'])
-
       $('#dt-FacturaIngreso').DataTable().ajax.reload(null, false);
       $('#modalCrearComplementoPago').modal('hide')
 
@@ -808,7 +809,7 @@ function addProductofactura(...argsProductos){
 
     <td class='text-center'>${renglonesfacturar} <input type="hidden" name="objetodeimpuesto[]" value="${argsProductos[7]}"</td>
     <td class='text-center'>${argsProductos[0]} <input type="hidden" name="idproducto[]" value="${argsProductos[0]}" </td>
-    <td class='text-left'><input class="form-control form-control-sm" type="text" name="descripcion[]" value="${argsProductos[4]}" </td>  
+    <td class='text-left'><input class="form-control form-control-sm" type="text" name="descripcion[]" value="${argsProductos[4]}"</td>  
     <td class='text-center'>${argsProductos[1]} <input type="hidden" name="cantidad[]" value="${argsProductos[1]}"</td>
     <td class='text-right'>${argsProductos[5]} <input type="hidden" name="preciounitario[]" value="${argsProductos[5]}"</td>
     <td class='text-right'>${parseFloat(argsProductos[6]).toFixed(2)} <input type="hidden" name="importe[]" value="${argsProductos[6]}"</td>
@@ -1188,7 +1189,7 @@ $("#dt-FacturaIngreso tbody").on("click", "button.btnCancelFact", function(){
     })
 
     .then((res)=>{ 
-      console.log(res.data.data.code)
+      console.log(res.data)
       if(res.data.data.code==200 || res.data.data.code==201) {
         $('#dt-FacturaIngreso').DataTable().ajax.reload(null, false);
         $('#container').waitMe("hide");
@@ -1295,25 +1296,33 @@ function TimbrarCompPago20(elem){
 
     .then((res)=>{ 
       console.log(res.data)
-      if(res.data.status==200 || res.data.status==201) {
+      if(res.data.data.code=="200") {
         $('#dt-FacturaIngreso').DataTable().ajax.reload(null, false);
         $('#tblComplementoPago20').DataTable().ajax.reload(null, false);
         $('#modalGestionREP20').waitMe("hide");
         swal({
-          title: "¡Complemento de Pago Timbrado!",
+          title: `${res.data.data.message}`,
           text: `${res.data.msg}`,
           icon: "success",
           button: "Cerrar",
           timer:3000
         })  //fin swal El valor del atributo DomicilioFiscalReceptor [] no corresponde a un registro del catálogo CatCodigosPostales
   
+      }else if(res.data.status==201){
+        swal({
+          title: `${res.data.data}`,
+          text: `${res.data.msg}`,
+          icon: "error",
+          button: "Cerrar",
+          timer:4000
+        })  //fin swal El valor del atributo DomicilioFiscalReceptor [] no corresponde a un registro del catálogo CatCodigosPostales
       }else{
         //console.log(res.data, res.status)
         $('#tblComplementoPago20').DataTable().ajax.reload(null, false);
         $('#modalGestionREP20').waitMe("hide");
         swal({
           title: "¡Lo sentimos mucho!!",
-          text: `No fue posible realizar timbrado. ${res.data.data}!!`,
+          text: `No fue posible realizar timbrado. ${res.data.data.message}!!`,
           icon: "error",
           buttons: false,
           timer: 13000
@@ -1372,6 +1381,58 @@ function RelacionExcel(){
      
      })();  //fin del async  
    
+ }
+ /****************************************************************************** */
+//   FUNCIONES PARA EL CALCULO DEL COMPLEMENTO DE PAGO
+/****************************************************************************** */
+function AgregaCtrlFacts(){
+  ids=[];
+   // Iterate over all selected checkboxes
+   $.each(tblFacturaIngreso.$('input[type="checkbox"]'), function(index, rowId){
+     if(this.checked && parseInt(rowId.value)>0){
+       ids.push(parseInt(rowId.value));
+     }
+   });
+   //console.log(ids.length)
+
+     if(ids.length==0){
+       return
+     }
+
+     (async () => {   
+        await axios.get('ajax/facturaingreso.ajax.php?op=AgregaCtrlFacts', {
+         params: {
+           ids: ids,
+         }
+       })
+       .then((res)=>{ 
+          //console.log(res);
+          //console.log(res.data);
+          //console.log(res.data.msg);
+          if(res.status===200){
+            /** aqui el codigo **/
+            swal({
+              title: `${res.statusText}!!`,
+              text: `${res.data.msg}. se añadieron: ${res.data.data} Registro(s) de ${ids.length}`,
+              icon: "success",
+              buttons: false,
+              timer: 5000
+            })  //fin swal
+            
+          }else{
+            swal({
+              title: `${res.statusText}!!`,
+              text: `${res.data.msg}!!`,
+              icon: "error",
+              buttons: false,
+              timer: 4000
+            })  //fin swal
+          }
+       }) 
+   
+       .catch((err) => {throw err}); 
+     
+     })();  //fin del async  
  }
 /**************************************************************** */
 //AL ABRIR EL MODAL TRAER EL ULTIMO NUMERO

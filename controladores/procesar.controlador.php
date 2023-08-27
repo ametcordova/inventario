@@ -14,7 +14,7 @@ use PhpOffice\PhpSpreadsheet\Reader\Xls;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 require_once '../extensiones/vendor/autoload.php';
 
-$file_mimes = array('text/x-comma-separated-values', 'text/comma-separated-values', 'application/octet-stream', 'application/vnd.ms-excel', 'application/x-csv', 'text/x-csv', 'text/csv', 'application/csv', 'application/excel', 'application/vnd.msexcel', 'text/plain', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','.xls', '.xlsx');
+$file_mimes = array('text/x-comma-separated-values', 'text/comma-separated-values', 'application/octet-stream', 'application/vnd.ms-excel', 'application/x-csv', 'text/x-csv', 'text/csv', 'application/csv', 'application/excel', 'application/vnd.msexcel', 'text/plain', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','.xls', '.xlsx', 'XLSX');
 try{
     if (isset($_FILES['file']['name']) && in_array($_FILES['file']['type'], $file_mimes)) {
         $arr_file = explode('.', $_FILES['file']['name']);
@@ -32,25 +32,30 @@ try{
             //$highestColumn = $worksheet->getHighestColumn(); 
             //$highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn); 
         if(isset($_POST['aplicar']) && $_POST['aplicar']==1){
-            $factura=$_POST['factura'];
+            $factura=trim($_POST['factura']);
             $estado=0;
             $no=0;
             $datos=$sincaptura=array();
             for ($row = 2; $row <= $highestRow; $row++){ 
                 $os=$worksheet->getCell("A".$row)->getValue();
                 $tel=$worksheet->getCell("B".$row)->getValue();
-
+                //$os=trim($os);
+                if($os==''){
+                    //$sincaptura[]=array('OS'=>$os, 'Telefono'=>$tel, 'OBS'=>'SIN ACTUALIZAR','ID'=>'SIN ID');
+                    break;
+                }
                 $sql="UPDATE tabla_os SET estatus=:estatus, factura=:factura WHERE ordenservicio=$os";
                 $stmt=Conexion::conectar()->prepare($sql);
                 $stmt->bindParam(":estatus", $estado, PDO::PARAM_INT);
                 $stmt->bindParam(":factura", $factura, PDO::PARAM_STR);
+                //$stmt->bindParam(":ordenservicio", $os, PDO::PARAM_STR);
                 $stmt->execute();
 
                 $no=$stmt->rowCount();
-                if($no>0){
-                    $datos[]=array('OS'=>$os, 'Telefono'=>$tel, 'OBS'=>'ACTUALIZADO');
+                if($stmt){
+                    $sincaptura[]=array('OS'=>$os, 'Telefono'=>$tel, 'OBS'=>'ACTUALIZADO', 'ID'=>$factura);
                 }else{
-                    $sincaptura[]=array('OS'=>$os, 'Telefono'=>$tel, 'OBS'=>'SIN ACTUALIZAR');
+                    $sincaptura[]=array('OS'=>$os, 'Telefono'=>$tel, 'OBS'=>'SIN ACTUALIZAR', 'ID'=>'SIN ID.');
                 }
                 
             };  //fin del for
@@ -66,14 +71,16 @@ try{
             for ($row = 2; $row <= $highestRow; $row++){ 
                 $os=$worksheet->getCell("A".$row)->getValue();
                 $tel=$worksheet->getCell("B".$row)->getValue();
-
+                $os=trim($os);
+                if($os==''){
+                    break;
+                }
                 $sql = "SELECT id, ordenservicio, telefono, factura, estatus FROM tabla_os WHERE ordenservicio=$os";
                 $stmt = Conexion::conectar()->prepare($sql);
                 $stmt->execute();
                 $arr = $stmt->fetch(PDO::FETCH_ASSOC);
                 
                     if($arr){
-
                         if($tel!=$arr['telefono']){
                             $datos[]=array('OS'=>$os, 'Telefono'=>$tel, 'OBS'=>$arr['telefono'], 'ID'=>$arr['id']);
                             $flag=true;
@@ -87,15 +94,15 @@ try{
                         }
 
                     }else{
-                        $sincaptura[]=array('OS'=>$os, 'Telefono'=>$tel, 'OBS'=>'SIN O.S.');
+                        $sincaptura[]=array('OS'=>$os, 'Telefono'=>$tel, 'OBS'=>'SIN O.S.', 'ID'=>'');
                     };
                     $flag=false;
-
             };      //fin del For
 
             //si no existe ALGUN OS en la BD, se agrega al array
             if(!empty($sincaptura) || sizeof($sincaptura)>0){
-                $datos=array_merge($datos,$sincaptura);    
+                $datos=array_merge($datos,$sincaptura);
+                //$datos=$sincaptura;
             }
         }; 
         //ENVIA DATOS A FRONTEND

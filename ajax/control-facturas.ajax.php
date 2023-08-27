@@ -13,7 +13,7 @@ switch ($_GET["op"]){
         
 	case 'guardar':
 		if(isset($_POST["nuevaFactura"])){
-            
+            $nvoEsConstruccion=isset($_POST["nvoEsConstruccion"])?1:0;
 			if(preg_match('/^[#\_\/a-zA-Z0-9]+$/', $_POST["nuevaFactura"]) &&
                preg_match('/^[#\.\,\-\/a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ ]+$/', $_POST["nuevoCliente"])
             ){
@@ -56,6 +56,7 @@ switch ($_GET["op"]){
                                "fechaentregado" => $_POST["nvaFechaEntregado"],
                                "observaciones"  => strtoupper($_POST["nvaObservacion"]),
                                "contrato"  		=> strtoupper($_POST["nuevoContrato"]),
+							   "construccion"	=> $nvoEsConstruccion,
                                "status"         => $_POST["nvoStatusFactura"],
 						       "idusuario"      => $_POST["idDeUsuario"],
 							   "rutaexpediente"	=> $rutaexpediente
@@ -75,9 +76,10 @@ switch ($_GET["op"]){
         if(isset($_POST["idFactura"])){
             $item = "id";
 			$valor = $_POST["idFactura"];
+			$valor2 = $_POST["idSerie"];
 			$orden = $_POST["idBorrado"];
 
-            $respuesta = ControladorFacturas::ctrMostrarFacturas($item, $valor, $orden, $tipo=null, $year=null, $monthinicial=null, $monthfinal=null, $solopagadas=null);
+            $respuesta = ControladorFacturas::ctrMostrarFacturas($item, $valor, $valor2, $orden, $tipo=null, $year=null, $monthinicial=null, $monthfinal=null, $solopagadas=null);
 
             echo json_encode($respuesta);
 
@@ -118,6 +120,7 @@ switch ($_GET["op"]){
 				}					
 				
 /* =============================== ARRAY PARA GUARDAR =========================*/
+				$editconstruccion=isset($_POST["editEsConstruccion"])?1:0;
                 $datos = array("idregistro"     => $_POST["idregistro"],
 							   "serie"			=> $_POST["editaSerie"],
                                "fechafactura"   => $_POST["editaFechaFactura"],
@@ -132,6 +135,7 @@ switch ($_GET["op"]){
                                "fechaentregado" => $_POST["editaFechaEntregado"],
                                "observaciones"  => strtoupper($_POST["editaObservacion"]),
                                "contrato"  		=> strtoupper($_POST["editaContrato"]),
+                               "construccion" 	=> $editconstruccion,
                                "fechapagado"    => $_POST["editaFechaPagado"],
                                "status"         => $_POST["editaStatusFactura"],
 						       "idusuario"      => $_POST["idDeUsuario"],
@@ -219,9 +223,10 @@ switch ($_GET["op"]){
 	    $solopagadas = isset($_GET["factpagadas"]) ? $_GET["factpagadas"] : 0;
 		$item = null;
     	$valor = null;
+    	$valor2 = null;
     	$orden = "id";
 		$conter=0;
-  		$facturas = ControladorFacturas::ctrMostrarFacturas($item, $valor, $orden,$tipo, $year, $monthinicial, $monthfinal, $solopagadas);
+  		$facturas = ControladorFacturas::ctrMostrarFacturas($item, $valor, $valor2, $orden, $tipo, $year, $monthinicial, $monthfinal, $solopagadas);
 		$saldo=ControladorFacturas::ctrMostrarSaldoDisponible();
 		$saldodisponible=$saldo[0];
   		if(count($facturas) == 0){
@@ -235,8 +240,10 @@ switch ($_GET["op"]){
 				$fechaEntregado = $value["fechaentregado"]==null?"":date('d-m-Y', strtotime($value["fechaentregado"]));
 				$fechaPagado =$value["fechapagado"]==null?" ":date('d-m-Y', strtotime($value["fechapagado"]));
 				$importeFact=number_format($value['importe'], 2, '.',',');
-				$odc=str_replace(' ', '',$value["numorden"])==''?'S/O':str_replace(' ', '',$value["numorden"]);
-				$ob=str_replace(' ', '',$value["observaciones"])==''?'S/P':str_replace(' ', '',$value["observaciones"]);
+				//$odc=str_replace(' ', '',is_array($value["numorden"]))===''?'S/O':str_replace(' ', '',$value["numorden"]);
+				$odc=is_array($value["numorden"])===''?'S/O':$value["numorden"];
+				//$ob=str_replace(' ', '',is_array($value["observaciones"]))===''?'S/P':str_replace(' ', '',$value["observaciones"]);
+				$ob=is_array($value["observaciones"])===''?'S/P':$value["observaciones"];
 				
 				//." <button class='btn btn-primary btn-sm px-1 py-1 btnAgregaGastos' idFactura='".$value['id']."' numFactura='".$value['numfact']."' idEstado='".$value['status']."' data-toggle='modal' data-target='#modalAgregarGastos' title=''><i class='fa fa-plus-circle'></i></button>"
 
@@ -248,10 +255,10 @@ switch ($_GET["op"]){
 					"<button class='btn btn-success py-1 btn-sm disabled' title='Cerrado'><i class='fa fa-lock'></i></button>";				
 				}
 
-				$boton1=getAccess($acceso, ACCESS_EDIT)?"<button class='btn btn-primary btn-sm px-1 btnEditarFactura' idFactura='".$value['id']."' numFactura='".$value['numfact']."' idEstado='".$value['status']."' idBorrado='".$value['borrado']."' data-toggle='modal' data-target='#modalEditarFactura' title='Editar Factura'><i class='fa fa-pencil'></i></button> ":"";
-				$boton2=getAccess($acceso, ACCESS_PRINTER)?"<button class='btn btn-info btn-sm px-1 btnVerFactura' id=fila".$conter." idFactura='".$value['id']."' numFactura='".$value['numfact']."' idEstado='".$value['status']."' idBorrado='".$value['borrado']."' title='Ver Expediente'><i class='fa fa-eye'></i></button> ":"";
+				$boton1=getAccess($acceso, ACCESS_EDIT)?"<button class='btn btn-primary btn-sm px-1 btnEditarFactura' idFactura='".$value['id']."' idserie='".$value['serie']."' numFactura='".$value['numfact']."' idEstado='".$value['status']."' idBorrado='".$value['borrado']."' data-toggle='modal' data-target='#modalEditarFactura' title='Editar Factura'><i class='fa fa-pencil'></i></button> ":"";
+				$boton2=getAccess($acceso, ACCESS_PRINTER)?"<button class='btn btn-info btn-sm px-1 btnVerFactura' id=fila".$conter." idFactura='".$value['id']."' idserie='".$value['serie']."' numFactura='".$value['numfact']."' idEstado='".$value['status']."' idBorrado='".$value['borrado']."' title='Ver Expediente'><i class='fa fa-eye'></i></button> ":"";
 				if($value["borrado"]==0){
-					$boton3=getAccess($acceso, ACCESS_DELETE)?"<button class='btn btn-danger btn-sm px-1 btnBorrarFactura' title='Borrar Factura' idFactura='".$value['id']."' numFactura='".$value['numfact']."' subtotalFactura='".$value['subtotal']."' idEstado='".$value['status']."' idBorrado='".$value['borrado']."'><i class='fa fa-times'></i></button>":"";
+					$boton3=getAccess($acceso, ACCESS_DELETE)?"<button class='btn btn-danger btn-sm px-1 btnBorrarFactura' title='Borrar Factura' idFactura='".$value['id']."' idserie='".$value['serie']."' numFactura='".$value['numfact']."' subtotalFactura='".$value['subtotal']."' idEstado='".$value['status']."' idBorrado='".$value['borrado']."'><i class='fa fa-times'></i></button>":"";
 				}else{
 					$boton3=getAccess($acceso, ACCESS_DELETE)?"<button class='btn btn-danger btn-sm px-1 disabled' title='Borrar Factura' ><i class='fa fa-times'></i></button>":"";
 				}

@@ -9,14 +9,15 @@
   src: local('Audiowide'), local('Audiowide-Regular'), url(http://themes.googleusercontent.com/static/fonts/audiowide/v2/8XtYtNKEyyZh481XVWfVOj8E0i7KZn-EPnyo3HZu7kw.woff) format('woff');
 }
 
-.titleout{
+.titleout {
   /*color:#ffdd1b;*/
-  color:#add810;
-  font-family:Audiowide;
+  color: #add810;
+  font-family: Audiowide;
   text-shadow: 0px 0px 9px #89bd2a;
   font-style: italic;
 }
-#titleout:hover{
+
+#titleout:hover {
   -webkit-animation: neon3 1.5s ease-in-out infinite alternate;
   -moz-animation: neon3 1.5s ease-in-out infinite alternate;
   animation: neon3 1.5s ease-in-out infinite alternate;
@@ -32,33 +33,38 @@ Full screen Modal
   margin-left: auto;
   width: 100%;
 }
+
 @media (min-width: 768px) {
   .fullscreen-modal .modal-dialog {
     width: 750px;
   }
 }
+
 @media (min-width: 992px) {
   .fullscreen-modal .modal-dialog {
     width: 970px;
   }
 }
+
 @media (min-width: 1200px) {
   .fullscreen-modal .modal-dialog {
-     width: 1170px;
+    width: 1170px;
   }
 }
 
 .legend1:nth-of-type(odd) div {
-  background-color:antiquewhite;
-  }
-  .legend1:nth-of-type(even) div {
+  background-color: antiquewhite;
+}
+
+.legend1:nth-of-type(even) div {
   background: #FFFFFF;
 }
 
 .legend2:nth-of-type(odd) div {
-  background-color:rgb(245, 250, 215);
-  }
-  .legend2:nth-of-type(even) div {
+  background-color: rgb(245, 250, 215);
+}
+
+.legend2:nth-of-type(even) div {
   background: #FFFFFF;
 }
 
@@ -88,6 +94,7 @@ Full screen Modal
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -98,6 +105,7 @@ Full screen Modal
   position: relative;
   color: #0087ca;
 }
+
 .hover-underline-animation::after {
   content: '';
   position: absolute;
@@ -110,13 +118,14 @@ Full screen Modal
   transform-origin: bottom right;
   transition: transform 0.25s ease-out;
 }
+
 .hover-underline-animation:hover::after {
   transform: scaleX(1);
   transform-origin: bottom left;
 }
 
-.btn-fipabide{
-  background-color:rgb(205, 238, 15); 
+.btn-fipabide {
+  background-color: rgb(205, 238, 15);
 }
 
 @media only screen and (max-width: 480px) {
@@ -125,40 +134,47 @@ Full screen Modal
     align-items: center;
     justify-content: center;
     width: auto;
-    margin-top:1px;
+    margin-top: 1px;
     margin-bottom: 10px;
   }
 }
+
 @media only screen and (min-width: 480px) and (max-width: 768px) {
   .margen-custom {
     display: flex;
     align-items: center;
     justify-content: center;
     width: auto;
-    margin-top:0;
+    margin-top: 0;
     margin-bottom: 10px;
   }
 }
 
 @media only screen and (min-width: 768px) and (max-width: 959px) {
-  .margen-custom {margin-top:20px;}
+  .margen-custom {
+    margin-top: 20px;
+  }
 }
+
 @media only screen and (min-width: 959px) {
-  .margen-custom {margin-top:20px;;}
+  .margen-custom {
+    margin-top: 20px;
+    ;
+  }
 }
 
-.uni-code { 
-	font-family: FontAwesome, "Open Sans", Verdana, sans-serif;
-    font-style: normal;
-    font-weight: normal;
-    text-decoration: inherit;
+.uni-code {
+  font-family: FontAwesome, "Open Sans", Verdana, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  text-decoration: inherit;
 }
 
-#uploadedFile{
+#uploadedFile {
   border: 1px #A9A9A9 solid;
   background-color: #00BFFF;
   color: #fff;
-  font-family:Arial;
+  font-family: Arial;
   font-size: 14px;
 }
 
@@ -202,7 +218,7 @@ Full screen Modal
   color: #000000;
 }
 
-#estiloletra{
+#estiloletra {
   font-family: 'Unica One', cursive;
   font-size: 38px;
   margin: 0px;
@@ -225,9 +241,11 @@ Full screen Modal
   -o-transition: opacity 1s linear;
   -webkit-transition: opacity 1s linear;
 }
+
 #progress_bar.loading {
   opacity: 1.0;
 }
+
 #progress_bar .percent {
   background-color: #13e913;
   height: auto;
@@ -242,15 +260,50 @@ Full screen Modal
   0% {
     opacity: 1;
   }
+
   50% {
     opacity: .75;
   }
+
   75% {
     opacity: .5;
-    
+
   }
+
   100% {
     opacity: 0;
-    
+
   }
+}
+
+.boton-link {
+  text-decoration: none;
+  color: rgb(248, 246, 248);
+  background: #bd0eed;
+  font-size: 1.05em;
+  position: relative;
+  padding: 0 10px;
+  transition: 0.25s ease-in-out all;
+  font-weight: 250;
+}
+
+.boton-link::before {
+  content: '';
+  position: absolute;
+  background: #ec3f7a;
+  width: 2px;
+  height: 100%;
+  left: 0;
+  transition: 0.2s ease-in-out all;
+  z-index: -1;
+}
+
+.boton-link:hover::before {
+  width: 100%;
+}
+
+.boton-link:hover {
+  background: #ec3f7a;
+  color: #ffffff;
+  font-size: 1.2em;
 }

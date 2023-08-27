@@ -6,11 +6,11 @@ class ControladorRepositorio{
     LISTAR ARCHIVOS
 ============================================*/
 
-static public function ctrListsFiles($item, $valor, $orden, $ispublic){
+static public function ctrListsFiles($item, $valor, $ispublic){
 
 		$tabla = "repositorio";
 
-		$respuesta = ModeloRepositorio::mdlListsFiles($tabla, $item, $valor, $orden, $ispublic);
+		$respuesta = ModeloRepositorio::mdlListsFiles($tabla, $item, $valor, $ispublic);
 
 		return $respuesta;
 	
