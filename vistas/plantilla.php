@@ -184,6 +184,7 @@ if (isset($_SESSION["iniciarSesion"]) && $_SESSION["iniciarSesion"] == "ok") {
 <script src="vistas/js/reporteinventario.js?v=010320231206"></script>
 <script src="vistas/js/osvilla.js?v=010320231206"></script>
 <script src="vistas/js/adminoservicio.js?v=070720231233"></script>
+<script src="vistas/js/header.js?v=070720231233"></script>
 
 <!--<script defer src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
